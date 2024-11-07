@@ -1,0 +1,16 @@
+.popularTagContainer{
+    width: 228px;
+    background-color: #1E1F20;
+    padding: 26px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 21px;
+    margin-bottom: 26px;
+}
+
+.popularTagTitle{
+    font-size: 21px;
+    color: #FFFFFF;
+    font-weight: 600;
+    margin-bottom: 26px;
+}

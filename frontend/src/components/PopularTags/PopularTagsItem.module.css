@@ -1,0 +1,26 @@
+.popularTegItemContainer{
+    display: flex;
+    gap: 13px;
+}
+
+.popularTegItemTheme{
+    font-size: 16px;
+    color: #FFFFFF;
+    font-weight: 600;
+}
+
+.popularTegItemSubtext{
+    color: #97989D;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.popularTegItemImgContainer{
+    width: 42px;
+    height: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #5A4F43;
+    border-radius: 5px;
+}

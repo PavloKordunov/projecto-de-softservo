@@ -1,0 +1,21 @@
+.pinnedGroupContainer{
+    width: 228px;
+    padding: 26px;
+    display: flex;
+    flex-direction: column;
+    background-color: #1E1F20;
+    border-radius: 21px;
+}
+
+.pinnedGroupTitle{
+    font-size: 21px;
+    color: #FFFFFF;
+    font-weight: 600;
+}
+
+.pinnedGroupTitleContainer{
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+    margin-bottom: 26px;
+}

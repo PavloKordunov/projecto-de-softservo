@@ -1,0 +1,96 @@
+.postContainer {
+    width: 994px;
+    height: 210px;
+    background-color: #1E1F20;
+    border-radius: 21px;
+    display: flex;
+    padding: 26px;
+    gap: 26px;
+}
+
+.postTitleContainer{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 13px;
+}
+
+.pageIconContainer{
+    background-color: #2C353D;
+    width: 49px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.pageTitle{
+    color: #fff;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.pageIcon{
+    fill: #C5D0E6;
+}
+
+.pageGenresList{
+    display: flex;
+    gap: 13px;
+    margin-bottom: 40px;
+}
+
+.pageGenresEl{
+    padding: 0 13px ;
+    height: 32px;
+    background-color: #2C353D;
+    border-radius: 26px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pageGenresText{
+    color: #C5D0E6;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.postInfo{
+    display: flex;
+    align-items: center;
+}
+
+.postInfoImg{
+    margin-right: 13px;
+}
+
+.postInfoAuthor{
+    color: #F4F6F8;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.postInfoAuthorTime{
+    color: #C5D0E6;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.postStatysticsList{
+    display: flex;
+}
+
+.postStatysticsList li:not(:last-child){
+    margin-right: 52px;
+}
+
+.postStatysticsItem{
+    color: #C5D0E6;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.postInfoList{
+    margin-right: 46px;
+}

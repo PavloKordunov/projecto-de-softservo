@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+<<<<<<< Updated upstream
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
@@ -1944,6 +1945,51 @@
       <change afterPath="$PROJECT_DIR$/frontend/target/node/npx.cmd" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/frontend/tsconfig.json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+=======
+  <component name="ChangeListManager">
+    <list default="true" id="9bc57282-2277-4d25-953c-77bdda2ad58b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/App.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/App.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/CreatePostNav/CreatePostNav.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/CreatePostNav/CreatePostNav.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/NavBar/NavBar.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/NavBar/NavBar.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/NavPanel/NavPanel.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/NavPanel/NavPanel.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/PinnedGroup/PinnedGroup.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/PinnedGroup/PinnedGroup.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/PinnedGroup/PinnedGroupItem.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/PinnedGroup/PinnedGroupItem.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/PopularTags/PopularTags.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/PopularTags/PopularTags.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/PopularTags/PopularTagsItem.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/PopularTags/PopularTagsItem.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/Post/Post.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/Post/Post.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/pages/HomePage.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/pages/HomePge.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/img/Dev.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/img/NavPerson.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/img/image.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/img/person.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/img/sprite.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/public/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/public/logo192.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/public/logo512.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/public/robots.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.test.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/logo.svg" beforeDir="false" />
+>>>>>>> Stashed changes
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -1953,11 +1999,30 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+<<<<<<< Updated upstream
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
   <component name="ProjectId" id="2oFx7UGCa8mTdDeOBtrhQpZOx8u" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+=======
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "PavloKordunov"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/PavloKordunov/projecto-de-softservo.git",
+    "accountId": "6d8b8484-3254-4384-9756-bdb96500fdc7"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 3
+}]]></component>
+  <component name="ProjectId" id="2oWEtYBXR3HBEvolQryH1xLlKLN" />
+>>>>>>> Stashed changes
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -1965,15 +2030,21 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
+<<<<<<< Updated upstream
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/home/notvoltyyy/university/softserve-project",
+=======
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/home/pavlo/Documents/GitHub/projecto-de-softservo/frontend/src",
+>>>>>>> Stashed changes
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "vcs.Git",
+<<<<<<< Updated upstream
     "ts.external.directory.path": "/snap/intellij-idea-ultimate/543/plugins/javascript-plugin/jsLanguageServicesImpl/external",
     "vue.rearranger.settings.migration": "true"
   }
@@ -1988,12 +2059,23 @@
       <set>
         <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23726.103" />
         <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23726.103" />
+=======
+    "ts.external.directory.path": "/snap/webstorm/413/plugins/javascript-plugin/jsLanguageServicesImpl/external",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-WS-242.23726.96" />
+>>>>>>> Stashed changes
       </set>
     </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
+<<<<<<< Updated upstream
       <changelist id="458cb7ad-1dd8-4281-84f3-8421d5a4e5ab" name="Changes" comment="" />
       <created>1730478960857</created>
       <option name="number" value="Default" />
@@ -2007,12 +2089,21 @@
       <workItem from="1730714620544" duration="46000" />
       <workItem from="1730714685407" duration="2568000" />
       <workItem from="1730909085763" duration="1170000" />
+=======
+      <changelist id="9bc57282-2277-4d25-953c-77bdda2ad58b" name="Changes" comment="" />
+      <created>1730977146589</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1730977146589</updated>
+      <workItem from="1730977147670" duration="355000" />
+>>>>>>> Stashed changes
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+<<<<<<< Updated upstream
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
@@ -2028,4 +2119,6 @@
     <MESSAGE value="initial commit" />
     <option name="LAST_COMMIT_MESSAGE" value="initial commit" />
   </component>
+=======
+>>>>>>> Stashed changes
 </project>

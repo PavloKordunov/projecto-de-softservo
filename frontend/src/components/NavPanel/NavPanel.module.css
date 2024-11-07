@@ -1,0 +1,73 @@
+.panelList{
+    background-color: #1E1F20;
+    width: 250px;
+    border-radius: 21px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 13px 18px 0 13px;
+    margin-bottom: 26px;
+}
+
+.panelEl{
+    width: 248px;
+    height: 61px;
+    background-color: #262D34;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 13px;
+}
+
+.panelElLink{
+    display: flex;
+        flex-direction: row;
+        align-items: center;
+}
+
+.svgContainer{
+    margin: 6px 12px;
+    background-color: #2C353D;
+    border-radius: 8px;
+    width: 37px;
+    height: 37px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.panelElText{
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.panelElSubtext{
+    color: #97989D;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.subNumberContainer{
+    margin-left: 5px;
+    width: 29px;
+    height: 27px;
+    background-color: #FF6934;
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.subNumber{
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.panelElSubs{
+    display: flex;
+    align-items: center;
+}

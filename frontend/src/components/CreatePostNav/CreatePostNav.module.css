@@ -1,0 +1,43 @@
+.createPostNav{
+    width: 994px;
+    height: 63px;
+    display: flex;
+    padding: 26px;
+    background-color: #1E1F20;
+    border-radius: 21px;
+    align-items: center;
+    gap: 26px;
+    margin-bottom: 26px;
+}
+
+.createPostNavInput{
+    background-color: #2C353D;
+    width: 675px;
+    height: 30px;
+    border-radius: 8px;
+    border: none;
+    padding: 16px;
+}
+
+.createPostNavInput::placeholder{
+    color: #858EAD;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.createPostNavInput:active, :hover, :focus {
+    outline: 0;
+    outline-offset: 0;
+}
+
+.createPostNavButton{
+    width: 180px;
+    height: 60px;
+    background-color: #FF4155;
+    border-radius: 8px;
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+}

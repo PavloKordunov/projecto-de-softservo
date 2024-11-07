@@ -1,0 +1,26 @@
+.pinnedGroupItemImgContainer{
+    height: 42px;
+    width: 42px;
+    background-color: #fff;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pinnedGroupItemContainer{
+    display: flex;
+    gap: 13px;
+}
+
+.pinnedGroupItemText{
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.pinnedGroupItemSubtext{
+    color: #97989D;
+    font-size: 12px;
+    font-weight: 400;
+}
