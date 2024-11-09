@@ -1,0 +1,9 @@
+.layoutContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.sidePanel{
+    margin-top: 18px;
+    margin-left: 49px;
+}
