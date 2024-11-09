@@ -2,11 +2,11 @@ import css from "../NavBar/NavBar.module.css";
 import FlipImage from "../../img/person.png";
 import Icon from "../../img/sprite.svg";
 
-const NavBarDropMenu = ({isShow, handleCloseModal}) => {
+const NavBarDropMenu = ({isShowMenu, handleCloseMenu }) => {
     return (
-        isShow && (
+        isShowMenu && (
             <div className={css.NavBarFlipWrapper}
-                 onClick={handleCloseModal}>
+             onClick={handleCloseMenu}>
                 <div className={css.NavBarFlipContainer}>
                     <a className={css.NavBarFlipLink}>
                         <img src={FlipImage} alt='person' width='53' height='53'/>
@@ -37,7 +37,8 @@ const NavBarDropMenu = ({isShow, handleCloseModal}) => {
                         <p className={css.NavBarFlipIconText}>Log Out</p>
                     </div>
                 </div>
-            </div>)
+            </div>
+        )
 )
 }
 

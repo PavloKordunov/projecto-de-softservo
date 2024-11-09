@@ -7,17 +7,15 @@ import NavBarDropMenu from "../NavBarDropMenu/NavBarDropMenu";
 
 const NavBar = () => {
 
-    const [isShow, setIsShow] = useState(false)
+    const [isShowMenu, setIsShowMenu] = useState(false);
 
-    const handleShow = (e) => {
-        e.preventDefault()
-        setIsShow(!isShow)
-
+    const handleShowMenu = () => {
+        setIsShowMenu(!isShowMenu);
     }
 
-    const handleCloseModal = () => {
-        setIsShow(false);
-    };
+    const handleCloseMenu = () => {
+        setIsShowMenu(false);
+    }
 
     return (
         <div className={css.NavBarContainer}>
@@ -61,7 +59,7 @@ const NavBar = () => {
                 </li>
             </ul>
 
-            <a onClick={handleShow} href="" className={css.NavBarUserProfileContainer}>
+            <a onClick={handleShowMenu} className={css.NavBarUserProfileContainer}>
                 <div className={css.NavBarUserImageContainer}>
                     <img src={Image} alt="" width='40' height='43'/>
                 </div>
@@ -70,7 +68,7 @@ const NavBar = () => {
                 <use href={`${Icon}#iconArrowDown`} />
                 </svg>
             </a>
-            <NavBarDropMenu isShow={isShow} handleClose={handleCloseModal} />
+            <NavBarDropMenu isShowMenu={isShowMenu} handleCloseMenu={handleShowMenu}/>
         </div>
     )
 }
