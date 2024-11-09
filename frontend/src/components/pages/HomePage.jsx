@@ -10,7 +10,6 @@ const HomePage = () => {
 
     const handleSetTitle = (titleText) => {
         setTitleText(titleText);
-        console.log(titleText)
     }
 
     const handleCloseModal = () => {
@@ -24,7 +23,7 @@ const HomePage = () => {
                 <Post />
             </div>
 
-                <CreatePostModal titleText = {titleText} isShow={isShow} handleCloseModal={handleCloseModal} />
+            <CreatePostModal titleText = {titleText} isShow={isShow} handleCloseModal={handleCloseModal} />
         </div>
     );
 };

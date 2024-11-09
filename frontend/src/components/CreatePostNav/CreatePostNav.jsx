@@ -7,8 +7,9 @@ const CreatePostNav = ({setIsShow, handleSetTitle}) => {
     const [titleText, setTitleText] = useState("");
 
     const handleChange = (e) => {
-        setTitleText(e.target.value);
-        handleSetTitle(titleText)
+        const nextValue = e.target.value;
+        setTitleText(nextValue);
+        handleSetTitle(nextValue);
     }
 
     const handleClick = (e) => {

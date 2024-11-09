@@ -1,20 +1,29 @@
 import css from './CreatePostModal.module.css';
 import Icon from '../../img/sprite.svg';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 const CreatePostModal = ({ isShow, handleCloseModal, titleText }) => {
 
     const [showText, setShowText] = useState(false);
     const [showVideo, setShowVideo] = useState(false);
+    const [titleTextModal, setTitleTextModal] = useState('');
 
     const handleShowText = () => {
-            setShowVideo(false);
-            setShowText(true)
+        setShowVideo(false);
+        setShowText(true)
+    }
+
+    useEffect(() => {
+        setTitleTextModal(titleText);
+    }, [titleText])
+
+    const handleChange = (e) => {
+        setTitleTextModal(e.target.value);
     }
 
     const handleShowVideo = () => {
-            setShowText(false)
-            setShowVideo(true);
+        setShowText(false)
+        setShowVideo(true);
     }
 
     return (
@@ -53,7 +62,7 @@ const CreatePostModal = ({ isShow, handleCloseModal, titleText }) => {
                             </a>
                         </ul>
 
-                        <input value={titleText} className={css.createPostInputTitle} type="text" placeholder="Title" />
+                        <input onChange={handleChange} value={titleTextModal} className={css.createPostInputTitle} type="text" placeholder="Title" />
 
                         <ul className={css.createPostTagContainer}>
                             <a  className={css.createPostTag}>
@@ -63,12 +72,12 @@ const CreatePostModal = ({ isShow, handleCloseModal, titleText }) => {
 
                         {showText && (<div>
 
-                        <textarea className={css.createPostInput} placeholder="Enter text..."></textarea>
+                            <textarea className={css.createPostInput} placeholder="Enter text..."></textarea>
 
-                        <div className={css.createPostBtnContainer}>
-                            <button className={css.createPostBlackBtn} type='button' onClick={handleCloseModal}>Скасувати</button>
-                            <button className={css.createPostRedBtn} type='button'>Створити пост</button>
-                        </div>
+                            <div className={css.createPostBtnContainer}>
+                                <button className={css.createPostBlackBtn} type='button' onClick={handleCloseModal}>Скасувати</button>
+                                <button className={css.createPostRedBtn} type='button'>Створити пост</button>
+                            </div>
                         </div>)}
 
                         {showVideo && (
