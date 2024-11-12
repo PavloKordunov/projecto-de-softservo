@@ -1,0 +1,228 @@
+.createPostContainerWrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+}
+
+.createPostContainer {
+    position: relative;
+    z-index: 100;
+    background-color: #1E1F20;
+    width: 790px;
+    height: 700px;
+    padding: 25px 25px 25px 48px;
+    border-radius: 31px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.createPostCloseButtonContainer{
+    fill: #E4E3E3;
+}
+
+.createPostTitle{
+    font-size: 44px;
+    font-weight: 600;
+    color: #E4E3E3;
+}
+
+.createPostTitleContainer{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.createPostGroupContainer{
+    width: 145px;
+    height: 26px;
+    background-color: #2C353D;
+    border-radius: 31px;
+    gap: 10px;
+    padding: 11px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.createPostGroupText{
+    font-size: 18px;
+    font-weight: 600;
+    color: #E4E3E3;
+}
+
+.createPostTypeContainer{
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 16px;
+}
+
+.createPostType{
+    padding: 8px 26px;
+    background-color: #2C353D;
+    border-radius: 31px;
+}
+
+.createPostTypeText{
+    font-size: 18px;
+    font-weight: 600;
+    color: #E4E3E3;
+}
+
+.createPostInputTitle{
+    background-color: #2C353D;
+    width: 589px;
+    height: 23px;
+    border-radius: 14px;
+    border: none;
+    padding: 14px 20px;
+    color: #E4E3E3;
+    font-size: 21px;
+    margin-bottom: 16px;
+}
+
+.createPostInputTitle::placeholder{
+    color: #858EAD;
+    font-size: 21px;
+    font-weight: 500;
+}
+
+.createPostInputTitle:active, :hover, :focus {
+    outline: 0;
+    outline-offset: 0;
+}
+
+.createPostTagContainer{
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 16px;
+}
+
+.createPostTag{
+    display: block;
+    padding: 5px 17px;
+    background-color: #2C353D;
+    border-radius: 31px;
+}
+
+.createPostTagText{
+    font-size: 14px;
+    font-weight: 600;
+    color: #858EAD;
+}
+
+.createPostInput {
+    background-color: #2C353D;
+    width: 589px;
+    height: 235px;
+    border-radius: 14px;
+    border: none;
+    padding: 14px 20px;
+    color: #E4E3E3;
+    font-size: 21px;
+    margin-bottom: 16px;
+    resize: none;
+    text-align: left;
+    overflow-y: auto;
+}
+
+.createPostInput::placeholder {
+    color: #858EAD;
+    font-size: 21px;
+    font-weight: 500;
+    text-align: left;
+    font-family: "Source Sans 3", sans-serif;
+}
+
+.createPostInput:active,
+.createPostInput:hover,
+.createPostInput:focus {
+    outline: none;
+}
+
+.createPostBtnContainer{
+    display: flex;
+    gap: 28px;
+    justify-content: right;
+    margin-right: 160px;
+}
+
+.createPostBlackBtn{
+    width: 148px;
+    height: 59px;
+    background-color: #2C353D;
+    border-radius: 14px;
+    text-align: center;
+    color: #E4E3E3;
+    font-size: 19px;
+    font-weight: 600;
+    border: none;
+}
+
+.createPostRedBtn {
+    width: 193px;
+    height: 59px;
+    background-color: #FF4155;
+    border-radius: 14px;
+    text-align: center;
+    color: #E4E3E3;
+    font-size: 19px;
+    font-weight: 600;
+    border: none;
+}
+
+.dragDropArea {
+    background-color: #2C353D;
+    width: 629px;
+    height: 235px;
+    border-radius: 14px;
+    border: 2px dashed #858EAD;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #858EAD;
+    font-size: 21px;
+    margin-bottom: 16px;
+    cursor: pointer;
+}
+
+.dragDropText {
+    color: #858EAD;
+    font-size: 21px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.uploadButton {
+    background-color: #2C353D;
+    color: #E4E3E3;
+    border: 1px solid #858EAD;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.uploadButton:hover {
+    background-color: #3A4149;
+}

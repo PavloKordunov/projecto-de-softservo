@@ -11,7 +11,7 @@
     font-size: 34px;
     font-weight: bold;
     margin-left: 64px;
-    margin-right: 318px;
+    margin-right: 243px;
 }
 
 .NavBarIconsList{
@@ -88,4 +88,85 @@
     font-size: 21px;
     font-weight: bold;
     margin-right: 20px;
+}
+
+.NavBarFlipWrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+}
+
+.NavBarFlipContainer{
+    position: absolute;
+    width: 248px;
+    padding: 16px;
+    border-radius: 11px;
+    background-color: #1E1F20;
+    top: 100px;
+    right: 37px;
+    z-index: 1000;
+}
+
+.NavBarFlipLink{
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.NavBarFlipTextContainer{
+    display: flex;
+    flex-direction: column;
+}
+
+.NavBarFlipText{
+    color: #E4E3E3;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.NavBarFlipNickName{
+    color: #97989D;
+    font-size: 13px;
+}
+
+.NavBarFlipIcon{
+    fill: #E4E3E3;
+    margin-left: 6px;
+    margin-right: 18px;
+}
+
+.NavBarFlipIconContainer{
+    display: flex;
+    align-items: center;
+    margin-bottom: 26px;
+}
+
+.NavBarFlipIconText{
+    color: #E4E3E3;
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 26px;
+}
+
+.NavChangeThemeSwitcher{
+    width: 58px;
+    height: 31px;
+    border-radius: 32px;
+    background-color: #2C353D;
+}
+
+.NavChangeThemeCircle{
+    background-color: #E4E3E3;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    margin-top: 3px;
+    margin-left: 28px;
 }

@@ -1,13 +1,32 @@
 import Icon from '../../img/sprite.svg'
 import Image from '../../img/NavPerson.png'
 import css from './NavBar.module.css'
+import {useState} from "react";
+import NavBarDropMenu from "../NavBarDropMenu/NavBarDropMenu";
+
 
 const NavBar = () => {
+
+    const [isShowMenu, setIsShowMenu] = useState(false);
+
+    const handleShowMenu = () => {
+        setIsShowMenu(!isShowMenu);
+    }
+
+    const handleCloseMenu = () => {
+        setIsShowMenu(false);
+    }
+
     return (
         <div className={css.NavBarContainer}>
             <a href="/" className={css.NavBarLogo}>Logo</a>
 
             <ul className={css.NavBarIconsList}>
+                <li className={css.NavBarIconEl}>
+                    <svg width="26" height="26">
+                        <use href={`${Icon}#CalendarIcon`}></use>
+                    </svg>
+                </li>
                 <li className={css.NavBarIconEl}>
                     <svg width="26" height="26">
                         <use href={`${Icon}#iconHome`}></use>
@@ -40,15 +59,16 @@ const NavBar = () => {
                 </li>
             </ul>
 
-            <a href="/about" className={css.NavBarUserProfileContainer}>
+            <a onClick={handleShowMenu} className={css.NavBarUserProfileContainer}>
                 <div className={css.NavBarUserImageContainer}>
-                    <img src={Image} alt="about" width='40' height='43'/>
+                    <img src={Image} alt="" width='40' height='43'/>
                 </div>
                 <p className={css.NavBarName}>User</p>
                 <svg width="16" height="11">
                 <use href={`${Icon}#iconArrowDown`} />
                 </svg>
             </a>
+            <NavBarDropMenu isShowMenu={isShowMenu} handleCloseMenu={handleShowMenu}/>
         </div>
     )
 }

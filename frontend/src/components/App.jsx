@@ -1,15 +1,18 @@
 import css from "./App.module.css";
-
-import HomePage from "./pages/HomePge";
-import NavBar from "./NavBar/NavBar";
+import { Routes, Route } from "react-router-dom";
+import Loyout from "./Loyout/Loyout";
+import HomePage from "./pages/HomePage";
 
 function App() {
-  return (
-    <div className={css.app}>
-        <NavBar />
-        <HomePage/>
-    </div>
-  );
+
+    return (
+        <Routes>
+            <Route path="/" element={<Loyout />} >
+                <Route index element={<HomePage />} />
+            </Route>
+        </Routes>
+
+    );
 }
 
 export default App;
