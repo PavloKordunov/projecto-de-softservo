@@ -1,6 +1,7 @@
 import css from "../NavBar/NavBar.module.css";
 import FlipImage from "../../img/person.png";
 import Icon from "../../img/sprite.svg";
+import {Link} from "react-router-dom";
 
 const NavBarDropMenu = ({isShowMenu, handleCloseMenu }) => {
     return (
@@ -8,13 +9,13 @@ const NavBarDropMenu = ({isShowMenu, handleCloseMenu }) => {
             <div className={css.NavBarFlipWrapper}
              onClick={handleCloseMenu}>
                 <div className={css.NavBarFlipContainer}>
-                    <a className={css.NavBarFlipLink}>
+                    <Link to='userProfile' className={css.NavBarFlipLink}>
                         <img src={FlipImage} alt='person' width='53' height='53'/>
                         <div className={css.NavBarFlipTextContainer}>
                             <p className={css.NavBarFlipText}>View Profile</p>
                             <p className={css.NavBarFlipNickName}>@Nickname</p>
                         </div>
-                    </a>
+                    </Link>
                     <div className={css.NavBarFlipIconContainer}>
                         <svg className={css.NavBarFlipIcon} width='34' height='34'>
                             <use href={`${Icon}#NavThemeIcon`}></use>
