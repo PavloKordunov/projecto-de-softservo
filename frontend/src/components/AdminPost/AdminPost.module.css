@@ -1,0 +1,167 @@
+.adminPostContainer{
+    margin-left: 26px;
+    margin-top: 18px;
+    width: 986px;
+    background-color: #1E1F20;
+    border-radius: 31px;
+    padding: 30px;
+}
+
+.adminPostHeadContainer{
+    display: flex;
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+.adminPostImg{
+    margin-bottom: 26px;
+}
+
+.adminPostTrailer{
+    background-color: #FF4155;
+    width: 237px;
+    height: 39px;
+    border-radius: 31px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.adminPostTrailerText{
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.adminPostTagList{
+    display: flex;
+    flex-direction: row;
+    gap: 13px;
+    margin-bottom: 16px;
+}
+
+.adminPostTagEl{
+    width: 70px;
+    height: 32px;
+    background-color: #2C353D;
+    border-radius: 26px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.adminPostTagElText{
+    color: #C5D0E6;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.adminPostUserRatingList{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 16px;
+}
+
+.adminPostUserRatingIcon{
+    fill: #FFFFFF;
+}
+
+.adminPostUserRatingEl svg:not(:last-child){
+    fill: #FFD700;
+}
+
+.adminPostUserRatingText{
+    color: #C5D0E6;
+    font-size: 13px;
+}
+
+.adminPostGroup{
+    background-color: #2C353D;
+    width: 237px;
+    height: 39px;
+    border-radius: 31px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.adminPostGroupText{
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.adminPostTitleContainer{
+    display: flex;
+    align-items: center;
+    margin-bottom: 33px;
+}
+
+.adminPostTitleText{
+    color: #FFFFFF;
+    font-size: 36px;
+    font-weight: 800;
+    margin-right: 15px;
+}
+
+.adminPostAgeLimitContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    background-color: #FF4155;
+    border-radius: 9px;
+    margin-right: 410px;
+}
+
+.adminPostAgeLimitText{
+    color: #FFFFFF;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.adminPostTitleCloseIcon{
+    fill: #FFFFFF;
+}
+
+.adminPostInfoContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    height: 150px;
+    background-color: #2C353D;
+    padding: 17px;
+    width: fit-content;
+    border-radius: 14px;
+    margin-bottom: 25px;
+}
+
+.adminPostInfoType{
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.adminPostInfoResult{
+    color: #fff;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.adminPostDescriptionContainer{
+    height: fit-content;
+    background-color: #2C353D;
+    padding: 17px;
+    width: 660px;
+    border-radius: 14px;
+}
+
+.adminPostDescriptionText{
+    color: #fff;
+    font-size: 18px;
+    font-weight: 500;
+}

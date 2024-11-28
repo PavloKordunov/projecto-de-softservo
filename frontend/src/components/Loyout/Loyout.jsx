@@ -7,7 +7,7 @@ import css from "./Loyout.module.css";
 
 const Loyout = () => {
     return (
-        <div>
+        <div >
         <NavBar />
         <div className={css.layoutContainer}>
             <div className={css.sidePanel}>

@@ -4,7 +4,6 @@ import css from './NavBar.module.css'
 import {useState} from "react";
 import NavBarDropMenu from "../NavBarDropMenu/NavBarDropMenu";
 
-
 const NavBar = () => {
 
     const [isShowMenu, setIsShowMenu] = useState(false);

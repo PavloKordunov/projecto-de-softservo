@@ -2,9 +2,13 @@ import css from "./Post.module.css";
 import Image from "../../img/image.png";
 import Icon from "../../img/sprite.svg";
 import ImagePost from "../../img/person.png";
+import {Link} from "react-router-dom";
+
 
 const Post = () => {
     return (
+        <Link to='adminPost'>
+
         <div className={ css.postContainer}>
             <img src={Image} alt="film" width='206' height='206' />
             <div>
@@ -40,6 +44,7 @@ const Post = () => {
                 </div>
             </div>
         </div>
+        </Link>
     )
 }
 

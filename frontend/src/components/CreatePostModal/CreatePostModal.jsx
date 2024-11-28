@@ -41,7 +41,7 @@ const CreatePostModal = ({ isShow, handleCloseModal, titleText }) => {
                             <h2 className={css.createPostTitle}>Create a post</h2>
                             <a className={css.closeButton} onClick={handleCloseModal}>
                                 <svg width="32" height="32" className={css.createPostCloseButtonContainer}>
-                                    <use href={`${Icon}#postModalCloseBtnIcon`} />
+                                    <use href={`${Icon}#closeBtnIcon`} />
                                 </svg>
                             </a>
                         </div>
