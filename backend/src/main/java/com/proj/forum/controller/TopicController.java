@@ -1,27 +1,27 @@
-//package com.proj.forum.controller;
-//
-//
-//import com.proj.forum.dto.TopicDto;
-//import com.proj.forum.service.TopicService;
-//import lombok.extern.slf4j.Slf4j;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.web.bind.annotation.*;
-//
-//@Slf4j
-//@RestController
-//@RequestMapping("/api/topics")
-//@CrossOrigin("http://localhost:3000")
-//public class TopicController {
-////
-////    private TopicService topicService;
-////
-////    @Autowired
-////    public TopicController(TopicService topicService) {
-////        this.topicService = topicService;
-////    }
-//
-//    @PostMapping
-//    public void createTopic(@RequestBody TopicDto topic) {
-//        log.info("Create topic: {}", topic);
-//    }
-//}
+package com.proj.forum.controller;
+
+import com.proj.forum.dto.TopicDto;
+import com.proj.forum.service.TopicService;
+import com.proj.forum.service.impl.TopicServiceImpl;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@Slf4j
+@RestController
+@RequestMapping("/api/topics")
+@CrossOrigin("http://localhost:3000")
+public class TopicController {
+
+    private TopicService topicService;
+
+    @Autowired
+    public TopicController(TopicService topicService) {
+        this.topicService = topicService;
+    }
+
+    @PostMapping
+    public void createTopic(@RequestBody TopicDto topic) {
+        log.info("Create topic: {}", topic);
+    }
+}

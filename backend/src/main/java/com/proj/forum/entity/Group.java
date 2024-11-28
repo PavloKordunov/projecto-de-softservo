@@ -1,6 +1,5 @@
 package com.proj.forum.entity;
 
-
 import com.proj.forum.dto.UserDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,31 +10,22 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 import java.util.UUID;
 
-import com.proj.forum.entity.User;
-
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-@Table(name ="topic")
-public class Topic {
+@Table(name ="user_group")
+public class Group {
 
     @Id
     @GeneratedValue
     private UUID id;
 
-//    @ManyToOne
-//    private User author;
     private String title;
     private String description;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "topic_tag",
-//            joinColumns = @JoinColumn(name = "topic_id"),
-//            inverseJoinColumns = @JoinColumn(name = "tag_id")
-//    )
-//    private List<Tag> tags;
-    private String image;
+//    @OneToMany//(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true) //is there a need of args in ()?
+//    private List<Topic> topics;
+//    private String image;
 }
