@@ -1,8 +1,9 @@
 import css from "./HomePage.module.css";
 import CreatePostNav from "../CreatePostNav/CreatePostNav";
 import Post from "../Post/Post";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CreatePostModal from "../CreatePostModal/CreatePostModal";
+import {testFetch} from "../test";
 
 const HomePage = () => {
     const [isShow, setIsShow] = useState(false);
@@ -15,6 +16,10 @@ const HomePage = () => {
     const handleCloseModal = () => {
         setIsShow(false);
     };
+
+    useEffect(() => {
+        testFetch();
+    }, []);
 
     return (
         <div className={`${css.homePageContainer} ${isShow ? css.dimmed : ""}`}>

@@ -4,9 +4,12 @@ import Icon from '../../img/sprite.svg'
 import AdminPostCast from "./AdminPostCast";
 import AdminPostRating from "./AdminPostRating";
 import AdminPostComments from "./AdminPostComments";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 const AdminPost = () => {
+
+    const navigate = useNavigate()
+
     return (
         <div className={css.adminPostContainer}>
         <div className={css.adminPostHeadContainer}>
@@ -62,11 +65,13 @@ const AdminPost = () => {
                     <div className={css.adminPostAgeLimitContainer}>
                         <p className={css.adminPostAgeLimitText}>18+</p>
                     </div>
-                    <Link to={'/'}>
+                    <a onClick={() => {
+            navigate('/');
+                    }}>
                     <svg className={css.adminPostTitleCloseIcon} width="32" height="32">
                         <use href={`${Icon}#closeBtnIcon`}/>
                     </svg>
-                    </Link>
+                    </a>
                 </div>
 
                 <ul className={css.adminPostInfoContainer}>

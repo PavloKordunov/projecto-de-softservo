@@ -13,19 +13,19 @@ import AuthWrapper from "./Auth/AuthWrapper";
 function App() {
 
     return (
-        <AuthWrapper>
+
         <Routes>
             <Route path="/" element={<Loyout />} >
                 <Route index element={<HomePage />} />
-                {/* <Route index element={<LoginPage />} />
+                 <Route index element={<LoginPage />} />
                 <Route path="register" element={<Register/>}/>
                 <Route path="login" element={<Login/>}/>
-                <Route path="/callback" element={<Callback />} /> */}
-                <Route path='adminPost' element={<AdminPost />} />
+                <Route path="/callback" element={<Callback />} />
+                <Route path='/adminPost' element={<AdminPost />} />
                 <Route path='userProfile' element={<Profile/>}/>
             </Route>
         </Routes>
-        </AuthWrapper>
+
     );
 }
 

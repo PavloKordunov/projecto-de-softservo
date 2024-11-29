@@ -11,36 +11,21 @@ const Register = () => {
         e.preventDefault();
         setLoading(true);
 
-        const user = {
-            profile: {
-                firstName: username.split(' ')[0],
-                lastName: username.split(' ')[1] || '',
-                email,
-                login: email,
-            },
-            credentials: {
-                password: { value: password },
-            },
-        };
-
         try {
-            const response = await fetch('https://dev-37537562.okta.com/api/v1/users?activate=true', {
+            const response = await fetch('http://localhost:8080/api/register.', {
                 method: 'POST',
-                headers: {
-                    'Authorization': `00f34g-4rIFKCBMYhTZj1lRJLJVWYu0g-o8kOT5Nua`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(user),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, email, password }),
             });
 
             if (response.ok) {
-                alert('Registration successful! Please check your email for verification.');
+                alert('Registration successful! Check your email for verification.');
                 setUsername('');
                 setEmail('');
                 setPassword('');
             } else {
                 const errorData = await response.json();
-                setError(errorData.errorSummary || 'An error occurred.');
+                setError(errorData.message || 'An error occurred.');
             }
         } catch (err) {
             console.error(err);
