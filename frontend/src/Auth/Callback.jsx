@@ -1,28 +1,29 @@
 import React, { useEffect } from 'react';
-import { OktaAuth } from '@okta/okta-auth-js';
-
-const oktaAuth = new OktaAuth({
-  issuer: 'https://dev-37537562.okta.com/oauth2/default',
-  clientId: 'PvjDd2ZdD66T8jj9KcSsGGfFxqx2WAke',
-  redirectUri: window.location.origin + '/callback',
-});
+import { useNavigate } from 'react-router-dom';
 
 const Callback = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
-    async function handleAuth() {
+    async function handleCallback() {
       try {
-        const tokens = await oktaAuth.token.parseFromUrl();
-        oktaAuth.tokenManager.setTokens(tokens);
-        window.location.replace('/');
+        const response = await fetch('http://localhost:8080/login/callback', { // Backend login callback
+          credentials: 'include',
+        });
+
+        if (response.ok) {
+          navigate('/');
+        } else {
+          console.error('Callback failed');
+        }
       } catch (err) {
-        console.error('Error handling auth callback', err);
+        console.error('Error during callback:', err);
       }
     }
-    handleAuth();
-  }, []);
+    handleCallback();
+  }, [navigate]);
 
   return <p>Loading...</p>;
 };
 
 export default Callback;
-

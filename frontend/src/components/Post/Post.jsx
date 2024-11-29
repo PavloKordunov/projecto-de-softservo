@@ -2,12 +2,17 @@ import css from "./Post.module.css";
 import Image from "../../img/image.png";
 import Icon from "../../img/sprite.svg";
 import ImagePost from "../../img/person.png";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 
 const Post = () => {
+
+    const navigate = useNavigate()
+
     return (
-        <Link to='adminPost'>
+        <a onClick={() => {
+            navigate('/adminPost');
+          }}>
 
         <div className={ css.postContainer}>
             <img src={Image} alt="film" width='206' height='206' />
@@ -44,7 +49,7 @@ const Post = () => {
                 </div>
             </div>
         </div>
-        </Link>
+        </a>
     )
 }
 
