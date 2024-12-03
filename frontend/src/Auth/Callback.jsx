@@ -7,7 +7,7 @@ const Callback = () => {
   useEffect(() => {
     async function handleCallback() {
       try {
-        const response = await fetch('http://localhost:8080/login/callback', { // Backend login callback
+        const response = await fetch('http://localhost:8080/login/callback', {
           credentials: 'include',
         });
 

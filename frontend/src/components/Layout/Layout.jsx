@@ -3,12 +3,11 @@ import NavPanel from '../NavPanel/NavPanel';
 import { Outlet } from "react-router-dom";
 import PopularTags from "../PopularTags/PopularTags";
 import PinnedGroup from "../PinnedGroup/PinnedGroup";
-import css from "./Loyout.module.css";
+import css from "./Layout.module.css";
 
-const Loyout = () => {
+const Layout = () => {
     return (
         <div >
-        <NavBar />
         <div className={css.layoutContainer}>
             <div className={css.sidePanel}>
                 <NavPanel />
@@ -21,4 +20,4 @@ const Loyout = () => {
     );
 };
 
-export default Loyout;
+export default Layout;

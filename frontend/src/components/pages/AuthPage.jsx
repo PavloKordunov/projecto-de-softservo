@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const LoginPage = () => (
+const AuthPage = () => (
     <div style={{ textAlign: 'center', marginTop: '50px' }}>
         <h1>Welcome to My Forum</h1>
         <Link
@@ -30,4 +30,4 @@ const LoginPage = () => (
     </div>
 );
 
-export default LoginPage;
+export default AuthPage;

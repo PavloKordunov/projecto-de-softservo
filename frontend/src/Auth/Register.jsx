@@ -1,77 +1,47 @@
-import React, { useState } from 'react';
-import {useOktaAuth} from "@okta/okta-react";
-import {Redirect} from "react-router-dom";
+import { useEffect, useRef } from 'react';
+import OktaSignIn from '@okta/okta-signin-widget';
+import '@okta/okta-signin-widget/dist/css/okta-sign-in.min.css';
+import { oktaConfig } from "../lib/oktaConfig";
 
+const Register = ({ onSuccess, onError }) => {
+    const widgetRef = useRef();
 
-const Register = () => {
-    const { authState } = useOktaAuth();
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
-
-    const handleRegister = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-
-        try {
-            const response = await fetch('http://localhost:8080/api/register.', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, email, password }),
-            });
-
-            if (response.ok) {
-                alert('Registration successful! Check your email for verification.');
-                setUsername('');
-                setEmail('');
-                setPassword('');
-            } else {
-                const errorData = await response.json();
-                setError(errorData.message || 'An error occurred.');
-            }
-        } catch (err) {
-            console.error(err);
-            setError('Registration failed. Please try again.');
-        } finally {
-            setLoading(false);
+    useEffect(() => {
+        if (!widgetRef.current) {
+            return false;
         }
-    };
-    if (authState?.accessToken?.claims.userType === undefined) {    return <Redirect to='/userProfile'/>}
+
+        const widget = new OktaSignIn({
+            ...oktaConfig,
+            features: {
+                registration: true, // Увімкнути функцію реєстрації
+            },
+            registration: {
+                parseSchema: (schema, onSuccess, onFailure) => {
+                    // Можна кастомізувати форму реєстрації
+                    onSuccess(schema);
+                },
+                preSubmit: (postData, onSuccess, onFailure) => {
+                    // Використовується для перевірки даних перед відправкою
+                    onSuccess(postData);
+                },
+                postSubmit: (response, onSuccess, onFailure) => {
+                    // Використовується для обробки після відправки
+                    onSuccess(response);
+                },
+            },
+        });
+
+        widget.showSignInAndRedirect({
+            el: widgetRef.current,
+        }).then(onSuccess).catch(onError);
+
+        return () => widget.remove();
+    }, [onSuccess, onError]);
+
     return (
-        <div style={{ textAlign: 'center', marginTop: '50px' }}>
-            <h1>Register</h1>
-            <form onSubmit={handleRegister}>
-                <input
-                    type="text"
-                    placeholder="Full Name"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    style={{ padding: '10px', marginBottom: '10px' }}
-                />
-                <br />
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    style={{ padding: '10px', marginBottom: '10px' }}
-                />
-                <br />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    style={{ padding: '10px', marginBottom: '10px' }}
-                />
-                <br />
-                <button type="submit" style={{ padding: '10px 20px' }} disabled={loading}>
-                    {loading ? 'Registering...' : 'Register'}
-                </button>
-            </form>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+        <div className='container mt-5 mb-5'>
+            <div ref={widgetRef}></div>
         </div>
     );
 };
