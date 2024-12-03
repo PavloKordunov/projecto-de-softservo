@@ -6,6 +6,8 @@ import com.proj.forum.entity.Topic;
 import com.proj.forum.service.TopicService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -40,7 +42,7 @@ public class TopicController {
 //    }
 
     @GetMapping
-    public List<Topic> getAllTopics() {
+    public ResponseEntity<List<Topic>> getAllTopics() {
         // Mock response data
         List<Topic> topic = new ArrayList<>();
 
@@ -56,6 +58,6 @@ public class TopicController {
                 .description("Description for topic Home Alone")
                 .build());
 
-        return topic;
+        return ResponseEntity.ok(topic);
     };
 }
