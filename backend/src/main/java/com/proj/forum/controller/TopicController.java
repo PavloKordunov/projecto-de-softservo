@@ -1,13 +1,16 @@
 package com.proj.forum.controller;
 
 import com.proj.forum.dto.TopicDto;
+import com.proj.forum.entity.Group;
 import com.proj.forum.entity.Topic;
 import com.proj.forum.service.TopicService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -30,9 +33,29 @@ public class TopicController {
 
     }
 
+//    @GetMapping
+//    public List<Topic> getAllTopics() {
+//        log.info("Fetching all topics");
+//        return topicService.getAllTopics();
+//    }
+
     @GetMapping
     public List<Topic> getAllTopics() {
-        log.info("Fetching all topics");
-        return topicService.getAllTopics();
-    }
+        // Mock response data
+        List<Topic> topic = new ArrayList<>();
+
+        topic.add(Topic.builder()
+                .id(UUID.randomUUID())
+                .title("Topic Terrifier 3")
+                .description("Description for topic Terrifier 3")
+                .build());
+
+        topic.add(Topic.builder()
+                .id(UUID.randomUUID())
+                .title("Topic Home Alone")
+                .description("Description for topic Home Alone")
+                .build());
+
+        return topic;
+    };
 }
