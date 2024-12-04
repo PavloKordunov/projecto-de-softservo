@@ -23,6 +23,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupDto createGroup(GroupDto groupDto) {
+        log.info("Creating group in service");
         Group group = getGroup(groupDto);
         Group groupFromDB = groupRepository.save(group);
         return getGroupDto(groupFromDB);
@@ -58,6 +59,8 @@ public class GroupServiceImpl implements GroupService {
             log.error("Group is null");
             throw new NullPointerException();
         }
+        log.info("Creating group from groupDto");
+
         Group group = Group.builder()
                 .title(groupDto.title())
                 .description(groupDto.description() == null ? StringUtils.EMPTY : groupDto.description())
@@ -70,6 +73,7 @@ public class GroupServiceImpl implements GroupService {
             log.info("no group found");
             throw new EntityNotFoundException("no group found");
         }
+        log.info("Creating groupDto from group");
 
         return GroupDto.builder()
                 .id(group.getId())

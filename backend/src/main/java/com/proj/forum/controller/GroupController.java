@@ -18,28 +18,26 @@ public class GroupController {
     private final GroupService groupService;
 
     @Autowired
-    public GroupController(GroupService groupService) {this.groupService = groupService;}
+    public GroupController(GroupService groupService) {
+        this.groupService = groupService;
+    }
 
     @PostMapping
-    public GroupDto createGroups(@RequestBody GroupDto group)
-    {
-        log.info("Create group");
-        return groupService.createGroup(group);
+    public ResponseEntity<GroupDto> createGroup(@RequestBody GroupDto group) {
+        log.info("Create group in controller");
+        return ResponseEntity.ok(groupService.createGroup(group));
     }
 
     @GetMapping
-    public ResponseEntity<List<GroupDto>> getAllGroups()
-    {
+    public ResponseEntity<List<GroupDto>> getAllGroups() {
         log.info("Fetching all groups");
         List<GroupDto> groups = groupService.getAllGroups();
-        if (groups.isEmpty())
-        {
+        if (groups.isEmpty()) {
             log.info("No groups found");
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(groups);
     }
-
 
 
 }
