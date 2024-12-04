@@ -4,6 +4,7 @@ import com.proj.forum.dto.GroupDto;
 import com.proj.forum.service.GroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,10 +28,16 @@ public class GroupController {
     }
 
     @GetMapping
-    public List<GroupDto> getAllGroups()
+    public ResponseEntity<List<GroupDto>> getAllGroups()
     {
         log.info("Fetching all groups");
-        return groupService.getAllGroups();
+        List<GroupDto> groups = groupService.getAllGroups();
+        if (groups.isEmpty())
+        {
+            log.info("No groups found");
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(groups);
     }
 
 

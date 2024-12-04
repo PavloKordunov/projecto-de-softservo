@@ -1,24 +1,23 @@
 package com.proj.forum.entity;
 
 
-import com.proj.forum.dto.UserDto;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.UUID;
-
-import com.proj.forum.entity.User;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-@Table(name ="topic")
+@Table(name ="topics")
 public class Topic {
 
     @Id

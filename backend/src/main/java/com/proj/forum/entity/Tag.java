@@ -1,6 +1,9 @@
 package com.proj.forum.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Data
 @Builder
-@Table(name="tag")
+@Table(name="tags")
 public class Tag {
 
     @Id
