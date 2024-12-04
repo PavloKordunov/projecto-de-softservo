@@ -8,7 +8,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,12 +22,17 @@ public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
 
     @Override
+    public GroupDto createGroup(GroupDto groupDto) {
+        Group group = getGroup(groupDto);
+        Group groupFromDB = groupRepository.save(group);
+        return getGroupDto(groupFromDB);
+    }
+
+    @Override
     public List<GroupDto> getAllGroups(){
         List<Group> groupList = groupRepository.findAll();
         log.info("getAllGroups");
-
-
-//        // Mock response data
+        //        // Mock response data
 //        List<Group> group = new ArrayList<>();
 //
 //        group.add(Group.builder()
@@ -48,6 +52,19 @@ public class GroupServiceImpl implements GroupService {
                 .toList();
     }
 
+    private static Group getGroup(GroupDto groupDto) {
+        if(groupDto == null)
+        {
+            log.error("Group is null");
+            throw new NullPointerException();
+        }
+        Group group = Group.builder()
+                .title(groupDto.title())
+                .description(groupDto.description() == null ? StringUtils.EMPTY : groupDto.description())
+                .build();
+        return group;
+    }
+
     private static GroupDto getGroupDto(Group group) {
         if (group == null) {
             log.info("no group found");
@@ -59,8 +76,8 @@ public class GroupServiceImpl implements GroupService {
                 .title(group.getTitle())
                 .description(group.getDescription() == null ? StringUtils.EMPTY : group.getDescription())
                 .build();
-    }
+    };
 
-    ;
+
 
 }
