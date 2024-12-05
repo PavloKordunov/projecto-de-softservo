@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -27,6 +29,23 @@ public class GroupServiceImpl implements GroupService {
         Group group = getGroup(groupDto);
         Group groupFromDB = groupRepository.save(group);
         return getGroupDto(groupFromDB);
+    }
+
+    @Override
+    public GroupDto getGroup(UUID id) {
+        Optional<Group> group = groupRepository.findById(id);
+        if(group.isEmpty())
+        {
+            log.info("No group");
+            return null;
+        }
+
+        GroupDto groupDto = GroupDto.builder()
+                .id(group.get().getId())
+                .title(group.get().getTitle())
+                .description(group.get().getDescription() == null ? StringUtils.EMPTY : group.get().getDescription())
+                .build();
+        return groupDto;
     }
 
     @Override
@@ -61,11 +80,10 @@ public class GroupServiceImpl implements GroupService {
         }
         log.info("Creating group from groupDto");
 
-        Group group = Group.builder()
+        return Group.builder()
                 .title(groupDto.title())
                 .description(groupDto.description() == null ? StringUtils.EMPTY : groupDto.description())
                 .build();
-        return group;
     }
 
     private static GroupDto getGroupDto(Group group) {

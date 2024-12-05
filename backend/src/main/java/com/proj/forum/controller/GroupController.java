@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -39,5 +40,20 @@ public class GroupController {
         return ResponseEntity.ok(groups);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<GroupDto> getGroup(@PathVariable UUID id){
+        log.info("Fetch group");
+        if(id == null) {
+            log.info("No group found");
+            return ResponseEntity.noContent().build();
+        }
+        GroupDto groupDto = groupService.getGroup(id);
+        if(groupDto == null)
+        {
+            log.info("No group found");
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(groupDto);
+    }
 
 }
