@@ -40,7 +40,7 @@ public class GroupServiceImpl implements GroupService {
         }
 
         return GroupDto.builder()
-                .id(group.get().getId())
+                .id(id)
                 .title(group.get().getTitle())
                 .description(group.get().getDescription() == null ? StringUtils.EMPTY : group.get().getDescription())
                 .build();
@@ -71,20 +71,19 @@ public class GroupServiceImpl implements GroupService {
                 .toList();
     }
 
+    @Transactional
     @Override
     public GroupDto updateGroup(UUID id, GroupDto groupDto) {
-        GroupDto newGroupDto;
         log.info("Update group by put");
+        groupRepository.findById(id).ifPresent(group -> getGroupDto(groupDto, group));
 
-        Group groupBuf = getGroup(groupDto);
-        groupBuf.setId(id);     //if id not exist -> using new id or this id when creating?
-        if (groupRepository.existsById(id)) {
-            groupRepository.deleteById(id);
-        }
-        groupRepository.save(groupBuf);
-        newGroupDto = getGroupDto(groupBuf);
+        return groupDto;  // TODO fix return
+    }
 
-        return newGroupDto;
+    private GroupDto getGroupDto(GroupDto groupDto, Group group) {
+        group.setTitle(groupDto.title());
+        group.setDescription(groupDto.description());
+        return groupDto;
     }
 
     @Override
@@ -93,7 +92,7 @@ public class GroupServiceImpl implements GroupService {
             groupRepository.deleteById(id);
         } else {
             log.error("Not found group");
-            //TO DO throw new custom ex
+            //TODO throw new custom ex
         }
     }
 
