@@ -9,4 +9,8 @@ public interface GroupService {
     List<GroupDto> getAllGroups();
     GroupDto createGroup(GroupDto group);
     GroupDto getGroup(UUID id);
+
+    void deleteGroup(UUID id);
+
+    GroupDto updateGroup(UUID id, GroupDto groupDto);
 }
