@@ -7,6 +7,7 @@ import com.proj.forum.service.GroupService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,10 +24,17 @@ public class GroupController {
 
     private final GroupService groupService;
 
-    @PostMapping("/")
-    public ResponseEntity<GroupDto> createGroup(@RequestBody GroupDto group) {
-        log.info("Create group in controller");
-        return ResponseEntity.ok(groupService.createGroup(group));
+    @PostMapping("/create")
+    public ApiResponse<GenericResponse> createGroup(@RequestBody GroupDto group) {
+        try {
+            log.info("Create group");
+            UUID id = groupService.createGroup(group);
+
+            return apiResponse(true, 201, "Create group", id);
+        } catch (Exception e) {
+            return new ApiResponse<>(false, HttpStatus.BAD_REQUEST, "Argument don't correct", new GenericResponse("Group isn't exist"));
+        }
+
     }
 
     @GetMapping

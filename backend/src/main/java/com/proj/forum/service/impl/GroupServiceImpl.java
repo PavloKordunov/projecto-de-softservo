@@ -24,11 +24,10 @@ public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
 
     @Override
-    public GroupDto createGroup(GroupDto groupDto) {
-        log.info("Creating group in service");
+    public UUID createGroup(GroupDto groupDto) {
         Group group = getGroup(groupDto);
         Group groupFromDB = groupRepository.save(group);
-        return getUpdateGroup(groupFromDB);
+        return groupFromDB.getId();
     }
 
     @Override
