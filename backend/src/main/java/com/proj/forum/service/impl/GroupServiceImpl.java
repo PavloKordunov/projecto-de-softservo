@@ -73,18 +73,17 @@ public class GroupServiceImpl implements GroupService {
 
     @Transactional
     @Override
-    public void updateGroup(UUID id, GroupDto groupDto) {
+    public void updateGroup(UUID id, String title) {
         log.info("Update group by put");
-        Group updatedDto = groupRepository.findById(id)
-                .map(group -> getUpdateGroup(groupDto, group))
-                .orElse(Group.builder().build());
+        Group updatedGroup = groupRepository.findById(id)
+                .map(group -> getUpdateGroup(group, title))
+                .orElse(Group.builder().build()); //todo default group
 
-        groupRepository.save(updatedDto);
+        groupRepository.save(updatedGroup);
     }
 
-    private Group getUpdateGroup(GroupDto groupDto, Group group) {
-        group.setTitle(groupDto.title());
-        group.setDescription(groupDto.description());
+    private Group getUpdateGroup(Group group, String title) {
+        group.setTitle(title);
         return group;
     }
 
