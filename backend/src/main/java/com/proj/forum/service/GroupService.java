@@ -12,5 +12,5 @@ public interface GroupService {
 
     void deleteGroup(UUID id);
 
-    GroupDto updateGroup(UUID id, GroupDto groupDto);
+    void updateGroup(UUID id, GroupDto groupDto);
 }

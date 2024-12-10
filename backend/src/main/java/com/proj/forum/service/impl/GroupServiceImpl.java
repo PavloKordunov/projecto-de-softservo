@@ -28,7 +28,7 @@ public class GroupServiceImpl implements GroupService {
         log.info("Creating group in service");
         Group group = getGroup(groupDto);
         Group groupFromDB = groupRepository.save(group);
-        return getGroupDto(groupFromDB);
+        return getUpdateGroup(groupFromDB);
     }
 
     @Override
@@ -67,23 +67,25 @@ public class GroupServiceImpl implements GroupService {
 //                .build());
 
         return groupList.stream()
-                .map(GroupServiceImpl::getGroupDto)
+                .map(GroupServiceImpl::getUpdateGroup)
                 .toList();
     }
 
     @Transactional
     @Override
-    public GroupDto updateGroup(UUID id, GroupDto groupDto) {
+    public void updateGroup(UUID id, GroupDto groupDto) {
         log.info("Update group by put");
-        groupRepository.findById(id).ifPresent(group -> getGroupDto(groupDto, group));
+        Group updatedDto = groupRepository.findById(id)
+                .map(group -> getUpdateGroup(groupDto, group))
+                .orElse(Group.builder().build());
 
-        return groupDto;  // TODO fix return
+        groupRepository.save(updatedDto);
     }
 
-    private GroupDto getGroupDto(GroupDto groupDto, Group group) {
+    private Group getUpdateGroup(GroupDto groupDto, Group group) {
         group.setTitle(groupDto.title());
         group.setDescription(groupDto.description());
-        return groupDto;
+        return group;
     }
 
     @Override
@@ -110,7 +112,7 @@ public class GroupServiceImpl implements GroupService {
                 .build();
     }
 
-    private static GroupDto getGroupDto(Group group) {
+    private static GroupDto getUpdateGroup(Group group) {
         if (group == null) {
             log.info("no group found");
             throw new EntityNotFoundException("no group found");
