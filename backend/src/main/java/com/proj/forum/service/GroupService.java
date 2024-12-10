@@ -3,8 +3,14 @@ package com.proj.forum.service;
 import com.proj.forum.dto.GroupDto;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface GroupService {
     List<GroupDto> getAllGroups();
     GroupDto createGroup(GroupDto group);
+    GroupDto getGroup(UUID id);
+
+    void deleteGroup(UUID id);
+
+    GroupDto updateGroup(UUID id, GroupDto groupDto);
 }

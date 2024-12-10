@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -30,7 +32,23 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<GroupDto> getAllGroups(){
+    public GroupDto getGroup(UUID id) {
+        Optional<Group> group = groupRepository.findById(id);
+        if (group.isEmpty()) {
+            log.info("No group");
+            return null;
+        }
+
+        return GroupDto.builder()
+                .id(id)
+                .title(group.get().getTitle())
+                .description(group.get().getDescription() == null ? StringUtils.EMPTY : group.get().getDescription())
+                .build();
+    }
+
+
+    @Override
+    public List<GroupDto> getAllGroups() {
         List<Group> groupList = groupRepository.findAll();
         log.info("getAllGroups");
         //        // Mock response data
@@ -53,19 +71,43 @@ public class GroupServiceImpl implements GroupService {
                 .toList();
     }
 
+    @Transactional
+    @Override
+    public GroupDto updateGroup(UUID id, GroupDto groupDto) {
+        log.info("Update group by put");
+        groupRepository.findById(id).ifPresent(group -> getGroupDto(groupDto, group));
+
+        return groupDto;  // TODO fix return
+    }
+
+    private GroupDto getGroupDto(GroupDto groupDto, Group group) {
+        group.setTitle(groupDto.title());
+        group.setDescription(groupDto.description());
+        return groupDto;
+    }
+
+    @Override
+    public void deleteGroup(UUID id) {
+        if (groupRepository.existsById(id)) {
+            groupRepository.deleteById(id);
+        } else {
+            log.error("Not found group");
+            //TODO throw new custom ex
+        }
+    }
+
+
     private static Group getGroup(GroupDto groupDto) {
-        if(groupDto == null)
-        {
+        if (groupDto == null) {
             log.error("Group is null");
             throw new NullPointerException();
         }
-        log.info("Creating group from groupDto");
+//        log.info("Creating group from groupDto");
 
-        Group group = Group.builder()
+        return Group.builder()
                 .title(groupDto.title())
                 .description(groupDto.description() == null ? StringUtils.EMPTY : groupDto.description())
                 .build();
-        return group;
     }
 
     private static GroupDto getGroupDto(Group group) {
@@ -73,15 +115,14 @@ public class GroupServiceImpl implements GroupService {
             log.info("no group found");
             throw new EntityNotFoundException("no group found");
         }
-        log.info("Creating groupDto from group");
+//        log.info("Creating groupDto from group");
 
         return GroupDto.builder()
                 .id(group.getId())
                 .title(group.getTitle())
                 .description(group.getDescription() == null ? StringUtils.EMPTY : group.getDescription())
                 .build();
-    };
-
+    }
 
 
 }
