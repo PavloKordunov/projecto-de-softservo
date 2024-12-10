@@ -20,13 +20,13 @@ const NavPanel = () => {
             <li className={css.panelEl}>
                 <a href="" className={css.panelElLink}>
                     <div className={css.svgContainer}>
-                    <svg width='26' height='26'>
-                        <use href={`${Icon}#icon2`}></use>
-                    </svg>
+                        <svg width='26' height='26'>
+                            <use href={`${Icon}#diceIcon`}></use>
+                        </svg>
                     </div>
                     <div>
-                        <p className={css.panelElText}>Популярне сьогодні</p>
-                        <p className={css.panelElSubtext}>Shots featured today by curators</p>
+                        <p className={css.panelElText}>Випадковий допис</p>
+                        <p className={css.panelElSubtext}>Tap and try your luck</p>
                     </div>
                 </a>
             </li>

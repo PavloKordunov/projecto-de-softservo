@@ -1,27 +1,28 @@
-.NavBarContainer{
+.NavBarContainer {
     display: flex;
     background-color: #1E1F20;
     height: 81px;
     padding: 0 26px;
     align-items: center;
+    justify-content: space-between; /* Логотип і профіль по краях */
 }
 
-.NavBarLogo{
+.NavBarLogo {
     color: #FF4155;
     font-size: 34px;
     font-weight: bold;
     margin-left: 64px;
-    margin-right: 243px;
 }
 
-.NavBarIconsList{
+.NavBarIconsList {
     display: flex;
     align-items: center;
-    gap: 26px;
+    gap: 26px; /* Стандартні відступи між іконками */
     margin-right: 26px;
+    cursor: pointer;
 }
 
-.NavBarIconEl{
+.NavBarIconEl {
     width: 53px;
     height: 53px;
     background-color: #262D34;
@@ -29,50 +30,67 @@
     align-items: center;
     justify-content: center;
     border-radius: 9px;
+    transition: background-color 0.3s ease; /* Плавний перехід для ховера */
 }
 
-.NavBarIconEl:hover{
+.NavBarIconEl:hover {
     background-color: #FF4155;
 }
 
-.NavBarInput{
+.NavBarInput {
     width: 532px;
     height: 30px;
     padding: 12px 26px;
-    background-color: #2C353D;
+    background-color: rgba(221, 221, 221, 0.1);
+    color: #97989D;
     border-radius: 10px;
     border: none;
     margin-right: 292px;
+    font-size: 22px;
+    font-family: "Source Sans 3", sans-serif;
 }
 
-.NavBarInput:active, :hover, :focus {
+.NavBarInput:active,
+.NavBarInput:hover,
+.NavBarInput:focus {
     outline: 0;
     outline-offset: 0;
 }
 
-.NavBarInput::placeholder{
+.NavBarInput::placeholder {
     color: #858EAD;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 400;
+    font-family: "Source Sans 3", sans-serif;
 }
 
-.NavBarInputContainer{
+.NavBarInputContainer {
     display: flex;
     position: relative;
 }
 
-.NavBarInputIcon{
+.NavBarInputIcon {
     position: absolute;
     left: 532px;
     top: 12px;
+    cursor: pointer;
 }
 
-.NavBarUserProfileContainer{
+.NavBarUserProfileContainer {
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 
-.NavBarUserImageContainer{
+.rotateArrow {
+    transition: transform 0.5s ease-in-out;
+}
+
+.rotateArrowOpen {
+    transform: rotate(180deg);
+}
+
+.NavBarUserImageContainer {
     width: 45px;
     height: 45px;
     background-color: #F9DFC0;
@@ -81,14 +99,16 @@
     align-items: center;
     justify-content: center;
     margin-right: 20px;
+    cursor: pointer;
 }
 
-.NavBarName{
+.NavBarName {
     color: #FFF;
     font-size: 21px;
     font-weight: bold;
     margin-right: 20px;
 }
+
 
 .NavBarFlipWrapper {
     position: fixed;
@@ -102,7 +122,7 @@
     z-index: 20;
 }
 
-.NavBarFlipContainer{
+.NavBarFlipContainer {
     position: absolute;
     width: 248px;
     padding: 16px;
@@ -113,56 +133,56 @@
     z-index: 1000;
 }
 
-.NavBarFlipLink{
+.NavBarFlipLink {
     display: flex;
     gap: 16px;
     align-items: center;
     margin-bottom: 18px;
 }
 
-.NavBarFlipTextContainer{
+.NavBarFlipTextContainer {
     display: flex;
     flex-direction: column;
 }
 
-.NavBarFlipText{
+.NavBarFlipText {
     color: #E4E3E3;
     font-size: 16px;
     font-weight: 600;
 }
 
-.NavBarFlipNickName{
+.NavBarFlipNickName {
     color: #97989D;
     font-size: 13px;
 }
 
-.NavBarFlipIcon{
+.NavBarFlipIcon {
     fill: #E4E3E3;
     margin-left: 6px;
     margin-right: 18px;
 }
 
-.NavBarFlipIconContainer{
+.NavBarFlipIconContainer {
     display: flex;
     align-items: center;
     margin-bottom: 26px;
 }
 
-.NavBarFlipIconText{
+.NavBarFlipIconText {
     color: #E4E3E3;
     font-size: 14px;
     font-weight: 600;
     margin-right: 26px;
 }
 
-.NavChangeThemeSwitcher{
+.NavChangeThemeSwitcher {
     width: 58px;
     height: 31px;
     border-radius: 32px;
     background-color: #2C353D;
 }
 
-.NavChangeThemeCircle{
+.NavChangeThemeCircle {
     background-color: #E4E3E3;
     width: 25px;
     height: 25px;
@@ -170,3 +190,219 @@
     margin-top: 3px;
     margin-left: 28px;
 }
+
+
+ /*Для великих екранів (де більше 1024px) */
+@media (max-width: 1024px) {
+    .NavBarContainer {
+        flex-direction: column;
+        height: auto;
+        padding: 20px;
+    }
+
+    .NavBarLogo {
+        font-size: 28px;
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-bottom: 10px;
+    }
+
+    .NavBarIconsList {
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .NavBarInput {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+
+    .NavBarUserProfileContainer {
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+
+    .NavBarIconEl {
+        width: 45px;
+        height: 45px;
+    }
+}
+
+
+.NavBarHamburgerButton {
+    display: none;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.NavBarHamburgerMenuContainer {
+    display: none;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    position: absolute;
+    top: 70px;
+    z-index: 10;
+}
+
+.NavBarHamburgerMenu {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.NavBarContainer.openMenu {
+    padding-bottom: 80px;
+}
+
+.NavBarIconsList {
+    display: flex;
+    justify-content: space-around;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.NavBarContainer {
+    position: relative;
+}
+
+/* Для мобільних екранів (менше або рівно 768px) */
+@media (max-width: 768px) {
+    .NavBarContainer {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 0 15px;
+    }
+
+    .NavBarLogo {
+        font-size: 15px;
+        margin-left: 0;
+        margin-right: 20px;
+    }
+
+    .NavBarIconsList {
+        display: flex;
+        gap: 10px;
+        margin-right: 0;
+        justify-content: flex-end;
+    }
+
+    .NavBarInputContainer {
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    .NavBarInput {
+        flex: 1;
+        padding-right: 20px;
+        height: 5px;
+        margin-left: -10px;
+        border-radius: 15px;
+        font-size: 10px;
+        font-family: "Source Sans 3", sans-serif;
+    }
+
+
+    .NavBarInput::placeholder {
+        color: #858EAD;
+        font-size: 10px;
+        font-weight: 200;
+        font-family: "Source Sans 3", sans-serif;
+    }
+
+    .NavBarInputIcon {
+        position: absolute;
+        height: 10px;
+        margin-left: -430px;
+        width: 20px;
+        fill: #333;
+        pointer-events: none;
+    }
+
+    .NavBarUserProfileContainer {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+
+    }
+
+    .NavBarUserImageContainer {
+        width: 25px;
+        height: 25px;
+        background-color: #F9DFC0;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: -20px;
+        margin-bottom: 3px;
+        cursor: pointer;
+    }
+
+    .NavBarHamburgerButton {
+        display: block;
+        background-color: #f8debf;
+        border-radius: 15%;
+        width: 20px;
+        height: 20px;
+        margin-bottom: 5px;
+    }
+
+    .NavBarHamburgerMenuContainer {
+        display: none;
+    }
+
+    .NavBarHamburgerMenu {
+        display: none;
+    }
+
+    .NavBarIconEl {
+        width: 25px;
+        height: 25px;
+    }
+
+    /* При відкритті меню, показуємо контейнер меню */
+    .NavBarContainer.openMenu .NavBarHamburgerMenuContainer {
+        display: flex;
+        flex-direction: row;
+        position: absolute;
+        top: 81px;
+        width: 100%;
+        background-color: #1E1F20;
+        /*padding: 10px 0;*/
+        height: auto;
+        z-index: 10;
+    }
+
+    .NavBarContainer.openMenu .NavBarHamburgerMenu {
+        display: flex;
+        flex-direction: row;
+        gap: 35px;
+        align-items: center;
+    }
+
+    .NavBarContainer.openMenu .NavBarHamburgerMenu a {
+        color: #FF4155;
+        font-size: 24px;
+        font-weight: bold;
+        text-decoration: none;
+        padding: 10px 20px;
+    }
+}
+
+
+
+
+
+
+
+

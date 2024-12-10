@@ -24,3 +24,93 @@
     background-color: #5A4F43;
     border-radius: 5px;
 }
+
+.popularTegItemContainer {
+    display: flex;
+    gap: 13px;
+}
+
+.popularTegItemTheme {
+    font-size: 16px;
+    color: #FFFFFF;
+    font-weight: 600;
+}
+
+.popularTegItemSubtext {
+    color: #97989D;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.popularTegItemImgContainer {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #5A4F43;
+    border-radius: 5px;
+}
+
+/* Адаптив для планшетів */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .popularTegItemContainer {
+        gap: 10px;
+    }
+
+    .popularTegItemTheme {
+        font-size: 15px;
+    }
+
+    .popularTegItemSubtext {
+        font-size: 12px;
+    }
+
+    .popularTegItemImgContainer {
+        width: 36px;
+        height: 36px;
+        border-radius: 4px;
+    }
+}
+
+/* Адаптив для мобільних пристроїв */
+@media (max-width: 768px) {
+    .popularTegItemContainer {
+        gap: 8px;
+    }
+
+    .popularTegItemTheme {
+        font-size: 14px;
+    }
+
+    .popularTegItemSubtext {
+        font-size: 11px;
+    }
+
+    .popularTegItemImgContainer {
+        width: 32px;
+        height: 32px;
+        border-radius: 3px;
+    }
+}
+
+/* Адаптив для дуже маленьких екранів */
+@media (max-width: 480px) {
+    .popularTegItemContainer {
+        gap: 6px;
+    }
+
+    .popularTegItemTheme {
+        font-size: 13px;
+    }
+
+    .popularTegItemSubtext {
+        font-size: 10px;
+    }
+
+    .popularTegItemImgContainer {
+        width: 28px;
+        height: 28px;
+        border-radius: 2px;
+    }
+}

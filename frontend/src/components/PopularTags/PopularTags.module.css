@@ -14,3 +14,47 @@
     font-weight: 600;
     margin-bottom: 26px;
 }
+
+/* Адаптив для планшетів */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .popularTagContainer {
+        width: 200px;
+        padding: 20px;
+        border-radius: 18px;
+        margin-bottom: 20px;
+    }
+
+    .popularTagTitle {
+        font-size: 19px;
+        margin-bottom: 22px;
+    }
+}
+
+/* Адаптив для мобільних пристроїв */
+@media (max-width: 768px) {
+    .popularTagContainer {
+        width: 100%;
+        padding: 16px;
+        border-radius: 15px;
+        margin-bottom: 18px;
+    }
+
+    .popularTagTitle {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+}
+
+/* Адаптив для дуже маленьких екранів */
+@media (max-width: 480px) {
+    .popularTagContainer {
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+
+    .popularTagTitle {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+}
