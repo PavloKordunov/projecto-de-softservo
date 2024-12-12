@@ -1,28 +1,36 @@
 package com.proj.forum.controller;
 
 import com.proj.forum.dto.ApiResponse;
-import com.proj.forum.exception.CustomNullPointerException;
-import com.proj.forum.exception.CustomResourceNotFoundException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import com.proj.forum.exception.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
+import org.hibernate.exception.JDBCConnectionException;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-@ControllerAdvice
-public class GlobalExceptionHandler {
+import java.sql.SQLException;
 
-    @ExceptionHandler(CustomNullPointerException.class)
-    public ApiResponse<?> handleNullPointer(CustomNullPointerException ex) {
-        return new ApiResponse<>(ex.isSuccess(), ex.getStatusCode(), ex.getMessage(), null);
+@RestControllerAdvice
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler({EntityNotFoundException.class, ResourceNotFoundException.class})
+    public ApiResponse<?> handleEntityNotFound(RuntimeException ex) {
+        return new ApiResponse<>(true, HttpStatus.NOT_FOUND, ex.getCause().toString(), null);
     }
 
-    @ExceptionHandler(CustomResourceNotFoundException.class)
-    public ApiResponse<?> handleResourceNotFound(CustomResourceNotFoundException ex) {
-        return new ApiResponse<>(ex.isSuccess(), ex.getStatusCode(), ex.getMessage(), null);
+    @ExceptionHandler(SQLException.class)
+    public ApiResponse<?> handleSqlDb(RuntimeException ex) {
+        return new ApiResponse<>(false, HttpStatus.INTERNAL_SERVER_ERROR, ex.getCause().toString(), null);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ApiResponse<?> handleNotValid(MethodArgumentNotValidException ex)
-    {
-        return new ApiResponse<>(!ex.hasErrors(), ex.getStatusCode(), ex.getMessage(), null);
+    @ExceptionHandler(JDBCConnectionException.class)
+    public ApiResponse<?> handleDisconnectDb(RuntimeException ex) {
+        return new ApiResponse<>(false, HttpStatus.SERVICE_UNAVAILABLE, ex.getCause().toString(), null);
     }
+
+    //    @ExceptionHandler(DbNotResponseException.class)
+    //    public ApiResponse<?> handleDbError(RuntimeException ex){
+    //        return new ApiResponse<>(false, HttpStatus.SERVICE_UNAVAILABLE, ex.getCause().toString(), null);
+    //    }
 }

@@ -2,14 +2,12 @@ package com.proj.forum.service.impl;
 
 import com.proj.forum.dto.TagDto;
 import com.proj.forum.entity.Tag;
-import com.proj.forum.exception.CustomResourceNotFoundException;
 import com.proj.forum.repository.TagRepository;
 import com.proj.forum.service.TagService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +29,7 @@ public class TagServiceImpl implements TagService {
         log.info("getAllTags");
         if (tags.isEmpty()) {
             log.info("No groups found");
-            throw new CustomResourceNotFoundException(false, HttpStatus.NOT_FOUND, "No groups found");
+            throw new EntityNotFoundException("No groups found");
         }
         return tags.stream()
                 .map(TagServiceImpl::getTagDto)
