@@ -4,7 +4,7 @@ import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.GenericResponse;
 import com.proj.forum.dto.GroupDto;
 import com.proj.forum.exception.CustomNullPointerException;
-import com.proj.forum.exception.CustomResourseNotFoundException;
+import com.proj.forum.exception.CustomResourceNotFoundException;
 import com.proj.forum.service.GroupService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -42,10 +42,7 @@ public class GroupController {
     public ApiResponse<List<GroupDto>> getAllGroups() {
         log.info("Fetching all groups");
         List<GroupDto> groupsDto = groupService.getAllGroups();
-        //        if (groups.isEmpty()) {
-//            log.info("No groups found");
-//            return new ApiResponse<>(false, HttpStatus.NOT_FOUND, "Groups didn't find", null);
-//        }
+
         return new ApiResponse<>(true, HttpStatus.OK, "Groups found", groupsDto);
     }
 
@@ -55,7 +52,7 @@ public class GroupController {
             log.info("Fetch group");
             GroupDto groupDto = groupService.getGroup(id);
             return new ApiResponse<>(true, HttpStatus.OK, "Successful getting", groupDto);
-        } catch (CustomResourseNotFoundException ex) {
+        } catch (CustomResourceNotFoundException ex) {
             log.error("No group found [getById]");
             throw ex;
         }
@@ -64,12 +61,12 @@ public class GroupController {
     @PatchMapping("/update/{id}")
     public ApiResponse<GenericResponse> updateGroup(
             @PathVariable @Valid UUID id,
-            @RequestBody @Valid String title) {
+            @RequestBody GroupDto groupDto) {
         try {
             log.info("Update group");
-            groupService.updateGroup(id, title);
+            groupService.updateGroup(id, groupDto);
             return apiResponse(true, 200, "Group successfully updated", id);
-        } catch (CustomResourseNotFoundException ex) {
+        } catch (CustomResourceNotFoundException ex) {
             log.error("No group found [patch]");
             throw ex;
         }
@@ -81,7 +78,7 @@ public class GroupController {
             log.info("Delete group");
             groupService.deleteGroup(id);
             return apiResponse(true, 200, "Group successfully deleted", id);
-        } catch (CustomResourseNotFoundException ex) {
+        } catch (CustomResourceNotFoundException ex) {
             log.error("No group found [delete]");
             throw ex;
         }

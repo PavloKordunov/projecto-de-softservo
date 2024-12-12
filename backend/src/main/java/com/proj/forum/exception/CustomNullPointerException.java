@@ -1,9 +1,9 @@
 package com.proj.forum.exception;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 
 public class CustomNullPointerException extends CustomSuperException{
-    public CustomNullPointerException(boolean success, HttpStatus statusCode, String message) {
+    public CustomNullPointerException(boolean success, HttpStatusCode statusCode, String message) {
         super(success, statusCode, message);
     }
 
