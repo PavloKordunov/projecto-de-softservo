@@ -23,6 +23,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ApiResponse<?> handleNotValid(MethodArgumentNotValidException ex)
     {
-        return new ApiResponse<>(ex.hasErrors(), ex.getStatusCode(), ex.getMessage(), null);
+        return new ApiResponse<>(!ex.hasErrors(), ex.getStatusCode(), ex.getMessage(), null);
     }
 }
