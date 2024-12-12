@@ -1,11 +1,13 @@
 package com.proj.forum.controller;
 
 
+import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.TagDto;
+import com.proj.forum.exception.CustomResourseNotFoundException;
 import com.proj.forum.service.TagService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,13 +26,16 @@ public class TagController {
         log.info("Create tag: {}", tag);
     } //should it be the same?
 
+
     @GetMapping
-    public ResponseEntity<List<TagDto>> getTags(){
-        List<TagDto> tagDtos = tagService.getAllTags();
-        if (tagDtos.isEmpty()) {
-            log.info("No groups found");
-            return ResponseEntity.noContent().build();
+    public ApiResponse<List<TagDto>> getTags(){
+        try {
+            List<TagDto> tagDtos = tagService.getAllTags();
+            return new ApiResponse<>(true, HttpStatus.OK, "Tags found", tagDtos);
+        } catch (CustomResourseNotFoundException ex){
+            log.error("Tags didn't find");
+            throw ex;
         }
-        return ResponseEntity.ok(tagDtos);
+
     }
 }

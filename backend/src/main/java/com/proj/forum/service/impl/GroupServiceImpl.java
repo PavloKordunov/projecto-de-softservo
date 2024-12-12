@@ -9,6 +9,7 @@ import com.proj.forum.service.GroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +37,7 @@ public class GroupServiceImpl implements GroupService {
         Optional<Group> group = groupRepository.findById(id);
         if (group.isEmpty()) {
             log.info("No group");
-            throw new CustomResourseNotFoundException("No group"); //TODO custom ex
+            throw new CustomResourseNotFoundException(false, HttpStatus.NOT_FOUND,"No group"); //TODO custom ex
         }
 
         return GroupDto.builder()
@@ -54,7 +55,7 @@ public class GroupServiceImpl implements GroupService {
         if (groupList.isEmpty())
         {
             log.info("No groups");
-            throw new CustomResourseNotFoundException("No groups"); //TODO custom ex
+            throw new CustomResourseNotFoundException(false, HttpStatus.NOT_FOUND,"No groups"); //TODO custom ex
         }
         //        // Mock response data
 //        List<Group> group = new ArrayList<>();
@@ -82,7 +83,7 @@ public class GroupServiceImpl implements GroupService {
         log.info("Update group by put");
         Group updatedGroup = groupRepository.findById(id)
                 .map(group -> getUpdateGroup(group, title))
-                .orElseThrow(() -> new CustomResourseNotFoundException("Group didn't find")); //todo default group
+                .orElseThrow(() -> new CustomResourseNotFoundException(false, HttpStatus.NOT_FOUND,"Group didn't find")); //todo default group
 
         groupRepository.save(updatedGroup);
     }
@@ -98,7 +99,7 @@ public class GroupServiceImpl implements GroupService {
             groupRepository.deleteById(id);
         } else {
             log.error("Not found group");
-            throw new CustomResourseNotFoundException("Not found group");   //TODO throw new custom ex
+            throw new CustomResourseNotFoundException(false, HttpStatus.NOT_FOUND,"Not found group");   //TODO throw new custom ex
         }
     }
 
@@ -106,7 +107,7 @@ public class GroupServiceImpl implements GroupService {
     private static Group getGroup(GroupDto groupDto) {
         if (groupDto == null) {
             log.error("Group is null");
-            throw new CustomNullPointerException("Group is null");
+            throw new CustomNullPointerException(false, HttpStatus.BAD_REQUEST, "Group is null");
         }
 //        log.info("Creating group from groupDto");
 
@@ -119,7 +120,7 @@ public class GroupServiceImpl implements GroupService {
     private static GroupDto getUpdateGroup(Group group) {
         if (group == null) {
             log.info("no group found");
-            throw new CustomNullPointerException("no group found");
+            throw new CustomNullPointerException(false, HttpStatus.BAD_REQUEST, "no group found");
         }
 //        log.info("Creating groupDto from group");
 

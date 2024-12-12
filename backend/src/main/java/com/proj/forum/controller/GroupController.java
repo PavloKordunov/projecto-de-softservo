@@ -41,16 +41,16 @@ public class GroupController {
     @GetMapping
     public ApiResponse<List<GroupDto>> getAllGroups() {
         log.info("Fetching all groups");
-        List<GroupDto> groups = groupService.getAllGroups();
+        List<GroupDto> groupsDto = groupService.getAllGroups();
         //        if (groups.isEmpty()) {
 //            log.info("No groups found");
 //            return new ApiResponse<>(false, HttpStatus.NOT_FOUND, "Groups didn't find", null);
 //        }
-        return new ApiResponse<>(true, HttpStatus.OK, "Groups found", groups);
+        return new ApiResponse<>(true, HttpStatus.OK, "Groups found", groupsDto);
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<GroupDto> getGroupById(@Valid @PathVariable UUID id) {
+    public ApiResponse<GroupDto> getGroupById(@PathVariable @Valid UUID id) {
         try {
             log.info("Fetch group");
             GroupDto groupDto = groupService.getGroup(id);
@@ -62,7 +62,9 @@ public class GroupController {
     }
 
     @PatchMapping("/update/{id}")
-    public ApiResponse<GenericResponse> updateGroup(@Valid @PathVariable UUID id, @Valid @RequestBody String title) {
+    public ApiResponse<GenericResponse> updateGroup(
+            @PathVariable @Valid UUID id,
+            @RequestBody @Valid String title) {
         try {
             log.info("Update group");
             groupService.updateGroup(id, title);
@@ -74,18 +76,19 @@ public class GroupController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ApiResponse<GenericResponse> deleteGroup(@Valid @PathVariable UUID id) {
+    public ApiResponse<GenericResponse> deleteGroup(@PathVariable @Valid UUID id) {
         try {
             log.info("Delete group");
             groupService.deleteGroup(id);
             return apiResponse(true, 200, "Group successfully deleted", id);
         } catch (CustomResourseNotFoundException ex) {
             log.error("No group found [delete]");
-            throw  ex;
+            throw ex;
         }
     }
 
-    private static ApiResponse<GenericResponse> apiResponse(boolean success, int statusCode, String message, UUID id) {
+    private static ApiResponse<GenericResponse> apiResponse(
+            boolean success, int statusCode, String message, UUID id) {
         return new ApiResponse<>(success, HttpStatusCode.valueOf(statusCode), message, new GenericResponse(id));
     }
 }

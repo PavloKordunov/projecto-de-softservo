@@ -19,6 +19,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.
                 csrf(CsrfConfigurer::disable) //TODO need to investigate
+                //csrf(csrf -> csrf.ignoringRequestMatchers("/api/**")) <- this line is more up-to-date
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/groups/**", "/api/topics/**", "/api/tags/**")
                         .permitAll())
