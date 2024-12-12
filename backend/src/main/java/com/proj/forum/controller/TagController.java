@@ -1,29 +1,41 @@
 package com.proj.forum.controller;
 
 
+import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.TagDto;
-import com.proj.forum.dto.TopicDto;
+import com.proj.forum.exception.CustomResourseNotFoundException;
 import com.proj.forum.service.TagService;
-import com.proj.forum.service.TopicService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/tags")
 @CrossOrigin("http://localhost:3000")
 public class TagController {
 
-    private TagService tagService;
+    private final TagService tagService;
 
-    @Autowired
-    public TagController(TagService tagService) {
-        this.tagService = tagService;
-    }
-
-    @PostMapping
+    @PostMapping("/create")
     public void createTag(@RequestBody TagDto tag) {
         log.info("Create tag: {}", tag);
     } //should it be the same?
+
+
+    @GetMapping
+    public ApiResponse<List<TagDto>> getTags(){
+        try {
+            List<TagDto> tagDtos = tagService.getAllTags();
+            return new ApiResponse<>(true, HttpStatus.OK, "Tags found", tagDtos);
+        } catch (CustomResourseNotFoundException ex){
+            log.error("Tags didn't find");
+            throw ex;
+        }
+
+    }
 }

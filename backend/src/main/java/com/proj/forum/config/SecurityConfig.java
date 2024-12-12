@@ -18,9 +18,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.
-                csrf(CsrfConfigurer::disable)
+                csrf(CsrfConfigurer::disable) //TODO need to investigate
+                //csrf(csrf -> csrf.ignoringRequestMatchers("/api/**")) <- this line is more up-to-date
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/groups/**", "/api/topics", "/api/tags")
+                        .requestMatchers("/api/groups/**", "/api/topics/**", "/api/tags/**")
                         .permitAll())
                 .oauth2ResourceServer(oauth2 ->
                         oauth2

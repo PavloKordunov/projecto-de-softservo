@@ -1,12 +1,10 @@
 package com.proj.forum.controller;
 
 import com.proj.forum.dto.TopicDto;
-import com.proj.forum.entity.Group;
 import com.proj.forum.entity.Topic;
 import com.proj.forum.service.TopicService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,16 +14,12 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/topics")
 @CrossOrigin("http://localhost:3000")
 public class TopicController {
 
-    private TopicService topicService;
-
-    @Autowired
-    public TopicController(TopicService topicService) {
-        this.topicService = topicService;
-    }
+    private final TopicService topicService;
 
     @PostMapping
     public void createTopic(@RequestBody TopicDto topicDto) {

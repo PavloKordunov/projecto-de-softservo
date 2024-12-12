@@ -2,12 +2,14 @@ package com.proj.forum.service.impl;
 
 import com.proj.forum.dto.GroupDto;
 import com.proj.forum.entity.Group;
+import com.proj.forum.exception.CustomNullPointerException;
+import com.proj.forum.exception.CustomResourseNotFoundException;
 import com.proj.forum.repository.GroupRepository;
 import com.proj.forum.service.GroupService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,11 +26,10 @@ public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
 
     @Override
-    public GroupDto createGroup(GroupDto groupDto) {
-        log.info("Creating group in service");
+    public UUID createGroup(GroupDto groupDto) {
         Group group = getGroup(groupDto);
         Group groupFromDB = groupRepository.save(group);
-        return getGroupDto(groupFromDB);
+        return groupFromDB.getId();
     }
 
     @Override
@@ -36,7 +37,7 @@ public class GroupServiceImpl implements GroupService {
         Optional<Group> group = groupRepository.findById(id);
         if (group.isEmpty()) {
             log.info("No group");
-            return null;
+            throw new CustomResourseNotFoundException(false, HttpStatus.NOT_FOUND,"No group"); //TODO custom ex
         }
 
         return GroupDto.builder()
@@ -51,6 +52,11 @@ public class GroupServiceImpl implements GroupService {
     public List<GroupDto> getAllGroups() {
         List<Group> groupList = groupRepository.findAll();
         log.info("getAllGroups");
+        if (groupList.isEmpty())
+        {
+            log.info("No groups");
+            throw new CustomResourseNotFoundException(false, HttpStatus.NOT_FOUND,"No groups"); //TODO custom ex
+        }
         //        // Mock response data
 //        List<Group> group = new ArrayList<>();
 //
@@ -67,23 +73,24 @@ public class GroupServiceImpl implements GroupService {
 //                .build());
 
         return groupList.stream()
-                .map(GroupServiceImpl::getGroupDto)
+                .map(GroupServiceImpl::getUpdateGroup)
                 .toList();
     }
 
     @Transactional
     @Override
-    public GroupDto updateGroup(UUID id, GroupDto groupDto) {
+    public void updateGroup(UUID id, String title) {
         log.info("Update group by put");
-        groupRepository.findById(id).ifPresent(group -> getGroupDto(groupDto, group));
+        Group updatedGroup = groupRepository.findById(id)
+                .map(group -> getUpdateGroup(group, title))
+                .orElseThrow(() -> new CustomResourseNotFoundException(false, HttpStatus.NOT_FOUND,"Group didn't find")); //todo default group
 
-        return groupDto;  // TODO fix return
+        groupRepository.save(updatedGroup);
     }
 
-    private GroupDto getGroupDto(GroupDto groupDto, Group group) {
-        group.setTitle(groupDto.title());
-        group.setDescription(groupDto.description());
-        return groupDto;
+    private Group getUpdateGroup(Group group, String title) {
+        group.setTitle(title);
+        return group;
     }
 
     @Override
@@ -92,7 +99,7 @@ public class GroupServiceImpl implements GroupService {
             groupRepository.deleteById(id);
         } else {
             log.error("Not found group");
-            //TODO throw new custom ex
+            throw new CustomResourseNotFoundException(false, HttpStatus.NOT_FOUND,"Not found group");   //TODO throw new custom ex
         }
     }
 
@@ -100,7 +107,7 @@ public class GroupServiceImpl implements GroupService {
     private static Group getGroup(GroupDto groupDto) {
         if (groupDto == null) {
             log.error("Group is null");
-            throw new NullPointerException();
+            throw new CustomNullPointerException(false, HttpStatus.BAD_REQUEST, "Group is null");
         }
 //        log.info("Creating group from groupDto");
 
@@ -110,10 +117,10 @@ public class GroupServiceImpl implements GroupService {
                 .build();
     }
 
-    private static GroupDto getGroupDto(Group group) {
+    private static GroupDto getUpdateGroup(Group group) {
         if (group == null) {
             log.info("no group found");
-            throw new EntityNotFoundException("no group found");
+            throw new CustomNullPointerException(false, HttpStatus.BAD_REQUEST, "no group found");
         }
 //        log.info("Creating groupDto from group");
 
