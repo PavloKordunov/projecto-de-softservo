@@ -2,7 +2,7 @@ package com.proj.forum.service.impl;
 
 import com.proj.forum.dto.TagDto;
 import com.proj.forum.entity.Tag;
-import com.proj.forum.exception.CustomResourseNotFoundException;
+import com.proj.forum.exception.CustomResourceNotFoundException;
 import com.proj.forum.repository.TagRepository;
 import com.proj.forum.service.TagService;
 import jakarta.persistence.EntityNotFoundException;
@@ -31,7 +31,7 @@ public class TagServiceImpl implements TagService {
         log.info("getAllTags");
         if (tags.isEmpty()) {
             log.info("No groups found");
-            throw new CustomResourseNotFoundException(false, HttpStatus.NOT_FOUND, "No groups found");
+            throw new CustomResourceNotFoundException(false, HttpStatus.NOT_FOUND, "No groups found");
         }
         return tags.stream()
                 .map(TagServiceImpl::getTagDto)

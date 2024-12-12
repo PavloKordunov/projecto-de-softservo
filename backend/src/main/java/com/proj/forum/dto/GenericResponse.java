@@ -1,11 +1,14 @@
 package com.proj.forum.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.util.UUID;
 
-
+@JsonSerialize
 public class GenericResponse {
-    private UUID id;
-    private String message;
+
+    @JsonSerialize private UUID id;
+    @JsonSerialize private String message;
 
     public GenericResponse(UUID id, String message) {
         this.id = id;
