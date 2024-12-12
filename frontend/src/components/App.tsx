@@ -13,6 +13,8 @@ import Profile from "./Profile/Profile";
 import NavBar from "./NavBar/NavBar";
 import {useEffect} from "react";
 import {testFetch} from "./test";
+import { Helmet } from "react-helmet";
+
 
 const oktaAuth = new OktaAuth(oktaConfig);
 
@@ -33,12 +35,15 @@ function App() {
 
     return (
         <div className={css.app}>
+            <Helmet>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            </Helmet>
         <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri} onAuthRequired={customAuthHandler}>
             <NavBar/>
             <Routes >
                 <Route path="/" element={<Layout />}>
-                    {/*<Route index element={<HomePage />} />*/}
-                    <Route index element={<AuthPage />} />
+                    <Route index element={<HomePage />} />
+                    {/*<Route index element={<AuthPage />} />*/}
                     <Route path="adminPost" element={<AdminPost />} />
                     <Route path="userProfile" element={<Profile />} />
                 </Route>

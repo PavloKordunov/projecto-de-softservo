@@ -6,7 +6,6 @@ const PopularTags = () => {
     return (
         <div className={css.popularTagContainer}>
             <h2 className={css.popularTagTitle}>Популярні Теги</h2>
-
             <ul>
                 <PopularTagsItem/>
             </ul>
