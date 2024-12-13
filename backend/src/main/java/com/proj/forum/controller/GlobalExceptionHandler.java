@@ -3,7 +3,6 @@ package com.proj.forum.controller;
 import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.exception.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
-import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -24,11 +23,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ApiResponse<>(false, HttpStatus.INTERNAL_SERVER_ERROR, ex.getCause().toString(), null);
     }
 
-    @ExceptionHandler(JDBCConnectionException.class)
-    public ApiResponse<?> handleDisconnectDb(RuntimeException ex) {
-        return new ApiResponse<>(false, HttpStatus.SERVICE_UNAVAILABLE, ex.getCause().toString(), null);
-    }
-
+    //    @ExceptionHandler(JDBCConnectionException.class)
+    //    public ApiResponse<?> handleDisconnectDb(RuntimeException ex) {
+    //        return new ApiResponse<>(false, HttpStatus.SERVICE_UNAVAILABLE, ex.getCause().toString(), null);
+    //    }
     //    @ExceptionHandler(DbNotResponseException.class)
     //    public ApiResponse<?> handleDbError(RuntimeException ex){
     //        return new ApiResponse<>(false, HttpStatus.SERVICE_UNAVAILABLE, ex.getCause().toString(), null);
