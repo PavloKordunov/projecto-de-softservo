@@ -3,12 +3,12 @@ import FlipImage from "../../img/person.png";
 import Icon from "../../img/sprite.svg";
 import {Link} from "react-router-dom";
 
-const NavBarDropMenu = ({isShowMenu, handleCloseMenu, isFooterMenu}) => {
+const NavBarDropMenu = ({isShowMenu, handleCloseMenu, isFooterMenu, className}) => {
     return (
         isShowMenu && (
             <div
              onClick={handleCloseMenu}
-             className={`${css.NavBarFlipWrapper} ${isFooterMenu ? css.footerMenu : ""}`}>
+             className={`${css.NavBarFlipWrapper} ${isFooterMenu ? css.footerMenu : ""} ${className}`}>
                 <div className={css.NavBarFlipContainer}>
                     <Link to='userProfile' className={css.NavBarFlipLink}>
                         <img src={FlipImage} alt='person' width='53' height='53'/>

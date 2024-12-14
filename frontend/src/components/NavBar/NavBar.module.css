@@ -238,11 +238,11 @@
     align-items: center;
     padding: 10px 14px;
     background-color: #1f1f1f;
-    width: 100%;
-    position: fixed;   /* Фіксуємо панель внизу */
-    bottom: 0;         /* Встановлюємо панель в низ екрану */
+    width: 95%;
+    position: fixed;
+    bottom: 0;
     left: 0;
-    z-index: 1000;     /* Щоб панель була поверх інших елементів */
+    z-index: 1000;
 }
 
 .footerMenu {
@@ -391,6 +391,11 @@
         width: 30px;
         height: 30px;
     }
+
+    .navBarDropMenu{
+        transform: translateY(60%) translateX(-20%);
+    }
+
 }
 
 

@@ -77,23 +77,23 @@
     font-weight: 400;
 }
 
-.postStatysticsList{
+.postStatisticsList {
     display: flex;
 }
 
-.postStatysticsList li:not(:last-child){
-    margin-right: 52px;
+.postStatisticsItem {
+    font-size: 18px;
+    color: #C5D0E6;
 }
 
-.postStatysticsItem{
-    color: #C5D0E6;
-    font-size: 18px;
-    font-weight: 400;
+.postStatisticsList li:not(:last-child){
+    margin-right: 52px;
 }
 
 .postInfoList{
     margin-right: 46px;
 }
+
 
 @media (max-width: 768px) {
     .postContainer {
@@ -140,88 +140,93 @@
         display: none;
     }
 
-    .postStatysticsList {
+    .postStatisticsList {
         flex-direction: row;
         gap: 10px;
     }
 
-    .postStatysticsList li:not(:last-child) {
+    .postStatisticsList li:not(:last-child) {
         margin-right: 0;
     }
 
-    .postStatysticsItem {
+    .postStatisticsItem {
         font-size: 16px;
         flex-direction: row;
     }
 }
-
 @media (max-width: 440px) {
     .postContainer {
-        flex-direction: row;
-        align-items: center;
-        width: 100%;
+        gap: 10px;
         padding: 10px;
-        gap: 15px;
-        margin: 0 auto;
+        width: 300px;
+        height: 115px;
+        margin-left: 0;
+        border-radius: 10px;
+    }
+
+    .postContainer img {
+        width: 100px;
     }
 
     .postTitleContainer {
         flex-direction: row;
-        text-align: center;
-        margin: 5px 0;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
     }
 
     .pageTitle {
-        font-size: 14px;
-        text-wrap: wrap;
-        line-height: 1.4;
-    }
-
-    .pageIconContainer {
-        margin-top: 8px;
-        width: 40px;
-        height: 40px;
+        font-size: 9px;
+        margin-top: 5px;
+        line-height: 1.2;
+        flex-grow: 1;
     }
 
     .pageGenresList {
-        flex-direction: row;
-        gap: 8px;
-        margin-top: 8px;
+        display: flex;
+        gap: 5px;
+        align-items: center;
+        height: 10px;
     }
 
     .pageGenresEl {
-        padding: 0 8px;
-        height: 28px;
-        font-size: 12px;
+        margin-top: 10px;
+        height: 20px;
+    }
+
+    .pageGenresText {
+        font-size: 9px;
+        margin-bottom: 0;
     }
 
     .postInfo {
-        flex-direction: row;
+        display: flex;
         align-items: center;
-        gap: 8px;
-        text-align: center;
+        margin-top: -20px;
     }
 
     .postInfoImg {
-        width: 40px;
-        height: 40px;
+        height: 25px;
+        width: 25px;
+        border-radius: 50%;
+        margin-right: 1px;
     }
 
-    .postInfoAuthor {
-        font-size: 14px;
+    .postStatisticsList {
+        display: flex;
+        gap: 10px;
+        font-size: 9px;
+        flex-wrap: nowrap;
     }
 
-    .postInfoAuthorTime {
-        font-size: 12px;
+    .postStatisticsItem {
+        font-size: 9px;
+        margin-right: 5px;
     }
 
-    .postStatysticsList {
-        flex-direction: row;
-        gap: 5px;
-        align-items: center;
-    }
-
-    .postStatysticsItem {
-        font-size: 14px;
-    }
+    /* .likeButton { */
+    /* margin-bottom: 0; */
+    /* } */
 }
+
+

@@ -133,7 +133,8 @@ const NavBar = () => {
                         </a>
                         <NavBarDropMenu isShowMenu={isShowMenu}
                                         handleCloseMenu={handleShowMenu}
-                                        isFooterMenu={false} />
+                                        isFooterMenu={false}
+                                        className={css.navBarDropMenu}/>
                     </>
                 )}
             </div>
