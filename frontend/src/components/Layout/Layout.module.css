@@ -8,4 +8,33 @@
     margin-left: 49px;
 }
 
+.pinnedGroupTags{
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .layoutContainer {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .sidePanel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-left: 0;
+        gap: 10px;
+    }
+
+    .pinnedGroupTags {
+        display: none;
+    }
+
+}
+
+
 

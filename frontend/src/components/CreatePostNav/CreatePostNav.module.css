@@ -21,8 +21,8 @@
     font-size: 18px;
 }
 
-.createPostNavInput::placeholder{
-    color: #858EAD;
+.createPostNavInput::placeholder,
+.createPostNavInputMobile::placeholder {
     font-size: 18px;
     font-weight: 400;
 }
@@ -43,5 +43,124 @@
     font-weight: 500;
     text-align: center;
     cursor: pointer;
+}
+
+.createPostNavInputMobile,
+.createPostNavButtonMobileText,
+.createPostNavInputMobile::placeholder{
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .createPostNav {
+        width: 100%;
+        padding: 10px 15px;
+        justify-content: center;
+        flex-direction: row;
+        gap: 10px;
+        margin-top: -46px;
+        margin-left: -15px;
+    }
+
+    .createPostNav img {
+        width: 50px;
+        height: 50px;
+        margin-right: 10px;
+    }
+
+    .createPostNavInput {
+        width: 60%;
+        height: 30px;
+        font-size: 16px;
+        padding: 11px;
+    }
+
+    .createPostNavButton {
+        width: 20%;
+        height: 50px;
+        font-size: 16px;
+
+    }
+}
+
+@media (max-width: 440px) {
+    .createPostNav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 10px;
+        width: 70%;
+        max-width: 320px;
+        margin-left: 5px;
+        border-radius: 10px;
+        height: 30px;
+    }
+
+    .NavBarFlipLink {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 8px;
+    }
+
+    .createPostNavInput {
+        width: 55%;
+        padding: 5px;
+        font-size: 9px;
+        border-radius: 5px;
+        margin-right: 3px;
+    }
+
+    .createPostNavButton {
+        padding: 4px 8px;
+        font-size: 9px;
+        border-radius: 5px;
+        background-color: #FF4155;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        height: 40px;
+        width: 30%;
+    }
+
+    .createPostNavInput {
+        display: none;
+    }
+
+    .createPostNavInputMobile {
+        display: block;
+        width: 55%;
+        padding: 5px;
+        font-size: 9px;
+        border-radius: 5px;
+        margin-right: 3px;
+    }
+
+    .createPostNavInputMobile::placeholder {
+        color: #B0B0B0;
+        font-size: 8px;
+        font-style: italic;
+    }
+
+    .createPostNavButton {
+        font-size: 9px;
+    }
+
+    .createPostNavButtonText {
+        display: none;
+    }
+
+    .createPostNavButtonMobileText {
+        display: inline-block;
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    /* Для іконки профілю */
+    .NavBarFlipLink img {
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+    }
 }
 

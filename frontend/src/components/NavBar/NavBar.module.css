@@ -45,15 +45,32 @@
     background-color: #FF4155;
 }
 
-.NavBarInput {
+.NavBarInputContainer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /*width: 100%;*/
+    /*max-width: 532px;*/
     width: 532px;
-    height: 30px;
+    height: 33px;
     padding: 12px 26px;
-    background-color: rgba(221, 221, 221, 0.1);
+    background-color: rgb(44, 53, 61);
+    color: rgb(44, 53, 61);
+    border-radius: 10px;
+    border: none;
+    margin-right: 50px;
+    margin-left: 25px;
+    font-size: 22px;
+    font-family: "Source Sans 3", sans-serif;
+}
+
+.NavBarInput {
+    flex: 1;
+    padding: 12px;
+    background-color: rgb(44, 53, 61);
     color: #97989D;
     border-radius: 10px;
     border: none;
-    margin-right: 292px;
     font-size: 22px;
     font-family: "Source Sans 3", sans-serif;
 }
@@ -62,7 +79,6 @@
 .NavBarInput:hover,
 .NavBarInput:focus {
     outline: 0;
-    outline-offset: 0;
 }
 
 .NavBarInput::placeholder {
@@ -72,16 +88,25 @@
     font-family: "Source Sans 3", sans-serif;
 }
 
-.NavBarInputContainer {
-    display: flex;
-    position: relative;
+.NavBarInputIcon {
+    flex-shrink: 0;
+    cursor: pointer;
+    fill: #97989D;
 }
 
-.NavBarInputIcon {
-    position: absolute;
-    left: 532px;
-    top: 12px;
+.NavBarSearchButton {
+    background-color: transparent;
+    border: none;
+    padding: 8px;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.NavBarSearchButton:hover {
+    transform: scale(1.5);
 }
 
 .NavBarUserProfileContainer {
@@ -208,16 +233,16 @@
 
 
 .NavBarFooter {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #1f1f1f;
     display: flex;
-    justify-content: space-around;
-    padding: 10px 0;
-    border-top: 1px solid #333;
-    z-index: 1000;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    background-color: #1f1f1f;
+    width: 100%;
+    position: fixed;   /* Фіксуємо панель внизу */
+    bottom: 0;         /* Встановлюємо панель в низ екрану */
+    left: 0;
+    z-index: 1000;     /* Щоб панель була поверх інших елементів */
 }
 
 .footerMenu {
@@ -232,7 +257,22 @@
     align-items: center;
     justify-content: center;
     color: #fff;
-    font-size: 20px;
+    height: 35px;
+    width: 35px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.NavBarFooterIcon:hover {
+    transform: scale(1.5);
+}
+
+#iconProfile{
+    transition: transform 0.3s ease;
+}
+
+#iconProfile:hover {
+    transform: scale(3.5);
 }
 
 @media (min-width: 769px) {
@@ -244,9 +284,11 @@
 @media (max-width: 767px) {
     .NavBarContainer {
         flex-direction: row;
-        justify-content: space-between;
-        padding: 0 15px;
+        justify-content: center;
+        padding: 10px 15px;
         height: auto;
+        width: 100%;
+        border-radius: 15px;
     }
 
     .NavBarLogo {
@@ -258,25 +300,104 @@
         gap: 15px;
     }
 
+    .NavBarIconEl {
+        gap: 15px;
+    }
+
+    .NavBarInputContainer {
+        width: 80%;
+    }
+
     .NavBarInput {
-        width: 100%;
-        margin-right: 0;
-        font-size: 16px;
-        height: 40px;
+        font-size: 18px;
+    }
+
+    .NavBarInputIcon {
+        cursor: pointer;
     }
 
     .NavBarIconsListOne, .NavBarUserProfileContainer{
         display: none;
     }
+}
 
-    .NavBarInputIcon {
-        margin-left: -330px;
-        margin-top: 5px;
-        cursor: pointer;
+@media (max-width: 440px) {
+    .NavBarContainer {
+        width: 70%;
+        max-width: 100%;
+        overflow-x: hidden;
     }
 
+    .NavBarLogo {
+        font-size: 20px;
+        margin-left: 10px;
+        display: block;
+    }
 
+    .NavBarInputContainer {
+        width: calc(100% - 40px);
+        height: 30px;
+        padding: 0;
+        background-color: transparent;
+        margin-right: 10px;
+    }
+
+    .NavBarInput {
+        width: 100%;
+        padding: 8px;
+        font-size: 16px;
+        background-color: transparent;
+    }
+
+    .NavBarInput::placeholder {
+        color: transparent;
+    }
+
+    .NavBarSearchButton {
+        padding: 8px;
+    }
+
+    .NavBarIconsListTwo {
+        display: flex;
+        gap: 10px;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .NavBarIconEl {
+        width: 40px;
+        height: 40px;
+    }
+
+    .NavBarMobile {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+    }
+
+    .NavBarFooter {
+        padding: 15px 25px;
+        gap: 5px;
+        width: 61%;
+    }
+
+    .NavBarFooterIcon {
+        height: 30px;
+        width: 30px;
+    }
+
+    .NavBarFooterIcon svg {
+        width: 30px;
+        height: 30px;
+    }
 }
+
+
+
+
+
+
 
 
 

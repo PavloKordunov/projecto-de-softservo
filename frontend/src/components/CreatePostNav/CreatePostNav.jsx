@@ -26,8 +26,27 @@ const CreatePostNav = ({setIsShow, handleSetTitle}) => {
                 <img src={FlipImage} alt='person' width='60' height='60'/>
             </Link>
             {/*<img src={Image} alt="logo" width='60' height='60'/>*/}
-            <input onChange={handleChange} value={titleText} name='titleText' className={css.createPostNavInput} type="text" placeholder="Поширте те, що коїться у вас в голові"/>
-            <button onClick={handleClick} className={css.createPostNavButton} type='button'>Створити пост</button>
+            <input
+                onChange={handleChange}
+                value={titleText}
+                name='titleText'
+                className={css.createPostNavInput}
+                type="text"
+                placeholder="Поширте те, що коїться у вас в голові"/>
+            <input
+                onChange={handleChange}
+                value={titleText}
+                name='titleText'
+                className={css.createPostNavInputMobile}
+                type="text"
+                placeholder="Поширте те, що коїться"/>
+            <button
+                onClick={handleClick}
+                className={css.createPostNavButton}
+                type='button'>
+                <span className={css.createPostNavButtonText}>Створити пост</span>
+                <span className={css.createPostNavButtonMobileText}>Створити</span>
+            </button>
         </div>
     )
 }

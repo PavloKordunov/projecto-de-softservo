@@ -10,11 +10,13 @@ const Layout = () => {
         <div >
         <div className={css.layoutContainer}>
             <div className={css.sidePanel}>
-                <NavPanel />
-                <PopularTags />
-                <PinnedGroup />
+                <NavPanel/>
+                <div className={css.pinnedGroupTags}>
+                    <PinnedGroup/>
+                    <PopularTags/>
+                </div>
             </div>
-                <Outlet />
+            <Outlet/>
         </div>
         </div>
     );

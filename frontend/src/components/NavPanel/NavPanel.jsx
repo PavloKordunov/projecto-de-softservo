@@ -7,7 +7,7 @@ const NavPanel = () => {
             <li className={css.panelEl}>
                 <a href="" className={css.panelElLink}>
                     <div className={css.svgContainer}>
-                        <svg width="26" height="26">
+                        <svg width="26" height="26" className={css.svgEl}>
                             <use href={`${Icon}#icon1`}></use>
                         </svg>
                     </div>
@@ -20,7 +20,7 @@ const NavPanel = () => {
             <li className={css.panelEl}>
                 <a href="" className={css.panelElLink}>
                     <div className={css.svgContainer}>
-                        <svg width='26' height='26'>
+                        <svg width='26' height='26' className={css.svgEl}>
                             <use href={`${Icon}#diceIcon`}></use>
                         </svg>
                     </div>
@@ -33,7 +33,7 @@ const NavPanel = () => {
             <li className={css.panelEl}>
                 <a href="" className={css.panelElLink}>
                     <div className={css.svgContainer}>
-                        <svg width='26' height='26'>
+                        <svg width='26' height='26' className={css.svgEl}>
                             <use href={`${Icon}#icon3`}></use>
                         </svg>
                     </div>

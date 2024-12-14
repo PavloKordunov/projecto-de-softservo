@@ -36,16 +36,16 @@ const Post = () => {
                 </ul>
 
                 <div className={css.postInfo}>
-                <img className={css.postInfoImg} src={ImagePost} alt="" width='53' height='53'/>
-                   <div className={css.postInfoList}>
-                    <p className={css.postInfoAuthor}>Павло Сірий</p>
-                    <p className={css.postInfoAuthorTime}>2 години тому</p>
-                </div>
-                <ul className={css.postStatysticsList}>
-                    <li className={css.postStatysticsItem}>651,324 Переглядів</li>
-                    <li className={css.postStatysticsItem}>36,6545 Уподобань</li>
-                    <li className={css.postStatysticsItem}>56 Коментарів</li>
-                </ul>
+                    <img className={css.postInfoImg} src={ImagePost} alt="" width='53' height='53'/>
+                       <div className={css.postInfoList}>
+                            <p className={css.postInfoAuthor}>Павло Сірий</p>
+                            <p className={css.postInfoAuthorTime}>2 години тому</p>
+                       </div>
+                    <ul className={css.postStatysticsList}>
+                        <li className={css.postStatysticsItem}>651,324 Переглядів</li>
+                        <li className={css.postStatysticsItem}>36,6545 Уподобань</li>
+                        <li className={css.postStatysticsItem}>56 Коментарів</li>
+                    </ul>
                 </div>
             </div>
         </div>

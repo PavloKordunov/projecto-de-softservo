@@ -80,4 +80,91 @@
     align-items: center;
 }
 
+@media (max-width: 768px) {
+    .panelList {
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        padding: 10px 15px;
+        gap: 5px;
+    }
+
+    .panelEl {
+        width: auto;
+        height: auto;
+        flex-direction: row;
+        padding: 5px;
+        margin-bottom: 0;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .svgContainer {
+        margin-right: 10px;
+    }
+
+    .panelElSubtext {
+        display: none;
+    }
+}
+
+@media (max-width: 440px) {
+    .panelList {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 10px 0;
+        margin-bottom: 20px;
+        width: 90%;
+        border-radius: 5px;
+        margin-right: 100px;
+    }
+
+    .panelEl {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 1 auto;
+        height: 20px;
+        padding: 10px;
+        width: 70px;
+        margin: 0 -7px;
+    }
+
+    .panelElLink {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        width: 100%;
+    }
+
+    .svgContainer {
+        width: 22px;
+        height: 22px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 10px;
+    }
+
+    .svgEl {
+        width: 20px;
+        height: 20px;
+    }
+
+    .panelElText {
+        font-size: 10px;
+        font-weight: bold;
+        padding-right: 15px;
+    }
+
+    .subNumberContainer {
+        display: none;
+    }
+}
+
+
+
+
 
