@@ -14,20 +14,21 @@ import java.sql.SQLException;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler({EntityNotFoundException.class, ResourceNotFoundException.class})
+    @ExceptionHandler(value = {EntityNotFoundException.class, ResourceNotFoundException.class})
     public ApiResponse<?> handleEntityNotFound(RuntimeException ex) {
         return new ApiResponse<>(true, HttpStatus.NOT_FOUND, ex.getCause().toString(), null);
     }
 
-    @ExceptionHandler(SQLException.class)
+    @ExceptionHandler(value = SQLException.class)
     public ApiResponse<?> handleSqlDb(RuntimeException ex) {
         return new ApiResponse<>(false, HttpStatus.INTERNAL_SERVER_ERROR, ex.getCause().toString(), null);
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ExceptionHandler(value = DataIntegrityViolationException.class)
     public ApiResponse<?> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
         return new ApiResponse<>(false, HttpStatus.CONFLICT, ex.getCause().toString(), null);
     }
+
 
     //    @ExceptionHandler(JDBCConnectionException.class)
     //    public ApiResponse<?> handleDisconnectDb(RuntimeException ex) {
