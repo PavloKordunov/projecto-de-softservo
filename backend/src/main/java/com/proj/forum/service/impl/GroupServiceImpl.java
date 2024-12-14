@@ -8,11 +8,12 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -23,12 +24,47 @@ public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
 
     @Override
-    public List<GroupDto> getAllGroups(){
-        List<Group> groupList = groupRepository.findAll();
-        log.info("getAllGroups");
+    public UUID createGroup(GroupDto groupDto) {
+        Group group = mapToGroup(groupDto);
+        Group groupFromDB = groupRepository.save(group);
+        return groupFromDB.getId();
+    }
+
+    @Override
+    public GroupDto getGroup(UUID id) {
+        Optional<Group> group;
+        try {
+            group = groupRepository.findById(id);
+            if (group.isEmpty()) {
+                log.info("No group");
+                throw new EntityNotFoundException("No group");
+            }
+        } catch (RuntimeException ex) {
+            throw new EntityNotFoundException(ex);
+        }
+
+        return GroupDto.builder()
+                .id(id)
+                .title(group.get().getTitle())
+                .description(group.get().getDescription() == null ? StringUtils.EMPTY : group.get().getDescription())
+                .build();
+    }
 
 
-//        // Mock response data
+    @Override
+    public List<GroupDto> getAllGroups() {
+        List<Group> groupList;
+        try {
+            groupList = groupRepository.findAll();
+            log.info("getAllGroups");
+            if (groupList.isEmpty()) {
+                log.info("No groups");
+                throw new EntityNotFoundException("No groups");
+            }
+        } catch (RuntimeException ex) {
+            throw new EntityNotFoundException(ex);
+        }
+        //        // Mock response data
 //        List<Group> group = new ArrayList<>();
 //
 //        group.add(Group.builder()
@@ -44,16 +80,59 @@ public class GroupServiceImpl implements GroupService {
 //                .build());
 
         return groupList.stream()
-                .map(GroupServiceImpl::getGroupDto)
+                .map(GroupServiceImpl::getUpdateGroup)
                 .toList();
     }
 
-    private static GroupDto getGroupDto(Group group) {
-        if (group == null) {
-            log.info("no group found");
-            throw new EntityNotFoundException("no group found");
-        }
+    @Transactional
+    @Override
+    public void updateGroup(UUID id, GroupDto groupDto) {
+        log.info("Update group by put");
+        Group updatedGroup;
+        try {
+            updatedGroup = groupRepository.findById(id)
+                    .map(group -> getUpdateGroup(group, groupDto))
+                    .orElseThrow(() -> new EntityNotFoundException("Group didn't find"));
 
+            groupRepository.save(updatedGroup);
+        } catch (RuntimeException ex) {
+            throw new EntityNotFoundException(ex);
+        }
+    }
+
+    private Group getUpdateGroup(Group group, GroupDto groupDto) {
+        if (groupDto.title() != null)
+            group.setTitle(groupDto.title());
+        if (groupDto.description() != null)
+            group.setDescription(groupDto.description());
+        return group;
+    }
+
+    @Override
+    public void deleteGroup(UUID id) {
+        try {
+            if (groupRepository.existsById(id)) {
+                groupRepository.deleteById(id);
+            } else {
+                log.error("Not found group");
+                throw new EntityNotFoundException("Not found group");
+            }
+        } catch (EntityNotFoundException ex) {
+            throw new EntityNotFoundException(ex);
+//        } catch (Exception ex){
+//            throw new DbNotResponseException("Db error", ex);
+        }
+    }
+
+
+    private static Group mapToGroup(GroupDto groupDto) {
+        return Group.builder()
+                .title(groupDto.title())
+                .description(groupDto.description() == null ? StringUtils.EMPTY : groupDto.description())
+                .build();
+    }
+
+    private static GroupDto getUpdateGroup(Group group) {
         return GroupDto.builder()
                 .id(group.getId())
                 .title(group.getTitle())
@@ -61,6 +140,5 @@ public class GroupServiceImpl implements GroupService {
                 .build();
     }
 
-    ;
 
 }

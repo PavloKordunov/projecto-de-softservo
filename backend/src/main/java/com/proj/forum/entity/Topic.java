@@ -1,41 +1,34 @@
 package com.proj.forum.entity;
 
 
-import com.proj.forum.dto.UserDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.UUID;
-
-import com.proj.forum.entity.User;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-@Table(name ="topic")
+@Table(name ="topics")
 public class Topic {
-
     @Id
     @GeneratedValue
     private UUID id;
 
-//    @ManyToOne
-//    private User author;
+    @ManyToOne
+    @JoinColumn(name = "author_id", nullable = false) // Specifies the foreign key column
+    private User author;
+
+    @Column(nullable = false)
     private String title;
+
+    @Column(length = 500)
     private String description;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "topic_tag",
-//            joinColumns = @JoinColumn(name = "topic_id"),
-//            inverseJoinColumns = @JoinColumn(name = "tag_id")
-//    )
-//    private List<Tag> tags;
     private String image;
 }

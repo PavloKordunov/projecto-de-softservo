@@ -1,13 +1,14 @@
 package com.proj.forum.entity;
 
-import com.proj.forum.dto.UserDto;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -15,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 @Builder
-@Table(name ="user_group")
+@Table(name = "groups")
 public class Group {
 
     @Id
@@ -24,8 +25,8 @@ public class Group {
 
     private String title;
     private String description;
-
-//    @OneToMany//(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true) //is there a need of args in ()?
-//    private List<Topic> topics;
-//    private String image;
+    
+    //@OneToMany//(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true) //is there a need of args in ()?
+    //private List<Topic> topics;
+    //private String image;
 }

@@ -1,7 +1,6 @@
 package com.proj.forum.entity;
 
 import jakarta.persistence.*;
-
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,41 +10,59 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 import java.util.UUID;
 
+import static jakarta.persistence.CascadeType.ALL;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-@Table(name ="app_user")
+@Table(name ="users")
 public class User {
     @Id
     @GeneratedValue
-    private UUID id; //utilise @nickname
+    private UUID id;
 
-//    @Column(unique = true, nullable = false)
-//    @NotBlank(message = "Username is required")
+    @Column(unique = true, nullable = false)
+    @NotBlank(message = "Username is required")
     private String username;
+
+    @NotBlank(message = "Name is required")
     private String name;
+
     private String profileImage;
 
-//   @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true) one user can make many topics
-//    private List<Topic> createdTopics;
+    @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
+    private List<Topic> createdTopics;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "user_liked_topics",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "topic_id")   //many users can have many liked topics
-//    )
-//    private List<Topic> likedTopics;
+    @ManyToMany
+    @JoinTable(
+            name = "user_liked_topics",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "topic_id")
+    )
+    private List<Topic> likedTopics;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "user_saved_topics",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "topic_id")  //same as liked
-//    )
-//private List<Topic> savedTopics;
+    @ManyToMany
+    @JoinTable(
+            name = "user_saved_topics",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "topic_id")
+    )
+    private List<Topic> savedTopics;
 
-    private String image;
+    @ManyToMany
+    @JoinTable(
+            name = "user_subscribers",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "subscriber_id")
+    )
+    private List<User> subscribers;
+
+    @ManyToMany(mappedBy = "subscribers")
+    private List<User> following;
+
+
 }
+
+

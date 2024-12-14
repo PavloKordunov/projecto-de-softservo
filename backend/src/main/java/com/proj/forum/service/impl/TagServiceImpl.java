@@ -1,10 +1,12 @@
 package com.proj.forum.service.impl;
 
+import com.proj.forum.dto.TagDto;
 import com.proj.forum.entity.Tag;
-import com.proj.forum.entity.Topic;
 import com.proj.forum.repository.TagRepository;
 import com.proj.forum.service.TagService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,15 +18,33 @@ import java.util.List;
 @Transactional
 public class TagServiceImpl implements TagService {
 
-    private TagRepository tagRepository;
+    private final TagRepository tagRepository;
 
     @Autowired
     public TagServiceImpl(TagRepository tagRepository) {this.tagRepository = tagRepository;}
 
     @Override
-    public List<Tag> getAllTags(){
-        Iterable<Tag> all = tagRepository.findAll();
+    public List<TagDto> getAllTags(){
+        List<Tag> tags = tagRepository.findAll();
         log.info("getAllTags");
-        return List.of(all.iterator().next());
+        if (tags.isEmpty()) {
+            log.info("No groups found");
+            throw new EntityNotFoundException("No groups found");
+        }
+        return tags.stream()
+                .map(TagServiceImpl::getTagDto)
+                .toList();
     };
+
+    private static TagDto getTagDto(Tag tag) {
+        if (tag == null) {
+            log.info("no tag found");
+            throw new EntityNotFoundException("no tag found");
+        }
+//        log.info("Creating tagDto");
+        return TagDto.builder()
+                .id(tag.getId())
+                .name(tag.getName() == null ? StringUtils.EMPTY : tag.getName())
+                .build();
+    }
 }
