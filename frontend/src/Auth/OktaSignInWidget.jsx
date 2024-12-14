@@ -7,18 +7,28 @@ const OktaSignInWidget = ({ onSuccess, onError }) => {
     const widgetRef = useRef();
 
     useEffect(() => {
-
         if (!widgetRef.current) {
-            return false;
+            console.log("Widget reference not found.");
+            return;
         }
 
+        console.log("Initializing Okta Sign-In Widget.");
         const widget = new OktaSignIn(oktaConfig);
 
         widget.showSignInToGetTokens({
             el: widgetRef.current,
-        }).then(onSuccess).catch(onError);
+        }).then((tokens) => {
+            console.log("Tokens received:", tokens);
+            onSuccess(tokens);
+        }).catch((err) => {
+            console.error("Error during widget initialization:", err);
+            onError(err);
+        });
 
-        return () => widget.remove();
+        return () => {
+            console.log("Cleaning up Okta Sign-In Widget.");
+            widget.remove();
+        };
     }, [onSuccess, onError]);
 
     return (
@@ -28,4 +38,4 @@ const OktaSignInWidget = ({ onSuccess, onError }) => {
     );
 };
 
-export default OktaSignInWidget
+export default OktaSignInWidget;

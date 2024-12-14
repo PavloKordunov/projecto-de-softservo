@@ -1,0 +1,92 @@
+.messengerContainer{
+    background-color: #1E1F20;
+    padding: 12px 0 12px 12px;
+}
+
+.messengerWrapper{
+    position: absolute;
+    padding: 12px 12px 12px 12px;
+    border-radius: 16px;
+    background-color: #1E1F20;
+    top: 100px;
+    right: 37px;
+    z-index: 1000;
+}
+
+.messengerTitleContainer{
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    justify-content: space-between;
+}
+
+.messengerTitle{
+    font-size: 26px;
+    font-weight: 600;
+    color: #FFF;
+
+}
+
+.messengerCloseIcon{
+    fill: #FFF;
+}
+
+.messengerUserContainer{
+    display: flex;
+    background-color: #2C353D;
+    padding: 10px;
+    width: 320px;
+    align-items: center;
+    height: 50px;
+    border-radius: 14px;
+    margin-bottom: 18px;
+}
+
+.messengerUserDataContainer{
+    margin-left: 12px;
+}
+
+.messengerUserData{
+    display: flex;
+    justify-content: space-between;
+}
+
+.messengerUserName{
+    font-size: 20px;
+    font-weight: 600;
+    color: #FFF;
+}
+
+.messengerUserTime{
+    font-size: 16px;
+    font-weight: 600;
+    color: #FFF;
+}
+
+.messengerUserText{
+    font-size: 13px;
+    color: #C5D0E6;
+    font-weight: 600;
+}
+
+.chatListContainer{
+    display: flex;
+    gap: 12px;
+}
+
+.messengerScroll{
+    height: 387px;
+    width: 15px;
+    background-color: #2C353D;
+    border-radius: 31px;
+    display: flex;
+    justify-content: center;
+    padding: 13px 0;
+}
+
+.messengerScrollPointer{
+    height: 100px;
+    width: 9px;
+    background-color: #1E1F20;
+    border-radius: 31px;
+}

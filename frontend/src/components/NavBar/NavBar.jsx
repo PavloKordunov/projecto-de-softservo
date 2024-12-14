@@ -3,10 +3,13 @@ import Image from '../../img/NavPerson.png'
 import css from './NavBar.module.css'
 import {useState} from "react";
 import NavBarDropMenu from "../NavBarDropMenu/NavBarDropMenu";
+import {Link} from "react-router-dom";
+import Messenger from "../Messenger/Messenger";
 
 const NavBar = () => {
 
     const [isShowMenu, setIsShowMenu] = useState(false);
+    const [isShowMessenger, setIsShowMessenger] = useState(false);
 
     const handleShowMenu = () => {
         setIsShowMenu(!isShowMenu);
@@ -14,6 +17,14 @@ const NavBar = () => {
 
     const handleCloseMenu = () => {
         setIsShowMenu(false);
+    }
+
+    const handleShowMessenger = () => {
+        setIsShowMessenger(!isShowMessenger);
+    }
+
+    const handleCloseMessenger = () => {
+        setIsShowMessenger(false);
     }
 
     return (
@@ -45,18 +56,20 @@ const NavBar = () => {
                 </svg>
             </div>
 
-            <ul className={css.NavBarIconsList}>
-                <li className={css.NavBarIconEl}>
+            <div className={css.NavBarIconsList}>
+                <div className={css.NavBarIconEl} onClick={handleShowMessenger}>
                     <svg width="26" height="26">
                         <use href={`${Icon}#iconMessage`}></use>
                     </svg>
-                </li>
+                </div>
                 <li className={css.NavBarIconEl}>
                     <svg width="26" height="26">
                         <use href={`${Icon}#iconNotification`}></use>
                     </svg>
                 </li>
-            </ul>
+            </div>
+
+            <Link to='auth-page'>login</Link>
 
             <a onClick={handleShowMenu} className={css.NavBarUserProfileContainer}>
                 <div className={css.NavBarUserImageContainer}>
@@ -64,10 +77,11 @@ const NavBar = () => {
                 </div>
                 <p className={css.NavBarName}>User</p>
                 <svg width="16" height="11">
-                <use href={`${Icon}#iconArrowDown`} />
+                    <use href={`${Icon}#iconArrowDown`} />
                 </svg>
             </a>
-            <NavBarDropMenu isShowMenu={isShowMenu} handleCloseMenu={handleShowMenu}/>
+            <NavBarDropMenu isShowMenu={isShowMenu} handleCloseMenu={handleCloseMenu}/>
+            <Messenger setIsShowMessenger={setIsShowMessenger} isShowMessenger={isShowMessenger} handleCloseMessenger={handleCloseMessenger} />
         </div>
     )
 }

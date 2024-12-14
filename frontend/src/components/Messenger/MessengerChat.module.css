@@ -1,0 +1,124 @@
+.messengerChatExitIcon{
+    transform: rotate(180deg);
+    margin-right: 16px;
+}
+
+.messengerChatHeader{
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.messengerChatUserName{
+    font-size: 20px;
+    color: #fff;
+    font-weight: 600;
+    margin-left: 9px;
+}
+
+.messengerChatUserActivity{
+    font-size: 13px;
+    color: #C5D0E6;
+    font-weight: 600;
+    margin-left: 9px;
+}
+
+.messengerChatContainer{
+    background-color: #2C353D;
+    border-radius: 14px;
+    width: 345px;
+    height: 374px;
+    display: flex;
+    align-items: end;
+    padding: 0 8px 25px 0;
+    position: relative;
+}
+
+.messengerChatWrapper{
+    display: flex;
+    gap: 9px;
+    align-items: end;
+    margin-bottom: 14px;
+}
+
+.messengerChatScroll{
+    height: 348px;
+    width: 15px;
+    background-color: #2C353D;
+    border-radius: 31px;
+    display: flex;
+    justify-content: center;
+    padding: 13px 0;
+    align-items: end;
+}
+
+.messengerChatScrollPointer{
+    height: 100px;
+    width: 9px;
+    background-color: #1E1F20;
+    border-radius: 31px;
+}
+
+.messengerChatMessageLeftContainer{
+    display: flex;
+    align-items: center;
+    margin-bottom: 60px;
+    gap: 5px;
+    position: absolute;
+    right: 120px;
+}
+
+.messengerChatMessageContainer{
+    width: 165px;
+    height: 34px;
+    background-color: #1E1F20;
+    border-radius: 16px;
+}
+
+.messengerChatMessageTime{
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.messengerChatMessageRightContainer{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    position: absolute;
+    left: 120px;
+}
+
+.messengerChatFooter{
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    gap: 10px;
+    background-color: #2C353D;
+    border-radius: 14px;
+    width: 332px;
+    height: 36px;
+}
+
+.messengerChatInput{
+    border: none;
+    outline: none;
+    background-color: #1E1F20;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    width: 246px;
+    height: 36px;
+    border-radius: 16px;
+    padding: 0 8px;
+}
+
+.messengerChatSendIcon{
+    background-color: #FF4155;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 15px;
+}
