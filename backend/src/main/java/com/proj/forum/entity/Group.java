@@ -25,7 +25,7 @@ public class Group {
 
     private String title;
     private String description;
-
+    
     //@OneToMany//(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true) //is there a need of args in ()?
     //private List<Topic> topics;
     //private String image;

@@ -1,6 +1,5 @@
 package com.proj.forum.entity;
 
-import com.proj.forum.dto.UserDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -28,48 +27,42 @@ public class User {
     @NotBlank(message = "Username is required")
     private String username;
 
-    @NotBlank(message = "Name is required")//unique
+    @NotBlank(message = "Name is required")
     private String name;
-
 
     private String profileImage;
 
-
-
-    @OneToMany(mappedBy = "user", cascade = ALL, orphanRemoval = true) //one user can make many topics
+    @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
     private List<Topic> createdTopics;
-
-
 
     @ManyToMany
     @JoinTable(
             name = "user_liked_topics",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "topic_id")   //many users can have many liked topics
+            inverseJoinColumns = @JoinColumn(name = "topic_id")
     )
     private List<Topic> likedTopics;
-
 
     @ManyToMany
     @JoinTable(
             name = "user_saved_topics",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "topic_id")   //many users can have many liked topics
+            inverseJoinColumns = @JoinColumn(name = "topic_id")
     )
     private List<Topic> savedTopics;
 
-    @OneToMany
+    @ManyToMany
     @JoinTable(
             name = "user_subscribers",
-            joinColumns = @JoinColumn(name = "user_id")
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "subscriber_id")
     )
     private List<User> subscribers;
 
-
-    @OneToMany
-    @JoinTable(
-            name = "user_following",
-            joinColumns = @JoinColumn(name = "user_id")
-    )
+    @ManyToMany(mappedBy = "subscribers")
     private List<User> following;
+
+
 }
+
+

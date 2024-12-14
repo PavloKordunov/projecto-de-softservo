@@ -1,14 +1,17 @@
 package com.proj.forum.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
+
 
 import java.util.UUID;
 
-
+@Builder
 public record TopicDto(
-        UUID id,
-        @Getter @Setter String title,
-        @Getter @Setter String description
+        @NotNull UUID id,
+        @NotBlank @NotEmpty String title,
+        String description
 ) {
 }

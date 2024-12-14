@@ -3,8 +3,9 @@ package com.proj.forum.controller;
 
 import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.TagDto;
-import com.proj.forum.exception.ResourceNotFoundException;
+//import com.proj.forum.exception.CustomResourceNotFoundException;
 import com.proj.forum.service.TagService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -32,8 +33,8 @@ public class TagController {
         try {
             List<TagDto> tagDtos = tagService.getAllTags();
             return new ApiResponse<>(true, HttpStatus.OK, "Tags found", tagDtos);
-        } catch (ResourceNotFoundException ex){
-            log.error("Tags didn't find");
+        } catch (EntityNotFoundException ex){
+            log.error("Tags not found");
             throw ex;
         }
 
