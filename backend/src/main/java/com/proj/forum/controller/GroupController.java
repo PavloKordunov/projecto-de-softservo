@@ -3,13 +3,11 @@ package com.proj.forum.controller;
 import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.GenericResponse;
 import com.proj.forum.dto.GroupDto;
-import com.proj.forum.exception.CustomNullPointerException;
-import com.proj.forum.exception.CustomResourceNotFoundException;
 import com.proj.forum.service.GroupService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +30,7 @@ public class GroupController {
             UUID id = groupService.createGroup(group);
 
             return apiResponse(true, 201, "Create group", id);
-        } catch (CustomNullPointerException ex) {
+        } catch (EntityNotFoundException ex) {
             log.info("Group is null");
             throw ex;
         }
@@ -43,19 +41,16 @@ public class GroupController {
         log.info("Fetching all groups");
         List<GroupDto> groupsDto = groupService.getAllGroups();
 
-        return new ApiResponse<>(true, HttpStatus.OK, "Groups found", groupsDto);
+        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Groups found", groupsDto);
     }
 
     @GetMapping("/{id}")
     public ApiResponse<GroupDto> getGroupById(@PathVariable @Valid UUID id) {
-        try {
-            log.info("Fetch group");
-            GroupDto groupDto = groupService.getGroup(id);
-            return new ApiResponse<>(true, HttpStatus.OK, "Successful getting", groupDto);
-        } catch (CustomResourceNotFoundException ex) {
-            log.error("No group found [getById]");
-            throw ex;
-        }
+
+        log.info("Fetch group");
+        GroupDto groupDto = groupService.getGroup(id);
+
+        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Successful getting", groupDto);
     }
 
     @PatchMapping("/update/{id}")
@@ -66,7 +61,7 @@ public class GroupController {
             log.info("Update group");
             groupService.updateGroup(id, groupDto);
             return apiResponse(true, 200, "Group successfully updated", id);
-        } catch (CustomResourceNotFoundException ex) {
+        } catch (EntityNotFoundException ex) {
             log.error("No group found [patch]");
             throw ex;
         }
@@ -78,9 +73,13 @@ public class GroupController {
             log.info("Delete group");
             groupService.deleteGroup(id);
             return apiResponse(true, 200, "Group successfully deleted", id);
-        } catch (CustomResourceNotFoundException ex) {
+        } catch (EntityNotFoundException ex) {
             log.error("No group found [delete]");
             throw ex;
+//        } catch (DbNotResponseException ex)
+//        {
+//            log.error("Db doesn't response");
+//            throw ex;
         }
     }
 

@@ -3,7 +3,7 @@ package com.proj.forum.controller;
 
 import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.TagDto;
-import com.proj.forum.exception.CustomResourceNotFoundException;
+import com.proj.forum.exception.ResourceNotFoundException;
 import com.proj.forum.service.TagService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ public class TagController {
         try {
             List<TagDto> tagDtos = tagService.getAllTags();
             return new ApiResponse<>(true, HttpStatus.OK, "Tags found", tagDtos);
-        } catch (CustomResourceNotFoundException ex){
+        } catch (ResourceNotFoundException ex){
             log.error("Tags didn't find");
             throw ex;
         }
