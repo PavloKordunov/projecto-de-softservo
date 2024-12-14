@@ -3,15 +3,16 @@ package com.proj.forum.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 public class Message {
     @Id
     @GeneratedValue
-    private Long id;
+    private UUID id;
 
-    private Long senderId;
-    private Long recipientId;
+    private UUID senderId;
+    //private UUID recipientId;
     private String content;
     private LocalDateTime timestamp;
 
