@@ -46,7 +46,6 @@ public class GroupController {
 
     @GetMapping("/{id}")
     public ApiResponse<GroupDto> getGroupById(@PathVariable @Valid UUID id) {
-
         log.info("Fetch group");
         GroupDto groupDto = groupService.getGroup(id);
 

@@ -62,7 +62,8 @@ public class User {
     @ManyToMany(mappedBy = "subscribers")
     private List<User> following;
 
-
+    @OneToMany(mappedBy = "user", cascade = ALL)
+    private List<ChatRoom> chats;
 }
 
 
