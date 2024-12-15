@@ -24,7 +24,7 @@ public class GroupController {
     private final GroupService groupService;
 
     @PostMapping("/create")
-    public ApiResponse<GenericResponse> createGroup(@RequestBody @Valid GroupDto group) {
+    public ApiResponse<GenericResponse> createGroup(@Valid @RequestBody GroupDto group) {
         try {
             log.info("Create group");
             UUID id = groupService.createGroup(group);
@@ -55,7 +55,7 @@ public class GroupController {
     @PatchMapping("/update/{id}")
     public ApiResponse<GenericResponse> updateGroup(
             @PathVariable @Valid UUID id,
-            @RequestBody GroupDto groupDto) {
+            @RequestBody @Valid GroupDto groupDto) {
         try {
             log.info("Update group");
             groupService.updateGroup(id, groupDto);
