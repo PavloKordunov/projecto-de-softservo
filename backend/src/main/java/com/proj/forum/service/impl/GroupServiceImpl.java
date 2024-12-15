@@ -101,9 +101,9 @@ public class GroupServiceImpl implements GroupService {
     }
 
     private Group getUpdateGroup(Group group, GroupDto groupDto) {
-        if (groupDto.title() != null)
+        if (groupDto.title() != null && !groupDto.title().equals(group.getTitle()))
             group.setTitle(groupDto.title());
-        if (groupDto.description() != null)
+        if (groupDto.description() != null && !groupDto.description().equals(group.getDescription()))
             group.setDescription(groupDto.description());
         return group;
     }

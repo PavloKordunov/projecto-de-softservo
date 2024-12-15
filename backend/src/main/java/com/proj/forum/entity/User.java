@@ -67,7 +67,8 @@ public class User {
 //    )
     private List<User> following;
 
-
+    @OneToMany(mappedBy = "user", cascade = ALL)
+    private List<ChatRoom> chats;
 }
 
 

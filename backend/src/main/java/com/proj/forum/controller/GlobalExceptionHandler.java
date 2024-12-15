@@ -6,21 +6,36 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import java.sql.SQLException;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
 
-    @ExceptionHandler({EntityNotFoundException.class, ResourceNotFoundException.class})
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    @ExceptionHandler(value = {EntityNotFoundException.class, ResourceNotFoundException.class})
     public ApiResponse<?> handleEntityNotFound(RuntimeException ex) {
         return new ApiResponse<>(true, HttpStatus.NOT_FOUND, ex.getCause().toString(), null);
     }
 
-    @ExceptionHandler(SQLException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(value = SQLException.class)
     public ApiResponse<?> handleSqlDb(RuntimeException ex) {
         return new ApiResponse<>(false, HttpStatus.INTERNAL_SERVER_ERROR, ex.getCause().toString(), null);
+    }
+
+//    @ExceptionHandler(value = DataIntegrityViolationException.class)
+//    public ApiResponse<?> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+//        return new ApiResponse<>(false, HttpStatus.CONFLICT, ex.getCause().toString(), null);
+//    }
+
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class})
+    public ApiResponse<?> handleMethodNotValid(RuntimeException ex){
+        return new ApiResponse<>(false, HttpStatus.BAD_REQUEST, ex.getCause().toString(), null);
     }
 
     //    @ExceptionHandler(JDBCConnectionException.class)
