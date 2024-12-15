@@ -17,16 +17,17 @@
     border-radius: 8px;
     border: none;
     padding: 16px;
-    color: #E4E3E3;
-    font-size: 18px;
+    color: #848dac;
+    font-size: 23px;
     font-family: "Source Sans 3", sans-serif;
 }
 
 .createPostNavInput::placeholder,
 .createPostNavInputMobile::placeholder {
-    font-size: 18px;
+    font-size: 23px;
     font-weight: 400;
     font-family: "Source Sans 3", sans-serif;
+    color: #848dac;
 }
 
 .createPostNavInput:active, :hover, :focus {

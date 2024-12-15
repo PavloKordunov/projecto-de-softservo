@@ -32,8 +32,9 @@
 
 @media (max-width: 440px) {
     .likeButton {
-        width: 20px;
-        height: 10px;
+        width: 33px;
+        height: 20px;
+        margin-bottom: 10px;
     }
 
     .likeIcon {

@@ -5,6 +5,7 @@
     flex-direction: column;
     background-color: #1E1F20;
     border-radius: 21px;
+    cursor: pointer;
 }
 
 .pinnedGroupTitle{

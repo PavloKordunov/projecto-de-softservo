@@ -6,6 +6,7 @@
     flex-direction: column;
     border-radius: 21px;
     margin-bottom: 26px;
+    cursor: pointer;
 }
 
 .popularTagTitle{
