@@ -80,10 +80,6 @@ public class TopicController {
         } catch (EntityNotFoundException ex) {
             log.error("No topic found [delete]");
             throw ex;
-//        } catch (DbNotResponseException ex)
-//        {
-//            log.error("Db doesn't response");
-//            throw ex;
         }
     }
 

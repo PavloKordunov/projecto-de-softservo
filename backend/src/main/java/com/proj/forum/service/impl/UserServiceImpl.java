@@ -1,15 +1,15 @@
 package com.proj.forum.service.impl;
 
-import com.proj.forum.dto.GroupDto;
 import com.proj.forum.dto.UserDto;
-import com.proj.forum.entity.Group;
+
 import com.proj.forum.entity.User;
 import com.proj.forum.repository.UserRepository;
 import com.proj.forum.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,9 +20,10 @@ import java.util.UUID;
 @Slf4j
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public UserDto createUser(UserDto userDto) {

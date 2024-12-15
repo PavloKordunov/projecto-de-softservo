@@ -21,7 +21,7 @@ public class Topic {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "author_id", nullable = false) // Specifies the foreign key column
+    @JoinColumn(name = "author_id") // Specifies the foreign key column
     private User author;
 
     @Column(nullable = false)

@@ -7,6 +7,7 @@ import com.proj.forum.entity.Topic;
 import com.proj.forum.repository.TopicRepository;
 import com.proj.forum.service.TopicService;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,9 +21,10 @@ import java.util.UUID;
 @Slf4j
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class TopicServiceImpl implements TopicService {
 
-    private TopicRepository topicRepository;
+    private final TopicRepository topicRepository;
 
     @Override
     public UUID createTopic(TopicDto topicDto) {

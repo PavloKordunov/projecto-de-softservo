@@ -60,6 +60,11 @@ public class User {
     private List<User> subscribers;
 
     @ManyToMany(mappedBy = "subscribers")
+//    @JoinTable(
+//            name = "user_following",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "following_id")
+//    )
     private List<User> following;
 
 
