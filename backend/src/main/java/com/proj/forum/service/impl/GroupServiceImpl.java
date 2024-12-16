@@ -24,19 +24,23 @@ public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
 
     @Override
-    public GroupDto createGroup(GroupDto groupDto) {
-        log.info("Creating group in service");
-        Group group = getGroup(groupDto);
+    public UUID createGroup(GroupDto groupDto) {
+        Group group = mapToGroup(groupDto);
         Group groupFromDB = groupRepository.save(group);
-        return getGroupDto(groupFromDB);
+        return groupFromDB.getId();
     }
 
     @Override
     public GroupDto getGroup(UUID id) {
-        Optional<Group> group = groupRepository.findById(id);
-        if (group.isEmpty()) {
-            log.info("No group");
-            return null;
+        Optional<Group> group;
+        try {
+            group = groupRepository.findById(id);
+            if (group.isEmpty()) {
+                log.info("No group");
+                throw new EntityNotFoundException("No group");
+            }
+        } catch (RuntimeException ex) {
+            throw new EntityNotFoundException(ex);
         }
 
         return GroupDto.builder()
@@ -49,8 +53,17 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<GroupDto> getAllGroups() {
-        List<Group> groupList = groupRepository.findAll();
-        log.info("getAllGroups");
+        List<Group> groupList;
+        try {
+            groupList = groupRepository.findAll();
+            log.info("getAllGroups");
+            if (groupList.isEmpty()) {
+                log.info("No groups");
+                throw new EntityNotFoundException("No groups");
+            }
+        } catch (RuntimeException ex) {
+            throw new EntityNotFoundException(ex);
+        }
         //        // Mock response data
 //        List<Group> group = new ArrayList<>();
 //
@@ -67,56 +80,59 @@ public class GroupServiceImpl implements GroupService {
 //                .build());
 
         return groupList.stream()
-                .map(GroupServiceImpl::getGroupDto)
+                .map(GroupServiceImpl::getUpdateGroup)
                 .toList();
     }
 
     @Transactional
     @Override
-    public GroupDto updateGroup(UUID id, GroupDto groupDto) {
+    public void updateGroup(UUID id, GroupDto groupDto) {
         log.info("Update group by put");
-        groupRepository.findById(id).ifPresent(group -> getGroupDto(groupDto, group));
+        Group updatedGroup;
+        try {
+            updatedGroup = groupRepository.findById(id)
+                    .map(group -> getUpdateGroup(group, groupDto))
+                    .orElseThrow(() -> new EntityNotFoundException("Group didn't find"));
 
-        return groupDto;  // TODO fix return
+            groupRepository.save(updatedGroup);
+        } catch (RuntimeException ex) {
+            throw new EntityNotFoundException(ex);
+        }
     }
 
-    private GroupDto getGroupDto(GroupDto groupDto, Group group) {
-        group.setTitle(groupDto.title());
-        group.setDescription(groupDto.description());
-        return groupDto;
+    private Group getUpdateGroup(Group group, GroupDto groupDto) {
+        if (!groupDto.title().equals(group.getTitle()))
+            group.setTitle(groupDto.title());
+        if (!groupDto.description().equals(group.getDescription()))
+            group.setDescription(groupDto.description());
+        return group;
     }
 
     @Override
     public void deleteGroup(UUID id) {
-        if (groupRepository.existsById(id)) {
-            groupRepository.deleteById(id);
-        } else {
-            log.error("Not found group");
-            //TODO throw new custom ex
+        try {
+            if (groupRepository.existsById(id)) {
+                groupRepository.deleteById(id);
+            } else {
+                log.error("Not found group");
+                throw new EntityNotFoundException("Not found group");
+            }
+        } catch (EntityNotFoundException ex) {
+            throw new EntityNotFoundException(ex);
+//        } catch (Exception ex){
+//            throw new DbNotResponseException("Db error", ex);
         }
     }
 
 
-    private static Group getGroup(GroupDto groupDto) {
-        if (groupDto == null) {
-            log.error("Group is null");
-            throw new NullPointerException();
-        }
-//        log.info("Creating group from groupDto");
-
+    private static Group mapToGroup(GroupDto groupDto) {
         return Group.builder()
                 .title(groupDto.title())
                 .description(groupDto.description() == null ? StringUtils.EMPTY : groupDto.description())
                 .build();
     }
 
-    private static GroupDto getGroupDto(Group group) {
-        if (group == null) {
-            log.info("no group found");
-            throw new EntityNotFoundException("no group found");
-        }
-//        log.info("Creating groupDto from group");
-
+    private static GroupDto getUpdateGroup(Group group) {
         return GroupDto.builder()
                 .id(group.getId())
                 .title(group.getTitle())

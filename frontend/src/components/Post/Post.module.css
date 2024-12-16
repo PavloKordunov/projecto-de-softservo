@@ -8,6 +8,10 @@
     gap: 26px;
 }
 
+.postNavigate{
+    display: inline-block;
+}
+
 .postTitleContainer{
     display: flex;
     justify-content: center;

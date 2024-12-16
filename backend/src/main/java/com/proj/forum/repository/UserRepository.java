@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.UUID;
 
-public interface UserRepository extends JpaRepository<User, UUID> { //where use UUID and where nickname?
+public interface UserRepository extends JpaRepository<User, UUID> { //where use UUID and where username?
     List<User> findAll();
     User findByUsername(String username);
 

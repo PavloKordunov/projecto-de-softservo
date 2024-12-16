@@ -7,18 +7,21 @@ const LoginWidget = ({ config }) => {
     const navigate = useNavigate();
 
     const onSuccess = (tokens) => {
+        console.log("Login successful. Tokens:", tokens);
         oktaAuth.handleLoginRedirect(tokens);
     };
 
     const onError = (err) => {
-        console.error('Sign in error:', err);
+        console.error("Sign in error:", err);
     };
 
     if (!authState) {
+        console.log("Loading authentication state...");
         return <div>Loading...</div>;
     }
 
     if (authState.isAuthenticated) {
+        console.log("User is authenticated, redirecting to home page.");
         navigate('/');
         return null;
     }

@@ -15,7 +15,7 @@ const Post = () => {
     };
 
     return (
-        <a onClick={() => {
+        <a className={css.postNavigate} onClick={() => {
             navigate('/adminPost');
           }}>
 

@@ -1,9 +1,6 @@
 package com.proj.forum.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +20,6 @@ public class Tag {
     @GeneratedValue
     private UUID id;
 
-    //@Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     private String name;
 }
