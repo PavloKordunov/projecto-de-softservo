@@ -6,6 +6,7 @@ import NavBarDropMenu from "../NavBarDropMenu/NavBarDropMenu";
 import useWindowWidth from '../hooks/useWindowWidth';
 import { useOktaAuth } from '@okta/okta-react';
 import ProfileImage from '../../img/log-icon.png';
+import Messenger from "../Messenger/Messenger";
 
 const NavBar = () => {
     const [isShowMenu, setIsShowMenu] = useState(false);
@@ -14,9 +15,18 @@ const NavBar = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const { authState } = useOktaAuth();
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+    const [isShowMessenger, setIsShowMessenger] = useState(false);
 
     const handleShowMenu = () => {
         setIsShowMenu(!isShowMenu);
+    };
+
+    const handleShowMessenger = () => {
+        setIsShowMessenger(!isShowMessenger);
+    };
+
+    const handleCloseMessenger = () => {
+        setIsShowMessenger(false);
     };
 
     useEffect(() => {
@@ -91,8 +101,8 @@ const NavBar = () => {
                             </button>
                         </div>
                         <ul className={css.NavBarIconsListTwo}>
-                            <li className={css.NavBarIconEl}>
-                                <svg width="26" height="26">
+                            <li className={css.NavBarIconEl} onClick={handleShowMessenger}>
+                                <svg width="26" height="26" >
                                     <use href={`${Icon}#iconMessage`}></use>
                                 </svg>
                             </li>
@@ -105,12 +115,19 @@ const NavBar = () => {
                     </div>
                 ) : (
                     <>
-                    <ul className={css.NavBarIconsListTwo}>
-                            <li className={css.NavBarIconEl}>
-                                <svg width="26" height="26">
-                                    <use href={`${Icon}#iconMessage`}></use>
-                                </svg>
-                            </li>
+                        <ul className={css.NavBarIconsListTwo}>
+                            <div className={css.NavBarIconsList}>
+                                <div className={css.NavBarIconEl} onClick={handleShowMessenger}>
+                                    <svg width="26" height="26">
+                                        <use href={`${Icon}#iconMessage`}></use>
+                                    </svg>
+                                </div>
+                            </div>
+                                    {/*<li className={css.NavBarIconEl}>*/}
+                                    {/*    <svg width="26" height="26">*/}
+                                    {/*        <use href={`${Icon}#iconMessage`}></use>*/}
+                                    {/*    </svg>*/}
+                                    {/*</li>*/}
                             <li className={css.NavBarIconEl}>
                                 <svg width="26" height="26">
                                     <use href={`${Icon}#iconNotification`}></use>
@@ -138,6 +155,10 @@ const NavBar = () => {
                     </>
                 )}
             </div>
+            <Messenger
+                setIsShowMessenger={setIsShowMessenger}
+                isShowMessenger={isShowMessenger}
+                handleCloseMessenger={handleCloseMessenger} />
             <div className={css.NavBarFooter}>
                 <a href="/" className={css.NavBarFooterIcon}>
                     <svg width="24" height="24">

@@ -37,8 +37,8 @@ function App() {
             <NavBar/>
             <Routes >
                 <Route path="/" element={<Layout />}>
-                    {/*<Route index element={<HomePage />} />*/}
-                    <Route index element={<AuthPage />} />
+                    <Route index element={<HomePage />} />
+                    {/*<Route index element={<AuthPage />} />*/}
                     <Route path="adminPost" element={<AdminPost />} />
                     <Route path="userProfile" element={<Profile />} />
                 </Route>
