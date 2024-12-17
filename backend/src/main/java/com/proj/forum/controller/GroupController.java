@@ -29,7 +29,7 @@ public class GroupController {
             log.info("Create group");
             UUID id = groupService.createGroup(group);
 
-            return apiResponse(true, 201, "Create group", id);
+            return ApiResponse.apiResponse(true, 201, "Create group", id);
         } catch (EntityNotFoundException ex) {
             log.info("Group is null");
             throw ex;
@@ -59,7 +59,7 @@ public class GroupController {
         try {
             log.info("Update group");
             groupService.updateGroup(id, groupDto);
-            return apiResponse(true, 200, "Group successfully updated", id);
+            return ApiResponse.apiResponse(true, 200, "Group successfully updated", id);
         } catch (EntityNotFoundException ex) {
             log.error("No group found [patch]");
             throw ex;
@@ -71,19 +71,12 @@ public class GroupController {
         try {
             log.info("Delete group");
             groupService.deleteGroup(id);
-            return apiResponse(true, 200, "Group successfully deleted", id);
+            return ApiResponse.apiResponse(true, 200, "Group successfully deleted", id);
         } catch (EntityNotFoundException ex) {
             log.error("No group found [delete]");
             throw ex;
-//        } catch (DbNotResponseException ex)
-//        {
-//            log.error("Db doesn't response");
-//            throw ex;
+
         }
     }
 
-    private static ApiResponse<GenericResponse> apiResponse(
-            boolean success, int statusCode, String message, UUID id) {
-        return new ApiResponse<>(success, HttpStatusCode.valueOf(statusCode), message, new GenericResponse(id));
-    }
 }

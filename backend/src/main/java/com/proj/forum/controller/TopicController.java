@@ -33,7 +33,7 @@ public class TopicController {
             log.info("Create topic");
             UUID id = topicService.createTopic(topic);
 
-            return apiResponse(true, 201, "Create topic", id);
+            return ApiResponse.apiResponse(true, 201, "Create topic", id);
         } catch (EntityNotFoundException ex) {
             log.info("Topic is null");
             throw ex;
@@ -64,7 +64,7 @@ public class TopicController {
         try {
             log.info("Update topic");
             topicService.updateTopic(id, topicDto);
-            return apiResponse(true, 200, "Topic successfully updated", id);
+            return ApiResponse.apiResponse(true, 200, "Topic successfully updated", id);
         } catch (EntityNotFoundException ex) {
             log.error("No topic found [patch]");
             throw ex;
@@ -76,18 +76,12 @@ public class TopicController {
         try {
             log.info("Delete topic");
             topicService.deleteTopic(id);
-            return apiResponse(true, 200, "Topic successfully deleted", id);
+            return ApiResponse.apiResponse(true, 200, "Topic successfully deleted", id);
         } catch (EntityNotFoundException ex) {
             log.error("No topic found [delete]");
             throw ex;
         }
     }
-
-    private static ApiResponse<GenericResponse> apiResponse(
-            boolean success, int statusCode, String message, UUID id) {
-        return new ApiResponse<>(success, HttpStatusCode.valueOf(statusCode), message, new GenericResponse(id));
-    }
-
 
 
 //    @GetMapping
