@@ -135,6 +135,11 @@
         width: 90%;
     }
 
+    .messengerUserContainer img {
+        height: 35px;
+        width: 35px;
+    }
+
     .messengerUserName {
         font-size: 14px;
     }

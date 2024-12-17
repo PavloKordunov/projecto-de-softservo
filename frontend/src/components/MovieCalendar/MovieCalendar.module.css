@@ -1,0 +1,204 @@
+.ReactCalendar {
+    background-color: #2c353d;
+    border: none;
+    color: white;
+    font-size: 20px;
+    font-family: "Source Sans 3", sans-serif;
+    border-radius: 10px;
+}
+
+:global(.react-calendar__navigation button) {
+    display: flex;
+    height: 44px;
+    color: #ffffff;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 23px;
+    border-radius: 10px;
+    justify-content: center;
+}
+
+:global(.react-calendar__navigation button:enabled:hover),
+:global(.react-calendar__navigation button:enabled:focus) {
+    background-color: #d97b7b;
+}
+
+:global(.react-calendar__month-view__weekdays__weekday) {
+    padding: 0.5em;
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 17px;
+    margin-top: -15px;
+}
+
+:global(.react-calendar__month-view__weekNumbers .react-calendar__tile) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: inherit;
+    font-size: 0.75em;
+    font-weight: bold;
+}
+
+:global(.react-calendar__month-view__days__day--weekend) {
+    color: #d87b7b;
+}
+
+:global(.react-calendar__tile) {
+    max-width: 100%;
+    padding: 10px 6.6667px;
+    background: none;
+    text-align: center;
+    font: inherit;
+    font-size: 0.833em;
+    border-radius: 10px;
+}
+
+:global(.react-calendar__tile--now) {
+    background: #d87b7b;
+    border-radius: 10px;
+}
+
+:global(.react-calendar__tile:enabled:hover),
+:global(.react-calendar__tile:enabled:focus) {
+    background-color: #756262;
+    border-radius: 10px;
+}
+
+:global(.react-calendar__tile--active ) {
+    background: rgba(221, 221, 221, 0.1);
+    color: #090706;
+    border-radius: 10px;
+}
+
+:global(.react-calendar__month-view__days__day--neighboringMonth),
+:global(.react-calendar__decade-view__years__year--neighboringDecade),
+:global(.react-calendar__century-view__decades__decade--neighboringCentury) {
+    color: rgba(245, 241, 241, 0.4);
+    font-size: 20px;
+    font-family: "Source Sans 3", sans-serif;
+}
+
+:global(.react-calendar__year-view .react-calendar__tile),
+:global(.react-calendar__decade-view .react-calendar__tile),
+:global(.react-calendar__century-view .react-calendar__tile) {
+    padding: 2em 0.5em;
+    color: white;
+}
+
+
+:global(.react-calendar__navigation button:disabled) {
+    background-color: #d09696;
+}
+
+.MovieCalendarOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transform: translateX(-30%) translateY(-15%);
+}
+
+.MovieCalendarContainer {
+    background: #2c353d;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(221, 221, 221, 0.1);
+    position: relative;
+    animation: slideDown 0.5s ease;
+}
+
+.CloseButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: white;
+    transition: transform 0.3s ease, color 0.3s ease;
+    animation: rotateIn 0.5s ease-out;
+}
+
+.CloseButton:hover {
+    transform: scale(1.7) rotate(15deg);
+    color: #ff6347;
+}
+
+.CloseButton:active {
+    transform: scale(1) rotate(-10deg);
+    color: #ffd95b;
+}
+
+@keyframes rotateIn {
+    from {
+        transform: rotate(-90deg) scale(0);
+        opacity: 0;
+    }
+    to {
+        transform: rotate(0) scale(1);
+        opacity: 1;
+    }
+}
+
+
+.dateContainer {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+}
+
+
+.dot {
+    width: 6px;
+    height: 6px;
+    background: #fe4155;
+    border-radius: 50%;
+    position: absolute;
+    top: -25px;
+    right: 5px;
+    animation: pulse 1.5s infinite;
+}
+
+.popup {
+    display: none;
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(221, 221, 221, 0.1);
+    border-radius: 5px;
+    padding: 8px 10px;
+    white-space: nowrap;
+    z-index: 10;
+}
+
+.MovieList {
+    color: white;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-20px);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 0.8;
+    }
+}
