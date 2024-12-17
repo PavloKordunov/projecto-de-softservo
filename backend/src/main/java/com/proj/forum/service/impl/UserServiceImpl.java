@@ -26,66 +26,101 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDto createUser(UserDto userDto) {
-        log.info("Creating user in service");
-        User user = getUser(userDto);
+    public UUID createUser(UserDto userDto) {
+        User user = mapToUser(userDto);
         User userFromDB = userRepository.save(user);
-        return getUserDto(userFromDB);
+        return userFromDB.getId();
     }
 
     @Override
     public UserDto getUser(UUID id) {
-        Optional<User> user = userRepository.findById(id);
-        if(user.isEmpty())
-        {
-            log.info("No user");
-            return null;
+        Optional<User> user;
+        try {
+            user = userRepository.findById(id);
+            if (user.isEmpty()) {
+                log.info("No user found with id {}", id);
+                throw new EntityNotFoundException("No user found");
+            }
+        } catch (RuntimeException ex) {
+            throw new EntityNotFoundException(ex);
         }
 
-        UserDto userDto = UserDto.builder()
-                .id(user.get().getId())
+        return UserDto.builder()
+                .id(id)
                 .name(user.get().getName())
-                .username(user.get().getUsername() == null ? StringUtils.EMPTY : user.get().getName())
+                .username(user.get().getUsername() == null ? StringUtils.EMPTY : user.get().getUsername())
                 .build();
-        return userDto;
     }
 
     @Override
-    public List<UserDto> getAllUsers(){
-        List<User> groupList = userRepository.findAll();
-        log.info("getAllGroups");
+    public List<UserDto> getAllUsers() {
+        List<User> userList;
+        try {
+            userList = userRepository.findAll();
+            log.info("getAllUsers");
+            if (userList.isEmpty()) {
+                log.info("No users found");
+                throw new EntityNotFoundException("No users");
+            }
+        } catch (RuntimeException ex) {
+            throw new EntityNotFoundException(ex);
+        }
 
-        return groupList.stream()
-                .map(UserServiceImpl::getUserDto)
+        return userList.stream()
+                .map(UserServiceImpl::getUpdateUser)
                 .toList();
     }
 
-    private static User getUser(UserDto userDto) {
-        if(userDto == null)
-        {
-            log.error("User is null");
-            throw new NullPointerException();
-        }
-        log.info("Creating user from userDto");
+    @Transactional
+    @Override
+    public void updateUser(UUID id, UserDto userDto) {
+        log.info("Update user by patch");
+        User updatedUser;
+        try {
+            updatedUser = userRepository.findById(id)
+                    .map(user -> getUpdateUser(user, userDto))
+                    .orElseThrow(() -> new EntityNotFoundException("User is not found"));
 
+            userRepository.save(updatedUser);
+        } catch (RuntimeException ex) {
+            throw new EntityNotFoundException(ex);
+        }
+    }
+
+    private User getUpdateUser(User user, UserDto userDto) {
+        if (userDto.name() != null)
+            user.setName(userDto.name());
+        if (userDto.username() != null)
+            user.setUsername(userDto.username());
+        return user;
+    }
+
+    @Override
+    public void deleteUser(UUID id) {
+        try {
+            if (userRepository.existsById(id)) {
+                userRepository.deleteById(id);
+            } else {
+                log.error("No user found with id {}", id);
+                throw new EntityNotFoundException("User not found");
+            }
+        } catch (EntityNotFoundException ex) {
+            throw new EntityNotFoundException(ex);
+        }
+    }
+
+    private static User mapToUser(UserDto userDto) {
         return User.builder()
                 .name(userDto.name())
-                .username(userDto.username())
+                .username(userDto.username() == null ? StringUtils.EMPTY : userDto.username())
                 .build();
     }
 
-    private static UserDto getUserDto(User user) {
-        if (user == null) {
-            log.info("No user found");
-            throw new EntityNotFoundException("No user found");
-        }
-        log.info("Creating userDto from user");
-
+    private static UserDto getUpdateUser(User user) {
         return UserDto.builder()
                 .id(user.getId())
                 .name(user.getName())
-                .username(user.getUsername())
+                .username(user.getUsername() == null ? StringUtils.EMPTY : user.getUsername())
                 .build();
-    };
-
+    }
 }
