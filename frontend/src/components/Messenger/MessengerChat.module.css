@@ -7,6 +7,7 @@
     display: flex;
     align-items: center;
     margin-bottom: 12px;
+    cursor: pointer;
 }
 
 .messengerChatUserName{
@@ -121,4 +122,107 @@
     width: 36px;
     height: 36px;
     border-radius: 15px;
+    cursor: pointer;
 }
+@media (max-width: 440px) {
+
+    .messengerChatHeader {
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        margin-right: 90px;
+    }
+
+    .messengerChatHeader img {
+        height: 30px;
+        width: 32px;
+
+    }
+
+    .messengerChatUserName {
+        font-size: 16px;
+        margin-left: 8px;
+    }
+
+    .messengerChatUserActivity {
+        display: flex;
+        font-size: 10px;
+        margin-left: 8px;
+        flex-direction: row;
+        align-items: center;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .messengerChatWrapper{
+        height: 250px;
+        width: 270px;
+        /*background-color: red;*/
+        margin-bottom: 10px;
+    }
+
+    .messengerChatContainer{
+        height: 220px;
+        /*width: 270px;*/
+        margin-top: 50px;
+    }
+    .messengerChatMessageLeftContainer{
+        width: 100px;
+        margin-right: 20px;
+    }
+
+    .messengerChatMessageRightContainer{
+        margin-left: 25px;
+    }
+
+    .messengerChatMessageTime{
+        font-size: 9px;
+    }
+
+    .messengerChatMessageLeftContainer img,
+    .messengerChatMessageRightContainer img
+    {
+        height: 20px;
+        width: 20px;
+    }
+
+    .messengerChatMessageContainer{
+        height: 20px;
+        width: 40px;
+    }
+
+    .messengerChatScroll{
+        height: 220px;
+        width: 10px;
+        margin-right: 5px;
+    }
+
+    .messengerChatScrollPointer{
+        height: 70px;
+    }
+
+    .messengerChatFooter{
+        width: 230px;
+        height: 25px;
+        border-radius: 10px;
+        padding: 5px 10px;
+    }
+
+    .messengerChatFooter svg {
+        height: 15px;
+        width: 15px;
+    }
+
+    .messengerChatInput{
+        width: 160px;
+        height: 25px;
+        margin-left: -5px;
+    }
+
+    .messengerChatSendIcon{
+        height: 25px;
+        width: 25px;
+        border-radius: 10px;
+    }
+}
+
