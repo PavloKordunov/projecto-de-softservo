@@ -7,7 +7,15 @@ import useWindowWidth from '../hooks/useWindowWidth';
 import { useOktaAuth } from '@okta/okta-react';
 import ProfileImage from '../../img/log-icon.png';
 import Messenger from "../Messenger/Messenger";
-import {useNavigate} from "react-router-dom";
+import MovieCalendar from "../MovieCalendar/MovieCalendar";
+
+
+const movies = [
+    { id: 1, title: "Avatar 2", releaseDate: "2024-12-20" },
+    { id: 2, title: "Spider-Man", releaseDate: "2024-12-25" },
+    { id: 3, title: "Inception", releaseDate: "2025-01-01" },
+];
+
 
 const NavBar = () => {
     const [isShowMenu, setIsShowMenu] = useState(false);
@@ -17,8 +25,9 @@ const NavBar = () => {
     const { authState } = useOktaAuth();
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
     const [isShowMessenger, setIsShowMessenger] = useState(false);
+    const [isShowCalendar, setIsShowCalendar] = useState(false);
 
-    const navigate = useNavigate();
+    const toggleCalendar = () => setIsShowCalendar(!isShowCalendar);
 
     const handleShowMenu = () => {
         setIsShowMenu(!isShowMenu);
@@ -56,11 +65,13 @@ const NavBar = () => {
                     <>
                         <ul className={css.NavBarIconsListOne}>
                             <li className={css.NavBarIconEl}>
-                                <svg width="26" height="26">
-                                    <use href={`${Icon}#CalendarIcon`}></use>
-                                </svg>
+                                <button onClick={toggleCalendar} className={css.CalendarButton}>
+                                    <svg width="26" height="26">
+                                        <use href={`${Icon}#CalendarIcon`}></use>
+                                    </svg>
+                                </button>
                             </li>
-                            <li className={css.NavBarIconEl} onClick={() => navigate('/')}>
+                            <li className={css.NavBarIconEl}>
                                 <svg width="26" height="26">
                                     <use href={`${Icon}#iconHome`}></use>
                                 </svg>
@@ -126,11 +137,6 @@ const NavBar = () => {
                                     </svg>
                                 </div>
                             </div>
-                                    {/*<li className={css.NavBarIconEl}>*/}
-                                    {/*    <svg width="26" height="26">*/}
-                                    {/*        <use href={`${Icon}#iconMessage`}></use>*/}
-                                    {/*    </svg>*/}
-                                    {/*</li>*/}
                             <li className={css.NavBarIconEl}>
                                 <svg width="26" height="26">
                                     <use href={`${Icon}#iconNotification`}></use>
@@ -168,11 +174,11 @@ const NavBar = () => {
                         <use href={`${Icon}#iconHome`}></use>
                     </svg>
                 </a>
-                <a href="/calendar" className={css.NavBarFooterIcon}>
-                    <svg width="24" height="24">
+                <button onClick={toggleCalendar} className={css.CalendarButton}>
+                    <svg width="26" height="26">
                         <use href={`${Icon}#CalendarIcon`}></use>
                     </svg>
-                </a>
+                </button>
                 <a href="/community" className={css.NavBarFooterIcon}>
                     <svg width="24" height="24">
                         <use href={`${Icon}#iconCommunity`}></use>
@@ -196,6 +202,12 @@ const NavBar = () => {
                     )}
                 </a>
             </div>
+            {isShowCalendar && (
+                <MovieCalendar
+                    movies={movies}
+                    onClose={() => setIsShowCalendar(false)}
+                />
+            )}
         </div>
     );
 };

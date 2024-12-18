@@ -29,6 +29,7 @@
 
 .messengerCloseIcon{
     fill: #FFF;
+    cursor: pointer;
 }
 
 .messengerUserContainer{
@@ -40,6 +41,7 @@
     height: 50px;
     border-radius: 14px;
     margin-bottom: 18px;
+    cursor: pointer;
 }
 
 .messengerUserDataContainer{
@@ -89,4 +91,74 @@
     width: 9px;
     background-color: #1E1F20;
     border-radius: 31px;
+}
+
+@media (max-width: 440px) {
+    .messengerWrapper {
+        width: 60%;
+        max-width: none;
+        top: 0;
+        right: 0;
+        border-radius: 10px;
+        height: 75px;
+        transform: translateX(-40%) translateY(70%);
+
+
+    }
+
+    .messengerContainer {
+        padding: 10px;
+        width: 102%;
+        border-radius: 10px;
+        transform: translateX(-5%) translateY(-4%);
+
+
+    }
+
+    .messengerTitleContainer {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .messengerTitle {
+        font-size: 16px;
+    }
+
+    .messengerCloseIcon {
+        width: 18px;
+        height: 18px;
+    }
+
+    .messengerUserContainer {
+        height: auto;
+        padding: 10px;
+        width: 90%;
+    }
+
+    .messengerUserContainer img {
+        height: 35px;
+        width: 35px;
+    }
+
+    .messengerUserName {
+        font-size: 14px;
+    }
+
+    .messengerUserTime {
+        font-size: 12px;
+    }
+
+    .messengerUserText {
+        font-size: 10px;
+    }
+
+    .messengerScroll {
+        height: 200px;
+        width: 8px;
+    }
+
+    .messengerScrollPointer {
+        height: 60px;
+        width: 5px;
+    }
 }

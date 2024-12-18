@@ -87,12 +87,12 @@ public class GroupServiceImpl implements GroupService {
     @Transactional
     @Override
     public void updateGroup(UUID id, GroupDto groupDto) {
-        log.info("Update group by put");
+        log.info("Update group by patch");
         Group updatedGroup;
         try {
             updatedGroup = groupRepository.findById(id)
                     .map(group -> getUpdateGroup(group, groupDto))
-                    .orElseThrow(() -> new EntityNotFoundException("Group didn't find"));
+                    .orElseThrow(() -> new EntityNotFoundException("Group is not found"));
 
             groupRepository.save(updatedGroup);
         } catch (RuntimeException ex) {
@@ -114,13 +114,11 @@ public class GroupServiceImpl implements GroupService {
             if (groupRepository.existsById(id)) {
                 groupRepository.deleteById(id);
             } else {
-                log.error("Not found group");
-                throw new EntityNotFoundException("Not found group");
+                log.error("Group not found");
+                throw new EntityNotFoundException("Group not found");
             }
         } catch (EntityNotFoundException ex) {
             throw new EntityNotFoundException(ex);
-//        } catch (Exception ex){
-//            throw new DbNotResponseException("Db error", ex);
         }
     }
 

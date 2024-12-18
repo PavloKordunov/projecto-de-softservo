@@ -21,7 +21,7 @@ public class SecurityConfig {
                 csrf(CsrfConfigurer::disable) //TODO need to investigate
                 //csrf(csrf -> csrf.ignoringRequestMatchers("/api/**")) <- this line is more up-to-date
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/groups/**", "/api/topics/**", "/api/tags/**")
+                        .requestMatchers("/api/groups/**", "/api/topics/**", "/api/tags/**", "/api/users/**", "api/home/**")
                         .permitAll())
                 .oauth2ResourceServer(oauth2 ->
                         oauth2
