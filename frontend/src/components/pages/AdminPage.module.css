@@ -1,0 +1,30 @@
+.adminPageContainer{
+    margin-left: 26px;
+    margin-top: 18px;
+    width: 1036px;
+    background-color: #1E1F20;
+    border-radius: 31px;
+    padding: 30px;
+    position: relative;
+}
+
+.adminPageTitle{
+    color: #F4F6F8;
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 50px;
+}
+
+.adminPageButton{
+    border: none;
+    background-color: #2c353d;
+    width: 150px;
+    height: 50px;
+    border-radius: 14px;
+    color: #F4F6F8;
+    font-size: 16px;
+}
+
+.adminPageButton:hover{
+    background-color: #FF4155;
+}

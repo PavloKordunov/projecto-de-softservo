@@ -3,11 +3,14 @@ import Image from '../../img/person.png'
 import Icon from '../../img/sprite.svg'
 import Post from '../Post/Post'
 import { useState } from "react";
+import {useNavigate} from "react-router-dom";
 
 const Profile = () => {
 
     const [showIcon, setShowIcon] = useState(null)
-    
+
+    const navigate = useNavigate();
+
     return (
         <div className={css.profileContainer}>
             <div className={css.profileInfoContainer}>
@@ -46,6 +49,9 @@ const Profile = () => {
                                 Групи
                             </p>
                         </li>
+                        {/*<li className={css.profileStatsEl}>*/}
+                        {/*    <button onClick={() => navigate('/admin-page')}>AdminPage</button>*/}
+                        {/*</li>*/}
                     </ul>
             </div>
 

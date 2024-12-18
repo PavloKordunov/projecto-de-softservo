@@ -11,8 +11,8 @@ import AuthPage from "./pages/AuthPage";
 import AdminPost from "./AdminPost/AdminPost";
 import Profile from "./Profile/Profile";
 import NavBar from "./NavBar/NavBar";
-import {useEffect} from "react";
-import {testFetch} from "./test";
+import AdminPage from "./pages/AdminPage";
+import AdminPostMenu from "./AdminPostMenu/AdminPostMenu";
 
 const oktaAuth = new OktaAuth(oktaConfig);
 
@@ -27,37 +27,35 @@ function App() {
         navigate(toRelativeUrl(originalUri || '/', window.location.origin));
     };
 
-    useEffect(() => {
-        testFetch();
-    }, []);
-
     return (
         <div className={css.app}>
-        <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri} onAuthRequired={customAuthHandler}>
-            <NavBar/>
-            <Routes >
-                <Route path="/" element={<Layout />}>
-                    <Route index element={<HomePage />} />
-                    {/*<Route index element={<AuthPage />} />*/}
-                    <Route path="adminPost" element={<AdminPost />} />
-                    <Route path="userProfile" element={<Profile />} />
-                </Route>
-                <Route path="/login" element={<LoginWidget config={oktaConfig} />} />
-                <Route path="/login/callback" element={<LoginCallback />} />
-                <Route path="/register" element={<Register
-                    onSuccess={() => console.log('User registered successfully!')}
-                    onError={(err:any) => console.error('Registration error:', err)}
-                />} />
-                <Route path="/register" element={
-                    <SecureRoute>
-                        <Register
-                            onSuccess={() => console.log('User registered successfully!')}
-                            onError={(err:any) => console.error('Registration error:', err)}
-                        />
-                    </SecureRoute>
-                } />
-            </Routes>
-        </Security>
+            <Security
+                oktaAuth={oktaAuth}
+                restoreOriginalUri={restoreOriginalUri}
+                onAuthRequired={customAuthHandler}
+            >
+                <NavBar />
+                <Routes>
+                    <Route path="/" element={<Layout />}>
+                        <Route index element={<HomePage />} />
+                        <Route path="auth-page" element={<AuthPage />} />
+                        <Route path="adminPost" element={<AdminPost />} />
+                        <Route path="userProfile" element={<Profile />} />
+                        <Route path="admin-page" element={<AdminPage />} />
+                        <Route path='admin-post-menu' element={<AdminPostMenu />} />
+                    </Route>
+                    <Route path="/login" element={<LoginWidget config={oktaConfig} />} />
+                    <Route path="/login/callback" element={<LoginCallback />} />
+                    <Route path="/register" element={
+                        <SecureRoute>
+                            <Register
+                                onSuccess={() => console.log('User registered successfully!')}
+                                onError={(err: any) => console.error('Registration error:', err)}
+                            />
+                        </SecureRoute>
+                    } />
+                </Routes>
+            </Security>
         </div>
     );
 }

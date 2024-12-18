@@ -7,6 +7,7 @@ import useWindowWidth from '../hooks/useWindowWidth';
 import { useOktaAuth } from '@okta/okta-react';
 import ProfileImage from '../../img/log-icon.png';
 import Messenger from "../Messenger/Messenger";
+import {useNavigate} from "react-router-dom";
 
 const NavBar = () => {
     const [isShowMenu, setIsShowMenu] = useState(false);
@@ -16,6 +17,8 @@ const NavBar = () => {
     const { authState } = useOktaAuth();
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
     const [isShowMessenger, setIsShowMessenger] = useState(false);
+
+    const navigate = useNavigate();
 
     const handleShowMenu = () => {
         setIsShowMenu(!isShowMenu);
@@ -57,7 +60,7 @@ const NavBar = () => {
                                     <use href={`${Icon}#CalendarIcon`}></use>
                                 </svg>
                             </li>
-                            <li className={css.NavBarIconEl}>
+                            <li className={css.NavBarIconEl} onClick={() => navigate('/')}>
                                 <svg width="26" height="26">
                                     <use href={`${Icon}#iconHome`}></use>
                                 </svg>

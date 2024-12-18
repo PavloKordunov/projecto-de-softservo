@@ -1,9 +1,12 @@
 import css from "../NavBar/NavBar.module.css";
 import FlipImage from "../../img/person.png";
 import Icon from "../../img/sprite.svg";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 const NavBarDropMenu = ({isShowMenu, handleCloseMenu, isFooterMenu, className}) => {
+
+    const navigate = useNavigate();
+
     return (
         isShowMenu && (
             <div
@@ -38,10 +41,16 @@ const NavBarDropMenu = ({isShowMenu, handleCloseMenu, isFooterMenu, className}) 
                         </svg>
                         <p className={css.NavBarFlipIconText}>Log Out</p>
                     </div>
+                    <div className={css.NavBarFlipIconContainer}>
+                        <svg className={css.NavBarFlipIcon} width='34' height='34'>
+                            <use href={`${Icon}#iconCrown`}></use>
+                        </svg>
+                        <Link to='/admin-page' className={css.NavBarFlipIconText}>Admin Page</Link>
+                    </div>
                 </div>
             </div>
         )
-)
+    )
 }
 
 export default NavBarDropMenu;
