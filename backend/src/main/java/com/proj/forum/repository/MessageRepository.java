@@ -1,10 +1,8 @@
 package com.proj.forum.repository;
 
 import com.proj.forum.entity.Message;
-import com.proj.forum.entity.Topic;
-import com.proj.forum.entity.User;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,4 +12,9 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
     List<Message> findAll();
 
     Optional<Message> findById(UUID id);
+
+
+    default Message findOneById(UUID id) {
+        return findById(id).orElseThrow(() -> new EntityNotFoundException("Message doesn't find"));
+    }
 }
