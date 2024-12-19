@@ -22,8 +22,6 @@ public class Message {
     private String content;
     @NotEmpty
     private LocalDateTime timestamp;
-
-    @ManyToOne
-    @JoinColumn(name = "chat_room_id")
-    private ChatRoom chatRoom;
+    @NotEmpty
+    private Boolean readStatus;
 }
