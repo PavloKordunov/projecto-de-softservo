@@ -9,4 +9,6 @@ public interface MessageService {
     UUID createMessage(MessageDto messageDto);
     List<MessageDto> findAllMessages();
     MessageDto findMessage(UUID id);
+    MessageDto updateMessage(UUID id, String content);
+    void deleteMessage(UUID id);
 }
