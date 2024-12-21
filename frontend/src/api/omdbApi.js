@@ -18,3 +18,32 @@ export const getAutoFillData = async (movieName, year) => {
         console.log("No results found for the movie.");
     }
 };
+
+export const getMoviesByYear = (year, page = 1) => {
+    if (!year || typeof year !== 'number') {
+        throw new Error('A valid year must be provided');
+    }
+
+    const url = `${BASE_URL}/?apikey=${API_KEY}&s=movie&y=${year}&page=${page}`;
+
+    return fetch(url)
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            return res.json();
+        })
+        .then(data => {
+            if (data.Response === "False") {
+                console.error("API Error:", data.Error);
+            } else {
+                console.log(`Movies from ${year}, Page ${page}:`, data.Search);
+            }
+            return data;
+        })
+        .catch(error => {
+            console.error("Fetch error:", error);
+            throw error;
+        });
+};
+
