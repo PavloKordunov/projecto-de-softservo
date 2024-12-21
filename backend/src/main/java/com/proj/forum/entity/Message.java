@@ -1,14 +1,24 @@
 package com.proj.forum.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-
 @Entity
+@Data
+@Builder
 @Table(name = "messages")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Message {
     @Id
     @GeneratedValue
@@ -22,8 +32,6 @@ public class Message {
     private String content;
     @NotEmpty
     private LocalDateTime timestamp;
-
-    @ManyToOne
-    @JoinColumn(name = "chat_room_id")
-    private ChatRoom chatRoom;
+    @NotEmpty
+    private Boolean readStatus;
 }
