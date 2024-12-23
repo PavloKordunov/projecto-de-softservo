@@ -43,11 +43,27 @@ public class MessageServiceImpl implements MessageService {
         List<Message> messageDtos = messageRepository.findAll();
         if(messageDtos.isEmpty()) throw new EntityNotFoundException("Messages don't find");
         return messageDtos.stream()
-                .map(MessageServiceImpl::getMessageDto)
+                .map(MessageServiceImpl::getUpdateMessageDto)
                 .toList();
     }
 
-    private static MessageDto getMessageDto(Message message) {
+    @Override
+    public MessageDto findMessage(UUID id) {
+        Message message = messageRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Message doesn't find"));
+        return getUpdateMessageDto(message);
+    }
+
+    @Transactional
+    @Override
+    public MessageDto updateMessage(UUID id, String content) {
+        Message updatedMessage = messageRepository.findById(id)
+                .map(mess -> updateMessage(mess, content))
+                .orElseThrow(() -> new EntityNotFoundException("Message doesn't find"));
+        messageRepository.save(updatedMessage);
+        return getUpdateMessageDto(updatedMessage);
+    }
+
+    private static MessageDto getUpdateMessageDto(Message message) {
         return MessageDto.builder()
                 .id(message.getId())
                 .senderID(message.getSenderId())
@@ -58,9 +74,17 @@ public class MessageServiceImpl implements MessageService {
                 .build();
     }
 
+    static private Message updateMessage(Message message, String content){
+        if(!message.getContent().equals(content))
+            message.setContent(content);
+        return message;
+    }
+
     @Override
-    public MessageDto findMessage(UUID id) {
-        Message message = messageRepository.findOneById(id);
-        return getMessageDto(message);
+    public void deleteMessage(UUID id) {
+        if (messageRepository.existsById(id))
+            messageRepository.deleteById(id);
+        else
+            throw new EntityNotFoundException("Message doesn't find");
     }
 }
