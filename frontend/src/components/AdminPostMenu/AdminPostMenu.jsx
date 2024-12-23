@@ -1,43 +1,43 @@
-import css from './AdminPostMenu.module.css'
+import css from './AdminPostMenu.module.css';
 import Icon from "../../img/sprite.svg";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AutoFillPost from "./AutoFillPost";
-import {useEffect, useState} from "react";
-
+import { useEffect, useState } from "react";
 
 const AdminPostMenu = () => {
-
     const navigate = useNavigate();
+    const [postMode, setPostMode] = useState("film");
     const [showModal, setShowModal] = useState(true);
     const [filmData, setFilmData] = useState({});
-    const[filmName, setFilmName] = useState('');
-    const[filmIMBDRate, setFilmIMBDRate] = useState('');
-    const[filmCountry, setFilmCountry] = useState('');
-    const[filmGenre, setFilmGenre] = useState('');
-    const[filmTime, setFilmTime] = useState('');
+    const [formData, setFormData] = useState({
+        name: '',
+        imdbRating: '',
+        country: '',
+        genre: '',
+        runtime: '',
+    });
 
-    const getFilmApiData = (data) =>{
+    const getFilmApiData = (data) => {
         setFilmData(data);
-        console.log(filmData);
-    }
+    };
 
     useEffect(() => {
-        if (filmData?.Title) {
-            setFilmName(filmData.Title);
-        }
-        if(filmData?.imdbRating){
-            setFilmIMBDRate(filmData.imdbRating);
-        }
-        if(filmData?.Country){
-            setFilmCountry(filmData.Country);
-        }
-        if(filmData?.Runtime){
-            setFilmTime(filmData.Runtime);
-        }
-        if(filmData?.Genre){
-            setFilmGenre(filmData.Genre);
+        if (filmData) {
+            setFormData((prev) => ({
+                ...prev,
+                name: filmData?.Title || '',
+                imdbRating: filmData?.imdbRating || '',
+                country: filmData?.Country || '',
+                genre: filmData?.Genre || '',
+                runtime: filmData?.Runtime || '',
+            }));
         }
     }, [filmData]);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
 
     return (
         <div className={css.adminPostMenuContainer}>
@@ -51,9 +51,13 @@ const AdminPostMenu = () => {
             </div>
             <div className={css.adminPostMenuTitleContainer}>
                 <h1 className={css.adminPostMenuTitle}>Добавити фільм, серіал або книгу</h1>
-                <svg className={css.adminPostMenuExitIcon} width='33' height='33'
-                     onClick={() => navigate("/admin-page")}>
-                    <use href={`${Icon}#closeBtnIcon`}/>
+                <svg
+                    className={css.adminPostMenuExitIcon}
+                    width='33'
+                    height='33'
+                    onClick={() => navigate("/admin-page")}
+                >
+                    <use href={`${Icon}#closeBtnIcon`} />
                 </svg>
             </div>
             <div className={css.adminPostMenuMainContainer}>
@@ -61,15 +65,42 @@ const AdminPostMenu = () => {
                     <div className={css.adminPostMenuFieldContainer}>
                         <h2 className={css.adminPostMenuFieldTitle}>Створити</h2>
                         <div className={css.adminPostMenuButtonList}>
-                            <button className={css.adminPostMenuButton}>Фільм</button>
-                            <button className={css.adminPostMenuButton}>Серіал</button>
-                            <button className={css.adminPostMenuButton}>Книга</button>
+                            <button
+                                className={
+                                    `${css.adminPostMenuButton} ${postMode === "film" ? css.activeButton : ""}`
+                                }
+                                onClick={() => setPostMode("film")}
+                            >
+                                Фільм
+                            </button>
+                            <button
+                                className={
+                                    `${css.adminPostMenuButton} ${postMode === "serial" ? css.activeButton : ""}`
+                                }
+                                onClick={() => setPostMode("serial")}
+                            >
+                                Серіал
+                            </button>
+                            <button
+                                className={
+                                    `${css.adminPostMenuButton} ${postMode === "book" ? css.activeButton : ""}`
+                                }
+                                onClick={() => setPostMode("book")}
+                            >
+                                Книга
+                            </button>
                         </div>
                     </div>
                     <div className={css.adminPostMenuFieldContainer}>
                         <h2 className={css.adminPostMenuFieldTitle}>Назва:</h2>
-                        <input className={css.adminPostMenuFieldInput} type='text'
-                               placeholder='Введіть назву, вибраного вище поста...' value={filmName}/>
+                        <input
+                            className={css.adminPostMenuFieldInput}
+                            type='text'
+                            name='name'
+                            placeholder='Введіть назву, вибраного вище поста...'
+                            value={formData.name}
+                            onChange={handleInputChange}
+                        />
                     </div>
                     <div className={css.adminPostMenuFieldContainer}>
                         <h2 className={css.adminPostMenuFieldTitle}>Вікові обмеження:</h2>
@@ -81,27 +112,113 @@ const AdminPostMenu = () => {
                             <button className={css.adminPostMenuButton}>18+</button>
                         </div>
                     </div>
-                    <div className={css.adminPostMenuFieldContainer}>
+                    { (postMode === 'film' || postMode === 'serial') &&(
+                        <>
+                        <div className={css.adminPostMenuFieldContainer}>
                         <h2 className={css.adminPostMenuFieldTitle}>Рейтинг IMBD:</h2>
-                        <input className={css.adminPostMenuFieldInput} type='text'
-                               placeholder='Введіть рейтинг IMBD для даного поста...' value={filmIMBDRate}/>
+                        <input
+                            className={css.adminPostMenuFieldInput}
+                            type='text'
+                            name='imdbRating'
+                            placeholder='Введіть рейтинг IMBD для даного поста...'
+                            value={formData.imdbRating}
+                            onChange={handleInputChange}
+                        />
                     </div>
                     <div className={css.adminPostMenuFieldContainer}>
                         <h2 className={css.adminPostMenuFieldTitle}>Посилання на трейлер:</h2>
-                        <input className={css.adminPostMenuFieldInput} type='text'
-                               placeholder='Введіть посилання на трейлер для даного поста...'/>
+                        <input
+                            className={css.adminPostMenuFieldInput}
+                            type='text'
+                            name='trailerLink'
+                            placeholder='Введіть посилання на трейлер для даного поста...'
+                            onChange={handleInputChange}
+                        />
                     </div>
+                    </>)
+                    }
+
+                    {postMode === 'book' && (
+                        <>
+                        <div className={css.adminPostBookMenuDropFieldContainer}>
+                            <h2 className={css.adminPostBookMenuTitle}>Мова оригіналу:</h2>
+                            <input
+                                className={css.adminPostBookMenuFieldDropInput}
+                                list='country'
+                                name='country'
+                                placeholder='Виберіть мову'
+                                value={formData.country}
+                                onChange={handleInputChange}
+                            />
+                            <datalist id='country'>
+                                <option>США</option>
+                                <option>Англія</option>
+                            </datalist>
+                        </div>
+                        <div className={css.adminPostBookMenuDropFieldContainer}>
+                            <h2 className={css.adminPostBookMenuTitle}>Рівень складності тексту:</h2>
+                            <input
+                                className={css.adminPostBookMenuFieldDropInput}
+                                list='country'
+                                name='country'
+                                placeholder='Виберіть складність тексту'
+                                value={formData.country}
+                                onChange={handleInputChange}
+                            />
+                            <datalist id='country'>
+                                <option>Тяжкий</option>
+                                <option>Легкий</option>
+                            </datalist>
+                        </div>
+                        <div className={css.adminPostMenuFieldContainer}>
+                        <h2 className={css.adminPostMenuFieldTitle}>Кількість сторінок:</h2>
+                        <input
+                            className={css.adminPostMenuFieldInput}
+                            type='text'
+                            name='runtime'
+                            placeholder='Введіть кількість сторінок'
+                            value={formData.runtime}
+                            onChange={handleInputChange}
+                        />
+                    </div>
+                        </>
+                    )}
+
                     <div className={css.adminPostMenuFieldContainer}>
                         <h2 className={css.adminPostMenuFieldTitle}>Хештеги:</h2>
-                        <input className={css.adminPostMenuFieldInput} type='text'
-                               placeholder='Введіть до 9 хештегів для даного поста...'/>
+                        <input
+                            className={css.adminPostMenuFieldInput}
+                            type='text'
+                            name='hashtags'
+                            placeholder='Введіть до 9 хештегів для даного поста...'
+                            onChange={handleInputChange}
+                        />
                     </div>
+                    {postMode === 'serial' && (
+                    <div className={css.adminPostMenuFieldContainer}>
+                        <h2 className={css.adminPostMenuFieldTitle}>Кількість сезонів:</h2>
+                        <input
+                            className={css.adminPostMenuFieldInput}
+                            type='text'
+                            name='runtime'
+                            placeholder='Введіть кількість сезонів'
+                            value={formData.runtime}
+                            onChange={handleInputChange}
+                        />
+                    </div>
+                    )}
                 </div>
                 <div>
                     <div className={css.adminPostMenuDropFieldContainer}>
                         <h2 className={css.adminPostMenuRightSideFieldTitle}>Країна:</h2>
-                        <input className={css.adminPostMenuFieldDropInput} list='country'
-                               placeholder='Виберіть країну' value={filmCountry}/>
+                        <input
+                            className={css.adminPostMenuFieldDropInput}
+                            list='country'
+                            name='country'
+                            placeholder='Виберіть країну'
+                            value={formData.country}
+                            onChange={handleInputChange}
+                        />
                         <datalist id='country'>
                             <option>USA</option>
                             <option>GBP</option>
@@ -109,48 +226,132 @@ const AdminPostMenu = () => {
                     </div>
                     <div className={css.adminPostMenuDropFieldContainer}>
                         <h2 className={css.adminPostMenuRightSideFieldTitle}>Жанр:</h2>
-                        <input className={css.adminPostMenuFieldDropInput} list='genre' placeholder='Виберіть жанр' value={filmGenre}/>
+                        <input
+                            className={css.adminPostMenuFieldDropInput}
+                            list='genre'
+                            name='genre'
+                            placeholder='Виберіть жанр'
+                            value={formData.genre}
+                            onChange={handleInputChange}
+                        />
                         <datalist id='genre'>
                             <option>comedy</option>
                             <option>horror</option>
                         </datalist>
                     </div>
+                    {postMode === 'book' && (
+                        <>
+                        <div className={css.adminPostBookMenuDropFieldContainer}>
+                            <h2 className={css.adminPostBookMenuTitle}>Чи є адаптація:</h2>
+                            <input
+                                className={css.adminPostBookMenuFieldDropInput}
+                                list='country'
+                                name='country'
+                                placeholder='Виберіть чи є адаптація'
+                                value={formData.country}
+                                onChange={handleInputChange}
+                            />
+                            <datalist id='country'>
+                                <option>так</option>
+                                <option>ні</option>
+                            </datalist>
+                        </div>
+                        <div className={css.adminPostBookMenuDropFieldContainer}>
+                            <h2 className={css.adminPostBookMenuTitle}>На реальних подіях:</h2>
+                            <input
+                                className={css.adminPostBookMenuFieldDropInput}
+                                list='country'
+                                name='country'
+                                placeholder='Виберіть є на реальних подіях'
+                                value={formData.country}
+                                onChange={handleInputChange}
+                            />
+                            <datalist id='country'>
+                                <option>так</option>
+                                <option>ні</option>
+                            </datalist>
+                        </div>
+                        </>
+                    )}
                     <div className={css.adminPostMenuFieldContainer}>
                         <h2 className={css.adminPostMenuFieldTitle}>Фото:</h2>
                         <form>
                             <div id="drop-area" className={css.dropArea}>
                                 <p>Перетягніть сюди фото</p>
                                 <label htmlFor="fileInput" className={css.customButton}>Оберіть файл</label>
-                                <input className={css.adminPostMenuFieldInputPhoto} type="file" id="fileInput"
-                                       accept=".jpg, .jpeg, .png" multiple/>
+                                <input
+                                    className={css.adminPostMenuFieldInputPhoto}
+                                    type="file"
+                                    id="fileInput"
+                                    accept=".jpg, .jpeg, .png"
+                                    multiple
+                                />
                             </div>
                         </form>
                     </div>
                     <div className={css.adminPostMenuFieldContainer}>
                         <h2 className={css.adminPostMenuFieldTitle}>Посилання на групу:</h2>
-                        <input className={css.adminPostMenuRightSideFieldInput} type='text'
-                               placeholder='Введіть посилання на групу для даного поста...'/>
+                        <input
+                            className={css.adminPostMenuRightSideFieldInput}
+                            type='text'
+                            name='groupLink'
+                            placeholder='Введіть посилання на групу для даного поста...'
+                            onChange={handleInputChange}
+                        />
                     </div>
-                    <div className={css.adminPostMenuFieldContainer}>
+                    { (postMode === 'film' || postMode === 'serial') &&(
+                        <div className={css.adminPostMenuFieldContainer}>
                         <h2 className={css.adminPostMenuFieldTitle}>Тривалість:</h2>
-                        <input className={css.adminPostMenuRightSideFieldInput} type='text'
-                               placeholder='Введіть тривалість' value={filmTime}/>
+                        <input
+                            className={css.adminPostMenuRightSideFieldInput}
+                            type='text'
+                            name='runtime'
+                            placeholder='Введіть тривалість'
+                            value={formData.runtime}
+                            onChange={handleInputChange}
+                        />
+                    </div>)
+                    }
+                    {postMode === 'serial' && (
+                    <div className={css.adminPostMenuFieldContainer}>
+                        <h2 className={css.adminPostMenuFieldTitle}>Загальна кількість серій:</h2>
+                        <input
+                            className={css.adminPostMenuRightSideFieldInput}
+                            type='text'
+                            name='runtime'
+                            placeholder='Введіть кількість серій'
+                            value={formData.runtime}
+                            onChange={handleInputChange}
+                        />
                     </div>
+                    )}
                 </div>
             </div>
             <div className={css.adminPostMenuFieldContainer}>
                 <h2 className={css.adminPostMenuFieldTitle}>Короткий опис:</h2>
-                <textarea className={css.adminPostMenuTextArea} type='text'
-                          placeholder='Введіть короткий опис для даного поста...'/>
+                <textarea
+                    className={css.adminPostMenuTextArea}
+                    type='text'
+                    name='description'
+                    placeholder='Введіть короткий опис для даного поста...'
+                    onChange={handleInputChange}
+                />
             </div>
-            <div className={css.adminPostMenuFieldContainer}>
+            { (postMode === 'film' || postMode === 'serial') &&(
+                <>
+                <div className={css.adminPostMenuFieldContainer}>
                 <h2 className={css.adminPostMenuFieldTitle}>Режисери:</h2>
                 <div className={css.adminPostMenuCastFieldContainer}>
                     <div id="drop-area" className={css.dropAreaDown}>
                         <p>Перетягніть сюди фото</p>
                     </div>
-                    <input className={css.adminPostMenuFieldInputDown} type='text'
-                           placeholder='Введіть прізвище та ім’я...'/>
+                    <input
+                        className={css.adminPostMenuFieldInputDown}
+                        type='text'
+                        name='directorName'
+                        placeholder='Введіть прізвище та ім’я...'
+                        onChange={handleInputChange}
+                    />
                     <button className={css.adminPostMenuButtonDown}>Добавити ще</button>
                 </div>
             </div>
@@ -160,18 +361,30 @@ const AdminPostMenu = () => {
                     <div id="drop-area" className={css.dropAreaDown}>
                         <p>Перетягніть сюди фото</p>
                     </div>
-                    <input className={css.adminPostMenuFieldInputDown} type='text'
-                           placeholder='Введіть прізвище та ім’я (у фільмі)...'/>
-                    <input className={css.adminPostMenuFieldInputDown} type='text'
-                           placeholder='Введіть прізвище та ім’я (в житті)...'/>
+                    <input
+                        className={css.adminPostMenuFieldInputDown}
+                        type='text'
+                        name='actorFilmName'
+                        placeholder='Введіть прізвище та ім’я (у фільмі)...'
+                        onChange={handleInputChange}
+                    />
+                    <input
+                        className={css.adminPostMenuFieldInputDown}
+                        type='text'
+                        name='actorRealName'
+                        placeholder='Введіть прізвище та ім’я (в житті)...'
+                        onChange={handleInputChange}
+                    />
                     <button className={css.adminPostMenuButtonDown}>Добавити ще</button>
                 </div>
             </div>
+            </>
+            )}
             <div className={css.adminPostMenuCreateButtonContainer}>
                 <button className={css.adminPostMenuCreateButton}>Створити пост</button>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default AdminPostMenu;
