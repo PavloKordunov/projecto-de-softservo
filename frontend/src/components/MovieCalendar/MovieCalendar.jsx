@@ -1,18 +1,39 @@
-import React, { useState } from "react";
+import { useState, useEffect} from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import css from "./MovieCalendar.module.css";
+import {getAllMoviesByYear} from "../../api/omdbApi";
 
-const MovieCalendar = ({ movies, onClose }) => {
+const MovieCalendar = ({ onClose }) => {
     const [selectedDate, setSelectedDate] = useState(null);
+    const [movies, setMovieas] = useState([])
+
+    useEffect(() => {
+        getAllMoviesByYear(2025)
+        .then((movie) => {
+            const sortedMovies = movie.sort((a, b) => {
+                const dateA = new Date(a.Released);
+                const dateB = new Date(b.Released);
+                return dateA - dateB; 
+            });
+    
+            console.log("Movies sorted by Released date:", sortedMovies);
+            setMovieas(sortedMovies)
+        }
+    )
+        .catch((error) => {
+            console.error("Error fetching movies:", error);
+        });
+    
+    })
 
     const handleDateChange = (date) => {
         setSelectedDate(date);
     };
 
     const movieDates = movies.map((movie) => ({
-        date: new Date(movie.releaseDate),
-        title: movie.title,
+        date: new Date(movie.Released),
+        title: movie.Title,
     }));
 
     const isMovieDate = (date) =>
@@ -52,11 +73,11 @@ const MovieCalendar = ({ movies, onClose }) => {
                             {movies
                                 .filter(
                                     (movie) =>
-                                        new Date(movie.releaseDate).toDateString() ===
+                                        new Date(movie.Released).toDateString() ===
                                         selectedDate.toDateString()
                                 )
                                 .map((movie) => (
-                                    <li key={movie.id}>{movie.title}</li>
+                                    <li key={movie.id}>{movie.Title}</li>
                                 ))}
                         </ul>
                     </div>

@@ -9,14 +9,6 @@ import ProfileImage from '../../img/log-icon.png';
 import Messenger from "../Messenger/Messenger";
 import MovieCalendar from "../MovieCalendar/MovieCalendar";
 
-
-const movies = [
-    { id: 1, title: "Avatar 2", releaseDate: "2024-12-20" },
-    { id: 2, title: "Spider-Man", releaseDate: "2024-12-25" },
-    { id: 3, title: "Inception", releaseDate: "2025-01-01" },
-];
-
-
 const NavBar = () => {
     const [isShowMenu, setIsShowMenu] = useState(false);
     const windowWidth = useWindowWidth();
@@ -204,7 +196,6 @@ const NavBar = () => {
             </div>
             {isShowCalendar && (
                 <MovieCalendar
-                    movies={movies}
                     onClose={() => setIsShowCalendar(false)}
                 />
             )}

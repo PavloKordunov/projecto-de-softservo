@@ -13,21 +13,20 @@ import Profile from "./Profile/Profile";
 import NavBar from "./NavBar/NavBar";
 import AdminPage from "./pages/AdminPage";
 import AdminPostMenu from "./AdminPostMenu/AdminPostMenu";
-import {getMoviesByYear} from "../api/omdbApi";
-import {useEffect} from "react";
+
+import {getAllMoviesByYear} from "../api/omdbApi";
+import { useEffect } from "react";
+
 
 const oktaAuth = new OktaAuth(oktaConfig);
 
 function App() {
+
     const navigate = useNavigate();
 
     const customAuthHandler = () => {
         navigate('/login');
     };
-
-    useEffect(() => {
-        getMoviesByYear(2025, 1)
-    })
 
     const restoreOriginalUri = async (_oktaAuth:any, originalUri:any) => {
         navigate(toRelativeUrl(originalUri || '/', window.location.origin));
