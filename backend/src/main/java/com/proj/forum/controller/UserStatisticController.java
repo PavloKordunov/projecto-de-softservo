@@ -31,20 +31,20 @@ public class UserStatisticController {
         return new ApiResponse<>(true, HttpStatus.CREATED, "Statistic create successfully", newStatisticDto);
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ApiResponse<List<StatisticDto>> getAllStatistic(){
         log.info("Get all statistics");
-        List<StatisticDto> statisticDto = userStatisticService.getAllStatisticDto();
+        List<StatisticDto> statisticDto = userStatisticService.getAllStatistic();
 
-        return new ApiResponse<>(true, HttpStatus.OK, "Statistic is returned", statisticDto);
+        return new ApiResponse<>(true, HttpStatus.OK, "Statistic get successfully", statisticDto);
     }
 
-    @GetMapping("/all/user/{id}")
+    @GetMapping("/user/{id}")
     public ApiResponse<List<StatisticDto>> getAllStatisticByUserId(@PathVariable @Valid UUID id){
         log.info("Get all statistics by user id");
-        List<StatisticDto> statisticDto = userStatisticService.getAllStatisticDtoByUserId(id);
+        List<StatisticDto> statisticDto = userStatisticService.getAllStatisticByUserId(id);
 
-        return new ApiResponse<>(true, HttpStatus.OK, "Statistic is returned", statisticDto);
+        return new ApiResponse<>(true, HttpStatus.OK, "Statistic get by user id successfully", statisticDto);
     }
 
 //    @GetMapping("/all/user-saved/{id}")
@@ -59,8 +59,22 @@ public class UserStatisticController {
     @PutMapping
     public ApiResponse<GenericResponse> updateStatistic(@RequestBody @Valid StatisticDto statisticDto){
         log.info("Update statistic");
-        userStatisticService.updateStatisticDto(statisticDto);
+        userStatisticService.updateStatistic(statisticDto); //TODO if liked = null => 500 er
         return new ApiResponse<>(true, HttpStatus.OK, "Statistic update successfully", new GenericResponse(statisticDto.id()));
+    }
+
+    @PatchMapping("/{id}")
+    public ApiResponse<GenericResponse> updateStatisticByLiked(@PathVariable @Valid UUID id, Boolean liked){
+        log.info("Update statistic by liked");
+
+        return ApiResponse.apiResponse(true, 200, "Statistic update successfully", id);
+    }
+
+    @DeleteMapping("/{id}")
+    public ApiResponse<GenericResponse> deleteStatistic(@PathVariable @Valid UUID id){
+        log.info("Delete statistic");
+        userStatisticService.deleteStatistic(id);
+        return ApiResponse.apiResponse(true, 200, "Statistic successfully delete", null);
     }
 
 }

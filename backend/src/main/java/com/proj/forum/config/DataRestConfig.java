@@ -1,6 +1,7 @@
 package com.proj.forum.config;
 
 import com.proj.forum.entity.Group;
+import com.proj.forum.entity.Statistic;
 import com.proj.forum.entity.Topic;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
@@ -19,10 +20,10 @@ public class DataRestConfig implements RepositoryRestConfigurer {
                 HttpMethod.PATCH,
                 HttpMethod.DELETE};
 
-        config.exposeIdsFor(Topic.class, Group.class);
+        config.exposeIdsFor(Topic.class, Group.class, Statistic.class);
 
         config.getExposureConfiguration()
-                .forDomainType(Topic.class)
+                .forDomainType(Statistic.class)
                 .withItemExposure((metadata, httpMethods) ->
                         httpMethods.disable(unsupportedActions))
                 .withCollectionExposure((metadata, httpMethods) ->

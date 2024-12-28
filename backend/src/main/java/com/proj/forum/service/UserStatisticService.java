@@ -8,9 +8,11 @@ import java.util.UUID;
 public interface UserStatisticService {
     StatisticDto createStatistic(StatisticDto statisticDto);
 
-    void updateStatisticDto(StatisticDto statisticDto);
+    void updateStatistic(StatisticDto statisticDto);
 
-    List<StatisticDto> getAllStatisticDto();
+    List<StatisticDto> getAllStatistic();
 
-    List<StatisticDto> getAllStatisticDtoByUserId(UUID userId);
+    List<StatisticDto> getAllStatisticByUserId(UUID userId);
+
+    void deleteStatistic(UUID id);
 }

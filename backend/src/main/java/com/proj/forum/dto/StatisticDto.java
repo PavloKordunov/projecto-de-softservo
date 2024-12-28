@@ -12,6 +12,6 @@ public record StatisticDto(
         @NotNull UUID userId,
         @NotNull UUID topicId,
         int rate,
-        boolean liked,
-        @NotNull boolean saved
+        Boolean liked,
+        @NotNull Boolean saved
         ) { }

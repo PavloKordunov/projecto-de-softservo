@@ -30,36 +30,44 @@ public class UserStatisticServiceImpl implements UserStatisticService {
 
     @Transactional
     @Override
-    public void updateStatisticDto(StatisticDto statisticDto) {
-        StatisticDto statistic = userStatisticRepository.findById(statisticDto.id())
+    public void updateStatistic(StatisticDto statisticDto) {
+        Statistic statistic = userStatisticRepository.findById(statisticDto.id())
                 .map(stat -> updateStatistic(stat, statisticDto))
                 .orElseThrow(() -> new EntityNotFoundException("Not find statistic"));
         //userStatisticRepository.save(statistic);
     }
 
-    private StatisticDto updateStatistic(Statistic statistic, StatisticDto statisticDto) {
-        if (statisticDto.liked() != statistic.isLiked()) {
+    private Statistic updateStatistic(Statistic statistic, StatisticDto statisticDto) {
+        if (statisticDto.liked() != statistic.getLiked()) {
             statistic.setLiked(statisticDto.liked());
         }
-        if (statisticDto.saved() != statistic.isSaved()) {
+        if (statisticDto.saved() != statistic.getSaved()) {
             statistic.setSaved(statisticDto.saved());
         }
         if (statisticDto.rate() != statistic.getRate()) {
             statistic.setRate(statisticDto.rate());
         }
-        return statisticDto;
+        return statistic;
     }
 
     @Override
-    public List<StatisticDto> getAllStatisticDto() {
+    public List<StatisticDto> getAllStatistic() {
         List<Statistic> statisticList = userStatisticRepository.findAll();
         return getDtoList(statisticList);
     }
 
     @Override
-    public List<StatisticDto> getAllStatisticDtoByUserId(UUID userId) {
+    public List<StatisticDto> getAllStatisticByUserId(UUID userId) {
         List<Statistic> statisticList = userStatisticRepository.findByUserId(userId);
         return getDtoList(statisticList);
+    }
+
+    @Override
+    public void deleteStatistic(UUID id) {
+        if(userStatisticRepository.existsById(id))
+            userStatisticRepository.deleteById(id);
+        else
+            throw new EntityNotFoundException("Entity don't find");
     }
 
     private static StatisticDto mapToStatisticDto(Statistic statistic) {
@@ -68,8 +76,8 @@ public class UserStatisticServiceImpl implements UserStatisticService {
                 .userId(statistic.getUserId())
                 .topicId(statistic.getTopicId())
                 .rate(statistic.getRate())
-                .liked(statistic.isLiked())
-                .saved(statistic.isSaved())
+                .liked(statistic.getLiked())
+                .saved(statistic.getSaved())
                 .build();
     }
 

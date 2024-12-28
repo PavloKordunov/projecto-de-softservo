@@ -31,8 +31,8 @@ public class Statistic {
 
     private int rate;
 
-    private boolean liked;
+    private Boolean liked;
 
     @NotNull
-    private boolean saved;
+    private Boolean saved;
 }
