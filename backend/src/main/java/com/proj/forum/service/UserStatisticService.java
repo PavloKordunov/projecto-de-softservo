@@ -15,4 +15,6 @@ public interface UserStatisticService {
     List<StatisticDto> getAllStatisticByUserId(UUID userId);
 
     void deleteStatistic(UUID id);
+
+    void updateStatisticPartially(UUID id, Boolean liked);
 }

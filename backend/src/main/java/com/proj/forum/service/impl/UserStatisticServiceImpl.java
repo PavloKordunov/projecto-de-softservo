@@ -70,6 +70,20 @@ public class UserStatisticServiceImpl implements UserStatisticService {
             throw new EntityNotFoundException("Entity don't find");
     }
 
+    @Transactional
+    @Override
+    public void updateStatisticPartially(UUID id, Boolean liked) {
+        Statistic stat = userStatisticRepository.findById(id).map(statistic -> updatePartially(statistic, liked))
+                .orElseThrow(()-> new EntityNotFoundException("Statistic don't find"));
+        //userStatisticRepository.save(stat);
+    }
+
+    private static Statistic updatePartially(Statistic statistic, Boolean liked){
+        if(statistic.getLiked() != liked)
+            statistic.setLiked(liked);
+        return statistic;
+    }
+
     private static StatisticDto mapToStatisticDto(Statistic statistic) {
         return StatisticDto.builder()
                 .id(statistic.getId())

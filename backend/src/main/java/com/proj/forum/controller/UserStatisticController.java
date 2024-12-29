@@ -59,14 +59,14 @@ public class UserStatisticController {
     @PutMapping
     public ApiResponse<GenericResponse> updateStatistic(@RequestBody @Valid StatisticDto statisticDto){
         log.info("Update statistic");
-        userStatisticService.updateStatistic(statisticDto); //TODO if liked = null => 500 er
-        return new ApiResponse<>(true, HttpStatus.OK, "Statistic update successfully", new GenericResponse(statisticDto.id()));
+        userStatisticService.updateStatistic(statisticDto);
+        return ApiResponse.apiResponse(true, 200, "Statistic update successfully", statisticDto.id());
     }
 
     @PatchMapping("/{id}")
-    public ApiResponse<GenericResponse> updateStatisticByLiked(@PathVariable @Valid UUID id, Boolean liked){
+    public ApiResponse<GenericResponse> updateStatisticByLiked(@PathVariable @Valid UUID id, @RequestBody(required = false) @Valid Boolean liked){
         log.info("Update statistic by liked");
-
+        userStatisticService.updateStatisticPartially(id, liked);
         return ApiResponse.apiResponse(true, 200, "Statistic update successfully", id);
     }
 
