@@ -13,9 +13,7 @@ import Profile from "./Profile/Profile";
 import NavBar from "./NavBar/NavBar";
 import AdminPage from "./pages/AdminPage";
 import AdminPostMenu from "./AdminPostMenu/AdminPostMenu";
-
-import {getAllMoviesByYear} from "../api/omdbApi";
-import { useEffect } from "react";
+import Group from "./Group/Group";
 
 
 const oktaAuth = new OktaAuth(oktaConfig);
@@ -48,6 +46,8 @@ function App() {
                         <Route path="userProfile" element={<Profile />} />
                         <Route path="admin-page" element={<AdminPage />} />
                         <Route path='admin-post-menu' element={<AdminPostMenu />} />
+                        <Route path="auth-page" element={<AuthPage/>}/>
+                        <Route path="group" element={<Group/>}/>
                     </Route>
                     <Route path="/login" element={<LoginWidget config={oktaConfig} />} />
                     <Route path="/login/callback" element={<LoginCallback />} />

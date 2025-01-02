@@ -2,9 +2,12 @@ import css from "../NavBar/NavBar.module.css";
 import FlipImage from "../../img/person.png";
 import Icon from "../../img/sprite.svg";
 import {Link, useNavigate} from "react-router-dom";
+import { useOktaAuth } from "@okta/okta-react";
 
 const NavBarDropMenu = ({isShowMenu, handleCloseMenu, isFooterMenu, className}) => {
 
+    const handleLogout = async () => oktaAuth.signOut();
+    const { oktaAuth, authState } = useOktaAuth();
     const navigate = useNavigate();
 
     return (
@@ -35,12 +38,15 @@ const NavBarDropMenu = ({isShowMenu, handleCloseMenu, isFooterMenu, className}) 
                         </svg>
                         <p className={css.NavBarFlipIconText}>Settings</p>
                     </div>
-                    <div className={css.NavBarFlipIconContainer}>
-                        <svg className={css.NavBarFlipIcon} width='34' height='34'>
-                            <use href={`${Icon}#NavExitIcon`}></use>
-                        </svg>
-                        <p className={css.NavBarFlipIconText}>Log Out</p>
-                    </div>
+
+                        {authState?.isAuthenticated &&
+                        <div onClick={handleLogout} className={css.NavBarFlipIconContainer}>
+                            <svg className={css.NavBarFlipIcon} width='34' height='34'>
+                                <use href={`${Icon}#NavExitIcon`}></use>
+                            </svg>
+                            <p className={css.NavBarFlipIconText}>Log out</p>
+                        </div>
+                        }           
                     <div className={css.NavBarFlipIconContainer}>
                         <svg className={css.NavBarFlipIcon} width='34' height='34'>
                             <use href={`${Icon}#iconCrown`}></use>

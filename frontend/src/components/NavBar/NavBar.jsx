@@ -8,16 +8,20 @@ import { useOktaAuth } from '@okta/okta-react';
 import ProfileImage from '../../img/log-icon.png';
 import Messenger from "../Messenger/Messenger";
 import MovieCalendar from "../MovieCalendar/MovieCalendar";
+import { Link, useNavigate } from 'react-router-dom';
 
 const NavBar = () => {
     const [isShowMenu, setIsShowMenu] = useState(false);
     const windowWidth = useWindowWidth();
     const isMobile = windowWidth <= 440;
     const [searchQuery, setSearchQuery] = useState('');
-    const { authState } = useOktaAuth();
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
     const [isShowMessenger, setIsShowMessenger] = useState(false);
     const [isShowCalendar, setIsShowCalendar] = useState(false);
+
+    const { oktaAuth, authState } = useOktaAuth();
+
+    const handleLogout = async () => oktaAuth.signOut();
 
     const toggleCalendar = () => setIsShowCalendar(!isShowCalendar);
 
@@ -135,6 +139,9 @@ const NavBar = () => {
                                 </svg>
                             </li>
                         </ul>
+                            {!authState?.isAuthenticated &&
+                                <Link to='auth-page'>Sign in</Link>
+                            }
                         <a
                             onClick={handleShowMenu}
                             className={`${css.NavBarUserProfileContainer} ${isShowMenu ? 'open' : ''}`}>

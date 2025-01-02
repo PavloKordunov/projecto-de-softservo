@@ -1,0 +1,165 @@
+.groupContainer{
+    margin-left: 26px;
+    margin-top: 18px;
+    width: 1126px;
+    border-radius: 31px;
+    padding: 30px;
+}
+.groupTitleContainer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.groupTitleContainerItem{
+    display: flex;
+    align-items: center;
+}
+
+.groupTitle{
+    font-size: 32px;
+    font-weight: 600;
+    color: #fff;
+    margin-left: 13px;
+}
+
+.groupSubTitle{
+    color: #97989D;
+    font-size: 20px;
+    font-weight: 400;
+    margin-left: 13px;
+}
+
+.groupButtonCreate{
+    width: 150px;
+    height: 52px;
+    border: none;
+    border-radius: 7px;
+    background-color: #FF4155;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    margin-right: 24px;
+}
+
+.groupButton{
+    width: 150px;
+    height: 52px;
+    border: none;
+    border-radius: 7px;
+    background-color: #3A7F4F;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    margin-right: 24px;
+}
+
+.groupDataContainer{
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 15px;
+}
+
+.groupInfoContainer{
+    padding: 21px;
+    background-color: #1E1F20;
+    width: 76%;
+    border-radius: 14px;
+}
+
+.groupStatsContainer{
+    padding: 17px 12px 34px 12px;
+    width: 180px;
+    background-color: #1E1F20;
+    border-radius: 14px;
+}
+
+.groupDataText{
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.groupTagsContainer{
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.groupTag{
+    background-color: #434C55;
+    padding: 7px 10px;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 500;
+}
+
+.groupSabs{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.groupSabsText{
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.groupStatusBtn{
+    margin-top: 18px;
+    height: 31px;
+    width: 72px;
+    background-color: #434C55;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 500;
+    color: #fff;
+    border: none;
+    margin-bottom: 14px;
+}
+
+.groupPinnedPostContainer{
+    padding: 21px;
+    background-color: #1E1F20;
+    width: 95%;
+    border-radius: 14px;
+    margin-bottom: 12px;
+}
+
+.groupPinnedPostTitleContainer{
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.groupPinnedPostTitle{
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.groupPinnedPostWrapper{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.groupPinnedPost{
+    width: 355px;
+    height: 275px;
+    background-color: #2C353D;
+    border-bottom-right-radius: 14px ;
+    border-bottom-left-radius: 14px;
+}
+
+.groupPinnedPostTitle{
+    margin-left: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+}

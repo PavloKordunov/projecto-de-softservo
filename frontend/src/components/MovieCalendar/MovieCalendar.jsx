@@ -5,7 +5,7 @@ import css from "./MovieCalendar.module.css";
 import {getAllMoviesByYear} from "../../api/omdbApi";
 
 const MovieCalendar = ({ onClose }) => {
-    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(new Date());
     const [movies, setMovieas] = useState([])
 
     useEffect(() => {
@@ -26,6 +26,9 @@ const MovieCalendar = ({ onClose }) => {
         });
     
     })
+    useEffect(() => {
+        console.log(selectedDate)
+    }, [selectedDate])
 
     const handleDateChange = (date) => {
         setSelectedDate(date);
