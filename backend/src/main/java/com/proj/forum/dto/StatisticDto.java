@@ -10,7 +10,7 @@ import java.util.UUID;
 public record StatisticDto(
         @Id UUID id,
         @NotNull UUID userId,
-        @NotNull UUID topicId,
+        @NotNull UUID objectId,
         int rate,
         Boolean liked,
         @NotNull Boolean saved

@@ -88,7 +88,7 @@ public class UserStatisticServiceImpl implements UserStatisticService {
         return StatisticDto.builder()
                 .id(statistic.getId())
                 .userId(statistic.getUserId())
-                .topicId(statistic.getTopicId())
+                .topicId(statistic.getObjectId())
                 .rate(statistic.getRate())
                 .liked(statistic.getLiked())
                 .saved(statistic.getSaved())
@@ -98,7 +98,7 @@ public class UserStatisticServiceImpl implements UserStatisticService {
     private static Statistic mapToStatistic(StatisticDto dto) {
         return Statistic.builder()
                 .userId(dto.userId())
-                .topicId(dto.topicId())
+                .objectId(dto.objectId())
                 .rate(dto.rate())
                 .liked(dto.liked())
                 .saved(dto.saved())
