@@ -67,7 +67,7 @@ public class UserStatisticServiceImpl implements UserStatisticService {
         if(userStatisticRepository.existsById(id))
             userStatisticRepository.deleteById(id);
         else
-            throw new EntityNotFoundException("Entity don't find");
+            throw new EntityNotFoundException("Statistic don't find");
     }
 
     @Transactional
@@ -88,7 +88,7 @@ public class UserStatisticServiceImpl implements UserStatisticService {
         return StatisticDto.builder()
                 .id(statistic.getId())
                 .userId(statistic.getUserId())
-                .topicId(statistic.getObjectId())
+                .id(statistic.getObjectId())
                 .rate(statistic.getRate())
                 .liked(statistic.getLiked())
                 .saved(statistic.getSaved())
