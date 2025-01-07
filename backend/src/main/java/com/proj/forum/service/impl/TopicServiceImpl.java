@@ -118,7 +118,7 @@ public class TopicServiceImpl implements TopicService {
                 .actor(topicDto.actor())
                 .image(topicDto.image())
                 .IMBD(topicDto.IMBD())
-                .author(topicDto.author())
+                //.author(topicDto.author())
                 .director(topicDto.director())
                 .genre(topicDto.genre())
                 .duration(topicDto.duration())
@@ -130,6 +130,15 @@ public class TopicServiceImpl implements TopicService {
                 .id(topic.getId())
                 .title(topic.getTitle())
                 .description(topic.getDescription() == null ? StringUtils.EMPTY : topic.getDescription())
+                .country(topic.getCountry())
+                .limitAge(topic.getLimitAge())
+                .actor(topic.getActor())
+                .image(topic.getImage())
+                .IMBD(topic.getIMBD())
+                //.author(topic.getAuthor())
+                .director(topic.getDirector())
+                .genre(topic.getGenre())
+                .duration(topic.getDuration())
                 .build();
     }
 

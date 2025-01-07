@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 import java.util.UUID;
 
-import static jakarta.persistence.CascadeType.ALL;
-
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,8 +30,8 @@ public class User {
 
     private String profileImage;
 
-    @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
-    private List<Topic> createdTopics;
+//    @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
+//    private List<Topic> createdTopics;
 
     @ManyToMany
     @JoinTable(

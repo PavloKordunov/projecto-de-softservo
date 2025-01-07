@@ -80,26 +80,4 @@ public class TopicController {
             throw ex;
         }
     }
-
-
-//    @GetMapping
-//    public ResponseEntity<List<Topic>> getAllTopics() {
-//        // Mock response data
-//        List<Topic> topic = new ArrayList<>();
-//
-//        topic.add(Topic.builder()
-//                .id(UUID.randomUUID())
-//                .title("Topic Terrifier 3")
-//                .description("Description for topic Terrifier 3")
-//                .build());
-//
-//        topic.add(Topic.builder()
-//                .id(UUID.randomUUID())
-//                .title("Topic Home Alone")
-//                .description("Description for topic Home Alone")
-//                .build());
-//
-//        return ResponseEntity.ok(topic);
-//    };
-
 }
