@@ -2,9 +2,7 @@ package com.proj.forum.controller;
 
 import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.GenericResponse;
-
 import com.proj.forum.dto.TopicDto;
-
 import com.proj.forum.service.TopicService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -27,7 +25,7 @@ public class TopicController {
 
     private final TopicService topicService;
 
-    @PostMapping("/create")
+    @PostMapping("/movie")
     public ApiResponse<GenericResponse> createTopic(@RequestBody @Valid TopicDto topic) {
         try {
             log.info("Create topic");

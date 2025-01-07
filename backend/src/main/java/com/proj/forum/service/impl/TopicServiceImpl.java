@@ -1,16 +1,13 @@
 package com.proj.forum.service.impl;
 
 import com.proj.forum.dto.TopicDto;
-
 import com.proj.forum.entity.Topic;
-
 import com.proj.forum.repository.TopicRepository;
 import com.proj.forum.service.TopicService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -116,6 +113,15 @@ public class TopicServiceImpl implements TopicService {
         return Topic.builder()
                 .title(topicDto.title())
                 .description(topicDto.description() == null ? StringUtils.EMPTY : topicDto.description())
+                .country(topicDto.country())
+                .limitAge(topicDto.limitAge())
+                .actor(topicDto.actor())
+                .image(topicDto.image())
+                .IMBD(topicDto.IMBD())
+                .author(topicDto.author())
+                .director(topicDto.director())
+                .genre(topicDto.genre())
+                .duration(topicDto.duration())
                 .build();
     }
 
