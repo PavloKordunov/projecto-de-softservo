@@ -18,12 +18,16 @@ const NavBar = () => {
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
     const [isShowMessenger, setIsShowMessenger] = useState(false);
     const [isShowCalendar, setIsShowCalendar] = useState(false);
+    const navigate = useNavigate();
 
     const { oktaAuth, authState } = useOktaAuth();
 
     const handleLogout = async () => oktaAuth.signOut();
 
-    const toggleCalendar = () => setIsShowCalendar(!isShowCalendar);
+    const toggleCalendar = () => {
+        setIsShowCalendar(!isShowCalendar);
+    };
+
 
     const handleShowMenu = () => {
         setIsShowMenu(!isShowMenu);
@@ -139,9 +143,9 @@ const NavBar = () => {
                                 </svg>
                             </li>
                         </ul>
-                            {!authState?.isAuthenticated &&
-                                <Link to='auth-page'>Sign in</Link>
-                            }
+                            {/*{!authState?.isAuthenticated &&*/}
+                            {/*    <Link to='auth-page'>Sign in</Link>*/}
+                            {/*}*/}
                         <a
                             onClick={handleShowMenu}
                             className={`${css.NavBarUserProfileContainer} ${isShowMenu ? 'open' : ''}`}>
@@ -173,11 +177,11 @@ const NavBar = () => {
                         <use href={`${Icon}#iconHome`}></use>
                     </svg>
                 </a>
-                <button onClick={toggleCalendar} className={css.CalendarButton}>
+                <a href="/" className={css.CalendarButton}>
                     <svg width="26" height="26">
                         <use href={`${Icon}#CalendarIcon`}></use>
                     </svg>
-                </button>
+                </a>
                 <a href="/community" className={css.NavBarFooterIcon}>
                     <svg width="24" height="24">
                         <use href={`${Icon}#iconCommunity`}></use>
