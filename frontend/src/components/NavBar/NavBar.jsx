@@ -143,9 +143,9 @@ const NavBar = () => {
                                 </svg>
                             </li>
                         </ul>
-                            {/*{!authState?.isAuthenticated &&*/}
-                            {/*    <Link to='auth-page'>Sign in</Link>*/}
-                            {/*}*/}
+                            {!authState?.isAuthenticated &&
+                                <Link style={{textDecoration: "none", color: "#fff", fontSize: 20, fontWeight: 600}} to='login'>Login</Link>
+                            }
                         <a
                             onClick={handleShowMenu}
                             className={`${css.NavBarUserProfileContainer} ${isShowMenu ? 'open' : ''}`}>
