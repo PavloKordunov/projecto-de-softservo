@@ -4,6 +4,7 @@ import "react-calendar/dist/Calendar.css";
 import css from "./MovieCalendar.module.css";
 import {getAllMoviesByYear} from "../../api/omdbApi";
 
+
 const MovieCalendar = ({ onClose }) => {
     const [selectedDate, setSelectedDate] = useState('');
     const [movies, setMovieas] = useState([])

@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 import java.util.UUID;
 
-import static jakarta.persistence.CascadeType.ALL;
-
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor

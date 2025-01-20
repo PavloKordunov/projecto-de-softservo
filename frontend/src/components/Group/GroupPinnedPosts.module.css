@@ -1,0 +1,51 @@
+.groupPinnedPostsWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    width: 150px;
+    margin-top: -17px;
+    margin-left: 10px;
+}
+
+.groupPinnedPostTitle{
+    color: #eeeeee;
+    font-size: 10px;
+    justify-content: center;
+}
+
+.groupPinnedPostsMain {
+    display: flex;
+    transition: transform 0.3s ease;
+}
+
+.groupPinnedPost {
+    flex: 0 0 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.scrollButtonLeft,
+.scrollButtonRight {
+    position: absolute;
+    top: 62%;
+    transform: translateY(-180%);
+    background: rgba(0, 0, 0, 0.5);
+    color: #eeeeee;
+    border: none;
+    border-radius: 30%;
+    font-size: 14px;
+    /*padding: 10px;*/
+    cursor: pointer;
+}
+
+.scrollButtonLeft {
+    left: -1px;
+}
+
+.scrollButtonRight {
+    right: -1px;
+}

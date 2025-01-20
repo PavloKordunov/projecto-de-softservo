@@ -1,10 +1,11 @@
 .groupContainer{
     margin-left: 26px;
     margin-top: 18px;
-    width: 1126px;
+    width: 1020px;
     border-radius: 31px;
     padding: 30px;
 }
+
 .groupTitleContainer{
     display: flex;
     justify-content: space-between;
@@ -142,6 +143,12 @@
     color: #fff;
 }
 
+.groupPinnedPostMain{
+    display: flex;
+    flex-direction: row;
+    gap: 14px;
+}
+
 .groupPinnedPostWrapper{
     display: flex;
     justify-content: space-between;
@@ -163,3 +170,260 @@
     font-weight: 700;
     color: #fff;
 }
+
+
+@media (max-width: 767px) {
+    .groupContainer {
+        margin-left: 10px;
+        margin-right: 10px;
+        width: auto;
+        padding: 20px;
+    }
+
+    .groupTitleContainer {
+        flex-direction: row;
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+    .groupTitleContainerItem {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .groupTitle {
+        font-size: 24px;
+        margin-left: 0;
+    }
+
+    .groupSubTitle {
+        font-size: 16px;
+        margin-left: 0;
+    }
+
+    .groupButtonCreate,
+    .groupButton {
+        width: 70%;
+        height: 35px;
+        margin-right: 10px;
+        font-size: 14px;
+    }
+
+    .groupDataContainer {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .groupInfoContainer {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .groupStatsContainer {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .groupPinnedPostContainer {
+        width: 95%;
+    }
+
+    .groupPinnedPostWrapper {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .groupPinnedPost {
+        width: 100%;
+        height: auto;
+    }
+
+    .groupPinnedPost img {
+        width: 100%;
+        height: auto;
+    }
+}
+
+@media (max-width: 440px) {
+    .groupContainer {
+        padding: 10px;
+        width: 70%;
+        margin-right: 130px;
+    }
+
+    .groupTitleContainer {
+        margin-top: -50px;
+        margin-right: -15px;
+    }
+
+    .groupTitleMain {
+        margin-left: 7px;
+    }
+
+    .groupButtonCreate_Mobile {
+        background-color: #fe4155;
+        color: white;
+        border: none;
+        border-radius: 10%;
+        width: 28px;
+        height: 28px;
+        font-size: 34px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+
+
+    .imgTitle {
+        height: 40px;
+        width: 40px;
+    }
+
+    .groupTitle {
+        font-size: 10px;
+        margin-top: 4px;
+    }
+
+    .groupSubTitle {
+        font-size: 10px;
+
+    }
+
+    .groupButton {
+        height: 28px;
+        font-size: 10px;
+        width: 80%;
+        border: none;
+        border-radius: 5%;
+    }
+
+    .groupButton, .groupButtonCreate_Mobile {
+        margin-top: 6px;
+    }
+
+    .moreSign {
+        height: 40px;
+        width: 40px;
+        margin-left: -10px;
+    }
+
+    .groupDataText {
+        font-size: 10px;
+        margin-bottom: 10px;
+        margin-left: 0;
+    }
+
+    .groupTagsContainer {
+        gap: 8px;
+        margin-left: 0;
+    }
+
+    .groupTag {
+        font-size: 6px;
+    }
+
+
+    .groupPinnedPostWrapper {
+        gap: 8px;
+        flex-direction: row;
+        margin-left: 0;
+    }
+
+    .groupPinnedPostContainer {
+        width: 55%;
+        margin-right: 10px;
+    }
+
+
+    .groupPinnedPostTitleMain {
+        font-size: 14px;
+        margin-left: -60px;
+        margin-top: -10px;
+        color: #eeeeee;
+    }
+
+    .groupSabsText {
+        flex-direction: row;
+        font-size: 10px;
+        display: flex;;
+    }
+
+    .groupStatusBtn {
+        font-size: 8px;
+        padding: 4px 8px;
+        margin-bottom: 10px;
+        margin-left: 0;
+    }
+
+    .groupPinnedPostTitleContainer {
+        flex-direction: row;
+        align-items: center;
+        margin-left: 0;
+    }
+
+
+    .groupTitleContainerItem {
+        flex-direction: row;
+        gap: 6px;
+        align-items: flex-start;
+        margin-left: 0;
+    }
+
+    .groupDataContainer {
+        flex-direction: column;
+        gap: 16px;
+        margin-left: 0;
+    }
+
+    .groupInfoContainer {
+        padding: 10px;
+        margin-left: -15px;
+        width: 250px;
+        margin-top: -20px;
+    }
+
+    .groupScrollandStatus {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .groupStatsContainer {
+        width: 80px;
+        height: 120px;
+        flex-direction: row;
+        margin-left: 14px;
+        margin-bottom: 10px;
+    }
+
+    .groupStatusBtn {
+        height: 20px;
+        width: 60px;
+        margin-top: 10px;
+    }
+
+    .groupSabs {
+        gap: 6px;
+        margin-left: 0;
+    }
+
+    /*!!!*/
+    .groupPinnedPostTitle{
+        font-size: 10px;
+    }
+
+    .groupPinnedPostTitleContainer{
+        margin-left: 30px;
+    }
+
+    .groupTagsContainer{
+        margin-top: -18px;
+    }
+
+}
+
+
+
+

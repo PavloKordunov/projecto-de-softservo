@@ -330,9 +330,10 @@
 
 @media (max-width: 440px) {
     .NavBarContainer {
-        width: 70%;
+        width: 63%;
         max-width: 100%;
         overflow-x: hidden;
+        margin-left: 10px;
     }
 
     .NavBarLogo {
@@ -372,8 +373,8 @@
     }
 
     .NavBarIconEl {
-        width: 40px;
-        height: 40px;
+        width: 30px;
+        height: 30px;
     }
 
     .NavBarMobile {
@@ -386,7 +387,8 @@
     .NavBarFooter {
         padding: 15px 25px;
         gap: 5px;
-        width: 61%;
+        width: 59%;
+        border-radius: 10px;
     }
 
     .NavBarFooterIcon {

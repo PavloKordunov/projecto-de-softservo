@@ -125,10 +125,10 @@
         align-items: center;
         justify-content: center;
         flex: 0 1 auto;
-        height: 20px;
-        padding: 10px;
-        width: 70px;
-        margin: 0 -7px;
+        height: 15px;
+        padding: 7px 14px;
+        width: 65px;
+        margin: 0 -10px;
     }
 
     .panelElLink {

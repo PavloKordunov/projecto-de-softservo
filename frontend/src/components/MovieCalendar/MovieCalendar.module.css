@@ -39,7 +39,7 @@
 }
 
 :global(.react-calendar__month-view__days__day--weekend) {
-    color: #d87b7b;
+    color: #3a7f4f;
 }
 
 :global(.react-calendar__tile) {
@@ -100,7 +100,7 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    transform: translateX(-30%) translateY(-15%);
+    transform: translateX(-30%) translateY(7%);
 }
 
 .MovieCalendarContainer {
@@ -110,6 +110,7 @@
     box-shadow: 0 4px 10px rgba(221, 221, 221, 0.1);
     position: relative;
     animation: slideDown 0.5s ease;
+    width: 330px;
 }
 
 .CloseButton {
@@ -180,9 +181,38 @@
 }
 
 .MovieList {
-    color: white;
+    padding: 20px;
+    background-color: #151719; /* Темний фон */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
 }
 
+.MovieList h3 {
+    font-size: 1.2rem; /* Зменшений шрифт */
+    color: #fff; /* Білий текст для заголовка */
+    margin-bottom: 10px;
+}
+
+.MovieList ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.MovieList li {
+    padding: 8px;
+    background-color: #2d2d2f; /* Темний фон для кожного елемента */
+    border-radius: 6px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s, transform 0.3s;
+    color: #d77b7b;
+}
+
+.MovieList li:hover {
+    background-color: #555; /* Змінюється колір при наведенні */
+    transform: scale(1.05);
+}
 @keyframes slideDown {
     from {
         transform: translateY(-20px);
@@ -202,3 +232,8 @@
         opacity: 0.8;
     }
 }
+
+
+
+
+

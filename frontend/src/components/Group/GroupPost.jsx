@@ -6,7 +6,7 @@ const GroupPost = ({img, title}) => {
     return(
         <div className={css.groupPostContainer}>
             <div className={css.groupPostTitleContainer}>
-                <img src={Image} width={45} height={45}/>
+                <img src={Image} width={45} height={45} className={css.groupPostTitleImg}/>
                 <p style={{marginLeft: "12px"}} className={css.groupPostTitleText}>Домінік Торрето</p>
                 <p style={{marginLeft: "18px"}} className={css.groupPostTitleText}>55хв. тому</p>
             </div>
@@ -16,28 +16,28 @@ const GroupPost = ({img, title}) => {
                 </div>
             <div className={css.groupPostActionsContainer}>
                 <div className={css.groupPostActions}>
-                    <svg width={22} height={22}>
+                    <svg width={22} height={22} className={css.groupPostActionsIcon}>
                         <use href={`${Icon}#iconLow`}></use>
                     </svg>
                     <p className={css.groupPostActionsText}>82</p>
-                    <svg width={22} height={22}>
+                    <svg width={22} height={22} className={css.groupPostActionsIcon}>
                         <use href={`${Icon}#iconHigh`}></use>
                     </svg>
                 </div>
                 <div className={css.groupPostActions}>
-                <svg width={22} height={22}>
+                    <svg width={22} height={22} className={css.groupPostActionsIcon}>
                         <use href={`${Icon}#icon-comment`}></use>
                     </svg>
                     <p className={css.groupPostActionsText}>75</p>
                 </div>
                 <div className={css.groupPostActions}>
-                    <svg width={22} height={22}>
+                    <svg width={22} height={22} className={css.groupPostActionsIcon}>
                         <use href={`${Icon}#icon-share`}></use>
                     </svg>
                     <p className={css.groupPostActionsText}>Поділитись</p>
                 </div>
-                <div className={css.groupPostActions}>
-                    <svg width={22} height={22}>
+                <div className={css.groupPostActionsSave}>
+                    <svg width={22} height={22} className={css.groupPostActionsIconSave}>
                         <use href={`${Icon}#icon-save`}></use>
                     </svg>
                 </div>

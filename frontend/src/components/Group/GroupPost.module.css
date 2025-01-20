@@ -51,3 +51,90 @@
     font-size: 16px;
     font-weight: 700;
 }
+
+@media (max-width: 767px) {
+    .groupPostContainer {
+        padding: 12px;
+    }
+
+    .groupPostTitleContainer {
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .groupPostActionsContainer {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .groupPostActions {
+        margin-bottom: 10px;
+    }
+}
+
+
+@media (max-width: 440px) {
+    .groupPostContainer {
+        padding: 8px;
+        width: 89%;
+    }
+
+    .groupPostTitleContainer {
+        flex-direction: row;
+        align-items: flex-start;
+        margin-bottom: 8px;
+        font-size: 10px;
+    }
+
+    .groupPostTitleText {
+        font-size: 10px;
+        margin-right: 40px;
+        margin-top: 5px;
+    }
+
+    .groupPostTitleImg{
+        height: 30px;
+        width: 30px;
+    }
+
+    .groupPostActionsContainer {
+        flex-direction: row;
+        align-items: flex-start;
+        font-size: 10px;
+    }
+
+    .groupPostActions {
+        font-size: 10px;
+        margin-bottom: 8px;
+        width: 70px;
+    }
+
+    .groupPostActionsSave{
+        width: 33px;
+        background-color: #2C353D;
+        border-radius: 20%;
+        height: 24px;
+    }
+
+    .groupPostActionsIconSave{
+        margin-top: 5px;
+        height: 14px;
+        width: 14px;
+        margin-left: 5px;
+    }
+
+    .groupPostActionsText{
+        font-size: 10px;
+    }
+
+    .groupPostTextContainer{
+        width: 90%;
+        font-size: 12px;
+    }
+
+    .groupPostActionsIcon{
+        width: 14px;
+        height: 14px;
+    }
+
+}
