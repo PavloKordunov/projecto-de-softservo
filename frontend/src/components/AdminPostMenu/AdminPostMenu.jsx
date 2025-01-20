@@ -10,12 +10,32 @@ const AdminPostMenu = () => {
     const [showModal, setShowModal] = useState(true);
     const [filmData, setFilmData] = useState({});
     const [formData, setFormData] = useState({
-        name: '',
-        imdbRating: '',
+        title: '',
+        IMDB: '',
         country: '',
         genre: '',
-        runtime: '',
+        duration: '',
+        description: ""
     });
+
+    const handlCreateTopic = async () => {
+        try {
+            const res = await fetch("http://localhost:8080/api/topics/create", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            })
+            
+            const data = await res.json()
+            console.log(data)
+        } catch (error) {
+            console.log(error)
+        }
+
+        navigate("/")
+    }
 
     const getFilmApiData = (data) => {
         setFilmData(data);
@@ -25,11 +45,11 @@ const AdminPostMenu = () => {
         if (filmData) {
             setFormData((prev) => ({
                 ...prev,
-                name: filmData?.Title || '',
-                imdbRating: filmData?.imdbRating || '',
+                title: filmData?.Title || '',
+                IMDB: filmData?.ImdbRating || '',
                 country: filmData?.Country || '',
                 genre: filmData?.Genre || '',
-                runtime: filmData?.Runtime || '',
+                duration: filmData?.Runtime || '',
             }));
         }
     }, [filmData]);
@@ -96,9 +116,9 @@ const AdminPostMenu = () => {
                         <input
                             className={css.adminPostMenuFieldInput}
                             type='text'
-                            name='name'
+                            name='title'
                             placeholder='Введіть назву, вибраного вище поста...'
-                            value={formData.name}
+                            value={formData.title}
                             onChange={handleInputChange}
                         />
                     </div>
@@ -119,9 +139,9 @@ const AdminPostMenu = () => {
                         <input
                             className={css.adminPostMenuFieldInput}
                             type='text'
-                            name='imdbRating'
+                            name='IMDB'
                             placeholder='Введіть рейтинг IMBD для даного поста...'
-                            value={formData.imdbRating}
+                            value={formData.IMDB}
                             onChange={handleInputChange}
                         />
                     </div>
@@ -175,9 +195,9 @@ const AdminPostMenu = () => {
                         <input
                             className={css.adminPostMenuFieldInput}
                             type='text'
-                            name='runtime'
+                            name='duration'
                             placeholder='Введіть кількість сторінок'
-                            value={formData.runtime}
+                            value={formData.duration}
                             onChange={handleInputChange}
                         />
                     </div>
@@ -200,9 +220,9 @@ const AdminPostMenu = () => {
                         <input
                             className={css.adminPostMenuFieldInput}
                             type='text'
-                            name='runtime'
+                            name='seasoneAmount'
                             placeholder='Введіть кількість сезонів'
-                            value={formData.runtime}
+                            value={formData.seasoneAmount}
                             onChange={handleInputChange}
                         />
                     </div>
@@ -305,9 +325,9 @@ const AdminPostMenu = () => {
                         <input
                             className={css.adminPostMenuRightSideFieldInput}
                             type='text'
-                            name='runtime'
+                            name='duration'
                             placeholder='Введіть тривалість'
-                            value={formData.runtime}
+                            value={formData.duration}
                             onChange={handleInputChange}
                         />
                     </div>)
@@ -335,6 +355,7 @@ const AdminPostMenu = () => {
                     name='description'
                     placeholder='Введіть короткий опис для даного поста...'
                     onChange={handleInputChange}
+                    value={formData.description}
                 />
             </div>
             { (postMode === 'film' || postMode === 'serial') &&(
@@ -381,7 +402,7 @@ const AdminPostMenu = () => {
             </>
             )}
             <div className={css.adminPostMenuCreateButtonContainer}>
-                <button className={css.adminPostMenuCreateButton}>Створити пост</button>
+                <button className={css.adminPostMenuCreateButton} onClick={handlCreateTopic}>Створити пост</button>
             </div>
         </div>
     );

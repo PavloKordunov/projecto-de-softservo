@@ -8,8 +8,10 @@ import mainPostImg from '../../img/mainPostImg.png'
 import SabsActiveImage from '../../img/subsActive.png'
 import Icon from '../../img/sprite.svg'
 import GroupPost from "./GroupPost"
+import { useEffect } from "react"
 
 const Group = () => {
+
     return (
         <div className={css.groupContainer}>
             <div className={css.groupTitleContainer}>

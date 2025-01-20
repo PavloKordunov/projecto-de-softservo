@@ -1,49 +1,43 @@
 import { useEffect, useRef } from 'react';
 import OktaSignIn from '@okta/okta-signin-widget';
 import '@okta/okta-signin-widget/dist/css/okta-sign-in.min.css';
-import { oktaConfig } from "../lib/oktaConfig";
+import oktaConfig from '../lib/oktaConfig';
 
 const Register = ({ onSuccess, onError }) => {
-    const widgetRef = useRef();
+  const widgetRef = useRef(null);
 
-    useEffect(() => {
-        if (!widgetRef.current) {
-            return false;
+  useEffect(() => {
+    const signIn = new OktaSignIn({
+      baseUrl: oktaConfig.widget.baseUrl,
+      clientId: oktaConfig.widget.clientId,
+      redirectUri: oktaConfig.widget.redirectUri,
+      authParams: {
+        scopes: ['openid', 'profile', 'email'],
+      },
+      features: {
+        registration: true, // Enable registration
+      },
+    });
+
+    if (widgetRef.current) {
+      signIn.renderEl(
+        { el: widgetRef.current },
+        (res) => {
+          if (res.status === 'SUCCESS') {
+            onSuccess(res.tokens);
+          }
+        },
+        (err) => {
+          console.error('Error during registration:', err);
+          onError(err);
         }
+      );
+    }
 
-        const widget = new OktaSignIn({
-            ...oktaConfig,
-            features: {
-                registration: true, // Увімкнути функцію реєстрації
-            },
-            registration: {
-                parseSchema: (schema, onSuccess, onFailure) => {
-                    // Можна кастомізувати форму реєстрації
-                    onSuccess(schema);
-                },
-                preSubmit: (postData, onSuccess, onFailure) => {
-                    // Використовується для перевірки даних перед відправкою
-                    onSuccess(postData);
-                },
-                postSubmit: (response, onSuccess, onFailure) => {
-                    // Використовується для обробки після відправки
-                    onSuccess(response);
-                },
-            },
-        });
+    return () => signIn.remove();
+  }, [onSuccess, onError]);
 
-        widget.showSignInAndRedirect({
-            el: widgetRef.current,
-        }).then(onSuccess).catch(onError);
-
-        return () => widget.remove();
-    }, [onSuccess, onError]);
-
-    return (
-        <div className='container mt-5 mb-5'>
-            <div ref={widgetRef}></div>
-        </div>
-    );
+  return <div ref={widgetRef} style={{ width: '100%', maxWidth: '400px', margin: '0 auto' }} />;
 };
 
 export default Register;

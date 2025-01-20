@@ -6,7 +6,7 @@ import {Link, useNavigate} from "react-router-dom";
 import LikeButton from "../LikeButton/LikeButton";
 
 
-const Post = () => {
+const Post = ({topic}) => {
 
     const navigate = useNavigate()
 
@@ -24,7 +24,7 @@ const Post = () => {
             <div>
                 <div className={css.postTitleContainer}>
                     <h3 className={css.pageTitle}>
-                        Новий хоррор-фільм “Жахаючий 3” скоро буде доступний у кінотеатрах України!
+                        {topic?.title}
                     </h3>
                     <LikeButton
                         initialLiked={false}

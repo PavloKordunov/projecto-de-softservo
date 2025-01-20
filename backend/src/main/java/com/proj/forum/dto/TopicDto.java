@@ -17,7 +17,7 @@ public record TopicDto(
         String country,
         String duration,
         String genre,
-        String IMBD,
+        String IMDB,
         String actor,
         String director,
         String image

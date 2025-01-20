@@ -25,7 +25,7 @@ public class TopicController {
 
     private final TopicService topicService;
 
-    @PostMapping("/movie")
+    @PostMapping("/create")
     public ApiResponse<GenericResponse> createTopic(@RequestBody @Valid TopicDto topic) {
         try {
             log.info("Create topic");

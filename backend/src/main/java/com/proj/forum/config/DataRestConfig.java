@@ -23,7 +23,7 @@ public class DataRestConfig implements RepositoryRestConfigurer {
         config.exposeIdsFor(Topic.class, Group.class, Statistic.class);
 
         config.getExposureConfiguration()
-                .forDomainType(Statistic.class)
+                .forDomainType(Topic.class)
                 .withItemExposure((metadata, httpMethods) ->
                         httpMethods.disable(unsupportedActions))
                 .withCollectionExposure((metadata, httpMethods) ->

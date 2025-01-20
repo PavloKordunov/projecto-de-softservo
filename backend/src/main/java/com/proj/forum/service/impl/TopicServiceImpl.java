@@ -85,11 +85,11 @@ public class TopicServiceImpl implements TopicService {
         }
     }
 
-    private Topic getUpdateTopic(Topic topic, TopicDto topicDto) {
-        if (topicDto.title() != null)
-            topic.setTitle(topicDto.title());
-        if (topicDto.description() != null)
-            topic.setDescription(topicDto.description());
+   private Topic getUpdateTopic(Topic topic, TopicDto topicDto) {
+//        if (topicDto.title() != null)
+//            topic.setTitle(topicDto.title());
+//        if (topicDto.description() != null)
+//            topic.setDescription(topicDto.description());
         return topic;
     }
 
@@ -117,8 +117,8 @@ public class TopicServiceImpl implements TopicService {
                 .limitAge(topicDto.limitAge())
                 .actor(topicDto.actor())
                 .image(topicDto.image())
-                .IMBD(topicDto.IMBD())
-                .author(topicDto.author())
+                .IMDB(topicDto.IMDB())
+//                .author(topicDto.author())
                 .director(topicDto.director())
                 .genre(topicDto.genre())
                 .duration(topicDto.duration())

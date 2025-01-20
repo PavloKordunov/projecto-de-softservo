@@ -6,6 +6,7 @@
     display: flex;
     padding: 26px;
     gap: 26px;
+    margin-bottom: 26px;
 }
 
 .postNavigate{
@@ -14,7 +15,7 @@
 
 .postTitleContainer{
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     margin-bottom: 13px;
 }
 

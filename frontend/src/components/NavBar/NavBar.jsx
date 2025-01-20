@@ -140,7 +140,7 @@ const NavBar = () => {
                             </li>
                         </ul>
                             {!authState?.isAuthenticated &&
-                                <Link to='auth-page'>Sign in</Link>
+                                <Link to='login'>Login</Link>
                             }
                         <a
                             onClick={handleShowMenu}
