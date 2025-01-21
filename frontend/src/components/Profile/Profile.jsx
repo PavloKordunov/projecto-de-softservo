@@ -2,17 +2,31 @@ import css from "./Profile.module.css";
 import Image from '../../img/person.png'
 import Icon from '../../img/sprite.svg'
 import Post from '../Post/Post'
-import { useState } from "react";
-import {useNavigate} from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const Profile = () => {
 
     const [showIcon, setShowIcon] = useState(null)
+    const [topics, setTopics] = useState([]);
 
-    const navigate = useNavigate();
+    useEffect(() => {
+        const fetchTopics= async() => {
+            try {
+                const res = await fetch("http://localhost:8080/api/topics");
+                const data = await res.json();
+                console.log(data.body)
+                setTopics(data.body);
+            } catch (error) {
+                console.error("Error fetching topics:", error);
+            }
+        }
+    
+        fetchTopics();
+    }, [])
 
     return (
         <div className={css.profileContainer}>
+            <div className={css.profileWrapper}>
             <div className={css.profileInfoContainer}>
                 <img className={css.profileImage} src={Image} alt="profile image" width='110' height='110'/>
                 <div>
@@ -48,10 +62,8 @@ const Profile = () => {
                             <p className={css.profileStatsText}>
                                 Групи
                             </p>
+                            
                         </li>
-                        {/*<li className={css.profileStatsEl}>*/}
-                        {/*    <button onClick={() => navigate('/admin-page')}>AdminPage</button>*/}
-                        {/*</li>*/}
                     </ul>
             </div>
 
@@ -68,8 +80,11 @@ const Profile = () => {
                 <li>
                     <button className={css.profileActivityButton}>Збережені</button>
                 </li>
+                <li>
+                    <button className={css.profileActivityButton}>Мої оцінки</button>
+                </li>
             </ul>
-
+            </div>
             <div className={css.profileLine}></div>
 
             <ul className={css.profileFilterPostList}>
@@ -101,8 +116,11 @@ const Profile = () => {
                     </button>
                 </li>
             </ul>
-
-            <Post/>
+            <div style={{backgroundColor:""}}>
+                {topics?.map(topic => (
+                    <Post key={topic.id} topic={topic} />
+                ))}
+            </div>
         </div>
     )
 }

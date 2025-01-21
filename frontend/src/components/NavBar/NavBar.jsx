@@ -71,7 +71,7 @@ const NavBar = () => {
                                     </svg>
                                 </button>
                             </li>
-                            <li className={css.NavBarIconEl}>
+                            <li className={css.NavBarIconEl} onClick={() => navigate('/')}>
                                 <svg width="26" height="26">
                                     <use href={`${Icon}#iconHome`}></use>
                                 </svg>
