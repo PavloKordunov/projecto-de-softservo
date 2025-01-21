@@ -93,6 +93,8 @@ public class UserServiceImpl implements UserService {
             user.setName(userDto.name());
         if (userDto.username() != null)
             user.setUsername(userDto.username());
+        if (userDto.email() != null)
+            user.setEmail(userDto.email());
         return user;
     }
 
