@@ -133,5 +133,19 @@ public class TopicServiceImpl implements TopicService {
                 .build();
     }
 
+    @Override
+    public List<TopicDto> mapToTopicDtoList(List<Topic> topics) {
+        return topics.stream()
+                .map(topic -> TopicDto.builder()
+                        .id(topic.getId())
+                        .title(topic.getTitle())
+                        .description(topic.getDescription() == null ? StringUtils.EMPTY : topic.getDescription())
+                        .build())
+                .toList();
+    }
+
+    public List<TopicDto> getByTitleContain(String name){
+        return mapToTopicDtoList(topicRepository.findByTitleContainingIgnoreCase(name));
+    }
 
 }

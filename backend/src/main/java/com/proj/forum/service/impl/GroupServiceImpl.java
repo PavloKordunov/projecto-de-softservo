@@ -138,5 +138,19 @@ public class GroupServiceImpl implements GroupService {
                 .build();
     }
 
+    @Override
+    public List<GroupDto> mapToGroupDtoList(List<Group> groups) {
+        return groups.stream()
+                .map(group -> GroupDto.builder()
+                        .id(group.getId())
+                        .title(group.getTitle())
+                        .description(group.getDescription() == null ? StringUtils.EMPTY : group.getDescription())
+                        .build())
+                .toList();
+    }
+
+    public List<GroupDto> getByTitleContain(String name){
+        return mapToGroupDtoList(groupRepository.findByTitleContainingIgnoreCase(name));
+    }
 
 }

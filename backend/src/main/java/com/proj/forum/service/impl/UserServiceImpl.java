@@ -49,6 +49,7 @@ public class UserServiceImpl implements UserService {
                 .id(id)
                 .name(user.get().getName())
                 .username(user.get().getUsername() == null ? StringUtils.EMPTY : user.get().getUsername())
+                .email(user.get().getEmail() == null ? StringUtils.EMPTY : user.get().getEmail())
                 .build();
     }
 
@@ -113,6 +114,7 @@ public class UserServiceImpl implements UserService {
         return User.builder()
                 .name(userDto.name())
                 .username(userDto.username() == null ? StringUtils.EMPTY : userDto.username())
+                .email(userDto.email() == null ? StringUtils.EMPTY : userDto.email())
                 .build();
     }
 
@@ -121,6 +123,25 @@ public class UserServiceImpl implements UserService {
                 .id(user.getId())
                 .name(user.getName())
                 .username(user.getUsername() == null ? StringUtils.EMPTY : user.getUsername())
+                .email(user.getEmail() == null ? StringUtils.EMPTY : user.getEmail())
                 .build();
     }
+
+    @Override
+    public List<UserDto> mapToUserDtoList(List<User> users) {
+        return users.stream()
+                .map(user -> UserDto.builder()
+                        .id(user.getId())
+                        .name(user.getName())
+                        .username(user.getUsername() == null ? StringUtils.EMPTY : user.getUsername())
+                        .email(user.getEmail() == null ? StringUtils.EMPTY : user.getEmail())
+                        .build())
+                .toList();
+    }
+
+    public List<UserDto> getByUsernameContain(String name){
+        //List<Topic> topics = topicRepository.findByTitleContainingIgnoreCase(name);
+        return mapToUserDtoList(userRepository.findByUsernameContainingIgnoreCase(name));
+    }
+
 }
