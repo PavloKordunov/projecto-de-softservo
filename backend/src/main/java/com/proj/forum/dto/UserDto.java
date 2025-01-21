@@ -9,6 +9,7 @@ import java.util.UUID;
 public record UserDto(
         UUID id,
         @NotBlank(message = "Name cannot be blank")String name,
-        @NotBlank(message = "Username cannot be blank")String username
+        @NotBlank(message = "Username cannot be blank")String username,
+        String email
 ) {
 }

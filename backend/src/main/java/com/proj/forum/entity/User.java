@@ -21,8 +21,12 @@ public class User {
     @GeneratedValue
     private UUID id;
 
+    //@Column(unique = true, nullable = false)
+    //@NotBlank(message = "Email is required")
+    private String email;
+
     @Column(unique = true, nullable = false)
-    @NotBlank(message = "Username is required")
+    @NotBlank(message = "Nickname is required")
     private String username;
 
     @NotBlank(message = "Name is required")
