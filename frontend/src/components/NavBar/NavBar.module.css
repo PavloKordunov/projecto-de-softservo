@@ -122,6 +122,13 @@
     cursor: pointer;
 }
 
+.LoginLink {
+    text-decoration: none;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+    margin-left: 10px;
+}
 
 .rotateArrow {
     transition: transform 0.5s ease-in-out;
@@ -330,23 +337,23 @@
 
 @media (max-width: 440px) {
     .NavBarContainer {
-        width: 63%;
+        width: 93%;
+        height: 50px;
         max-width: 100%;
         overflow-x: hidden;
-        margin-left: 10px;
+        margin-left: 2px;
     }
 
     .NavBarLogo {
-        font-size: 20px;
-        margin-left: 10px;
-        display: block;
+        font-size: 25px;
     }
 
     .NavBarInputContainer {
         width: calc(100% - 40px);
-        height: 30px;
+        height: 40px;
         padding: 0;
-        background-color: transparent;
+        /*background-color: transparent;*/
+        background-color: #2C353D;
         margin-right: 10px;
     }
 
@@ -365,16 +372,22 @@
         padding: 8px;
     }
 
+    .LoginLink{
+        font-size: 20px;
+        color: #eeeeee;
+    }
+
     .NavBarIconsListTwo {
         display: flex;
         gap: 10px;
+        height: 20px;
         margin-left: 0;
         margin-right: 0;
     }
 
     .NavBarIconEl {
-        width: 30px;
-        height: 30px;
+        width: 45px;
+        height: 45px;
     }
 
     .NavBarMobile {
@@ -385,9 +398,10 @@
     }
 
     .NavBarFooter {
-        padding: 15px 25px;
+        margin-left: 5px;
+        width: 87%;
+        height: 40px;
         gap: 5px;
-        width: 59%;
         border-radius: 10px;
     }
 
@@ -401,8 +415,14 @@
         height: 30px;
     }
 
+    .CalendarButton svg{
+        width: 30px;
+        height: 30px;
+        margin-top: 5px;
+    }
+
     .navBarDropMenu{
-        transform: translateY(60%) translateX(-20%);
+        transform: translateY(50%) translateX(-20%);
     }
 
 }

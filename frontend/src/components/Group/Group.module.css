@@ -249,17 +249,17 @@
 @media (max-width: 440px) {
     .groupContainer {
         padding: 10px;
-        width: 70%;
-        margin-right: 130px;
+        width: 100%;
+        margin-right: 5px;
     }
 
     .groupTitleContainer {
-        margin-top: -50px;
-        margin-right: -15px;
+        margin-top: -40px;
     }
 
     .groupTitleMain {
-        margin-left: 7px;
+        margin-left: 17px;
+        margin-top: 1px;
     }
 
     .groupButtonCreate_Mobile {
@@ -278,30 +278,37 @@
 
 
     .imgTitle {
-        height: 40px;
-        width: 40px;
+        height: 55px;
+        width: 55px;
+        margin-left: 12px;
     }
 
     .groupTitle {
-        font-size: 10px;
-        margin-top: 4px;
+        font-size: 20px;
     }
 
     .groupSubTitle {
-        font-size: 10px;
-
+        font-size: 14px;
     }
 
     .groupButton {
         height: 28px;
-        font-size: 10px;
-        width: 80%;
+        font-size: 12px;
+        width: 60px;
         border: none;
         border-radius: 5%;
     }
 
-    .groupButton, .groupButtonCreate_Mobile {
+    .groupButtonCreate_Mobile{
         margin-top: 6px;
+        width: 30px;
+        height: 30px;
+    }
+
+    .groupButton {
+        margin-top: 6px;
+        width: 80px;
+        height: 30px;
     }
 
     .moreSign {
@@ -311,7 +318,7 @@
     }
 
     .groupDataText {
-        font-size: 10px;
+        font-size: 14px;
         margin-bottom: 10px;
         margin-left: 0;
     }
@@ -322,7 +329,7 @@
     }
 
     .groupTag {
-        font-size: 6px;
+        font-size: 12px;
     }
 
 
@@ -332,14 +339,9 @@
         margin-left: 0;
     }
 
-    .groupPinnedPostContainer {
-        width: 55%;
-        margin-right: 10px;
-    }
-
 
     .groupPinnedPostTitleMain {
-        font-size: 14px;
+        font-size: 16px;
         margin-left: -60px;
         margin-top: -10px;
         color: #eeeeee;
@@ -347,13 +349,13 @@
 
     .groupSabsText {
         flex-direction: row;
-        font-size: 10px;
+        font-size: 14px;
         display: flex;;
     }
 
     .groupStatusBtn {
-        font-size: 8px;
-        padding: 4px 8px;
+        font-size: 12px;
+        padding: 10px 20px;
         margin-bottom: 10px;
         margin-left: 0;
     }
@@ -361,7 +363,10 @@
     .groupPinnedPostTitleContainer {
         flex-direction: row;
         align-items: center;
-        margin-left: 0;
+    }
+
+    .groupPinnedPostWrapper{
+        flex-direction: column;
     }
 
 
@@ -380,9 +385,10 @@
 
     .groupInfoContainer {
         padding: 10px;
-        margin-left: -15px;
-        width: 250px;
+        width: 90%;
         margin-top: -20px;
+        margin-left: 5px;
+        margin-bottom: 10px;
     }
 
     .groupScrollandStatus {
@@ -391,17 +397,18 @@
     }
 
     .groupStatsContainer {
-        width: 80px;
+        width: 30%;
         height: 120px;
         flex-direction: row;
-        margin-left: 14px;
-        margin-bottom: 10px;
+        margin: 10px 15px 10px -80px;
     }
 
     .groupStatusBtn {
         height: 20px;
-        width: 60px;
+        width: 70px;
         margin-top: 10px;
+        padding: 0 0 0 3px;
+        line-height: 20px;
     }
 
     .groupSabs {
@@ -409,15 +416,23 @@
         margin-left: 0;
     }
 
+    .groupSabsText{
+        font-size: 12px;
+    }
+
     /*!!!*/
     .groupPinnedPostTitle{
-        font-size: 10px;
+        font-size: 14px;
     }
 
     .groupPinnedPostTitleContainer{
-        margin-left: 30px;
+        margin-bottom: 10px;
+        margin-left: 130px;
     }
 
+    .groupPinnedPostTitleMain{
+        margin-bottom: 5px;
+    }
     .groupTagsContainer{
         margin-top: -18px;
     }
