@@ -21,16 +21,16 @@ const Register = ({ onSuccess, onError }) => {
 
     if (widgetRef.current) {
       signIn.renderEl(
-        { el: widgetRef.current },
-        (res) => {
-          if (res.status === 'SUCCESS') {
-            onSuccess(res.tokens);
+          { el: widgetRef.current },
+          (res) => {
+            if (res.status === 'SUCCESS') {
+              onSuccess(res.tokens);
+            }
+          },
+          (err) => {
+            console.error('Error during registration:', err);
+            onError(err);
           }
-        },
-        (err) => {
-          console.error('Error during registration:', err);
-          onError(err);
-        }
       );
     }
 
@@ -41,3 +41,7 @@ const Register = ({ onSuccess, onError }) => {
 };
 
 export default Register;
+
+
+
+
