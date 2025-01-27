@@ -9,6 +9,6 @@ import java.util.UUID;
 public record PrivacyPolicyDto(
        UUID id,
        @NotEmpty String version,
-       @NotEmpty String policyContent,
-       @NotEmpty Boolean isAccepted //TODO Must it be?!
+       @NotEmpty String policyContent
+       //@NotEmpty Boolean isAccepted //TODO Must it be?!
         ) {}
