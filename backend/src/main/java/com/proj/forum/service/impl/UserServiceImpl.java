@@ -47,8 +47,8 @@ public class UserServiceImpl implements UserService {
 
         return UserDto.builder()
                 .id(id)
-                .name(user.get().getName())
-                .username(user.get().getUsername() == null ? StringUtils.EMPTY : user.get().getUsername())
+                .firstName(user.get().getName())
+                .nickName(user.get().getUsername() == null ? StringUtils.EMPTY : user.get().getUsername())
                 .email(user.get().getEmail() == null ? StringUtils.EMPTY : user.get().getEmail())
                 .build();
     }
@@ -89,10 +89,10 @@ public class UserServiceImpl implements UserService {
     }
 
     private User getUpdateUser(User user, UserDto userDto) {
-        if (userDto.name() != null)
-            user.setName(userDto.name());
-        if (userDto.username() != null)
-            user.setUsername(userDto.username());
+        if (userDto.firstName() != null)
+            user.setName(userDto.firstName());
+        if (userDto.nickName() != null)
+            user.setUsername(userDto.nickName());
         if (userDto.email() != null)
             user.setEmail(userDto.email());
         return user;
@@ -114,8 +114,8 @@ public class UserServiceImpl implements UserService {
 
     private static User mapToUser(UserDto userDto) {
         return User.builder()
-                .name(userDto.name())
-                .username(userDto.username() == null ? StringUtils.EMPTY : userDto.username())
+                .name(userDto.firstName())
+                .username(userDto.nickName() == null ? StringUtils.EMPTY : userDto.nickName())
                 .email(userDto.email() == null ? StringUtils.EMPTY : userDto.email())
                 .build();
     }
@@ -123,8 +123,8 @@ public class UserServiceImpl implements UserService {
     private static UserDto getUpdateUser(User user) {
         return UserDto.builder()
                 .id(user.getId())
-                .name(user.getName())
-                .username(user.getUsername() == null ? StringUtils.EMPTY : user.getUsername())
+                .firstName(user.getName())
+                .nickName(user.getUsername() == null ? StringUtils.EMPTY : user.getUsername())
                 .email(user.getEmail() == null ? StringUtils.EMPTY : user.getEmail())
                 .build();
     }
@@ -134,8 +134,8 @@ public class UserServiceImpl implements UserService {
         return users.stream()
                 .map(user -> UserDto.builder()
                         .id(user.getId())
-                        .name(user.getName())
-                        .username(user.getUsername() == null ? StringUtils.EMPTY : user.getUsername())
+                        .firstName(user.getName())
+                        .nickName(user.getUsername() == null ? StringUtils.EMPTY : user.getUsername())
                         .email(user.getEmail() == null ? StringUtils.EMPTY : user.getEmail())
                         .build())
                 .toList();
