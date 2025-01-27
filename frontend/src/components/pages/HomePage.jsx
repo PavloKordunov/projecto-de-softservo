@@ -28,7 +28,6 @@ const HomePage = () => {
                 console.error("Error fetching topics:", error);
             }
         }
-
         fetchTopics();
     }, [])
 
@@ -40,7 +39,7 @@ const HomePage = () => {
         <div className={`${css.homePageContainer} ${isShow ? css.dimmed : ""}`}>
             <div>
                 <CreatePostNav handleSetTitle={handleSetTitle} setIsShow={setIsShow} />
-                <div>
+                <div style={{display: "flex", flexWrap: "nowrap", flexDirection: "column"}}>
                     {topics?.map(topic => (
                         <Post key={topic.id} topic={topic} />
                     ))}
