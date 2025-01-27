@@ -14,7 +14,7 @@ import GroupPinnedPosts from './GroupPinnedPosts';
 
 const Group = () => {
     const windowWidth = useWindowWidth();
-    const isMobile = windowWidth <= 440;
+    const isMobile = windowWidth <= 460;
 
     return (
         <>
@@ -112,10 +112,10 @@ const Group = () => {
                         </div>
                         <div className={css.groupTitleContainerItem}>
                             <button className={css.groupButtonCreate_Mobile}>+</button>
-                            <button className={css.groupButton}>Приєднатися</button>
-                            <svg width={50} height={50} className={css.moreSign}>
-                                <use href={`${Icon}#moreIcon`}></use>
-                            </svg>
+                            <button className={css.groupButton}>Доєднатися</button>
+                            {/*<svg width={50} height={50} className={css.moreSign}>*/}
+                            {/*    <use href={`${Icon}#moreIcon`}></use>*/}
+                            {/*</svg>*/}
                         </div>
                     </div>
 
@@ -145,8 +145,6 @@ const Group = () => {
                                 <div className={css.groupPinnedPostTitleContainer}>
                                     <p className={css.groupPinnedPostTitleMain}>Закріплені пости</p>
                                 </div>
-                            </div>
-                            <div>
                                 <GroupPinnedPosts />
                             </div>
                         </div>
@@ -160,7 +158,7 @@ const Group = () => {
                                 <p className={css.groupSabsText}>37,731 онлайн</p>
                             </div>
                             <button className={css.groupStatusBtn}>Публічний</button>
-                            <p style={{fontSize: 10}} className={css.groupSabsText}>Група створена: 31.12.2024</p>
+                            <p className={css.groupSabsText}>Група створена: 31.12.2024</p>
                         </div>
                     </div>
                     <GroupPost

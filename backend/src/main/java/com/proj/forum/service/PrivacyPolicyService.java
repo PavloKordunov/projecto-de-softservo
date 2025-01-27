@@ -4,4 +4,5 @@ import com.proj.forum.dto.PrivacyPolicyDto;
 
 public interface PrivacyPolicyService {
     PrivacyPolicyDto getLatestPolicy();
+    void createPrivacyPolicy(PrivacyPolicyDto privacyPolicyDto);
 }

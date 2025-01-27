@@ -3,15 +3,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    width: 150px;
+    /*overflow: hidden;*/
+    width: 70%;
+    height: 80%;
     margin-top: -17px;
-    margin-left: 10px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    margin-right: -20px;
 }
 
 .groupPinnedPostTitle{
     color: #eeeeee;
-    font-size: 10px;
+    font-size: 16px;
     justify-content: center;
 }
 
@@ -21,29 +24,28 @@
 }
 
 .groupPinnedPost {
-    flex: 0 0 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    margin-left: 20px;
+}
+
+.groupPinnedPostImg{
+    border-radius: 15px;
 }
 
 .scrollButtonLeft,
 .scrollButtonRight {
     position: absolute;
-    top: 62%;
+    top: 55%;
     transform: translateY(-180%);
     background: rgba(0, 0, 0, 0.5);
     color: #eeeeee;
     border: none;
-    border-radius: 30%;
-    font-size: 14px;
-    /*padding: 10px;*/
+    border-radius: 20%;
+    font-size: 18px;
     cursor: pointer;
 }
 
 .scrollButtonLeft {
-    left: -1px;
+    left: 20px;
 }
 
 .scrollButtonRight {

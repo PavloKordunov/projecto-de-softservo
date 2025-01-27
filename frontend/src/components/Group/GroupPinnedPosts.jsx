@@ -30,7 +30,9 @@ const GroupPinnedPosts = () => {
             </button>
             <div className={css.groupPinnedPostsMain}>
                 <div className={css.groupPinnedPost}>
-                    <img src={posts[currentIndex].image} alt="Post" />
+                    <img  className={css.groupPinnedPostImg}
+                          src={posts[currentIndex].image}
+                          alt="Post" />
                     <p className={css.groupPinnedPostTitle}>
                         {posts[currentIndex].title}
                     </p>

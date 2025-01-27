@@ -1,6 +1,7 @@
 package com.proj.forum.service.impl;
 
 import com.proj.forum.dto.PrivacyPolicyDto;
+import com.proj.forum.entity.PrivacyPolicy;
 import com.proj.forum.repository.PrivacyPolicyRepository;
 import com.proj.forum.service.PrivacyPolicyService;
 import jakarta.persistence.EntityNotFoundException;
@@ -28,4 +29,14 @@ public class PrivacyPolicyServiceImpl implements PrivacyPolicyService {
                     .build())
                 .orElseThrow(()-> new EntityNotFoundException("Privacy policy doesn't find"));
     }
+
+    @Override
+    public void createPrivacyPolicy(PrivacyPolicyDto privacyPolicyDto) {
+        PrivacyPolicy privacyPolicy = PrivacyPolicy.builder()
+                .privacyContent(privacyPolicyDto.policyContent())
+                .version(privacyPolicyDto.version())
+                .build();
+        privacyPolicyRepository.save(privacyPolicy);
+    }
+
 }

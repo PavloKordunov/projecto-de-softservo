@@ -27,3 +27,4 @@ const LoginWidget = ({ config }) => {
 };
 
 export default LoginWidget;
+

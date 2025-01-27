@@ -126,6 +126,14 @@ const NavBar = () => {
                                 </svg>
                             </li>
                         </ul>
+                        {!authState?.isAuthenticated && (
+                            <Link
+                                to="login"
+                                className={css.LoginLink}>
+                                Login
+                            </Link>
+
+                        )}
                     </div>
                 ) : (
                     <>
@@ -143,9 +151,14 @@ const NavBar = () => {
                                 </svg>
                             </li>
                         </ul>
-                            {!authState?.isAuthenticated &&
-                                <Link style={{textDecoration: "none", color: "#fff", fontSize: 20, fontWeight: 600}} to='login'>Login</Link>
-                            }
+                        {!authState?.isAuthenticated && (
+                            <Link
+                                to="login"
+                                className={css.LoginLink}>
+                                Login
+                            </Link>
+
+                        )}
                         <a
                             onClick={handleShowMenu}
                             className={`${css.NavBarUserProfileContainer} ${isShowMenu ? 'open' : ''}`}>
