@@ -2,7 +2,9 @@ package com.proj.forum.service;
 
 import com.proj.forum.dto.PrivacyPolicyDto;
 
+import java.util.UUID;
+
 public interface PrivacyPolicyService {
     PrivacyPolicyDto getLatestPolicy();
-    void createPrivacyPolicy(PrivacyPolicyDto privacyPolicyDto);
+    UUID createPrivacyPolicy(PrivacyPolicyDto privacyPolicyDto);
 }
