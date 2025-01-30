@@ -22,9 +22,7 @@ public class SecurityConfig {
                 //csrf(csrf -> csrf.ignoringRequestMatchers("/api/**")) <- this line is more up-to-date
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
-                                "/api/groups/**", "/api/topics/**",
-                                "/api/tags/**", "/api/users/**",
-                                "api/home/**", "api/user-statistic/**", "api/search/**")
+                                "/api/**")
                         .permitAll())
                 .oauth2ResourceServer(oauth2 ->
                         oauth2

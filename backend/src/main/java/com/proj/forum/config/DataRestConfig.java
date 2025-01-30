@@ -20,10 +20,10 @@ public class DataRestConfig implements RepositoryRestConfigurer {
                 HttpMethod.PATCH,
                 HttpMethod.DELETE};
 
-        config.exposeIdsFor(Topic.class, Group.class, Statistic.class);
+        config.exposeIdsFor(Object.class);
 
         config.getExposureConfiguration()
-                .forDomainType(Topic.class)
+                .forDomainType(Object.class)
                 .withItemExposure((metadata, httpMethods) ->
                         httpMethods.disable(unsupportedActions))
                 .withCollectionExposure((metadata, httpMethods) ->
