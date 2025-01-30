@@ -17,7 +17,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin("localhost:3000")
+@CrossOrigin("http://localhost:3000")
 @RequiredArgsConstructor
 public class UserController {
 

@@ -16,7 +16,6 @@ import AdminPostMenu from "./AdminPostMenu/AdminPostMenu";
 import Group from "./Group/Group";
 import SecureRoute from "../lib/SecureRoute";
 
-
 const oktaAuth = new OktaAuth(oktaConfig.oidc);
 
 function App() {

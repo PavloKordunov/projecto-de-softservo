@@ -1,17 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
 import OktaSignIn from '@okta/okta-signin-widget';
 import '@okta/okta-signin-widget/dist/css/okta-sign-in.min.css';
-import PrivacyPolicyPopup from '../components/PrivacyPolicyPopup/PrivacyPolicyPopup';
 
 const OktaSignInWidget = ({ config, onSuccess, onError }) => {
   const widgetRef = useRef();
-  const [showPopup, setShowPopup] = useState(true);
-  const [canProceed, setCanProceed] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    if (!widgetRef.current || !canProceed) {
+    if (!widgetRef.current) {
       return;
     }
 
@@ -20,47 +15,74 @@ const OktaSignInWidget = ({ config, onSuccess, onError }) => {
       clientId: config.widget.clientId,
       redirectUri: config.widget.redirectUri,
       authParams: config.widget.authParams,
+      registration: {
+        preSubmit: async (postData, onSuccess, onFailure) => {
+          console.log(postData)
+          try {
+            const response = await fetch('http://localhost:8080/api/users/create', {
+              method: "POST",
+              headers: {
+                "Content-Type" : "application/json"
+              },
+              body: JSON.stringify(postData),
+            })
+            if (response.ok) {
+              const result = await response.json();
+              console.log('Registration data sent successfully:', result);
+
+              onSuccess(postData);
+            } else {
+              const errorResponse = await response.json();
+              console.error('Backend API error:', errorResponse);
+
+              onFailure({
+                errorSummary: 'Registration failed on backend',
+                errorCauses: [
+                  {
+                    errorSummary: 'Check your data',
+                    property: 'customField',
+                  },
+                ],
+              });
+            }
+          } catch (error) {
+            console.error('Error sending registration data:', error);
+
+            onFailure({
+              errorSummary: 'Network or server error',
+              errorCauses: [
+                {
+                  errorSummary: 'Unable to connect to backend',
+                },
+              ],
+            });
+          }
+        },
+        postSubmit: (response, onSuccess, onFailure) => {
+          console.log('Post submit response:', response);
+          onSuccess(response);
+        },
+      },
       features: {
         registration: true,
       },
     });
 
     widget
-        .showSignInToGetTokens({
-          el: widgetRef.current,
-        })
-        .then(onSuccess)
-        .catch(onError);
+      .showSignInToGetTokens({
+        el: widgetRef.current,
+      })
+      .then(onSuccess)
+      .catch(onError);
 
     return () => widget.remove();
-  }, [config, onSuccess, onError, canProceed]);
-
-  const handleDecline = () => {
-    setShowPopup(false);
-    navigate('/');
-  };
-
-  const handleAccept = () => {
-    setShowPopup(false);
-    setCanProceed(true);
-  };
+  }, [config, onSuccess, onError]);
 
   return (
-      <div className="container mt-5 mb-5">
-        {showPopup && (
-            <PrivacyPolicyPopup
-                onAccept={handleAccept}
-                onDecline={handleDecline}
-            />
-        )}
-        {canProceed && <div ref={widgetRef}></div>}
-      </div>
+    <div className="container mt-5 mb-5">
+      <div ref={widgetRef}></div>
+    </div>
   );
 };
 
 export default OktaSignInWidget;
-
-
-
-
-
