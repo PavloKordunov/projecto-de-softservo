@@ -3,7 +3,7 @@ import OktaSignIn from '@okta/okta-signin-widget';
 import { useNavigate } from 'react-router-dom';
 import '@okta/okta-signin-widget/dist/css/okta-sign-in.min.css';
 import PrivacyPolicyPopup from '../components/PrivacyPolicyPopup/PrivacyPolicyPopup';
-import ForumRulesPopup from '../components/ForumRulesPopup/ForumRulesPopup';
+import RulesPopup from '../components/RulesPopup/RulesPopup';
 
 const OktaSignInWidget = ({ config, oktaAuth }) => {
   const widgetRef = useRef();
@@ -24,13 +24,12 @@ const OktaSignInWidget = ({ config, oktaAuth }) => {
 
   const acceptForumRules = () => {
     setShowRulesPopup(false);
-    // Користувач може продовжити використовувати форум
   };
 
   const declineForumRules = async () => {
     setShowRulesPopup(false);
-    await oktaAuth.signOut(); // Розлогінення
-    navigate('/'); // Перенаправлення на головну сторінку
+    setWidgetVisible(false);
+    navigate('/');
   };
 
   useEffect(() => {
@@ -83,9 +82,9 @@ const OktaSignInWidget = ({ config, oktaAuth }) => {
             });
           }
         },
-        postSubmit: (response, onSuccess, onFailure) => {
+        postSubmit: async (response, onSuccess, onFailure) => {
           console.log('Post submit response:', response);
-          setShowRulesPopup(true); // Показуємо попап з правилами після успішної реєстрації
+          setShowRulesPopup(true);
           onSuccess(response);
         },
       },
@@ -113,7 +112,7 @@ const OktaSignInWidget = ({ config, oktaAuth }) => {
             />
         )}
         {showRulesPopup && (
-            <ForumRulesPopup
+            <RulesPopup
                 onAccept={acceptForumRules}
                 onDecline={declineForumRules}
             />
