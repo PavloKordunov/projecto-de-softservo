@@ -22,9 +22,9 @@ public class Topic {
 
     private UUID tag_id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "author_id") // Specifies the foreign key column
-//    private User author;
+    @ManyToOne
+    @JoinColumn(name = "author_id") // Specifies the foreign key column
+    private User author;
 
     @Column(nullable = false)
     private String title;

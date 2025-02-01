@@ -1,5 +1,6 @@
 package com.proj.forum.entity;
 
+//import com.proj.forum.enums.MessageType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -34,4 +35,6 @@ public class Message {
     private LocalDateTime timestamp;
     @NotEmpty
     private Boolean readStatus;
+
+//    private MessageType type;
 }
