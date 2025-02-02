@@ -1,10 +1,8 @@
 package com.proj.forum.entity;
 
 //import com.proj.forum.enums.MessageType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.proj.forum.enums.MessageStatus;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +18,7 @@ import java.util.UUID;
 @Table(name = "messages")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Message {
+public class ChatMessage {
     @Id
     @GeneratedValue
     private UUID id;
@@ -36,5 +34,12 @@ public class Message {
     @NotEmpty
     private Boolean readStatus;
 
-//    private MessageType type;
+    private String senderUsername;
+
+    private String recipientUsername;
+
+    @ManyToOne
+    private ChatRoom chatRoom;
+
+    private MessageStatus messageStatus;
 }

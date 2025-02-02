@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -35,5 +36,7 @@ public class Post {
 
     private String image;
 
-    private Instant createdDate;
+    private LocalDateTime createdDate;
+
+    //private boolean isPinned;
 }

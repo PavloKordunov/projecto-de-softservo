@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,7 +35,6 @@ public class PostServiceImpl implements PostService {
     public UUID createPost(PostRequestDto postDto) {
         Group group = groupRepository.findById(postDto.group_id()).orElseThrow(() -> new EntityNotFoundException("Group don't find"));
         User user = userRepository.findById(postDto.user_id()).orElseThrow(() -> new EntityNotFoundException("User not found"));
-
         Post post = mapToPost(postDto, user, group);
         Post postFromDB = postRepository.save(post);
         return postFromDB.getId();
@@ -124,6 +124,7 @@ public class PostServiceImpl implements PostService {
                 .image(postDto.image())
                 .author(user)
                 .group(group)
+                .createdDate(LocalDateTime.now())
                 .build();
     }
 
