@@ -38,5 +38,5 @@ public class Post {
 
     private LocalDateTime createdDate;
 
-    //private boolean isPinned;
+    private boolean isPinned;
 }

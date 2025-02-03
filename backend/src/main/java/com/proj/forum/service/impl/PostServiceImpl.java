@@ -2,8 +2,10 @@ package com.proj.forum.service.impl;
 
 import com.proj.forum.dto.PostRequestDto;
 import com.proj.forum.dto.PostResponseDto;
+import com.proj.forum.dto.TopicDto;
 import com.proj.forum.entity.Group;
 import com.proj.forum.entity.Post;
+import com.proj.forum.entity.Topic;
 import com.proj.forum.entity.User;
 import com.proj.forum.repository.GroupRepository;
 import com.proj.forum.repository.PostRepository;
@@ -38,6 +40,25 @@ public class PostServiceImpl implements PostService {
         Post post = mapToPost(postDto, user, group);
         Post postFromDB = postRepository.save(post);
         return postFromDB.getId();
+    }
+
+    @Override
+    public List<PostResponseDto> getAllPosts() {
+        List<Post> postList;
+        try {
+            postList = postRepository.findAll();
+            log.info("getAllPosts");
+            if (postList.isEmpty()) {
+                log.info("No posts found");
+                throw new EntityNotFoundException("No posts found");
+            }
+        } catch (RuntimeException ex) {
+            throw new EntityNotFoundException(ex);
+        }
+
+        return postList.stream()
+                .map(PostServiceImpl::getUpdatePost)
+                .toList();
     }
 
     @Override
@@ -95,11 +116,30 @@ public class PostServiceImpl implements PostService {
         }
     }
 
+  //  @Transactional
+    @Override
+    public boolean pinPost(UUID id) {
+        log.info("Pin/unpin post by patch");
+        try {
+            Post post = postRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Post not found"));
+
+            post.setPinned(!post.isPinned());
+            postRepository.save(post);
+            return post.isPinned();
+        } catch (RuntimeException ex) {
+            log.error("Error occurred while pinning/unpinning post", ex);
+            throw new EntityNotFoundException("Error occurred while pinning/unpinning post", ex);
+        }
+    }
+
     private Post getUpdatePost(Post post, PostRequestDto postDto) {
         if (postDto.title() != null)
             post.setTitle(postDto.title());
         if (postDto.description() != null)
             post.setDescription(postDto.description());
+        if(postDto.image() != null)
+            post.setImage(postDto.image());
         return post;
     }
 
@@ -124,6 +164,7 @@ public class PostServiceImpl implements PostService {
                 .image(postDto.image())
                 .author(user)
                 .group(group)
+                .isPinned(false)
                 .createdDate(LocalDateTime.now())
                 .build();
     }
@@ -138,6 +179,7 @@ public class PostServiceImpl implements PostService {
                 .user_image(post.getAuthor().getProfileImage())
                 .nickname(post.getAuthor().getUsername())
                 .name(post.getAuthor().getName())
+                .isPinned(post.isPinned())
                 .build();
     }
 
@@ -160,5 +202,7 @@ public class PostServiceImpl implements PostService {
     public List<PostResponseDto> getByTitleContain(String name){
         return mapToPostDtoList(postRepository.findByTitleContainingIgnoreCase(name));
     }
+
+
 }
 

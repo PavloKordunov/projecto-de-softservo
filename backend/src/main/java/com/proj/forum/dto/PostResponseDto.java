@@ -12,7 +12,8 @@ public record PostResponseDto(
         String image,
         String name,
         String nickname,
-        String user_image
+        String user_image,
+        boolean isPinned
         ) {
 
 }

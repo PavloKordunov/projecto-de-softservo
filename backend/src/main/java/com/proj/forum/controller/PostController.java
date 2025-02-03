@@ -1,18 +1,17 @@
 package com.proj.forum.controller;
 
-import com.proj.forum.dto.ApiResponse;
-import com.proj.forum.dto.GenericResponse;
-import com.proj.forum.dto.PostRequestDto;
-import com.proj.forum.dto.PostResponseDto;
+import com.proj.forum.dto.*;
 import com.proj.forum.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/posts")
@@ -20,6 +19,14 @@ import java.util.UUID;
 public class PostController {
 
     private final PostService postService;
+
+    @GetMapping
+    public ApiResponse<List<PostResponseDto>> getAllPosts() {
+        log.info("Fetching all posts");
+        List<PostResponseDto> postsDto = postService.getAllPosts();
+
+        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Posts found", postsDto);
+    }
 
     @PostMapping("/create")
     public ApiResponse<GenericResponse> createPost(@RequestBody @Valid PostRequestDto postDto) {
@@ -46,6 +53,17 @@ public class PostController {
             @RequestBody PostRequestDto postDto) {
         postService.updatePost(postId, postDto);
         return ApiResponse.apiResponse(true, 200, "Post updated", postId);
+    }
+
+    @PatchMapping("/pin/{postId}")
+    public ApiResponse<GenericResponse> pinPost(@PathVariable UUID postId){
+        boolean pin = postService.pinPost(postId);
+        if(pin){
+            return ApiResponse.apiResponse(true, 200, "Post pinned", postId);
+        }
+        else{
+            return ApiResponse.apiResponse(true, 200, "Post unpinned", postId);
+        }
     }
 
     @DeleteMapping("/delete/{postId}")
