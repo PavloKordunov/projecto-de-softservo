@@ -14,6 +14,7 @@ public record GroupDto(
         String title,
         @NotNull
         @Length(max = 500)
-        String description
+        String description,
+        String image
 ) {
 }

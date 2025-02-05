@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Slf4j
 @Service
 @Transactional
@@ -31,12 +33,13 @@ public class PrivacyPolicyServiceImpl implements PrivacyPolicyService {
     }
 
     @Override
-    public void createPrivacyPolicy(PrivacyPolicyDto privacyPolicyDto) {
+    public UUID createPrivacyPolicy(PrivacyPolicyDto privacyPolicyDto) {
         PrivacyPolicy privacyPolicy = PrivacyPolicy.builder()
                 .privacyContent(privacyPolicyDto.policyContent())
                 .version(privacyPolicyDto.version())
                 .build();
-        privacyPolicyRepository.save(privacyPolicy);
+        PrivacyPolicy policyFromDB = privacyPolicyRepository.save(privacyPolicy);
+        return policyFromDB.getId();
     }
 
 }

@@ -1,13 +1,7 @@
 package com.proj.forum.service.impl;
 
-import com.proj.forum.dto.GroupDto;
-import com.proj.forum.dto.SearchDto;
-import com.proj.forum.dto.TopicDto;
-import com.proj.forum.dto.UserDto;
-import com.proj.forum.service.GroupService;
-import com.proj.forum.service.SearchService;
-import com.proj.forum.service.TopicService;
-import com.proj.forum.service.UserService;
+import com.proj.forum.dto.*;
+import com.proj.forum.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,12 +18,14 @@ public class SearchServiceImpl implements SearchService {
     private final UserService userService;
     private final TopicService topicService;
     private final GroupService groupService;
+    private final PostService postService;
 
     public SearchDto findByName(String query) {
         List<UserDto> users = userService.getByUsernameContain(query);
         List<TopicDto> topics = topicService.getByTitleContain(query);
         List<GroupDto> groups = groupService.getByTitleContain(query);
+        List<PostResponseDto> posts = postService.getByTitleContain(query);
 
-        return new SearchDto(users, topics, groups);
+        return new SearchDto(users, topics, groups, posts);
     }
 }

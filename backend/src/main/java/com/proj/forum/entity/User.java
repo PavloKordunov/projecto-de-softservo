@@ -1,5 +1,6 @@
 package com.proj.forum.entity;
 
+import com.proj.forum.dto.PostResponseDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.UUID;
+
+import static jakarta.persistence.CascadeType.ALL;
 
 @Entity
 @AllArgsConstructor
@@ -34,24 +37,30 @@ public class User {
 
     private String profileImage;
 
-//    @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
-//    private List<Topic> createdTopics;
+    @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
+    private List<Topic> createdTopics;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_liked_topics",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "topic_id")
-    )
-    private List<Topic> likedTopics;
+    @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
+    private List<Post> createdPosts;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_saved_topics",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "topic_id")
-    )
-    private List<Topic> savedTopics;
+    @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
+    private List<Post> createdGroups;
+
+//    @ManyToMany
+//    @JoinTable(
+//            name = "user_liked_topics",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "topic_id")
+//    )
+//    private List<Topic> likedTopics;
+//
+//    @ManyToMany
+//    @JoinTable(
+//            name = "user_saved_topics",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "topic_id")
+//    )
+//    private List<Topic> savedTopics;
 
     @ManyToMany
     @JoinTable(
@@ -62,13 +71,8 @@ public class User {
     private List<User> subscribers;
 
     @ManyToMany(mappedBy = "subscribers")
-//    @JoinTable(
-//            name = "user_following",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "following_id")
-//    )
-    private List<User> following;
 
+    private List<User> following;
 }
 
 

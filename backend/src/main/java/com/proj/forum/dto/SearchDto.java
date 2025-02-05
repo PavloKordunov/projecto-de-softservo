@@ -6,5 +6,6 @@ import java.util.List;
 public record SearchDto(
         List<UserDto> users,
         List<TopicDto> topics,
-        List<GroupDto> groups
+        List<GroupDto> groups,
+        List<PostResponseDto> posts
 ) {}
