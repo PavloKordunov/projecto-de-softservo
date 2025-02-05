@@ -5,7 +5,7 @@ import '@okta/okta-signin-widget/dist/css/okta-sign-in.min.css';
 import PrivacyPolicyPopup from '../components/PrivacyPolicyPopup/PrivacyPolicyPopup';
 import RulesPopup from '../components/RulesPopup/RulesPopup';
 
-const OktaSignInWidget = ({ config, oktaAuth }) => {
+const OktaSignInWidget = ({ config, onSuccess, onError }) => {
   const widgetRef = useRef();
   const navigate = useNavigate();
   const [showPrivacyPopup, setShowPrivacyPopup] = useState(true);
@@ -94,14 +94,14 @@ const OktaSignInWidget = ({ config, oktaAuth }) => {
     });
 
     widget
-        .showSignInToGetTokens({
-          el: widgetRef.current,
-        })
-        .then(() => console.log('Widget loaded'))
-        .catch((err) => console.error('Widget error', err));
+      .showSignInToGetTokens({
+        el: widgetRef.current,
+      })
+      .then(onSuccess)
+      .catch(onError);
 
     return () => widget.remove();
-  }, [config, widgetVisible]);
+  }, [config, widgetVisible, onSuccess, onError]);
 
   return (
       <div className="container mt-5 mb-5">
