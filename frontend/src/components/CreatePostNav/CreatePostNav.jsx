@@ -1,8 +1,6 @@
 import css from "./CreatePostNav.module.css";
-import Image from "../../img/person.png";
 import {useState} from "react";
 import FlipImage from "../../img/person.png";
-import Icon from "../../img/sprite.svg";
 import {Link} from "react-router-dom";
 
 const CreatePostNav = ({setIsShow, handleSetTitle}) => {
