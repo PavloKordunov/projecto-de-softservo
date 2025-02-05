@@ -2,7 +2,7 @@ import css from "./Profile.module.css";
 import Image from '../../img/person.png';
 import Icon from '../../img/sprite.svg';
 import Post from '../Post/Post';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import useWindowWidth from "../hooks/useWindowWidth";
 
 const Profile = () => {
@@ -15,6 +15,20 @@ const Profile = () => {
     const [topics, setTopics] = useState([]);
 
     const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const filterRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (filterRef.current && !filterRef.current.contains(event.target)) {
+                setIsFilterOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     useEffect(() => {
         const fetchTopics = async () => {
@@ -147,13 +161,42 @@ const Profile = () => {
                     </li>
                 </ul>
             ) : (
-                <div className={css.profileFilterWrapper}>
+                <div className={css.profileFilterWrapper} ref={filterRef}>
                     <button className={css.profileFilter} onClick={() => setIsFilterOpen(!isFilterOpen)}>Фільтер</button>
                         {isFilterOpen && (
                             <ul className={css.profileFilterDropdown}>
-                                <li><button className={css.profileFilterOption}>За вподобаннями</button></li>
-                                <li><button className={css.profileFilterOption}>За переглядами</button></li>
-                                <li><button className={css.profileFilterOption}>За датою</button></li>
+                                <div className={css.profileFilterDropdownMenu}>
+                                    <li>
+                                        <button className={css.profileFilterOption}>
+                                            За переглядами (від більших до менших)
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button className={css.profileFilterOption}>
+                                            За переглядами (від менших до більших)
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button className={css.profileFilterOption}>
+                                            За датою (від новіших до старіших)
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button className={css.profileFilterOption}>
+                                            За датою (від старіших до новіших)
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button className={css.profileFilterOption}>
+                                            За вподобаннями (від більших до менших)
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button className={css.profileFilterOption}>
+                                            За вподобаннями (від менших до більших)
+                                        </button>
+                                    </li>
+                                </div>
                             </ul>
                         )}
                 </div>
