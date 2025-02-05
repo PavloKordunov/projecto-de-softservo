@@ -28,14 +28,14 @@ public class ChatMessageController {
     @MessageMapping("/chat")
     public void processMessage(@Payload ChatMessage chatMessage) {
 
-        ChatMessage saved = chatMessageService.createMessage(chatMessage);
+        chatMessageService.createMessage(chatMessage);
 
         messagingTemplate.convertAndSendToUser(
                 chatMessage.getRecipientUsername(),"/queue/messages",
                 new ChatNotification(
-                        saved.getId(),
-                        saved.getSenderId(),
-                        saved.getSenderUsername()));
+                        chatMessage.getId(),
+                        chatMessage.getSenderId(),
+                        chatMessage.getSenderUsername()));
     }
 
     @GetMapping("/messages/{senderId}/{recipientId}/count")

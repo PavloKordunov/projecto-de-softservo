@@ -118,9 +118,16 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     @Transactional
     @Override
     public ChatMessage createMessage(ChatMessage chatMessage) {
-        chatMessage.setMessageStatus(MessageStatus.RECEIVED);
-        log.info("Create message");
-        return chatMessageRepository.save(chatMessage);
+        log.info("Start processing message");
+        try {
+            var message = chatMessageRepository.save(chatMessage);
+            message.setMessageStatus(MessageStatus.DELIVERED);
+            return message;
+        }catch (Exception e) {
+            chatMessage.setMessageStatus(MessageStatus.FAILED);
+            return chatMessage;
+        }
+
     }
 
     @Override

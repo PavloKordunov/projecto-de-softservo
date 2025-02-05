@@ -9,11 +9,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-
 
 
 @Slf4j
@@ -21,6 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/api/topics")
 @CrossOrigin("http://localhost:3000")
+//TODO try to use AOP, create admin annotation for each controller
 public class TopicController {
 
     private final TopicService topicService;
