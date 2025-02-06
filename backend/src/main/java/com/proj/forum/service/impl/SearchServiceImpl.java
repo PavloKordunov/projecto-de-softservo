@@ -21,7 +21,7 @@ public class SearchServiceImpl implements SearchService {
     private final PostService postService;
 
     public SearchDto findByName(String query) {
-        List<UserDto> users = userService.getByUsernameContain(query);
+        List<UserRequestDto> users = userService.getByUsernameContain(query);
         List<TopicDto> topics = topicService.getByTitleContain(query);
         List<GroupDto> groups = groupService.getByTitleContain(query);
         List<PostResponseDto> posts = postService.getByTitleContain(query);

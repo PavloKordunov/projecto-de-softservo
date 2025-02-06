@@ -1,14 +1,15 @@
 package com.proj.forum.controller;
 
-import com.proj.forum.dto.*;
+import com.proj.forum.dto.ApiResponse;
+import com.proj.forum.dto.GenericResponse;
+import com.proj.forum.dto.UserRequestDto;
+import com.proj.forum.dto.UserResponseDto;
 import com.proj.forum.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.http.HttpStatusCode;
-
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/create")
-    public ApiResponse<GenericResponse> createUser(@RequestBody @Valid UserDto user) {
+    public ApiResponse<GenericResponse> createUser(@RequestBody @Valid UserRequestDto user) {
         try {
             log.info("Create user");
             UUID id = userService.createUser(user);
@@ -37,27 +38,27 @@ public class UserController {
     }
 
     @GetMapping
-    public ApiResponse<List<UserDto>> getAllUsers() {
+    public ApiResponse<List<UserRequestDto>> getAllUsers() {
         log.info("Fetching all users");
-        List<UserDto> usersDto = userService.getAllUsers();
+        List<UserRequestDto> usersDto = userService.getAllUsers();
 
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Users found", usersDto);
     }
 
     @GetMapping("/id/{id}")
-    public ApiResponse<UserDto> getUserById(@PathVariable @Valid UUID id) {
+    public ApiResponse<UserResponseDto> getUserById(@PathVariable @Valid UUID id) {
 
         log.info("Fetch user");
-        UserDto userDto = userService.getUser(id);
+        UserResponseDto userDto = userService.getUser(id);
 
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Successful getting", userDto);
     }
 
     @GetMapping("/{username}")
-    public ApiResponse<UserDto> getUserByUsername(@PathVariable @Valid String username) {
+    public ApiResponse<UserResponseDto> getUserByUsername(@PathVariable @Valid String username) {
 
         log.info("Fetch user by username");
-        UserDto userDto = userService.getUserByUsername(username);
+        UserResponseDto userDto = userService.getUserByUsername(username);
 
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Successful getting", userDto);
     }
@@ -65,7 +66,7 @@ public class UserController {
     @PatchMapping("/update/{id}")
     public ApiResponse<GenericResponse> updateUser(
             @PathVariable @Valid UUID id,
-            @RequestBody UserDto userDto) {
+            @RequestBody UserRequestDto userDto) {
         try {
             log.info("Update user");
             userService.updateUser(id, userDto);
