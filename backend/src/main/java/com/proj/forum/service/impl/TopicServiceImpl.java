@@ -47,6 +47,14 @@ public class TopicServiceImpl implements TopicService {
                 .id(id)
                 .title(topic.get().getTitle())
                 .description(topic.get().getDescription() == null ? StringUtils.EMPTY : topic.get().getDescription())
+                .country(topic.get().getCountry())
+                .limitAge(topic.get().getLimitAge())
+                .actor(topic.get().getActor())
+                .image(topic.get().getImage())
+                .IMDB(topic.get().getIMDB())
+                .director(topic.get().getDirector())
+                .genre(topic.get().getGenre())
+                .duration(topic.get().getDuration())
                 .build();
     }
 
@@ -118,7 +126,6 @@ public class TopicServiceImpl implements TopicService {
                 .actor(topicDto.actor())
                 .image(topicDto.image())
                 .IMDB(topicDto.IMDB())
-//                .author(topicDto.author())
                 .director(topicDto.director())
                 .genre(topicDto.genre())
                 .duration(topicDto.duration())
@@ -130,6 +137,14 @@ public class TopicServiceImpl implements TopicService {
                 .id(topic.getId())
                 .title(topic.getTitle())
                 .description(topic.getDescription() == null ? StringUtils.EMPTY : topic.getDescription())
+                .country(topic.getCountry())
+                .limitAge(topic.getLimitAge())
+                .actor(topic.getActor())
+                .image(topic.getImage())
+                .IMDB(topic.getIMDB())
+                .director(topic.getDirector())
+                .genre(topic.getGenre())
+                .duration(topic.getDuration())
                 .build();
     }
 
