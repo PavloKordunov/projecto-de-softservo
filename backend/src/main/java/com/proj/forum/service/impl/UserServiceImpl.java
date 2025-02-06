@@ -54,6 +54,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto getUserByUsername(String username){
+        Optional<User> user;
+        try{
+            user = Optional.ofNullable(userRepository.findByUsername(username));
+            if (user.isEmpty()) {
+                log.info("No user found with username {}", username);
+                throw new EntityNotFoundException("No user found");
+            }
+        }catch (RuntimeException ex){
+            throw new EntityNotFoundException(ex);
+        }
+
+        return UserDto.builder()
+                .id(user.get().getId())
+                .firstName(user.get().getName())
+                .nickName(username)
+                .email(user.get().getEmail() == null ? StringUtils.EMPTY : user.get().getEmail())
+                .build();
+    }
+
+    @Override
     public List<UserDto> getAllUsers() {
         List<User> userList;
         try {

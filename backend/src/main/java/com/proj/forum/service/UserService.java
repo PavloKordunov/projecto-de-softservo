@@ -9,6 +9,7 @@ public interface UserService {
     List<UserDto> getAllUsers();
     UUID createUser(UserDto user);
     UserDto getUser(UUID id);
+    UserDto getUserByUsername(String username);
     void deleteUser(UUID id);
     void updateUser(UUID id, UserDto userDto);
     List<UserDto> mapToUserDtoList(List<User> users);

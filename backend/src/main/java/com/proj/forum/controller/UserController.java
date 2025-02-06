@@ -44,11 +44,20 @@ public class UserController {
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Users found", usersDto);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ApiResponse<UserDto> getUserById(@PathVariable @Valid UUID id) {
 
         log.info("Fetch user");
         UserDto userDto = userService.getUser(id);
+
+        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Successful getting", userDto);
+    }
+
+    @GetMapping("/{username}")
+    public ApiResponse<UserDto> getUserByUsername(@PathVariable @Valid String username) {
+
+        log.info("Fetch user by username");
+        UserDto userDto = userService.getUserByUsername(username);
 
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Successful getting", userDto);
     }
