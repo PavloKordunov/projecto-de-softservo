@@ -31,7 +31,7 @@ public class Post {
     private Group group;
 
     @ManyToOne
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
     private String image;

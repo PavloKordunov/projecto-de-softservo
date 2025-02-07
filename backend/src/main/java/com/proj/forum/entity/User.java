@@ -1,6 +1,5 @@
 package com.proj.forum.entity;
 
-import com.proj.forum.dto.PostResponseDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -37,14 +36,14 @@ public class User {
 
     private String profileImage;
 
-    @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
-    private List<Topic> createdTopics;
+//    @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
+//    private List<Topic> createdTopics;
 
     @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
     private List<Post> createdPosts;
 
     @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
-    private List<Post> createdGroups;
+    private List<Group> createdGroups;
 
 //    @ManyToMany
 //    @JoinTable(

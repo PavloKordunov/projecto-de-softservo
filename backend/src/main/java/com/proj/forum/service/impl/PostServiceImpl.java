@@ -2,10 +2,8 @@ package com.proj.forum.service.impl;
 
 import com.proj.forum.dto.PostRequestDto;
 import com.proj.forum.dto.PostResponseDto;
-import com.proj.forum.dto.TopicDto;
 import com.proj.forum.entity.Group;
 import com.proj.forum.entity.Post;
-import com.proj.forum.entity.Topic;
 import com.proj.forum.entity.User;
 import com.proj.forum.repository.GroupRepository;
 import com.proj.forum.repository.PostRepository;
