@@ -1,7 +1,7 @@
-package com.proj.forum.controller;
+package com.proj.forum.handler;
 
 import com.proj.forum.dto.ApiResponse;
-import com.proj.forum.exception.ResourceNotFoundException;
+import com.proj.forum.exception.TokenTypeException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,13 +10,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.security.sasl.AuthenticationException;
+import java.nio.file.AccessDeniedException;
 import java.sql.SQLException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    @ExceptionHandler(value = {EntityNotFoundException.class, ResourceNotFoundException.class})
+    @ExceptionHandler(value = {EntityNotFoundException.class})
     public ApiResponse<?> handleEntityNotFound(RuntimeException ex) {
         return new ApiResponse<>(true, HttpStatus.NOT_FOUND, ex.getCause().toString(), null);
     }
@@ -36,6 +38,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
     @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class})
     public ApiResponse<?> handleMethodNotValid(RuntimeException ex){
         return new ApiResponse<>(false, HttpStatus.BAD_REQUEST, ex.getCause().toString(), null);
+    }
+
+    @ResponseStatus(value =  HttpStatus.FORBIDDEN)
+    @ExceptionHandler(value = {AccessDeniedException.class})
+    public ApiResponse<?> handleAccessDenied(RuntimeException ex){
+        return new ApiResponse<>(false, HttpStatus.FORBIDDEN, ex.getCause().toString(), null);
+    }
+
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(value = {TokenTypeException.class, AuthenticationException.class})
+    public ApiResponse<?> handleAuthentication(RuntimeException ex){
+        return new ApiResponse<>(false, HttpStatus.UNAUTHORIZED, ex.getCause().toString(), null);
     }
 
 //    @Override

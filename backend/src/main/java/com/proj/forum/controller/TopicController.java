@@ -1,5 +1,6 @@
 package com.proj.forum.controller;
 
+import com.proj.forum.annotation.RequireRoles;
 import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.GenericResponse;
 import com.proj.forum.dto.TopicDto;
@@ -38,6 +39,7 @@ public class TopicController {
         }
     }
 
+    @RequireRoles({"Everyone"})
     @GetMapping
     public ApiResponse<List<TopicDto>> getAllTopics() {
         log.info("Fetching all topics");

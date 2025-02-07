@@ -15,7 +15,7 @@ public class CustomRoleConverter implements Converter<Jwt, Collection<GrantedAut
 
         return roles == null ? List.of() :
                 roles.stream()
-                        .map(role -> (GrantedAuthority) () -> "ROLE_" + role)
+                        .map(role -> (GrantedAuthority) () -> role)
                         .collect(Collectors.toList());
     }
 }

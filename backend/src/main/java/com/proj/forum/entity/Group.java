@@ -35,5 +35,5 @@ public class Group {
     private List<Post> pinnedPosts;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private User author;
 }

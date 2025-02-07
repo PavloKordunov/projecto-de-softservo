@@ -2,14 +2,14 @@ package com.proj.forum.service.impl;
 
 import com.proj.forum.entity.ChatMessage;
 import com.proj.forum.enums.MessageStatus;
-import com.proj.forum.exception.ResourceNotFoundException;
+import com.proj.forum.exception.TokenTypeException;
 import com.proj.forum.repository.ChatMessageRepository;
 import com.proj.forum.service.ChatMessageService;
 import com.proj.forum.service.ChatRoomService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -152,14 +152,14 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                     chatMessage.setMessageStatus(MessageStatus.DELIVERED);
                     return chatMessageRepository.save(chatMessage);
                 })
-                .orElseThrow(() -> new ResourceNotFoundException("Can't find message (" + id + ")"));
+                .orElseThrow(() -> new TokenTypeException("Can't find message (" + id + ")"));
     }
 
     @Transactional
     @Override
     public void updateStatuses(UUID senderId, UUID recipientId, MessageStatus status) {
         UUID uuid = chatRoomService.getChatId(senderId, recipientId, true)
-            .orElseThrow(()->new ResourceNotFoundException("Can't find chat room"));
+            .orElseThrow(()->new TokenTypeException("Can't find chat room"));
 
         chatMessageRepository.updateMessageStatusByChatRoom_Id(status, uuid);
     }
