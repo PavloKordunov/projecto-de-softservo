@@ -91,6 +91,10 @@ const OktaSignInWidget = ({ config, onSuccess, onError }) => {
       features: {
         registration: true,
       },
+      idps: [
+        { type: 'GOOGLE', id: '0oan9t36dsavw99JZ5d7' }
+      ],
+      idpDisplay: 'PRIMARY',
     });
 
     widget
@@ -104,21 +108,21 @@ const OktaSignInWidget = ({ config, onSuccess, onError }) => {
   }, [config, widgetVisible, onSuccess, onError]);
 
   return (
-      <div className="container mt-5 mb-5">
-        {showPrivacyPopup && (
-            <PrivacyPolicyPopup
-                onAccept={showOktaWidget}
-                onDecline={declinePrivacyPolicy}
-            />
-        )}
-        {showRulesPopup && (
-            <RulesPopup
-                onAccept={acceptForumRules}
-                onDecline={declineForumRules}
-            />
-        )}
-        <div ref={widgetRef}></div>
-      </div>
+    <div className="container mt-5 mb-5">
+      {showPrivacyPopup && (
+        <PrivacyPolicyPopup
+          onAccept={showOktaWidget}
+          onDecline={declinePrivacyPolicy}
+        />
+      )}
+      {showRulesPopup && (
+        <RulesPopup
+          onAccept={acceptForumRules}
+          onDecline={declineForumRules}
+        />
+      )}
+      <div ref={widgetRef}></div>
+    </div>
   );
 };
 

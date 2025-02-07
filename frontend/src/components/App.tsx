@@ -43,7 +43,7 @@ function App() {
                         <Route index element={<HomePage />} />
                         {/* <Route path="auth-page" element={<AuthPage />} /> */}
                         <Route path="adminPost" element={<AdminPost />} />
-                        <Route path="userProfile" element={<Profile />} />
+                        <Route path="/:username" element={<Profile />} />
                         <Route path="admin-page" element={<AdminPage />} />
                         <Route path="admin-post-menu" element={<AdminPostMenu />} />
                         <Route path="group" element={<Group />} />
@@ -57,9 +57,6 @@ function App() {
                         onError={() => console.error('Registration error:')}
                     />
                         } />
-                    <Route element={<SecureRoute />}>
-                    {/* Add secured routes here */}
-                    </Route>
                 </Routes>
             </Security>
         </div>
