@@ -1,5 +1,6 @@
 package com.proj.forum.controller;
 
+import com.proj.forum.annotation.RequireRoles;
 import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.GenericResponse;
 import com.proj.forum.dto.GroupDto;
@@ -36,6 +37,7 @@ public class GroupController {
         }
     }
 
+    @RequireRoles({"Everyone"})
     @GetMapping
     public ApiResponse<List<GroupDto>> getAllGroups() {
         log.info("Fetching all groups");

@@ -6,7 +6,7 @@ import lombok.Builder;
 import java.util.UUID;
 
 @Builder
-public record UserDto(
+public record UserRequestDto(
         UUID id,
         @NotBlank(message = "Name cannot be blank")String firstName,
         @NotBlank(message = "Username cannot be blank")String nickName,

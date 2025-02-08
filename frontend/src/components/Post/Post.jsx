@@ -4,11 +4,20 @@ import Icon from "../../img/sprite.svg";
 import ImagePost from "../../img/person.png";
 import {Link, useNavigate} from "react-router-dom";
 import LikeButton from "../LikeButton/LikeButton";
+import { useEffect } from "react";
 
 
 const Post = ({topic}) => {
 
     const navigate = useNavigate()
+
+    // useEffect(async() => {
+    //     try {
+    //         const res = await fetch(`http://localhost:8080/api/users/`)
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // })
 
     const handleLikeToggle = (isLiked) => {
         console.log("Лайк поставлено:", isLiked);
@@ -50,7 +59,7 @@ const Post = ({topic}) => {
                         width='53' height='53'
                         />
                        <div className={css.postInfoList}>
-                            <p className={css.postInfoAuthor}>Павло Сірий</p>
+                            <p className={css.postInfoAuthor} onClick={() => navigate('/:id')}>Павло Сірий</p>
                             <p className={css.postInfoAuthorTime}>2 години тому</p>
                        </div>
                     <ul className={css.postStatisticsList}>

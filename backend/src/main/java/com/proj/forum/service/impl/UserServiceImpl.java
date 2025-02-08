@@ -1,7 +1,7 @@
 package com.proj.forum.service.impl;
 
-import com.proj.forum.dto.UserDto;
-
+import com.proj.forum.dto.UserRequestDto;
+import com.proj.forum.dto.UserResponseDto;
 import com.proj.forum.entity.User;
 import com.proj.forum.repository.UserRepository;
 import com.proj.forum.service.UserService;
@@ -9,7 +9,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,14 +25,14 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public UUID createUser(UserDto userDto) {
+    public UUID createUser(UserRequestDto userDto) {
         User user = mapToUser(userDto);
         User userFromDB = userRepository.save(user);
         return userFromDB.getId();
     }
 
     @Override
-    public UserDto getUser(UUID id) {
+    public UserResponseDto getUser(UUID id) {
         Optional<User> user;
         try {
             user = userRepository.findById(id);
@@ -45,16 +44,39 @@ public class UserServiceImpl implements UserService {
             throw new EntityNotFoundException(ex);
         }
 
-        return UserDto.builder()
-                .id(id)
-                .firstName(user.get().getName())
-                .nickName(user.get().getUsername() == null ? StringUtils.EMPTY : user.get().getUsername())
-                .email(user.get().getEmail() == null ? StringUtils.EMPTY : user.get().getEmail())
+        return getUserResponseDto(user);
+    }
+
+    private UserResponseDto getUserResponseDto(Optional<User> user) {
+        return UserResponseDto.builder()
+                .id(user.get().getId())
+                .name(user.get().getName())
+                .username(user.get().getUsername())
+                .following(user.get().getFollowing().size())
+                .subscribers(user.get().getSubscribers().size())
+                .followingGroups(user.get().getCreatedGroups().size())
+                .profileImage(user.get().getEmail() == null ? StringUtils.EMPTY : user.get().getEmail())
                 .build();
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
+    public UserResponseDto getUserByUsername(String username){
+        Optional<User> user;
+        try{
+            user = Optional.ofNullable(userRepository.findByUsername(username));
+            if (user.isEmpty()) {
+                log.info("No user found with username {}", username);
+                throw new EntityNotFoundException("No user found");
+            }
+        }catch (RuntimeException ex){
+            throw new EntityNotFoundException(ex);
+        }
+
+        return getUserResponseDto(user);
+    }
+
+    @Override
+    public List<UserRequestDto> getAllUsers() {
         List<User> userList;
         try {
             userList = userRepository.findAll();
@@ -74,7 +96,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void updateUser(UUID id, UserDto userDto) {
+    public void updateUser(UUID id, UserRequestDto userDto) {
         log.info("Update user by patch");
         User updatedUser;
         try {
@@ -88,7 +110,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private User getUpdateUser(User user, UserDto userDto) {
+    private User getUpdateUser(User user, UserRequestDto userDto) {
         if (userDto.firstName() != null)
             user.setName(userDto.firstName());
         if (userDto.nickName() != null)
@@ -112,7 +134,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private static User mapToUser(UserDto userDto) {
+    private static User mapToUser(UserRequestDto userDto) {
         return User.builder()
                 .name(userDto.firstName())
                 .username(userDto.nickName() == null ? StringUtils.EMPTY : userDto.nickName())
@@ -120,8 +142,8 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    private static UserDto getUpdateUser(User user) {
-        return UserDto.builder()
+    private static UserRequestDto getUpdateUser(User user) {
+        return UserRequestDto.builder()
                 .id(user.getId())
                 .firstName(user.getName())
                 .nickName(user.getUsername() == null ? StringUtils.EMPTY : user.getUsername())
@@ -130,9 +152,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> mapToUserDtoList(List<User> users) {
+    public List<UserRequestDto> mapToUserDtoList(List<User> users) {
         return users.stream()
-                .map(user -> UserDto.builder()
+                .map(user -> UserRequestDto.builder()
                         .id(user.getId())
                         .firstName(user.getName())
                         .nickName(user.getUsername() == null ? StringUtils.EMPTY : user.getUsername())
@@ -141,7 +163,7 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
-    public List<UserDto> getByUsernameContain(String name){
+    public List<UserRequestDto> getByUsernameContain(String name){
         //List<Topic> topics = topicRepository.findByTitleContainingIgnoreCase(name);
         return mapToUserDtoList(userRepository.findByUsernameContainingIgnoreCase(name));
     }
