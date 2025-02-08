@@ -27,11 +27,11 @@ public class Post {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "group_title", nullable = false)
+    @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
     @ManyToOne
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
     private String image;
@@ -39,4 +39,6 @@ public class Post {
     private LocalDateTime createdDate;
 
     private boolean isPinned;
+
+    private String group_title;
 }

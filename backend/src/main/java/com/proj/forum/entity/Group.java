@@ -34,6 +34,6 @@ public class Group {
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> pinnedPosts;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    @ManyToOne
+    private User author;
 }

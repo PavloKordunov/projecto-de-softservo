@@ -77,7 +77,7 @@ public class PostServiceImpl implements PostService {
         return PostResponseDto.builder()
                 .id(id)
                 .title(post.get().getTitle())
-                .description(post.get().getDescription() == null ? StringUtils.EMPTY : post.get().getDescription())
+                .description(post.get().getDescription() == null ? StringUtils.EMPTY : post.get().getDescription()) //TODO add other fields
                 .build();
     }
 
@@ -164,6 +164,7 @@ public class PostServiceImpl implements PostService {
                 .image(postDto.image())
                 .author(user)
                 .group(group)
+                .group_title(group.getTitle())
                 .isPinned(false)
                 .createdDate(LocalDateTime.now())
                 .build();
@@ -180,6 +181,7 @@ public class PostServiceImpl implements PostService {
                 .nickname(post.getAuthor().getUsername())
                 .name(post.getAuthor().getName())
                 .isPinned(post.isPinned())
+                .group_title(post.getGroup_title())
                 .build();
     }
 

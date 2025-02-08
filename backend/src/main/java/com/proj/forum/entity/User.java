@@ -37,8 +37,8 @@ public class User {
 
     private String profileImage;
 
-    @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
-    private List<Topic> createdTopics;
+//    @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
+//    private List<Topic> createdTopics;
 
     @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
     private List<Post> createdPosts;
