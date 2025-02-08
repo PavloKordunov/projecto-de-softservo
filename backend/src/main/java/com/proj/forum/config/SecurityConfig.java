@@ -26,8 +26,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/**")
                         .permitAll())
                 .oauth2ResourceServer(oauth2 ->
-                        oauth2
-                                .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtCustomAuthenticationConverter()))
+                        oauth2.jwt(Customizer.withDefaults())
+//                                .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtCustomAuthenticationConverter()))
                 );
         http.cors(Customizer.withDefaults());
         http.setSharedObject(ContentNegotiationStrategy.class, new HeaderContentNegotiationStrategy());

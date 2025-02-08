@@ -26,26 +26,24 @@ import java.util.Set;
 public class AuthorizationAspect {
 
     @Around("@annotation(requireRole)")
-    public Object checkAccessAdvice(ProceedingJoinPoint proceedingJoinPoint, RequireRoles requireRole) throws Throwable{
+    public Object checkAccessAdvice(ProceedingJoinPoint joinPoint, RequireRoles requireRole) throws Throwable{
 
         Jwt jwt = getJwt();
-        List<String> roles = jwt.getClaimAsStringList("groups"); // <- certainly "groups"?
+        List<String> roles = jwt.getClaimAsStringList("groups");
         if (roles == null)
-            throw new AccessDeniedException("User doesn't have roles"); //TODO create custom ex
+            throw new AccessDeniedException("User doesn't have roles");
 
         Set<String> requiredRoles = new HashSet<>(Arrays.asList(requireRole.value()));
 
-        if(requiredRoles.stream().noneMatch(requiredRoles::contains))
+        if(roles.stream().noneMatch(requiredRoles::contains))
             throw new AccessDeniedException("User doesn't have permission to use it");
 
-        return proceedingJoinPoint.proceed();
+        return joinPoint.proceed();
     }
 
     private static Jwt getJwt() throws AuthenticationException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("Authentication class: {}", authentication.getClass().getName());
 
-        // is guest
         if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
             throw new AuthenticationException("User isn't authentication");
         }
