@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Slf4j
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -43,16 +43,11 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostResponseDto> getAllPosts() {
         List<Post> postList;
-        try {
             postList = postRepository.findAll();
-            log.info("getAllPosts");
             if (postList.isEmpty()) {
-                log.info("No posts found");
                 throw new EntityNotFoundException("No posts found");
             }
-        } catch (RuntimeException ex) {
-            throw new EntityNotFoundException(ex);
-        }
+
 
         return postList.stream()
                 .map(PostServiceImpl::getUpdatePost)
@@ -62,15 +57,11 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostResponseDto getPostById(UUID id) {
         Optional<Post> post;
-        try {
+
             post = postRepository.findById(id);
             if (post.isEmpty()) {
-                log.info("No post");
                 throw new EntityNotFoundException("No post");
             }
-        } catch (RuntimeException ex) {
-            throw new EntityNotFoundException(ex);
-        }
 
         return PostResponseDto.builder()
                 .id(id)
@@ -82,16 +73,10 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostResponseDto> getPostsByGroup(UUID groupId) {
         List<Post> postList;
-        try {
             postList = postRepository.findAllByGroupId(groupId);
-            log.info("getAllPosts");
             if (postList.isEmpty()) {
-                log.info("No posts");
                 throw new EntityNotFoundException("No posts");
             }
-        } catch (RuntimeException ex) {
-            throw new EntityNotFoundException(ex);
-        }
 
         return postList.stream()
                 .map(PostServiceImpl::getUpdatePost)
@@ -101,23 +86,18 @@ public class PostServiceImpl implements PostService {
     @Transactional
     @Override
     public void updatePost(UUID id, PostRequestDto postDto) {
-        log.info("Update post by put");
         Post updatedPost;
-        try {
+
             updatedPost = postRepository.findById(id)
                     .map(post -> getUpdatePost(post, postDto))
                     .orElseThrow(() -> new EntityNotFoundException("Post didn't find"));
 
             postRepository.save(updatedPost);
-        } catch (RuntimeException ex) {
-            throw new EntityNotFoundException(ex);
-        }
     }
 
-  //  @Transactional
+    @Transactional
     @Override
     public boolean pinPost(UUID id) {
-        log.info("Pin/unpin post by patch");
         try {
             Post post = postRepository.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException("Post not found"));
@@ -126,7 +106,6 @@ public class PostServiceImpl implements PostService {
             postRepository.save(post);
             return post.isPinned();
         } catch (RuntimeException ex) {
-            log.error("Error occurred while pinning/unpinning post", ex);
             throw new EntityNotFoundException("Error occurred while pinning/unpinning post", ex);
         }
     }
@@ -143,16 +122,11 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void deletePost(UUID id) {
-        try {
             if (postRepository.existsById(id)) {
                 postRepository.deleteById(id);
             } else {
-                log.error("Not found post");
                 throw new EntityNotFoundException("Not found post");
             }
-        } catch (EntityNotFoundException ex) {
-            throw new EntityNotFoundException(ex);
-        }
     }
 
     private static Post mapToPost(PostRequestDto postDto, User user, Group group) {

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Slf4j
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -34,14 +34,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto getUser(UUID id) {
         Optional<User> user;
-        try {
-            user = userRepository.findById(id);
-            if (user.isEmpty()) {
-                log.info("No user found with id {}", id);
-                throw new EntityNotFoundException("No user found");
-            }
-        } catch (RuntimeException ex) {
-            throw new EntityNotFoundException(ex);
+
+        user = userRepository.findById(id);
+        if (user.isEmpty()) {
+            throw new EntityNotFoundException("No user found");
         }
 
         return getUserResponseDto(user);
@@ -60,16 +56,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto getUserByUsername(String username){
+    public UserResponseDto getUserByUsername(String username) {
         Optional<User> user;
-        try{
-            user = Optional.ofNullable(userRepository.findByUsername(username));
-            if (user.isEmpty()) {
-                log.info("No user found with username {}", username);
-                throw new EntityNotFoundException("No user found");
-            }
-        }catch (RuntimeException ex){
-            throw new EntityNotFoundException(ex);
+
+        user = Optional.ofNullable(userRepository.findByUsername(username));
+        if (user.isEmpty()) {
+            throw new EntityNotFoundException("No user found");
         }
 
         return getUserResponseDto(user);
@@ -78,15 +70,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserRequestDto> getAllUsers() {
         List<User> userList;
-        try {
-            userList = userRepository.findAll();
-            log.info("getAllUsers");
-            if (userList.isEmpty()) {
-                log.info("No users found");
-                throw new EntityNotFoundException("No users");
-            }
-        } catch (RuntimeException ex) {
-            throw new EntityNotFoundException(ex);
+
+        userList = userRepository.findAll();
+        if (userList.isEmpty()) {
+            throw new EntityNotFoundException("No users");
         }
 
         return userList.stream()
@@ -97,17 +84,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void updateUser(UUID id, UserRequestDto userDto) {
-        log.info("Update user by patch");
         User updatedUser;
-        try {
-            updatedUser = userRepository.findById(id)
-                    .map(user -> getUpdateUser(user, userDto))
-                    .orElseThrow(() -> new EntityNotFoundException("User is not found"));
-
-            userRepository.save(updatedUser);
-        } catch (RuntimeException ex) {
-            throw new EntityNotFoundException(ex);
-        }
+        updatedUser = userRepository.findById(id)
+                .map(user -> getUpdateUser(user, userDto))
+                .orElseThrow(() -> new EntityNotFoundException("User is not found"));
+        userRepository.save(updatedUser);
     }
 
     private User getUpdateUser(User user, UserRequestDto userDto) {
@@ -122,15 +103,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(UUID id) {
-        try {
-            if (userRepository.existsById(id)) {
-                userRepository.deleteById(id);
-            } else {
-                log.error("No user found with id {}", id);
-                throw new EntityNotFoundException("User not found");
-            }
-        } catch (EntityNotFoundException ex) {
-            throw new EntityNotFoundException(ex);
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+        } else {
+            throw new EntityNotFoundException("User not found");
         }
     }
 
@@ -163,8 +139,7 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
-    public List<UserRequestDto> getByUsernameContain(String name){
-        //List<Topic> topics = topicRepository.findByTitleContainingIgnoreCase(name);
+    public List<UserRequestDto> getByUsernameContain(String name) {
         return mapToUserDtoList(userRepository.findByUsernameContainingIgnoreCase(name));
     }
 

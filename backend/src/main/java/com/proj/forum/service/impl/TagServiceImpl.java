@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Slf4j
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -32,15 +32,11 @@ public class TagServiceImpl implements TagService {
     @Override
     public TagDto getTag(UUID id) {
         Optional<Tag> tag;
-        try {
-            tag = tagRepository.findById(id);
-            if (tag.isEmpty()) {
-                log.info("No tag");
-                throw new EntityNotFoundException("No tag");
-            }
-        } catch (RuntimeException ex) {
-            throw new EntityNotFoundException(ex);
+        tag = tagRepository.findById(id);
+        if (tag.isEmpty()) {
+            throw new EntityNotFoundException("No tag");
         }
+
 
         return TagDto.builder()
                 .id(id)
@@ -51,15 +47,9 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<TagDto> getAllTags() {
         List<Tag> tagList;
-        try {
-            tagList = tagRepository.findAll();
-            log.info("getAllTags");
-            if (tagList.isEmpty()) {
-                log.info("No tags");
-                throw new EntityNotFoundException("No tags");
-            }
-        } catch (RuntimeException ex) {
-            throw new EntityNotFoundException(ex);
+        tagList = tagRepository.findAll();
+        if (tagList.isEmpty()) {
+            throw new EntityNotFoundException("No tags");
         }
 
         return tagList.stream()

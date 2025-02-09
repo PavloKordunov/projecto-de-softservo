@@ -1,7 +1,9 @@
 package com.proj.forum.entity;
 
 
+import com.proj.forum.enums.TopicType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,6 +33,9 @@ public class Topic {
 
     @Column(length = 500)
     private String description;
+
+    @NotBlank
+    private TopicType type;
 
     @Column
     private Integer limitAge;

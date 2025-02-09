@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
-@Slf4j
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -34,7 +34,6 @@ public class UserStatisticServiceImpl implements UserStatisticService {
         Statistic statistic = userStatisticRepository.findById(statisticDto.id())
                 .map(stat -> updateStatistic(stat, statisticDto))
                 .orElseThrow(() -> new EntityNotFoundException("Not find statistic"));
-        //userStatisticRepository.save(statistic);
     }
 
     private Statistic updateStatistic(Statistic statistic, StatisticDto statisticDto) {
@@ -75,7 +74,6 @@ public class UserStatisticServiceImpl implements UserStatisticService {
     public void updateStatisticPartially(UUID id, Boolean liked) {
         Statistic stat = userStatisticRepository.findById(id).map(statistic -> updatePartially(statistic, liked))
                 .orElseThrow(()-> new EntityNotFoundException("Statistic don't find"));
-        //userStatisticRepository.save(stat);
     }
 
     private static Statistic updatePartially(Statistic statistic, Boolean liked){

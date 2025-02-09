@@ -1,6 +1,7 @@
 package com.proj.forum.controller;
 
 
+import com.proj.forum.annotation.Logging;
 import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.GenericResponse;
 import com.proj.forum.dto.TagDto;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@Slf4j
+@Logging
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/tags")
@@ -26,30 +27,19 @@ public class TagController {
 
     @PostMapping("/create")
     public ApiResponse<GenericResponse> createTag(@Valid @RequestBody TagDto tag) {
-        try {
-            log.info("Create group");
             UUID id = tagService.createTag(tag);
-
             return ApiResponse.apiResponse(true, 201, "Create tag", id);
-        } catch (EntityNotFoundException ex) {
-            log.info("Tag is null");
-            throw ex;
-        }
     }
 
     @GetMapping
     public ApiResponse<List<TagDto>> getAllTags() {
-        log.info("Fetching all tags");
         List<TagDto> groupsDto = tagService.getAllTags();
-
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Tags found", groupsDto);
     }
 
     @GetMapping("/{id}")
     public ApiResponse<TagDto> getTagById(@PathVariable @Valid UUID id) {
-        log.info("Fetch tag");
         TagDto tagDto = tagService.getTag(id);
-
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Successful getById", tagDto);
     }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Slf4j
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -33,14 +33,9 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public TopicDto getTopic(UUID id) {
         Optional<Topic> topic;
-        try {
-            topic = topicRepository.findById(id);
-            if (topic.isEmpty()) {
-                log.info("No topic");
-                throw new EntityNotFoundException("No topic");
-            }
-        } catch (RuntimeException ex) {
-            throw new EntityNotFoundException(ex);
+        topic = topicRepository.findById(id);
+        if (topic.isEmpty()) {
+            throw new EntityNotFoundException("No topic");
         }
 
         return TopicDto.builder()
@@ -61,15 +56,9 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public List<TopicDto> getAllTopics() {
         List<Topic> topicList;
-        try {
-            topicList = topicRepository.findAll();
-            log.info("getAllTopics");
-            if (topicList.isEmpty()) {
-                log.info("No topics");
-                throw new EntityNotFoundException("No topics");
-            }
-        } catch (RuntimeException ex) {
-            throw new EntityNotFoundException(ex);
+        topicList = topicRepository.findAll();
+        if (topicList.isEmpty()) {
+            throw new EntityNotFoundException("No topics");
         }
 
         return topicList.stream()
@@ -80,7 +69,6 @@ public class TopicServiceImpl implements TopicService {
     @Transactional
     @Override
     public void updateTopic(UUID id, TopicDto topicDto) {
-        log.info("Update topic by put");
         Topic updatedTopic;
         try {
             updatedTopic = topicRepository.findById(id)
@@ -93,8 +81,8 @@ public class TopicServiceImpl implements TopicService {
         }
     }
 
-   private Topic getUpdateTopic(Topic topic, TopicDto topicDto) {
-//        if (topicDto.title() != null)
+    private Topic getUpdateTopic(Topic topic, TopicDto topicDto) {
+//        if (topicDto.title() != null)         //TODO fix it asap (later)
 //            topic.setTitle(topicDto.title());
 //        if (topicDto.description() != null)
 //            topic.setDescription(topicDto.description());
@@ -103,17 +91,11 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public void deleteTopic(UUID id) {
-        try {
-            if (topicRepository.existsById(id)) {
-                topicRepository.deleteById(id);
-            } else {
-                log.error("Not found topic");
-                throw new EntityNotFoundException("Not found topic");
-            }
-        } catch (EntityNotFoundException ex) {
-            throw new EntityNotFoundException(ex);
-//        } catch (Exception ex){
-//            throw new DbNotResponseException("Db error", ex);
+
+        if (topicRepository.existsById(id)) {
+            topicRepository.deleteById(id);
+        } else {
+            throw new EntityNotFoundException("Not found topic");
         }
     }
 
@@ -159,7 +141,7 @@ public class TopicServiceImpl implements TopicService {
                 .toList();
     }
 
-    public List<TopicDto> getByTitleContain(String name){
+    public List<TopicDto> getByTitleContain(String name) {
         return mapToTopicDtoList(topicRepository.findByTitleContainingIgnoreCase(name));
     }
 

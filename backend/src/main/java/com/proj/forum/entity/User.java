@@ -36,30 +36,8 @@ public class User {
 
     private String profileImage;
 
-//    @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
-//    private List<Topic> createdTopics;
-
-    @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
-    private List<Post> createdPosts;
-
     @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
     private List<Group> createdGroups;
-
-//    @ManyToMany
-//    @JoinTable(
-//            name = "user_liked_topics",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "topic_id")
-//    )
-//    private List<Topic> likedTopics;
-//
-//    @ManyToMany
-//    @JoinTable(
-//            name = "user_saved_topics",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "topic_id")
-//    )
-//    private List<Topic> savedTopics;
 
     @ManyToMany
     @JoinTable(
@@ -72,6 +50,10 @@ public class User {
     @ManyToMany(mappedBy = "subscribers")
 
     private List<User> following;
+
+//    @ManyToMany
+//    @JoinColumn(name = "group_id", nullable = false)
+//    private List<Group> groups;
 }
 
 

@@ -1,6 +1,5 @@
 package com.proj.forum.entity;
 
-//import com.proj.forum.enums.MessageType;
 import com.proj.forum.enums.MessageStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;

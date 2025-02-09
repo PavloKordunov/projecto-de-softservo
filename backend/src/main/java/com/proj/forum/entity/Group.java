@@ -1,6 +1,7 @@
 package com.proj.forum.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,6 +35,10 @@ public class Group {
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> pinnedPosts;
 
-    @ManyToOne
-    private User author;
+    @NotNull
+    private UUID author;
+
+//    @ManyToMany
+//    @JoinColumn(name = "member_id", nullable = false)
+//    private List<User> members;
 }

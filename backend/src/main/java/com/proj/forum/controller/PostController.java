@@ -1,5 +1,6 @@
 package com.proj.forum.controller;
 
+import com.proj.forum.annotation.Logging;
 import com.proj.forum.dto.*;
 import com.proj.forum.service.PostService;
 import jakarta.validation.Valid;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@Slf4j
+@Logging
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/posts")
@@ -22,9 +23,7 @@ public class PostController {
 
     @GetMapping
     public ApiResponse<List<PostResponseDto>> getAllPosts() {
-        log.info("Fetching all posts");
         List<PostResponseDto> postsDto = postService.getAllPosts();
-
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Posts found", postsDto);
     }
 
@@ -48,7 +47,6 @@ public class PostController {
 
     @PatchMapping("/update/{postId}")
     public ApiResponse<GenericResponse> updatePost(
- //           @PathVariable UUID groupId,
             @PathVariable UUID postId,
             @RequestBody PostRequestDto postDto) {
         postService.updatePost(postId, postDto);
@@ -56,19 +54,17 @@ public class PostController {
     }
 
     @PatchMapping("/pin/{postId}")
-    public ApiResponse<GenericResponse> pinPost(@PathVariable UUID postId){
+    public ApiResponse<GenericResponse> pinPost(@PathVariable UUID postId) {
         boolean pin = postService.pinPost(postId);
-        if(pin){
+        if (pin) {
             return ApiResponse.apiResponse(true, 200, "Post pinned", postId);
-        }
-        else{
+        } else {
             return ApiResponse.apiResponse(true, 200, "Post unpinned", postId);
         }
     }
 
     @DeleteMapping("/delete/{postId}")
-    public ApiResponse<GenericResponse> deletePost(
-            @PathVariable UUID postId) {
+    public ApiResponse<GenericResponse> deletePost(@PathVariable UUID postId) {
         postService.deletePost(postId);
         return ApiResponse.apiResponse(true, 200, "Post deleted", postId);
     }
