@@ -3,6 +3,7 @@ package com.proj.forum.service.impl;
 import com.proj.forum.dto.GroupDto;
 import com.proj.forum.dto.UserRequestDto;
 import com.proj.forum.dto.UserResponseDto;
+import com.proj.forum.dto.UserUpdateDto;
 import com.proj.forum.entity.Group;
 import com.proj.forum.entity.User;
 import com.proj.forum.exception.UserAlreadySubscribeException;
@@ -90,7 +91,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void updateUser(UUID id, UserRequestDto userDto) {
+    public void updateUser(UUID id, UserUpdateDto userDto) {
         User updatedUser;
         updatedUser = userRepository.findById(id)
                 .map(user -> getUpdateUser(user, userDto))
@@ -98,13 +99,13 @@ public class UserServiceImpl implements UserService {
         userRepository.save(updatedUser);
     }
 
-    private User getUpdateUser(User user, UserRequestDto userDto) {
-        if (userDto.firstName() != null)
-            user.setName(userDto.firstName());
-        if (userDto.nickName() != null)
-            user.setUsername(userDto.nickName());
-        if (userDto.email() != null)
-            user.setEmail(userDto.email());
+    private User getUpdateUser(User user, UserUpdateDto userDto) {
+        if (userDto.username() != null)
+            user.setUsername(userDto.username());
+        if (userDto.name() != null)
+            user.setName(userDto.name());
+        if (userDto.profileImg() != null)
+            user.setProfileImage(userDto.profileImg());
         return user;
     }
 

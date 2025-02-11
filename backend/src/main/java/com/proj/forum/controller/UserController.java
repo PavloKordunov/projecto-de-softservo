@@ -52,7 +52,7 @@ public class UserController {
     @PatchMapping("/update/{id}")
     public ApiResponse<GenericResponse> updateUser(
             @PathVariable @Valid UUID id,
-            @RequestBody UserRequestDto userDto) {
+            @RequestBody UserUpdateDto userDto) {
             userService.updateUser(id, userDto);
             return ApiResponse.apiResponse(true, 200, "User successfully updated", id);
     }
