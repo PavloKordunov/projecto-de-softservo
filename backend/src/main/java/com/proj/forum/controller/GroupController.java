@@ -6,13 +6,12 @@ import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.GenericResponse;
 import com.proj.forum.dto.GroupDto;
 import com.proj.forum.service.GroupService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,19 +43,36 @@ public class GroupController {
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Successful getting", groupDto);
     }
 
+    @RequireRoles({"Everyone"})
     @PatchMapping("/update/{id}")
     public ApiResponse<GenericResponse> updateGroup(
             @PathVariable @Valid UUID id,
-            @RequestBody @Valid GroupDto groupDto) {
+            @RequestBody @Valid GroupDto groupDto) throws AccessDeniedException {
         groupService.updateGroup(id, groupDto);
         return ApiResponse.apiResponse(true, 200, "Group successfully updated", id);
 
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ApiResponse<GenericResponse> deleteGroup(@PathVariable @Valid UUID id) {
-        groupService.deleteGroup(id);
-        return ApiResponse.apiResponse(true, 200, "Group successfully deleted", id);
+    @PatchMapping("/{groupName}/add/{userId}/")
+    public ApiResponse<?> addMember(@PathVariable @Valid String groupName, @PathVariable @Valid UUID userId) {
+        UUID groupId = groupService.addMember(userId, groupName);
+        return ApiResponse.apiResponse(true, 200, "User successfully subscribed", groupId);
+    }
+
+    @PatchMapping("/{groupName}/remove/{userId}/")
+    public ApiResponse<?> removeMember(@PathVariable @Valid UUID userId, @PathVariable @Valid String groupName) {
+        UUID groupId = groupService.removeMember(userId, groupName);
+        return ApiResponse.apiResponse(true, 200, "User successfully unsubscribed", groupId);
+    }
+
+    @RequireRoles({"Everyone"})
+    @DeleteMapping("/delete/{groupId}/user/{userId}")
+    public ApiResponse<GenericResponse> deleteGroup(
+            @PathVariable @Valid UUID groupId,
+            @PathVariable @Valid UUID userId
+            ) throws AccessDeniedException {
+        groupService.deleteGroup(groupId, userId);
+        return ApiResponse.apiResponse(true, 200, "Group successfully deleted", groupId);
 
     }
 }

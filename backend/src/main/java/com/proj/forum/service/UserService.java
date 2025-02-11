@@ -1,4 +1,5 @@
 package com.proj.forum.service;
+import com.proj.forum.dto.GroupDto;
 import com.proj.forum.dto.UserRequestDto;
 import com.proj.forum.dto.UserResponseDto;
 import com.proj.forum.entity.User;
@@ -15,5 +16,4 @@ public interface UserService {
     void updateUser(UUID id, UserRequestDto userDto);
     List<UserRequestDto> mapToUserDtoList(List<User> users);
     List<UserRequestDto> getByUsernameContain(String name);
-
 }

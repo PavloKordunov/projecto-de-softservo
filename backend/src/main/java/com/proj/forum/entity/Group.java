@@ -38,7 +38,10 @@ public class Group {
     @NotNull
     private UUID author;
 
-//    @ManyToMany
-//    @JoinColumn(name = "member_id", nullable = false)
-//    private List<User> members;
+    @ManyToMany
+    @JoinTable(
+            name = "group_members",
+            joinColumns = @JoinColumn(name = "group_id")
+    )
+    private List<User> members;
 }

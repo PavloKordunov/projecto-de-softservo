@@ -48,12 +48,10 @@ public class User {
     private List<User> subscribers;
 
     @ManyToMany(mappedBy = "subscribers")
-
     private List<User> following;
 
-//    @ManyToMany
-//    @JoinColumn(name = "group_id", nullable = false)
-//    private List<Group> groups;
+    @ManyToMany(mappedBy = "members")
+    private List<Group> groups;
 }
 
 

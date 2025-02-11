@@ -35,6 +35,9 @@ public class PostServiceImpl implements PostService {
     public UUID createPost(PostRequestDto postDto) {
         Group group = groupRepository.findById(postDto.group_id()).orElseThrow(() -> new EntityNotFoundException("Group don't find"));
         User user = userRepository.findById(postDto.user_id()).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        if(!user.getGroups().contains(group)){
+            throw new EntityNotFoundException("Group not found");
+        }
         Post post = mapToPost(postDto, user, group);
         Post postFromDB = postRepository.save(post);
         return postFromDB.getId();

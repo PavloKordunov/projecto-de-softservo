@@ -2,6 +2,7 @@ package com.proj.forum.handler;
 
 import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.exception.TokenTypeException;
+import com.proj.forum.exception.UserAlreadySubscribeException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,7 +36,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
 //    }
 
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class})
+    @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class, UserAlreadySubscribeException.class})
     public ApiResponse<?> handleMethodNotValid(RuntimeException ex){
         return new ApiResponse<>(false, HttpStatus.BAD_REQUEST, ex.getCause().toString(), null);
     }

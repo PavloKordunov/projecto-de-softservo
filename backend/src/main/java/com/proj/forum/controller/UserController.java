@@ -1,15 +1,15 @@
 package com.proj.forum.controller;
 
 import com.proj.forum.annotation.Logging;
-import com.proj.forum.dto.ApiResponse;
-import com.proj.forum.dto.GenericResponse;
-import com.proj.forum.dto.UserRequestDto;
-import com.proj.forum.dto.UserResponseDto;
+import com.proj.forum.dto.*;
+import com.proj.forum.entity.Group;
 import com.proj.forum.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.ServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
 

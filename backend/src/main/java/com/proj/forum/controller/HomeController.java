@@ -23,7 +23,7 @@ public class HomeController {
 
     private final TopicService topicService;
     private final TagService tagService;
-    private final GroupService groupService;
+    private final GroupService groupService; 
     private final PostService postService;
 
 

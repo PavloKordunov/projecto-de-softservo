@@ -1,9 +1,14 @@
 package com.proj.forum.service.impl;
 
+import com.proj.forum.dto.GroupDto;
 import com.proj.forum.dto.UserRequestDto;
 import com.proj.forum.dto.UserResponseDto;
+import com.proj.forum.entity.Group;
 import com.proj.forum.entity.User;
+import com.proj.forum.exception.UserAlreadySubscribeException;
+import com.proj.forum.repository.GroupRepository;
 import com.proj.forum.repository.UserRepository;
+import com.proj.forum.service.GroupService;
 import com.proj.forum.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +28,8 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
+    private final GroupService groupService;
 
     @Override
     public UUID createUser(UserRequestDto userDto) {

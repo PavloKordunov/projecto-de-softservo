@@ -1,5 +1,6 @@
 package com.proj.forum.repository;
 
+import com.proj.forum.entity.Group;
 import com.proj.forum.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -10,5 +11,4 @@ public interface UserRepository extends JpaRepository<User, UUID> { //where use 
     List<User> findAll();
     User findByUsername(String username);
     List<User> findByUsernameContainingIgnoreCase(String name);
-
 }

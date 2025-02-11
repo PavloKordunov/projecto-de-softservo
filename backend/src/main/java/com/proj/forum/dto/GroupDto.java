@@ -15,6 +15,7 @@ public record GroupDto(
         @NotNull
         @Length(max = 500)
         String description,
-        String image
+        String image,
+        @NotNull UUID userId
 ) {
 }
