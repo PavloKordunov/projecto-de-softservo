@@ -11,7 +11,7 @@ public record TopicDto(
         UUID id,
         UUID tag_id,
         @NotBlank(message = "Title cannot be blank") String title,
-        User author,
+        UUID author,
         Integer limitAge,
         String description,
         String country,
@@ -20,6 +20,7 @@ public record TopicDto(
         String IMDB,
         String actor,
         String director,
-        String image
+        String image,
+        int viewCount
 ) {
 }

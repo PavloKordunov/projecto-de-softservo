@@ -6,7 +6,6 @@ import com.proj.forum.repository.TopicRepository;
 import com.proj.forum.service.TopicService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,19 +37,7 @@ public class TopicServiceImpl implements TopicService {
             throw new EntityNotFoundException("No topic");
         }
 
-        return TopicDto.builder()
-                .id(id)
-                .title(topic.get().getTitle())
-                .description(topic.get().getDescription() == null ? StringUtils.EMPTY : topic.get().getDescription())
-                .country(topic.get().getCountry())
-                .limitAge(topic.get().getLimitAge())
-                .actor(topic.get().getActor())
-                .image(topic.get().getImage())
-                .IMDB(topic.get().getIMDB())
-                .director(topic.get().getDirector())
-                .genre(topic.get().getGenre())
-                .duration(topic.get().getDuration())
-                .build();
+        return getUpdateTopic(topic.get());
     }
 
     @Override
@@ -133,12 +120,18 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public List<TopicDto> mapToTopicDtoList(List<Topic> topics) {
         return topics.stream()
-                .map(topic -> TopicDto.builder()
-                        .id(topic.getId())
-                        .title(topic.getTitle())
-                        .description(topic.getDescription() == null ? StringUtils.EMPTY : topic.getDescription())
-                        .build())
+                .map(TopicServiceImpl::getUpdateTopic)
                 .toList();
+    }
+
+    @Override
+    public void addView(UUID id) {
+        Optional<Topic> topic;
+        topic = topicRepository.findById(id);
+        if (topic.isEmpty()) {
+            throw new EntityNotFoundException("No topic");
+        }
+        topic.get().setViewCount((topic.get().getViewCount()) + 1);
     }
 
     public List<TopicDto> getByTitleContain(String name) {

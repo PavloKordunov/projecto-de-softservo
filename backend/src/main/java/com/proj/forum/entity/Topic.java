@@ -3,7 +3,6 @@ package com.proj.forum.entity;
 
 import com.proj.forum.enums.TopicType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,8 +23,6 @@ public class Topic {
 
     private UUID tag_id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "author_id") // Specifies the foreign key column
     private UUID author_id;
 
     @Column(nullable = false)
@@ -34,8 +31,11 @@ public class Topic {
     @Column(length = 500)
     private String description;
 
-    @NotBlank
+    //@NotBlank
     private TopicType type;
+
+    //@NotNull
+    private int viewCount;
 
     @Column
     private Integer limitAge;

@@ -25,11 +25,12 @@ public class Statistic {
     private UUID id;
 
     @NotNull
-    private UUID userId;    
+    private UUID userId;
+
     @NotNull
     private UUID objectId;
 
-    private int rate;
+    private Short rate;
 
     private Boolean liked;
 

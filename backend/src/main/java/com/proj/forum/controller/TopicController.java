@@ -6,12 +6,9 @@ import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.GenericResponse;
 import com.proj.forum.dto.TopicDto;
 import com.proj.forum.service.TopicService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,7 +23,7 @@ public class TopicController {
 
     private final TopicService topicService;
 
-    @RequireRoles({"Admin"})
+    //@RequireRoles({"Admin"})
     @PostMapping("/create")
     public ApiResponse<GenericResponse> createTopic(@RequestBody @Valid TopicDto topic) {
             UUID id = topicService.createTopic(topic);
@@ -55,6 +52,11 @@ public class TopicController {
 
             topicService.updateTopic(id, topicDto);
             return ApiResponse.apiResponse(true, 200, "Topic successfully updated", id);
+    }
+
+    @PatchMapping("/view/{id}")
+    public void addView(@PathVariable @Valid UUID id){
+        topicService.addView(id);
     }
 
     @RequireRoles({"Admin"})
