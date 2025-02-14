@@ -23,7 +23,7 @@ public class TopicController {
 
     private final TopicService topicService;
 
-    //@RequireRoles({"Admin"})
+    @RequireRoles({"Admin"})
     @PostMapping("/create")
     public ApiResponse<GenericResponse> createTopic(@RequestBody @Valid TopicDto topic) {
             UUID id = topicService.createTopic(topic);

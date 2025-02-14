@@ -9,7 +9,7 @@ import java.util.UUID;
 @Builder
 public record CommentDto(
         UUID id,
-        @NotNull String content,
+        @NotBlank String content,
         @NotNull UUID object,
         @NotNull String userImage,
         @NotBlank String nickName,

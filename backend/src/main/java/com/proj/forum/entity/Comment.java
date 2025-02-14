@@ -28,10 +28,9 @@ public class Comment {
     @NotBlank
     private String content;
 
-    @NotNull
     private LocalDateTime createdAt;
 
-    @NotBlank
+    @NotNull
     private UUID object; //topic or post
 
     @NotNull
