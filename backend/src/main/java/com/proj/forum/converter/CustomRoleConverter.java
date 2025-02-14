@@ -12,7 +12,7 @@ public class CustomRoleConverter implements Converter<Jwt, Collection<GrantedAut
     @Override
     public Collection<GrantedAuthority> convert(Jwt jwt) {
         List<String> roles = jwt.getClaimAsStringList("groups");
-
+        //
         return roles == null ? List.of() :
                 roles.stream()
                         .map(role -> (GrantedAuthority) () -> role)
