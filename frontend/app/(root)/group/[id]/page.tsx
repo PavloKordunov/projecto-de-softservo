@@ -71,8 +71,8 @@ const Group = () => {
                     </div>
                 </div>
             </div>
-            <Post/>
-            <Post/>
+            <Post className=""/>
+            <Post className=""/>
         </div>
      );
 }

@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const Post = () => {
+const Post = ({className} : {className: string}) => {
     return ( 
-        <Link href='/post/:id' className="p-6 bg-MainColor rounded-[21px] flex flex-row gap-3 mb-6 items-center w-[1030px]">
+        <Link href='/post/:id' className={`p-6 bg-MainColor rounded-[21px] flex flex-row gap-3 mb-6 items-center w-[1030px] ${className}`}>
             <Image src="/postImage.png" alt="" width="208" height="237" />
             <div>
                 <div className="flex">

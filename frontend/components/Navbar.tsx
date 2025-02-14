@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 const NavBar = () => {
@@ -18,21 +19,21 @@ const NavBar = () => {
                 <p className="text-AccnetColor font-bold text-[30px]">Logo</p>
             </div>
             <div className=" flex gap-6 items-center relative">
-                <div className="  hidden xl:bg-SecondaryColor xl:w-14 xl:h-14 xl:rounded-[9px] xl:flex items-center justify-center">
+                <Link href='/home' className="  hidden xl:bg-SecondaryColor xl:w-14 xl:h-14 xl:rounded-[9px] xl:flex items-center justify-center">
                     <svg className="w-6 h-6" >
                         <use href={`/sprite.svg#iconHome`} />
                     </svg>
-                </div>
+                </Link>
                 <div className="hidden xl:bg-SecondaryColor xl:w-14 xl:h-14 xl:rounded-[9px] xl:flex items-center justify-center">
                     <svg className="w-6 h-6" >
                         <use href={`/sprite.svg#CalendarIcon`} />
                     </svg>
                 </div>
-                <div className="hidden xl:bg-SecondaryColor xl:w-14 xl:h-14 xl:rounded-[9px] xl:flex items-center justify-center">
+                <Link href="/group" className="hidden xl:bg-SecondaryColor xl:w-14 xl:h-14 xl:rounded-[9px] xl:flex items-center justify-center">
                     <svg className="w-6 h-6" >
                         <use href={`/sprite.svg#iconCommunity`} />
                     </svg>
-                </div>
+                </Link>
                 <input type="text" className=" md:w-[300px] lg:w-[480px] 2xl:w-[580px] h-14 px-4 py-2 text-white bg-SecondaryColor border-none rounded-[10px] focus:outline-none" placeholder="Введіть для пошуку..."/>
                 <svg className="w-6 h-6 absolute top-1/2 right-0 transform -translate-x-1/2 -translate-y-1/2" >
                     <use href={`/sprite.svg#iconSearch`} />
@@ -61,13 +62,13 @@ const NavBar = () => {
             </div>
             {show && (
                 <div className="absolute w-[248px] bg-MainColor p-3 top-[100px] right-[37px] flex flex-col justify-center gap-4 rounded-[11px]">
-                    <div className="flex items-center gap-4">
+                    <Link href="user/:id" className="flex items-center gap-4">
                         <Image src="/person.png" alt="" width={53} height={53} />
                         <div>
                             <p className="text-white text-[16px] font-semibold">View Profile</p>
                             <p className="text-[#97989D] text-[12px]">@Nickname</p>
                         </div>
-                    </div>
+                    </Link>
                     <div className="ml-2 flex items-center gap-4">
                         <svg className="w-8 h-8" fill="#fff" >
                             <use href={`/sprite.svg#NavThemeIcon`} />
