@@ -3,7 +3,7 @@ package com.proj.forum.entity;
 
 import com.proj.forum.enums.TopicType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,33 +24,42 @@ public class Topic {
 
     private UUID tag_id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "author_id") // Specifies the foreign key column
+    @Column(nullable = false)
     private UUID author_id;
 
     @Column(nullable = false)
     private String title;
 
-    @Column(length = 500)
+    @Column(length = 500, nullable = false)
     private String description;
 
-    @NotBlank
+    @NotNull
     private TopicType type;
 
-    @Column
+    //@NotNull
+    private int viewCount;
+
+    @Column(nullable = false)
     private Integer limitAge;
 
+    @Column(nullable = false)
     private String country;
 
+    @Column(nullable = false)
     private String duration;
 
+    @Column(nullable = false)
     private String genre;
 
+    @Column(nullable = false)
     private String IMDB;
 
+    @Column(nullable = false)
     private String actor;
 
+    @Column(nullable = false)
     private String director;
 
+    @Column(nullable = false)
     private String image;
 }

@@ -6,8 +6,6 @@ import com.proj.forum.repository.TopicRepository;
 import com.proj.forum.service.TopicService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,20 +35,7 @@ public class TopicServiceImpl implements TopicService {
         if (topic.isEmpty()) {
             throw new EntityNotFoundException("No topic");
         }
-
-        return TopicDto.builder()
-                .id(id)
-                .title(topic.get().getTitle())
-                .description(topic.get().getDescription() == null ? StringUtils.EMPTY : topic.get().getDescription())
-                .country(topic.get().getCountry())
-                .limitAge(topic.get().getLimitAge())
-                .actor(topic.get().getActor())
-                .image(topic.get().getImage())
-                .IMDB(topic.get().getIMDB())
-                .director(topic.get().getDirector())
-                .genre(topic.get().getGenre())
-                .duration(topic.get().getDuration())
-                .build();
+        return getUpdateTopic(topic.get());
     }
 
     @Override
@@ -82,7 +67,7 @@ public class TopicServiceImpl implements TopicService {
     }
 
     private Topic getUpdateTopic(Topic topic, TopicDto topicDto) {
-//        if (topicDto.title() != null)         //TODO fix it asap (later)
+        //        if (topicDto.title() != null)         //TODO fix it asap (later)
 //            topic.setTitle(topicDto.title());
 //        if (topicDto.description() != null)
 //            topic.setDescription(topicDto.description());
@@ -91,7 +76,6 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public void deleteTopic(UUID id) {
-
         if (topicRepository.existsById(id)) {
             topicRepository.deleteById(id);
         } else {
@@ -102,15 +86,19 @@ public class TopicServiceImpl implements TopicService {
     private static Topic mapToTopic(TopicDto topicDto) {
         return Topic.builder()
                 .title(topicDto.title())
-                .description(topicDto.description() == null ? StringUtils.EMPTY : topicDto.description())
+                .description(topicDto.description())
                 .country(topicDto.country())
                 .limitAge(topicDto.limitAge())
                 .actor(topicDto.actor())
+                .director(topicDto.director())
                 .image(topicDto.image())
                 .IMDB(topicDto.IMDB())
-                .director(topicDto.director())
                 .genre(topicDto.genre())
                 .duration(topicDto.duration())
+                .viewCount(0)
+                .author_id(topicDto.author())
+                .type(topicDto.topicType())
+                .tag_id(topicDto.tag_id())
                 .build();
     }
 
@@ -118,27 +106,38 @@ public class TopicServiceImpl implements TopicService {
         return TopicDto.builder()
                 .id(topic.getId())
                 .title(topic.getTitle())
-                .description(topic.getDescription() == null ? StringUtils.EMPTY : topic.getDescription())
+                .description(topic.getDescription())
                 .country(topic.getCountry())
                 .limitAge(topic.getLimitAge())
                 .actor(topic.getActor())
+                .director(topic.getDirector())
                 .image(topic.getImage())
                 .IMDB(topic.getIMDB())
-                .director(topic.getDirector())
                 .genre(topic.getGenre())
                 .duration(topic.getDuration())
+                .viewCount(topic.getViewCount())
+                .author(topic.getAuthor_id())
+                .topicType(topic.getType())
+                .tag_id(topic.getTag_id())
                 .build();
     }
 
     @Override
     public List<TopicDto> mapToTopicDtoList(List<Topic> topics) {
         return topics.stream()
-                .map(topic -> TopicDto.builder()
-                        .id(topic.getId())
-                        .title(topic.getTitle())
-                        .description(topic.getDescription() == null ? StringUtils.EMPTY : topic.getDescription())
-                        .build())
+                .map(TopicServiceImpl::getUpdateTopic)
                 .toList();
+    }
+
+
+    @Override
+    public void addView(UUID id) {
+        Optional<Topic> topic;
+        topic = topicRepository.findById(id);
+        if (topic.isEmpty()) {
+            throw new EntityNotFoundException("No topic");
+        }
+        topic.get().setViewCount((topic.get().getViewCount()) + 1);
     }
 
     public List<TopicDto> getByTitleContain(String name) {

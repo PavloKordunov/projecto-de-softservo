@@ -14,4 +14,5 @@ public interface TopicService {
     void deleteTopic(UUID id);
     void updateTopic(UUID id, TopicDto topicDto);
     List<TopicDto> mapToTopicDtoList(List<Topic> topics);
+    void addView(UUID id);
 }
