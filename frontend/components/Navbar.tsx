@@ -86,12 +86,12 @@ const NavBar = () => {
                         </svg>
                         <p className="text-white text-[14px] font-semibold">Settings</p>
                     </div>
-                    <div className="ml-2 flex items-center gap-4">
+                    <Link href='/admin-page' className="ml-2 flex items-center gap-4">
                         <svg className="w-8 h-8" fill="#fff" >
                             <use href={`/sprite.svg#iconCrown`} />
                         </svg>
                         <p className="text-white text-[14px] font-semibold">Admin Page</p>
-                    </div>
+                    </Link>
                     <div className="ml-2 flex items-center gap-4">
                         <svg className="w-8 h-8" fill="#fff" >
                             <use href={`/sprite.svg#NavExitIcon`} />
