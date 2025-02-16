@@ -54,13 +54,13 @@ public class UserServiceImpl implements UserService {
 
     private UserResponseDto getUserResponseDto(User user) {
         return UserResponseDto.builder()
-                .id(user.get().getId())
-                .name(user.get().getName())
-                .username(user.get().getUsername())
-                .following(user.get().getFollowing().size())
-                .subscribers(user.get().getSubscribers().size())
-                .followingGroups(user.get().getCreatedGroups().size())
-                .profileImage(user.get().getEmail() == null ? StringUtils.EMPTY : user.get().getEmail())
+                .id(user.getId())
+                .name(user.getName())
+                .username(user.getUsername())
+                .following(user.getFollowing().size())
+                .subscribers(user.getSubscribers().size())
+                .followingGroups(user.getCreatedGroups().size())
+                .profileImage(user.getEmail() == null ? StringUtils.EMPTY : user.getEmail())
                 .build();
     }
 

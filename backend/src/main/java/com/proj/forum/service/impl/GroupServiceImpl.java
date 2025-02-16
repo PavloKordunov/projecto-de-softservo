@@ -71,7 +71,7 @@ public class GroupServiceImpl implements GroupService {
                 .map(group -> getUpdateGroup(group, groupDto))
                 .orElseThrow(() -> new EntityNotFoundException("Group is not found"));
         if (updatedGroup.getAuthor() != id)
-            throw new AccessDeniedException("Not permission");
+            throw new AccessDeniedException("No permission");
         groupRepository.save(updatedGroup);
     }
 
