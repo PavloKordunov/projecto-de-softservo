@@ -1,6 +1,8 @@
 package com.proj.forum.service.impl;
 
 import com.proj.forum.annotation.Logging;
+import com.proj.forum.dto.MessageDto;
+import com.proj.forum.dto.MessageRequestDto;
 import com.proj.forum.entity.ChatMessage;
 import com.proj.forum.enums.MessageStatus;
 import com.proj.forum.exception.TokenTypeException;
@@ -13,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 

@@ -30,16 +30,14 @@ public class TopicController {
             return ApiResponse.apiResponse(true, 201, "Create topic", id);
     }
 
-
     @GetMapping
     public ApiResponse<List<TopicDto>> getAllTopics() {
         List<TopicDto> topicsDto = topicService.getAllTopics();
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Topics found", topicsDto);
     }
 
-    @RequireRoles({"Everyone"})
     @GetMapping("/{id}")
-    public ApiResponse<TopicDto> getTopicById(@PathVariable @Valid UUID id) {
+    public ApiResponse<TopicDto> getTopicById(@PathVariable UUID id) {
         TopicDto topicDto = topicService.getTopic(id);
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Successful getting", topicDto);
     }

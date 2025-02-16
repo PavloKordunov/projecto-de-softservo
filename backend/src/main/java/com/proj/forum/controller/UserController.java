@@ -1,6 +1,7 @@
 package com.proj.forum.controller;
 
 import com.proj.forum.annotation.Logging;
+import com.proj.forum.annotation.RequireRoles;
 import com.proj.forum.dto.*;
 import com.proj.forum.entity.Group;
 import com.proj.forum.service.UserService;
@@ -49,6 +50,7 @@ public class UserController {
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Successful getting", userDto);
     }
 
+    @RequireRoles({"Everyone"})
     @PatchMapping("/update/{id}")
     public ApiResponse<GenericResponse> updateUser(
             @PathVariable @Valid UUID id,
@@ -57,8 +59,9 @@ public class UserController {
             return ApiResponse.apiResponse(true, 200, "User successfully updated", id);
     }
 
+    @RequireRoles({"Everyone"})
     @DeleteMapping("/delete/{id}")
-    public ApiResponse<GenericResponse> deleteUser(@PathVariable @Valid UUID id) {
+    public ApiResponse<GenericResponse> deleteUser(@PathVariable @Valid UUID id) {  //TODO only user can delete/change himself
             userService.deleteUser(id);
             return ApiResponse.apiResponse(true, 200, "User successfully deleted", id);
     }

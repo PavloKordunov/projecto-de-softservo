@@ -45,7 +45,7 @@ public class AuthorizationAspect {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-            throw new AuthenticationException("User isn't authentication");
+            throw new AuthenticationException("User isn't authenticated");
         }
         if (!(authentication instanceof JwtAuthenticationToken jwtAuthToken)) {
             throw new TokenTypeException("Type of token isn't jwt");

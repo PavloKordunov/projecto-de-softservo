@@ -22,23 +22,14 @@ public class ChatMessage {
     @GeneratedValue
     private UUID id;
 
-    @NotEmpty
-    private UUID senderId;
-    @NotEmpty
-    private UUID recipientId;
-    @NotEmpty
     private String content;
-    @NotEmpty
-    private LocalDateTime timestamp;
-    @NotEmpty
-    private Boolean readStatus;
 
-    private String senderUsername;
-
-    private String recipientUsername;
+    @ManyToOne
+    private User sender;
 
     @ManyToOne
     private ChatRoom chatRoom;
 
-    private MessageStatus messageStatus;
+    private LocalDateTime timestamp;
+
 }

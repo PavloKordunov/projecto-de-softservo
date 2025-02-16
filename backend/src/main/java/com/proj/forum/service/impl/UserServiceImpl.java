@@ -5,6 +5,7 @@ import com.proj.forum.dto.UserRequestDto;
 import com.proj.forum.dto.UserResponseDto;
 import com.proj.forum.dto.UserUpdateDto;
 import com.proj.forum.entity.Group;
+import com.proj.forum.entity.Post;
 import com.proj.forum.entity.User;
 import com.proj.forum.exception.UserAlreadySubscribeException;
 import com.proj.forum.repository.GroupRepository;
@@ -18,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,8 +31,7 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final GroupRepository groupRepository;
-    private final GroupService groupService;
+
 
     @Override
     public UUID createUser(UserRequestDto userDto) {
@@ -48,10 +49,10 @@ public class UserServiceImpl implements UserService {
             throw new EntityNotFoundException("No user found");
         }
 
-        return getUserResponseDto(user);
+        return getUserResponseDto(user.get());
     }
 
-    private UserResponseDto getUserResponseDto(Optional<User> user) {
+    private UserResponseDto getUserResponseDto(User user) {
         return UserResponseDto.builder()
                 .id(user.get().getId())
                 .name(user.get().getName())
@@ -67,12 +68,12 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto getUserByUsername(String username) {
         Optional<User> user;
 
-        user = Optional.ofNullable(userRepository.findByUsername(username));
+        user = userRepository.findByUsername(username);
         if (user.isEmpty()) {
             throw new EntityNotFoundException("No user found");
         }
 
-        return getUserResponseDto(user);
+        return getUserResponseDto(user.get());
     }
 
     @Override

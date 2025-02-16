@@ -1,6 +1,7 @@
 package com.proj.forum.config;
 
 import com.okta.spring.boot.oauth.Okta;
+import com.proj.forum.annotation.Logging;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +20,7 @@ import org.springframework.web.accept.HeaderContentNegotiationStrategy;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@Logging
 public class SecurityConfig {
 
     @Bean
@@ -28,7 +30,8 @@ public class SecurityConfig {
                 //csrf(csrf -> csrf.ignoringRequestMatchers("/api/**")) <- this line is more up-to-date
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/**")
-                        .permitAll())
+                        .permitAll()
+                        .requestMatchers("/ws/**").permitAll())
                 .oauth2ResourceServer(oauth2 ->
                         oauth2.jwt(Customizer.withDefaults())
 //                                .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtCustomAuthenticationConverter()))

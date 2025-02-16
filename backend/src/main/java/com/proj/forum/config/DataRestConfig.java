@@ -1,5 +1,6 @@
 package com.proj.forum.config;
 
+import com.proj.forum.annotation.Logging;
 import com.proj.forum.entity.Group;
 import com.proj.forum.entity.Statistic;
 import com.proj.forum.entity.Topic;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 @Configuration
+@Logging
 public class DataRestConfig implements RepositoryRestConfigurer {
 
     @Override

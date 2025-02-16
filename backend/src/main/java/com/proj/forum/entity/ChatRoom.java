@@ -1,13 +1,12 @@
 package com.proj.forum.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -22,13 +21,15 @@ public class ChatRoom {
     private UUID id;
 
     @Column(nullable = false)
-    private UUID user1; //main user
+    private String name;
 
-    @Column(nullable = false)
-    private UUID user2;
+    @ManyToMany
+    @JoinTable(
+            name = "chat_room_users",
+            joinColumns = @JoinColumn(name = "chat_room_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    @Singular
+    private Set<User> users = new HashSet<>();
 
-    private LocalDateTime createdAt;
-
-    @OneToMany
-    private List<ChatMessage> chatMessages;
 }

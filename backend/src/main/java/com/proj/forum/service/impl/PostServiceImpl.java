@@ -133,6 +133,7 @@ public class PostServiceImpl implements PostService {
                 .group(group)
                 .isPinned(false)
                 .createdDate(LocalDateTime.now())
+                .viewCount(0)
                 .build();
     }
 

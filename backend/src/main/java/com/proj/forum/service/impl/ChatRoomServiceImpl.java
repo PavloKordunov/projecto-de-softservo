@@ -3,6 +3,7 @@ package com.proj.forum.service.impl;
 import com.proj.forum.entity.ChatRoom;
 import com.proj.forum.repository.ChatRoomRepository;
 import com.proj.forum.service.ChatRoomService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

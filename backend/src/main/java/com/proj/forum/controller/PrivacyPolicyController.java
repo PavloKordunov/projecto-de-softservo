@@ -1,6 +1,7 @@
 package com.proj.forum.controller;
 
 import com.proj.forum.annotation.Logging;
+import com.proj.forum.annotation.RequireRoles;
 import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.GenericResponse;
 import com.proj.forum.dto.PrivacyPolicyDto;
@@ -22,6 +23,7 @@ public class PrivacyPolicyController {
 
     private final PrivacyPolicyService privacyPolicyService;
 
+    @RequireRoles({"Admin"})
     @PostMapping("/create")
     public ApiResponse<GenericResponse> createPolicy(@RequestBody @Valid PrivacyPolicyDto policyDto) {
         UUID id = privacyPolicyService.createPrivacyPolicy(policyDto);

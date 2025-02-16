@@ -2,6 +2,7 @@ package com.proj.forum.service.impl;
 
 import com.proj.forum.dto.GroupDto;
 import com.proj.forum.entity.Group;
+import com.proj.forum.entity.Topic;
 import com.proj.forum.entity.User;
 import com.proj.forum.exception.UserAlreadySubscribeException;
 import com.proj.forum.repository.GroupRepository;
