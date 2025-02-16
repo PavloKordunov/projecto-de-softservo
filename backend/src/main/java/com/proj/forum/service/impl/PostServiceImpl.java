@@ -65,17 +65,7 @@ public class PostServiceImpl implements PostService {
             throw new EntityNotFoundException("No post");
         }
 
-        return PostResponseDto.builder()
-                .id(id)
-                .title(post.get().getTitle())
-                .description(post.get().getDescription() == null ? StringUtils.EMPTY : post.get().getDescription())
-                .image(post.get().getImage())
-                .name(post.get().getAuthor().getName())
-                .nickname(post.get().getAuthor().getUsername())
-                .user_image(post.get().getAuthor().getProfileImage())
-                .isPinned(post.get().isPinned())
-                .group_title(post.get().getGroup().getTitle())
-                .build();
+        return getUpdatePost(post.get());
     }
 
     @Override
@@ -155,21 +145,14 @@ public class PostServiceImpl implements PostService {
                 .nickname(post.getAuthor().getUsername())
                 .name(post.getAuthor().getName())
                 .isPinned(post.isPinned())
+                .group_title(post.getGroup().getTitle())
                 .build();
     }
 
     @Override
     public List<PostResponseDto> mapToPostDtoList(List<Post> posts) {
         return posts.stream()
-                .map(post -> PostResponseDto.builder()
-                        .id(post.getId())
-                        .title(post.getTitle())
-                        .description(post.getDescription() == null ? StringUtils.EMPTY : post.getDescription())
-                        .image(post.getImage() == null ? StringUtils.EMPTY : post.getImage())
-                        .user_image(post.getAuthor().getProfileImage())
-                        .nickname(post.getAuthor().getUsername())
-                        .name(post.getAuthor().getName())
-                        .build())
+                .map(PostServiceImpl::getUpdatePost)
                 .toList();
 
     }
@@ -183,10 +166,6 @@ public class PostServiceImpl implements PostService {
                 .orElse(false)) {
             throw new AccessDeniedException("User is not the author of this post.");
         }
-
-        postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("Post doesn't exist"));
-
     }
 
     public List<PostResponseDto> getByTitleContain(String name) {
