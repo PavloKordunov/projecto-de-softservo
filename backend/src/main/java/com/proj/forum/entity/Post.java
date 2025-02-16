@@ -25,6 +25,8 @@ public class Post {
 
     private String description;
 
+    private Integer viewCount;
+
     @ManyToOne
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;

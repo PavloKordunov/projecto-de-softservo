@@ -20,4 +20,5 @@ public interface PostService {
 
     List<PostResponseDto> mapToPostDtoList(List<Post> posts);
     void isAuthor(UUID postId, UUID userId) throws AccessDeniedException;
+    void addView(UUID id);
 }

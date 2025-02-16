@@ -68,6 +68,8 @@ public class PostServiceImpl implements PostService {
         return getUpdatePost(post.get());
     }
 
+
+
     @Override
     public List<PostResponseDto> getPostsByGroup(UUID groupId) {
         List<Post> postList;
@@ -146,6 +148,8 @@ public class PostServiceImpl implements PostService {
                 .name(post.getAuthor().getName())
                 .isPinned(post.isPinned())
                 .group_title(post.getGroup().getTitle())
+                .createdAt(post.getCreatedDate())
+                .viewCount(post.getViewCount())
                 .build();
     }
 
@@ -173,5 +177,14 @@ public class PostServiceImpl implements PostService {
     }
 
 
+    @Override
+    public void addView(UUID id) {
+        Optional<Post> post;
+        post = postRepository.findById(id);
+        if (post.isEmpty()) {
+            throw new EntityNotFoundException("No post");
+        }
+        post.get().setViewCount((post.get().getViewCount()) + 1);
+    }
 }
 

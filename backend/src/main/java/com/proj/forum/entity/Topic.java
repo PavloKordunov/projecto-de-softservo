@@ -37,7 +37,7 @@ public class Topic {
     private TopicType type;
 
     //@NotNull
-    private int viewCount;
+    private Integer viewCount;
 
     @Column(nullable = false)
     private Integer limitAge;
