@@ -1,6 +1,7 @@
 package com.proj.forum.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 import java.util.UUID;
@@ -10,8 +11,8 @@ public record PostRequestDto(
         UUID id,
         UUID tag_id,
         @NotBlank(message = "Title cannot be blank") String title,
-        UUID user_id,
-        UUID group_id,
+        @NotNull UUID user_id,
+        @NotNull UUID group_id,
         String description,
         String image
 

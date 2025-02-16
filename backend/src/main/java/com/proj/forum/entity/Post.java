@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -39,6 +38,4 @@ public class Post {
     private LocalDateTime createdDate;
 
     private boolean isPinned;
-
-    private String group_title;
 }

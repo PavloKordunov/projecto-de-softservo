@@ -1,5 +1,6 @@
 package com.proj.forum.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
 import java.util.UUID;
@@ -7,14 +8,14 @@ import java.util.UUID;
 @Builder
 public record PostResponseDto(
         UUID id,
-        String title,
+        @NotBlank String title,
         String description,
         String image,
         String name,
-        String nickname,
-        String user_image,
+        @NotBlank String nickname,
+        @NotBlank String user_image,
         boolean isPinned,
-        String group_title
+        @NotBlank String group_title
         ) {
 
 }

@@ -11,11 +11,11 @@ import com.proj.forum.repository.UserRepository;
 import com.proj.forum.service.PostService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +35,7 @@ public class PostServiceImpl implements PostService {
     public UUID createPost(PostRequestDto postDto) {
         Group group = groupRepository.findById(postDto.group_id()).orElseThrow(() -> new EntityNotFoundException("Group don't find"));
         User user = userRepository.findById(postDto.user_id()).orElseThrow(() -> new EntityNotFoundException("User not found"));
-        if(!user.getGroups().contains(group)){
+        if (!user.getGroups().contains(group)) {
             throw new EntityNotFoundException("Group not found");
         }
         Post post = mapToPost(postDto, user, group);
@@ -46,11 +46,10 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostResponseDto> getAllPosts() {
         List<Post> postList;
-            postList = postRepository.findAll();
-            if (postList.isEmpty()) {
-                throw new EntityNotFoundException("No posts found");
-            }
-
+        postList = postRepository.findAll();
+        if (postList.isEmpty()) {
+            throw new EntityNotFoundException("No posts found");
+        }
 
         return postList.stream()
                 .map(PostServiceImpl::getUpdatePost)
@@ -61,25 +60,31 @@ public class PostServiceImpl implements PostService {
     public PostResponseDto getPostById(UUID id) {
         Optional<Post> post;
 
-            post = postRepository.findById(id);
-            if (post.isEmpty()) {
-                throw new EntityNotFoundException("No post");
-            }
+        post = postRepository.findById(id);
+        if (post.isEmpty()) {
+            throw new EntityNotFoundException("No post");
+        }
 
         return PostResponseDto.builder()
                 .id(id)
                 .title(post.get().getTitle())
-                .description(post.get().getDescription() == null ? StringUtils.EMPTY : post.get().getDescription()) //TODO add other fields
+                .description(post.get().getDescription() == null ? StringUtils.EMPTY : post.get().getDescription())
+                .image(post.get().getImage())
+                .name(post.get().getAuthor().getName())
+                .nickname(post.get().getAuthor().getUsername())
+                .user_image(post.get().getAuthor().getProfileImage())
+                .isPinned(post.get().isPinned())
+                .group_title(post.get().getGroup().getTitle())
                 .build();
     }
 
     @Override
     public List<PostResponseDto> getPostsByGroup(UUID groupId) {
         List<Post> postList;
-            postList = postRepository.findAllByGroupId(groupId);
-            if (postList.isEmpty()) {
-                throw new EntityNotFoundException("No posts");
-            }
+        postList = postRepository.findAllByGroupId(groupId);
+        if (postList.isEmpty()) {
+            throw new EntityNotFoundException("No posts");
+        }
 
         return postList.stream()
                 .map(PostServiceImpl::getUpdatePost)
@@ -88,21 +93,20 @@ public class PostServiceImpl implements PostService {
 
     @Transactional
     @Override
-    public void updatePost(UUID id, PostRequestDto postDto) {
+    public void updatePost(UUID postId, PostRequestDto postDto) {
         Post updatedPost;
+        updatedPost = postRepository.findById(postId)
+                .map(post -> getUpdatePost(post, postDto))
+                .orElseThrow(() -> new EntityNotFoundException("Post didn't find"));
 
-            updatedPost = postRepository.findById(id)
-                    .map(post -> getUpdatePost(post, postDto))
-                    .orElseThrow(() -> new EntityNotFoundException("Post didn't find"));
-
-            postRepository.save(updatedPost);
+        postRepository.save(updatedPost);
     }
 
     @Transactional
     @Override
-    public boolean pinPost(UUID id) {
+    public boolean pinPost(UUID postId) {
         try {
-            Post post = postRepository.findById(id)
+            Post post = postRepository.findById(postId)
                     .orElseThrow(() -> new EntityNotFoundException("Post not found"));
 
             post.setPinned(!post.isPinned());
@@ -118,18 +122,14 @@ public class PostServiceImpl implements PostService {
             post.setTitle(postDto.title());
         if (postDto.description() != null)
             post.setDescription(postDto.description());
-        if(postDto.image() != null)
+        if (postDto.image() != null)
             post.setImage(postDto.image());
         return post;
     }
 
     @Override
     public void deletePost(UUID id) {
-            if (postRepository.existsById(id)) {
-                postRepository.deleteById(id);
-            } else {
-                throw new EntityNotFoundException("Not found post");
-            }
+        postRepository.deleteById(id);
     }
 
     private static Post mapToPost(PostRequestDto postDto, User user, Group group) {
@@ -139,7 +139,6 @@ public class PostServiceImpl implements PostService {
                 .image(postDto.image())
                 .author(user)
                 .group(group)
-                .group_title(group.getTitle())
                 .isPinned(false)
                 .createdDate(LocalDateTime.now())
                 .build();
@@ -156,7 +155,6 @@ public class PostServiceImpl implements PostService {
                 .nickname(post.getAuthor().getUsername())
                 .name(post.getAuthor().getName())
                 .isPinned(post.isPinned())
-                .group_title(post.getGroup_title())
                 .build();
     }
 
@@ -172,11 +170,26 @@ public class PostServiceImpl implements PostService {
                         .nickname(post.getAuthor().getUsername())
                         .name(post.getAuthor().getName())
                         .build())
-                        .toList();
+                .toList();
 
     }
 
-    public List<PostResponseDto> getByTitleContain(String name){
+    @Override
+    public void isAuthor(UUID postId, UUID userId) throws AccessDeniedException {
+        if (!postRepository.findById(postId)
+                .map(Post::getAuthor)
+                .map(User::getId)
+                .map(id -> id.equals(userId))
+                .orElse(false)) {
+            throw new AccessDeniedException("User is not the author of this post.");
+        }
+
+        postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("Post doesn't exist"));
+
+    }
+
+    public List<PostResponseDto> getByTitleContain(String name) {
         return mapToPostDtoList(postRepository.findByTitleContainingIgnoreCase(name));
     }
 

@@ -1,6 +1,5 @@
 package com.proj.forum.service.impl;
 
-import com.proj.forum.annotation.Logging;
 import com.proj.forum.dto.GroupDto;
 import com.proj.forum.entity.Group;
 import com.proj.forum.entity.User;
@@ -12,7 +11,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,7 +85,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void deleteGroup(UUID groupId, UUID userId) throws AccessDeniedException { //TODO let only author delete
+    public void deleteGroup(UUID groupId, UUID userId) throws AccessDeniedException {
         if(!groupRepository.findById(groupId).get().getAuthor().equals(userId) ) {
             throw new AccessDeniedException("User has no permission");
         }

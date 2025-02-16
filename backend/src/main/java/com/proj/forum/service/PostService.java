@@ -4,17 +4,20 @@ import com.proj.forum.dto.PostRequestDto;
 import com.proj.forum.dto.PostResponseDto;
 import com.proj.forum.entity.Post;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.UUID;
 
 public interface PostService {
+    UUID createPost(PostRequestDto post);
     List<PostResponseDto> getAllPosts();
     List<PostResponseDto> getPostsByGroup(UUID id);
-    UUID createPost(PostRequestDto post);
     PostResponseDto getPostById(UUID id);
     List<PostResponseDto> getByTitleContain(String name);
-    void deletePost(UUID id);
     void updatePost(UUID id, PostRequestDto postDto);
+    boolean pinPost(UUID postId);
+    void deletePost(UUID postId);
+
     List<PostResponseDto> mapToPostDtoList(List<Post> posts);
-    boolean pinPost(UUID id);
+    void isAuthor(UUID postId, UUID userId) throws AccessDeniedException;
 }

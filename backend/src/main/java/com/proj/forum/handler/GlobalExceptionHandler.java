@@ -36,7 +36,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
 //    }
 
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class, UserAlreadySubscribeException.class})
+    @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class,
+                                UserAlreadySubscribeException.class,
+                                IllegalArgumentException.class})  // <--?
     public ApiResponse<?> handleMethodNotValid(RuntimeException ex){
         return new ApiResponse<>(false, HttpStatus.BAD_REQUEST, ex.getCause().toString(), null);
     }
@@ -53,31 +55,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
         return new ApiResponse<>(false, HttpStatus.UNAUTHORIZED, ex.getCause().toString(), null);
     }
 
-//    @Override
-//    @Nullable
-//    protected ResponseEntity<Object> handleMethodArgumentNotValid(
-//            MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-//        Map<String, Object> objectBody = new LinkedHashMap<>();
-//        objectBody.put("Current Timestamp", new Date());
-//        objectBody.put("Status", status.value());
-//
-//        // Get all errors
-//        List<String> exceptionalErrors
-//                = ex.getBindingResult()
-//                .getFieldErrors()
-//                .stream()
-//                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-//                .toList();
-//
-//        objectBody.put("Errors", exceptionalErrors);
-//        return handleExceptionInternal(ex, null, headers, status, request);
-//    }
     //    @ExceptionHandler(JDBCConnectionException.class)
     //    public ApiResponse<?> handleDisconnectDb(RuntimeException ex) {
     //        return new ApiResponse<>(false, HttpStatus.SERVICE_UNAVAILABLE, ex.getCause().toString(), null);
-    //    }
-    //    @ExceptionHandler(DbNotResponseException.class)
-    //    public ApiResponse<?> handleDbError(RuntimeException ex){
-    //        return new ApiResponse<>(false, HttpStatus.SERVICE_UNAVAILABLE, ex.getCause().toString(), null);
-    //    }
 }

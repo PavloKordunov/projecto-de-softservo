@@ -1,14 +1,18 @@
 package com.proj.forum.controller;
 
 import com.proj.forum.annotation.Logging;
-import com.proj.forum.dto.*;
+import com.proj.forum.annotation.RequireRoles;
+import com.proj.forum.dto.ApiResponse;
+import com.proj.forum.dto.GenericResponse;
+import com.proj.forum.dto.PostRequestDto;
+import com.proj.forum.dto.PostResponseDto;
 import com.proj.forum.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,6 +31,7 @@ public class PostController {
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Posts found", postsDto);
     }
 
+    @RequireRoles({"Everyone"})
     @PostMapping("/create")
     public ApiResponse<GenericResponse> createPost(@RequestBody @Valid PostRequestDto postDto) {
         UUID postId = postService.createPost(postDto);
@@ -45,14 +50,18 @@ public class PostController {
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Post found", post);
     }
 
-    @PatchMapping("/update/{postId}")
+    @RequireRoles({"Everyone"})
+    @PatchMapping("/update/{postId}/{userId}")
     public ApiResponse<GenericResponse> updatePost(
             @PathVariable UUID postId,
-            @RequestBody PostRequestDto postDto) {
+            @PathVariable UUID userId,
+            @RequestBody @Valid PostRequestDto postDto) throws AccessDeniedException {
+        postService.isAuthor(postId, userId);
         postService.updatePost(postId, postDto);
         return ApiResponse.apiResponse(true, 200, "Post updated", postId);
     }
 
+    @RequireRoles({"Everyone"})
     @PatchMapping("/pin/{postId}")
     public ApiResponse<GenericResponse> pinPost(@PathVariable UUID postId) {
         boolean pin = postService.pinPost(postId);
@@ -63,8 +72,10 @@ public class PostController {
         }
     }
 
-    @DeleteMapping("/delete/{postId}")
-    public ApiResponse<GenericResponse> deletePost(@PathVariable UUID postId) {
+    @RequireRoles({"Everyone"})
+    @DeleteMapping("/delete/{postId}/author/{authorId}")
+    public ApiResponse<GenericResponse> deletePost(@PathVariable UUID postId, @PathVariable UUID authorId) throws AccessDeniedException {
+        postService.isAuthor(postId, authorId);
         postService.deletePost(postId);
         return ApiResponse.apiResponse(true, 200, "Post deleted", postId);
     }
