@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/chat")
+@RequestMapping("/api/chatrooms")
 @RequiredArgsConstructor
 @Logging
 public class ChatRoomController {
@@ -22,9 +22,9 @@ public class ChatRoomController {
     private final ChatRoomService chatRoomService;
     private final ChatMessageService messageService;
 
-    @PostMapping("/rooms")
-    public ApiResponse<ChatRoomDto> createRoom(@RequestBody ChatRoomDto chatRoomDto) {
-        return new ApiResponse<>(true, HttpStatus.OK, "", chatRoomService.createChatRoom(chatRoomDto));
+    @PostMapping("/create")
+    public ApiResponse<UUID> createRoom(@RequestBody ChatRoomDto chatRoomDto) {
+        return new ApiResponse<>(true, HttpStatus.OK, "", chatRoomService.createChatRoom(chatRoomDto).id());
     }
 
     @GetMapping("/{chatRoomId}/history")

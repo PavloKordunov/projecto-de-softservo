@@ -1,5 +1,5 @@
 package com.proj.forum.service;
-import com.proj.forum.dto.GroupDto;
+
 import com.proj.forum.dto.UserRequestDto;
 import com.proj.forum.dto.UserResponseDto;
 import com.proj.forum.dto.UserUpdateDto;
@@ -13,6 +13,7 @@ public interface UserService {
     UUID createUser(UserRequestDto user);
     UserResponseDto getUser(UUID id);
     UserResponseDto getUserByUsername(String username);
+    UserResponseDto getUserByEmail(String email);
     void deleteUser(UUID id);
     void updateUser(UUID id, UserUpdateDto userDto);
     List<UserRequestDto> mapToUserDtoList(List<User> users);

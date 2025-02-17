@@ -3,13 +3,9 @@ package com.proj.forum.controller;
 import com.proj.forum.annotation.Logging;
 import com.proj.forum.annotation.RequireRoles;
 import com.proj.forum.dto.*;
-import com.proj.forum.entity.Group;
 import com.proj.forum.service.UserService;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.servlet.ServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +44,12 @@ public class UserController {
     public ApiResponse<UserResponseDto> getUserByUsername(@PathVariable @Valid String username) {
         UserResponseDto userDto = userService.getUserByUsername(username);
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Successful getting", userDto);
+    }
+
+    @GetMapping("email/{email}")
+    public ApiResponse<UserResponseDto> getUserByEmail(@PathVariable @Valid String email) {
+        var g = userService.getUserByEmail(email);
+        return new ApiResponse<>(true, HttpStatus.OK, "Successful getting", g);
     }
 
     @RequireRoles({"Everyone"})
