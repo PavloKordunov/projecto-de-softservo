@@ -45,10 +45,11 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         chatRoomRepository.save(chatRoom);
     }
 
-    public Set<User> getChatRoomUsers(UUID chatRoomId) { //TODO maybe List<User>
-        return chatRoomRepository.findById(chatRoomId)
+    public List<User> getChatRoomUsers(UUID chatRoomId) {
+        Set<User> users = chatRoomRepository.findById(chatRoomId)
                 .map(ChatRoom::getUsers)
                 .orElseThrow(() -> new EntityNotFoundException("Chat room not found"));
+        return new ArrayList<>(users);
     }
 
     private ChatRoomDto convertToDto(ChatRoom chatRoom) {
