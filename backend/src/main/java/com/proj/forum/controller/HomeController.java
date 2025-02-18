@@ -21,7 +21,7 @@ import java.util.List;
 @RequestMapping("/api/home")
 public class HomeController {
 
-    private final TopicService topicService;
+    //private final TopicService topicService;
     private final TagService tagService;
     private final GroupService groupService; 
     private final PostService postService;
@@ -29,12 +29,12 @@ public class HomeController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<HomePageDto>> getHomePageData() {
-        List<TopicDto> topics = topicService.getAllTopics();
+        //List<TopicDto> topics = topicService.getAllTopics();
         List<TagDto> tags = tagService.getAllTags();
         List<GroupDto> groups = groupService.getAllGroups();
         List<PostResponseDto> posts = postService.getAllPosts();
 
-        HomePageDto response = new HomePageDto(topics, tags, groups, posts);
+        HomePageDto response = new HomePageDto(tags, groups, posts);
 
         ApiResponse<HomePageDto> apiResponse = new ApiResponse<>(
                 true,
