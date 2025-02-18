@@ -52,7 +52,8 @@ public class UserServiceImpl implements UserService {
                 .following(user.getFollowing().size())
                 .subscribers(user.getSubscribers().size())
                 .followingGroups(user.getCreatedGroups().size())
-                .profileImage(user.getEmail() == null ? StringUtils.EMPTY : user.getEmail())
+                .profileImage(user.getProfileImage() == null ? StringUtils.EMPTY : user.getProfileImage())
+                .email(user.getEmail() == null ? StringUtils.EMPTY : user.getEmail())
                 .build();
     }
 
@@ -122,6 +123,7 @@ public class UserServiceImpl implements UserService {
                 .name(userDto.firstName())
                 .username(userDto.nickName() == null ? StringUtils.EMPTY : userDto.nickName())
                 .email(userDto.email() == null ? StringUtils.EMPTY : userDto.email())
+                .profileImage(userDto.image() == null ? StringUtils.EMPTY : userDto.image())
                 .build();
     }
 

@@ -14,6 +14,7 @@ public record UserResponseDto(
         String profileImage,
         @NotBlank Integer following,
         @NotNull Integer subscribers,
-        @NotNull Integer followingGroups
+        @NotNull Integer followingGroups,
+        String email
 ) {
 }
