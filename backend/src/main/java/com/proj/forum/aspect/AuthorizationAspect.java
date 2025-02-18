@@ -1,6 +1,7 @@
 package com.proj.forum.aspect;
 
 import com.proj.forum.annotation.RequireRoles;
+import com.proj.forum.enums.RoleType;
 import com.proj.forum.exception.TokenTypeException;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -33,10 +34,14 @@ public class AuthorizationAspect {
         if (roles == null)
             throw new AccessDeniedException("User doesn't have roles");
 
-        Set<String> requiredRoles = new HashSet<>(Arrays.asList(requireRole.value()));
+        List<String> roleValues = Arrays
+                .stream(RoleType.values())
+                .map(RoleType::getValue)
+                .toList();
 
-        if(roles.stream().noneMatch(requiredRoles::contains))
+        if (roles.stream().noneMatch(s -> roleValues.stream().anyMatch(s::contains))) {
             throw new AccessDeniedException("User doesn't have permission to use it");
+        }
 
         return joinPoint.proceed();
     }

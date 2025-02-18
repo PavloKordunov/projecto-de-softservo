@@ -5,6 +5,7 @@ import com.proj.forum.annotation.RequireRoles;
 import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.GenericResponse;
 import com.proj.forum.dto.TopicDto;
+import com.proj.forum.enums.RoleType;
 import com.proj.forum.service.TopicService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class TopicController {
 
     private final TopicService topicService;
 
-    @RequireRoles({"Admin"})
+    @RequireRoles({RoleType.ADMIN})
     @PostMapping("/create")
     public ApiResponse<GenericResponse> createTopic(@RequestBody @Valid TopicDto topic) {
             UUID id = topicService.createTopic(topic);
@@ -42,7 +43,7 @@ public class TopicController {
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Successful getting", topicDto);
     }
 
-    @RequireRoles({"Admin"})
+    @RequireRoles({RoleType.ADMIN})
     @PatchMapping("/update/{id}")
     public ApiResponse<GenericResponse> updateTopic(
             @PathVariable @Valid UUID id,
@@ -57,7 +58,7 @@ public class TopicController {
         topicService.addView(id);
     }
 
-    @RequireRoles({"Admin"})
+    @RequireRoles({RoleType.ADMIN})
     @DeleteMapping("/delete/{id}")
     public ApiResponse<GenericResponse> deleteTopic(@PathVariable @Valid UUID id) {
             topicService.deleteTopic(id);

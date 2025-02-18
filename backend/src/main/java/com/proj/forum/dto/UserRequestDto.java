@@ -8,9 +8,13 @@ import java.util.UUID;
 @Builder
 public record UserRequestDto(
         UUID id,
-        @NotBlank(message = "Name cannot be blank")String firstName,
-        @NotBlank(message = "Username cannot be blank")String nickName,
-        String email,
-        String image
+        String image,
+        @NotBlank(message = "Name cannot be blank")
+        String firstName,
+        @NotBlank(message = "Username cannot be blank")
+        String nickName,
+        @NotBlank(message = "Email cannot be blank")
+        String email
+
 ) {
 }

@@ -6,6 +6,7 @@ import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.GenericResponse;
 import com.proj.forum.dto.PostRequestDto;
 import com.proj.forum.dto.PostResponseDto;
+import com.proj.forum.enums.RoleType;
 import com.proj.forum.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class PostController {
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Posts found", postsDto);
     }
 
-    @RequireRoles({"Everyone"})
+    @RequireRoles({RoleType.USER})
     @PostMapping("/create")
     public ApiResponse<GenericResponse> createPost(@RequestBody @Valid PostRequestDto postDto) {
         UUID postId = postService.createPost(postDto);
@@ -50,7 +51,7 @@ public class PostController {
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Post found", post);
     }
 
-    @RequireRoles({"Everyone"})
+    @RequireRoles({RoleType.USER})
     @PatchMapping("/update/{postId}/{userId}")
     public ApiResponse<GenericResponse> updatePost(
             @PathVariable UUID postId,
@@ -61,7 +62,7 @@ public class PostController {
         return ApiResponse.apiResponse(true, 200, "Post updated", postId);
     }
 
-    @RequireRoles({"Everyone"})
+    @RequireRoles({RoleType.USER})
     @PatchMapping("/pin/{postId}")
     public ApiResponse<GenericResponse> pinPost(@PathVariable UUID postId) {
         boolean pin = postService.pinPost(postId);
@@ -72,8 +73,8 @@ public class PostController {
         }
     }
 
-    @RequireRoles({"Everyone"})
-    @DeleteMapping("/delete/{postId}/author/{authorId}")
+    @RequireRoles({RoleType.USER})
+    @DeleteMapping("/delete/{postId}/author/{authorId}") //TODO maybe dont put author in endpoint but get it from token
     public ApiResponse<GenericResponse> deletePost(@PathVariable UUID postId, @PathVariable UUID authorId) throws AccessDeniedException {
         postService.isAuthor(postId, authorId);
         postService.deletePost(postId);

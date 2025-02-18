@@ -16,7 +16,6 @@ import java.util.List;
 
 @Configuration
 @EnableWebSocketMessageBroker
-@Logging
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override

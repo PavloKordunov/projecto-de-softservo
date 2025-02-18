@@ -5,6 +5,7 @@ import com.proj.forum.annotation.RequireRoles;
 import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.GenericResponse;
 import com.proj.forum.dto.PrivacyPolicyDto;
+import com.proj.forum.enums.RoleType;
 import com.proj.forum.service.PrivacyPolicyService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -23,7 +24,7 @@ public class PrivacyPolicyController {
 
     private final PrivacyPolicyService privacyPolicyService;
 
-    @RequireRoles({"Admin"})
+    @RequireRoles({RoleType.ADMIN})
     @PostMapping("/create")
     public ApiResponse<GenericResponse> createPolicy(@RequestBody @Valid PrivacyPolicyDto policyDto) {
         UUID id = privacyPolicyService.createPrivacyPolicy(policyDto);

@@ -4,15 +4,20 @@ import com.proj.forum.dto.UserRequestDto;
 import com.proj.forum.dto.UserResponseDto;
 import com.proj.forum.dto.UserUpdateDto;
 import com.proj.forum.entity.User;
+import com.proj.forum.exception.TokenTypeException;
 import com.proj.forum.repository.UserRepository;
 import com.proj.forum.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,7 +38,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto getUser(UUID id) {
+    public UUID createUserByGoogle(){
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.getPrincipal() instanceof OidcUser oidcUser) {
+            Map<String, Object> claim = oidcUser.getIdToken().getClaims();
+            Optional<User> user = userRepository.findByEmail((String) claim.get("email"));
+            if(user.isPresent()) {
+                return user.get().getId();
+            }
+            // TODO implement user creation case
+        }
+        throw new TokenTypeException("User not found");
+    }
+    @Override
+    public UserResponseDto getUser(UUID id) {  //TODO add created posts field instead of following groups
         Optional<User> user;
 
         user = userRepository.findById(id);

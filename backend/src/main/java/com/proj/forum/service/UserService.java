@@ -9,8 +9,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
-    List<UserRequestDto> getAllUsers();
     UUID createUser(UserRequestDto user);
+    UUID createUserByGoogle();
+    List<UserRequestDto> getAllUsers();
     UserResponseDto getUser(UUID id);
     UserResponseDto getUserByUsername(String username);
     UserResponseDto getUserByEmail(String email);

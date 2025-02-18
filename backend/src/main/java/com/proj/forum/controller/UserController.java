@@ -3,6 +3,7 @@ package com.proj.forum.controller;
 import com.proj.forum.annotation.Logging;
 import com.proj.forum.annotation.RequireRoles;
 import com.proj.forum.dto.*;
+import com.proj.forum.enums.RoleType;
 import com.proj.forum.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,15 @@ public class UserController {
         return ApiResponse.apiResponse(true, 201, "Create user", id);
     }
 
+
+    @PostMapping("/check")
+    public void checkUser() {
+        //TODO get user from auth header
+        UUID id = userService.createUserByGoogle();
+        //return ApiResponse.apiResponse(true, 201, "Create user", id);
+    }
+
+
     @GetMapping
     public ApiResponse<List<UserRequestDto>> getAllUsers() {
         List<UserRequestDto> usersDto = userService.getAllUsers();
@@ -52,7 +62,7 @@ public class UserController {
         return new ApiResponse<>(true, HttpStatus.OK, "Successful getting", g);
     }
 
-    @RequireRoles({"Everyone"})
+    @RequireRoles({RoleType.USER})
     @PatchMapping("/update/{id}")
     public ApiResponse<GenericResponse> updateUser(
             @PathVariable @Valid UUID id,
@@ -61,7 +71,7 @@ public class UserController {
             return ApiResponse.apiResponse(true, 200, "User successfully updated", id);
     }
 
-    @RequireRoles({"Everyone"})
+    @RequireRoles({RoleType.USER})
     @DeleteMapping("/delete/{id}")
     public ApiResponse<GenericResponse> deleteUser(@PathVariable @Valid UUID id) {  //TODO only user can delete/change himself
             userService.deleteUser(id);

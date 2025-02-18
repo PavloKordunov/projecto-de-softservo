@@ -15,6 +15,7 @@ public record UserResponseDto(
         @NotBlank Integer following,
         @NotNull Integer subscribers,
         @NotNull Integer followingGroups,
-        String email
+        Integer createdPosts,
+        String email //TODO necessary field
 ) {
 }

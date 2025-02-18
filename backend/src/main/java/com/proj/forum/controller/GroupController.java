@@ -5,6 +5,7 @@ import com.proj.forum.annotation.RequireRoles;
 import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.GenericResponse;
 import com.proj.forum.dto.GroupDto;
+import com.proj.forum.enums.RoleType;
 import com.proj.forum.service.GroupService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class GroupController {
 
     private final GroupService groupService;
 
-    @RequireRoles({"Everyone"})
+    @RequireRoles(RoleType.USER)
     @PostMapping("/create")
     public ApiResponse<GenericResponse> createGroup(@Valid @RequestBody GroupDto group) {
         UUID id = groupService.createGroup(group);
@@ -43,7 +44,7 @@ public class GroupController {
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Successful getting", groupDto);
     }
 
-    @RequireRoles({"Everyone"})
+    @RequireRoles(RoleType.USER)
     @PatchMapping("/update/{id}")
     public ApiResponse<GenericResponse> updateGroup(
             @PathVariable @Valid UUID id,
@@ -53,21 +54,21 @@ public class GroupController {
 
     }
 
-    @RequireRoles({"Everyone"})
+    @RequireRoles({RoleType.USER})
     @PatchMapping("/{groupName}/add/{userId}/")
     public ApiResponse<?> addMember(@PathVariable @Valid String groupName, @PathVariable @Valid UUID userId) {
         UUID groupId = groupService.addMember(userId, groupName);
         return ApiResponse.apiResponse(true, 200, "User successfully subscribed", groupId);
     }
 
-    @RequireRoles({"Everyone"})
+    @RequireRoles({RoleType.USER})
     @PatchMapping("/{groupName}/remove/{userId}/")
     public ApiResponse<?> removeMember(@PathVariable @Valid UUID userId, @PathVariable @Valid String groupName) {
         UUID groupId = groupService.removeMember(userId, groupName);
         return ApiResponse.apiResponse(true, 200, "User successfully unsubscribed", groupId);
     }
 
-    @RequireRoles({"Everyone"})
+    @RequireRoles({RoleType.USER})
     @DeleteMapping("/delete/{groupId}/user/{userId}")
     public ApiResponse<GenericResponse> deleteGroup(
             @PathVariable @Valid UUID groupId,
