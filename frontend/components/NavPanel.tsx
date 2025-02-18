@@ -1,21 +1,23 @@
+"use client"
+
 import Image from "next/image";
 
 const NavPanel = () => {
     return ( 
         <div className="flex flex-col">
         <div className="mt-4  xl:ml-16 p-3 bg-MainColor rounded-[21px] w-fit flex flex-row xl:flex-col gap-3 mb-6">
-            <div className="p-2 bg-[#262D34] flex gap-2 items-center rounded-lg h-[60px] w-45 lg:w-60">
+            <div className="p-2 bg-[#262D34] flex gap-2 items-center rounded-lg h-[60px] w-90 lg:w-90">
                 <div className="w-9 h-9 bg-SecondaryColor rounded-lg flex items-center justify-center">
                     <svg className="w-6 h-6" >
                         <use href={`/sprite.svg#icon1`} />
                     </svg>
                 </div>
                 <div>
-                    <p className="text-white text-[12px] lg:text-[16px] font-semibold">Нещодавні пости</p>
-                    <p className="text-[#97989D] text-[8px] lg:text-[12px]">Find the latest update</p>
+                    <p className="text-white text-[12px] lg:text-[16px] font-semibold">КіноКнигаСеріал</p>
+                    <p className="text-[#97989D] text-[8px] lg:text-[12px]">Обирай фільми, книги та серіали.</p>
                 </div>
             </div>
-            <div className="p-2 bg-[#262D34] flex gap-2 items-center rounded-lg h-[60px] w-45 lg:w-60">
+            <div className="p-2 bg-[#262D34] flex gap-2 items-center rounded-lg h-[60px] w-90 lg:w-90">
                 <div className="w-9 h-9 bg-SecondaryColor rounded-lg flex items-center justify-center">
                     <svg className="w-6 h-6" >
                         <use href={`/sprite.svg#diceIcon`} />
@@ -26,20 +28,20 @@ const NavPanel = () => {
                     <p className="text-[#97989D] text-[8px] lg:text-[12px]">Tap and try your luck</p>
                 </div>
             </div>
-            <div className="p-2 bg-[#262D34] flex gap-2 items-center rounded-lg h-[60px] w-45 lg:w-60">
+            <div className="p-2 bg-[#262D34] flex gap-2 items-center rounded-lg h-[60px] w-90 lg:w-90">
                 <div className="w-9 h-9 bg-SecondaryColor rounded-lg flex items-center justify-center">
                     <svg className="w-6 h-6" >
                         <use href={`/sprite.svg#icon2`} />
                     </svg>
                 </div>
                 <div>
-                    <p className="text-white text-[12px] lg:text-[16px] font-semibold">Підписники</p>
+                    <p className="text-white text-[12px] lg:text-[16px] font-semibold">Підписки</p>
                     <p className="text-[#97989D] text-[8px] lg:text-[12px]">Explore from your favorite person</p>
                 </div>
             </div>
         </div>
         <div>
-            <div className="hidden xl:ml-16 xl:w-[264px] xl:p-6 xl:bg-MainColor xl:rounded-[21px]  xl:flex xl:flex-col xl:gap-3 xl:mb-6">
+            <div className="hidden xl:ml-16 xl:w-[272px] xl:p-6 xl:bg-MainColor xl:rounded-[21px]  xl:flex xl:flex-col xl:gap-3 xl:mb-6">
                 <div className="flex items-center gap-2 mb-4">
                     <p className="text-[21px] text-white font-semibold">Групи</p>
                     <svg className="w-4 h-3" fill="#fff" >
@@ -56,7 +58,7 @@ const NavPanel = () => {
             </div>
         </div>
         <div>
-            <div className="hidden xl:ml-16 xl:w-[264px] xl:p-6 xl:bg-MainColor xl:rounded-[21px] xl:flex xl:flex-col xl:gap-3 xl:mb-6">
+            <div className="hidden xl:ml-16 xl:w-[272px] xl:p-6 xl:bg-MainColor xl:rounded-[21px] xl:flex xl:flex-col xl:gap-3 xl:mb-6">
                 <div className="flex items-center gap-2 mb-4">
                     <p className="text-[21px] text-white font-semibold">Популярні Теги</p>
                 </div>

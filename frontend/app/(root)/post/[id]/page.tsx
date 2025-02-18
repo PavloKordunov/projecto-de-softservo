@@ -1,22 +1,63 @@
+"use client";
+
+import { useParams } from 'next/navigation';
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from 'react';
+
+interface Post {
+      id: string;
+      title: string;
+      description: string;
+      name: string;
+      nickname: string;
+      image?: string;
+      isPinned: boolean;
+      group_title: string;
+      viewCount: string
+  }
 
 const PostPage = () => {
+
+    const params = useParams();
+    const postId = params.id;
+
+    const [post, setPost] = useState<Post | null>(null)
+
+    useEffect(() => {
+        const getPostById = async() =>{
+            try {
+                const res = await fetch(`http://localhost:8080/api/posts/${postId}`)
+                const data = await res.json()
+                setPost(data.body)
+                console.log(data)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        getPostById()
+    },[])
+
+    if (!post) {
+        return <p className="text-white">Завантаження...</p>;
+      }
+
     return (
         <div>
         <div className="p-7 mt-4 bg-MainColor rounded-[21px] mb-6 w-[1030px]">
             <div className="flex items-center justify-between mb-4">
-            <Link href='/group/:id' className="flex item-center">
+            <Link href='/group/:id' className="flex item-center gap-2">
                     <Image src='/groupImage.png' alt="" width={38} height={38} />
-                    <p className="text-[18px] text-white font-semibold">/GroupName</p>
+                    <p className="text-[18px] text-white font-semibold">/{post?.group_title}</p>
                 </Link>
                 <div className="bg-SecondaryColor p-[2px] rounded-[20px] flex gap-2 items-center">
                     <Image src="/view.png" alt="" width={42} height={42}/>
-                    <p className="text-[18px] text-[#C5D0E6]">110,000</p>
+                    <p className="text-[18px] text-[#C5D0E6]">{post.viewCount}</p>
                 </div>
             </div>
-            <p className="text-[24px] text-white font-bold mb-4">Новий хоррор-фільм “Жахаючий 3” скоро буде доступний у кінотеатрах України!</p>
-            <p className="text-[18px] text-white mb-3">"Жахаючий 3" (англ. Terrifier 3) — американський різдвяний надприродний слешер 2024 року від Демієна Леоне. У головних ролях — Лорен Лавера, Девід Говард Торнтон та інші актори з попередніх частин. У сюжеті Сієнна Шоу намагається налагодити своє життя, але знову зіштовхується з Артом і його новою спільницею, одержимою Вікторією Хейз. Після успіху "Жахаючого 2" Леоне вирішив глибше розкрити образ Вікторії.</p>
+            <p className="text-[24px] text-white font-bold mb-4">{post.title}</p>
+            <p className="text-[18px] text-white mb-3">"{post.description}</p>
             <div className="flex gap-3 items-center mb-3">
                 <div className="py-2 w-fit px-3 bg-SecondaryColor rounded-[24px]">
                     <p className="text-[13px] text-[#C5D0E6] font-semibold">фільм</p>
@@ -33,7 +74,7 @@ const PostPage = () => {
                 <div className="flex items-center gap-3">
                     <Image src="/person.png" alt="" width={54} height={54}/>
                     <div>
-                        <p className="text-[18px] text-white font-semibold">Павло Сірий</p>
+                        <p className="text-[18px] text-white font-semibold">{post.nickname}</p>
                         <span className="text-[13px] text-[#C5D0E6] font-regular">2 години тому</span>
                     </div>
                     <div className="flex gap-3 ml-5">
@@ -58,7 +99,6 @@ const PostPage = () => {
                         </div>
                     </div>
                 </div>
-                <p className="text-[14px] text-white">35хв. тому</p>
             </div>
         </div>
         <div className="p-4 mt-7 bg-MainColor rounded-[21px] mb-6 w-[1030px]">

@@ -4,7 +4,7 @@ import Link from "next/link";
 const GroupPage = () => {
     return ( 
         <Link href='/group/:id' className="mt-4 p-4 bg-MainColor rounded-[21px] flex items-center h-fit w-[1030px] gap-4">
-            <Image src="/postImage.png" alt="" width="208" height="237" />
+            <Image src="/postImage.png" alt="" width="208" height="237"/>
             <div className="w-full">
                <div className="flex items-center justify-between mb-4">
                     <p className="text-[24px] text-white font-semibold">/Ржака_Українською</p>

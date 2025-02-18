@@ -1,3 +1,5 @@
+"use client"
+
 import CreatePostNav from "@/components/CreatePostNav";
 import Post from "@/components/Post";
 
