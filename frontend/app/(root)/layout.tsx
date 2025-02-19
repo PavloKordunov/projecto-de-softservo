@@ -1,5 +1,8 @@
+"use client"
+
 import NavBar from "@/components/Navbar";
 import NavPanel from "@/components/NavPanel";
+import { RecoilRoot } from "recoil";
 
 export default function HomeLayout({
     children,

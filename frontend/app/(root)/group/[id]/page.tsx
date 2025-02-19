@@ -1,7 +1,24 @@
+"use client"
+
 import Post from "@/components/Post";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 const Group = () => {
+
+      const [posts, setPosts] = useState<any[]>([]);
+
+    useEffect(() => {
+        const getAllPost = async () => {
+          const res = await fetch("http://localhost:8080/api/posts");
+          const data = await res.json();
+          setPosts(data.body);
+          console.log(data);
+        };
+    
+        getAllPost();
+      }, []);
+
     return (
         <div> 
             <div className="mt-4 px-5 py-4 bg-MainColor rounded-[21px] flex items-center justify-between h-fit w-[1030px]">
@@ -71,8 +88,11 @@ const Group = () => {
                     </div>
                 </div>
             </div>
-            <Post className=""/>
-            <Post className=""/>
+            {posts.length > 0 ? (
+                posts.map((post) => <Post key={post.id} post={post} />)
+            ) : (
+                <p>Поки що немає постів...</p>
+            )}
         </div>
      );
 }
