@@ -37,7 +37,7 @@ public class Post {
 
     private String image;
 
-    private LocalDateTime createdDate;
+    private LocalDateTime createdAt;
 
     private boolean isPinned;
 }

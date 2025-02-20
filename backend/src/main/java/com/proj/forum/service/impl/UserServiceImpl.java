@@ -1,9 +1,9 @@
 package com.proj.forum.service.impl;
 
-import com.proj.forum.dto.UserRequestDto;
-import com.proj.forum.dto.UserResponseDto;
+import com.proj.forum.dto.UserDto;
 import com.proj.forum.dto.UserUpdateDto;
 import com.proj.forum.entity.User;
+import com.proj.forum.helper.UserHelper;
 import com.proj.forum.exception.TokenTypeException;
 import com.proj.forum.repository.UserRepository;
 import com.proj.forum.service.UserService;
@@ -11,13 +11,12 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,30 +28,46 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-
     @Override
-    public UUID createUser(UserRequestDto userDto) {
+    public UUID createUser(UserDto userDto) {
         User user = mapToUser(userDto);
         User userFromDB = userRepository.save(user);
         return userFromDB.getId();
     }
 
     @Override
-    public UUID createUserByGoogle(){
+    public UUID checkOrCreateUserByGoogle() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication != null && authentication.getPrincipal() instanceof OidcUser oidcUser) {
-            Map<String, Object> claim = oidcUser.getIdToken().getClaims();
-            Optional<User> user = userRepository.findByEmail((String) claim.get("email"));
-            if(user.isPresent()) {
+        if (authentication != null && authentication.getPrincipal() instanceof JwtAuthenticationToken token) {
+            var jwt= (Jwt) token.getPrincipal();
+            String email = jwt.getClaims().get("sub").toString();
+            Optional<User> user = userRepository.findByEmail(email);
+            if (user.isPresent()) {
                 return user.get().getId();
             }
-            // TODO implement user creation case
+            else{
+                String nickName;
+                do{
+                     nickName = UserHelper.createNickname(email);
+                } while(userRepository.existsByUsername(nickName));
+
+                User newUser = User.builder()
+                        .name(nickName)
+                        .profileImage(StringUtils.EMPTY)
+                        .email(email)
+                        .username(nickName)
+                        .build();
+
+                User savedUser = userRepository.save(newUser);
+                return savedUser.getId();
+            }
         }
         throw new TokenTypeException("User not found");
     }
+
     @Override
-    public UserResponseDto getUser(UUID id) {  //TODO add created posts field instead of following groups
+    public UserDto getUser(UUID id) {
         Optional<User> user;
 
         user = userRepository.findById(id);
@@ -60,24 +75,25 @@ public class UserServiceImpl implements UserService {
             throw new EntityNotFoundException("No user found");
         }
 
-        return getUserResponseDto(user.get());
+        return getUserDto(user.get());
     }
 
-    private UserResponseDto getUserResponseDto(User user) {
-        return UserResponseDto.builder()
+    private UserDto getUserDto(User user) {
+        return UserDto.builder()
                 .id(user.getId())
-                .name(user.getName())
-                .username(user.getUsername())
+                .nickName(user.getName())
+                .firstName(user.getUsername())
                 .following(user.getFollowing().size())
                 .subscribers(user.getSubscribers().size())
                 .followingGroups(user.getCreatedGroups().size())
+                .createdPosts(user.getCreatedPosts().size())
                 .profileImage(user.getProfileImage() == null ? StringUtils.EMPTY : user.getProfileImage())
                 .email(user.getEmail() == null ? StringUtils.EMPTY : user.getEmail())
                 .build();
     }
 
     @Override
-    public UserResponseDto getUserByUsername(String username) {
+    public UserDto getUserByUsername(String username) {
         Optional<User> user;
 
         user = userRepository.findByUsername(username);
@@ -85,17 +101,17 @@ public class UserServiceImpl implements UserService {
             throw new EntityNotFoundException("No user found");
         }
 
-        return getUserResponseDto(user.get());
+        return getUserDto(user.get());
     }
 
     @Override
-    public UserResponseDto getUserByEmail(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(()->new EntityNotFoundException("User don't find"));
-        return getUserResponseDto(user);
+    public UserDto getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User don't find"));
+        return getUserDto(user);
     }
 
     @Override
-    public List<UserRequestDto> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         List<User> userList;
 
         userList = userRepository.findAll();
@@ -119,12 +135,12 @@ public class UserServiceImpl implements UserService {
     }
 
     private User getUpdateUser(User user, UserUpdateDto userDto) {
-        if (userDto.username() != null)
-            user.setUsername(userDto.username());
-        if (userDto.name() != null)
-            user.setName(userDto.name());
-        if (userDto.profileImg() != null)
-            user.setProfileImage(userDto.profileImg());
+        if (userDto.firstName() != null)
+            user.setName(userDto.firstName());
+        if (userDto.nickName() != null)
+            user.setUsername(userDto.nickName());
+        if (userDto.profileImage() != null)
+            user.setProfileImage(userDto.profileImage());
         return user;
     }
 
@@ -137,17 +153,17 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private static User mapToUser(UserRequestDto userDto) {
+    private static User mapToUser(UserDto userDto) {
         return User.builder()
                 .name(userDto.firstName())
                 .username(userDto.nickName() == null ? StringUtils.EMPTY : userDto.nickName())
                 .email(userDto.email() == null ? StringUtils.EMPTY : userDto.email())
-                .profileImage(userDto.image() == null ? StringUtils.EMPTY : userDto.image())
+                .profileImage(userDto.profileImage() == null ? StringUtils.EMPTY : userDto.profileImage())
                 .build();
     }
 
-    private static UserRequestDto getUpdateUser(User user) {
-        return UserRequestDto.builder()
+    private static UserDto getUpdateUser(User user) {
+        return UserDto.builder()
                 .id(user.getId())
                 .firstName(user.getName())
                 .nickName(user.getUsername() == null ? StringUtils.EMPTY : user.getUsername())
@@ -156,9 +172,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserRequestDto> mapToUserDtoList(List<User> users) {
+    public List<UserDto> mapToUserDtoList(List<User> users) {
         return users.stream()
-                .map(user -> UserRequestDto.builder()
+                .map(user -> UserDto.builder()
                         .id(user.getId())
                         .firstName(user.getName())
                         .nickName(user.getUsername() == null ? StringUtils.EMPTY : user.getUsername())
@@ -167,8 +183,12 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
-    public List<UserRequestDto> getByUsernameContain(String name) {
+    public List<UserDto> getByUsernameContain(String name) {
         return mapToUserDtoList(userRepository.findByUsernameContainingIgnoreCase(name));
     }
 
+//    @Override
+//    public boolean isCurrentUser(String email){
+//        return false;
+//    }
 }

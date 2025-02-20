@@ -6,10 +6,8 @@ import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.GenericResponse;
 import com.proj.forum.dto.TagDto;
 import com.proj.forum.service.TagService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
 

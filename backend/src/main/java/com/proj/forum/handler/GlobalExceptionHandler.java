@@ -29,7 +29,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
     public ApiResponse<?> handleSqlDb(RuntimeException ex) {
         return new ApiResponse<>(false, HttpStatus.INTERNAL_SERVER_ERROR, ex.getCause().toString(), null);
     }
-
+//
 //    @ExceptionHandler(value = DataIntegrityViolationException.class)
 //    public ApiResponse<?> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
 //        return new ApiResponse<>(false, HttpStatus.CONFLICT, ex.getCause().toString(), null);

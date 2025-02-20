@@ -10,7 +10,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface PostRepository extends JpaRepository<Post, UUID> {
-    List<Post> findAllByGroupId(UUID groupId);
+    List<Post> findAllByGroup_Id(UUID groupId);
+    List<Post> findAllByAuthor_Id(UUID authorId);
     List<Post> findAll();
     Post findByTitle(String name);
     Optional<Post> findById(UUID id);

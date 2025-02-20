@@ -12,6 +12,7 @@ public interface PostService {
     UUID createPost(PostRequestDto post);
     List<PostResponseDto> getAllPosts();
     List<PostResponseDto> getPostsByGroup(UUID id);
+    List<PostResponseDto> getPostsByUser(UUID id);
     PostResponseDto getPostById(UUID id);
     List<PostResponseDto> getByTitleContain(String name);
     void updatePost(UUID id, PostRequestDto postDto);

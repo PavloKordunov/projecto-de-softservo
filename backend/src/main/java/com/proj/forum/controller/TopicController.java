@@ -19,7 +19,6 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/topics")
-@CrossOrigin("http://localhost:3000")
 public class TopicController {
 
     private final TopicService topicService;

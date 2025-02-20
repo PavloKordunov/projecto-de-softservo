@@ -68,12 +68,23 @@ public class PostServiceImpl implements PostService {
         return getUpdatePost(post.get());
     }
 
+    @Override
+    public List<PostResponseDto> getPostsByUser(UUID userId) {
+        List<Post> postList;
+        postList = postRepository.findAllByAuthor_Id(userId);
+        if (postList.isEmpty()) {
+            throw new EntityNotFoundException("No posts");
+        }
 
+        return postList.stream()
+                .map(PostServiceImpl::getUpdatePost)
+                .toList();
+    }
 
     @Override
     public List<PostResponseDto> getPostsByGroup(UUID groupId) {
         List<Post> postList;
-        postList = postRepository.findAllByGroupId(groupId);
+        postList = postRepository.findAllByGroup_Id(groupId);
         if (postList.isEmpty()) {
             throw new EntityNotFoundException("No posts");
         }
@@ -132,7 +143,7 @@ public class PostServiceImpl implements PostService {
                 .author(user)
                 .group(group)
                 .isPinned(false)
-                .createdDate(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
                 .viewCount(0)
                 .build();
     }
@@ -149,7 +160,7 @@ public class PostServiceImpl implements PostService {
                 .name(post.getAuthor().getName())
                 .isPinned(post.isPinned())
                 .group_title(post.getGroup().getTitle())
-                .createdAt(post.getCreatedDate())
+                .createdAt(post.getCreatedAt())
                 .viewCount(post.getViewCount())
                 .build();
     }

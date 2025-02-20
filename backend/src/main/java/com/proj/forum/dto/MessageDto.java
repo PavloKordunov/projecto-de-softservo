@@ -16,7 +16,7 @@ public record MessageDto(
         String content,
         UUID senderId,
         String senderName,
-        @Setter @Getter UUID chatRoomId,
+         @Getter UUID chatRoomId,
         LocalDateTime timestamp
 ) {
 }

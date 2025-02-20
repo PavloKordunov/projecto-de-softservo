@@ -7,10 +7,8 @@ import com.proj.forum.dto.GenericResponse;
 import com.proj.forum.dto.PrivacyPolicyDto;
 import com.proj.forum.enums.RoleType;
 import com.proj.forum.service.PrivacyPolicyService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
@@ -19,7 +17,6 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/policy")
-@CrossOrigin("http://localhost:3000")
 public class PrivacyPolicyController {
 
     private final PrivacyPolicyService privacyPolicyService;

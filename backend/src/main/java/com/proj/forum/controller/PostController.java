@@ -21,7 +21,6 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/posts")
-@CrossOrigin("http://localhost:3000")
 public class PostController {
 
     private final PostService postService;
@@ -42,6 +41,12 @@ public class PostController {
     @GetMapping("/group/{groupId}")
     public ApiResponse<List<PostResponseDto>> getPostsByGroup(@PathVariable UUID groupId) {
         List<PostResponseDto> posts = postService.getPostsByGroup(groupId);
+        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Posts found", posts);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ApiResponse<List<PostResponseDto>> getPostsByUser(@PathVariable UUID userId) {
+        List<PostResponseDto> posts = postService.getPostsByUser(userId);
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Posts found", posts);
     }
 

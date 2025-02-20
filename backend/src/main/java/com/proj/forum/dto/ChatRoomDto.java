@@ -12,5 +12,5 @@ import java.util.UUID;
 public record ChatRoomDto(
         UUID id,
         String name,
-        @Setter @Getter Set<UUID> userIds) {
+        @Getter Set<UUID> userIds) {
 }
