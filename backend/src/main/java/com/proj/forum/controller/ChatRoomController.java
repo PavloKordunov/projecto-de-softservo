@@ -17,6 +17,7 @@ import java.util.UUID;
 @RequestMapping("/api/chatrooms")
 @RequiredArgsConstructor
 @Logging
+@CrossOrigin("http://localhost:3000")
 public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;

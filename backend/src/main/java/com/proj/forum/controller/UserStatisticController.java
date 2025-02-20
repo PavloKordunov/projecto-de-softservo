@@ -18,6 +18,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user-statistic")
+@CrossOrigin("http://localhost:3000")
 public class UserStatisticController {
 
     private final UserStatisticService userStatisticService;
