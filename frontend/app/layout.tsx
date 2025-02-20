@@ -1,7 +1,7 @@
 "use client";
 
 import "./globals.css";
-import NavBar from "@/components/Navbar";
+import NavBar from "@/components/NavBar/NavBar";
 import OktaAuth, { toRelativeUrl } from "@okta/okta-auth-js";
 import { useRouter } from "next/navigation";
 import { Security } from "@okta/okta-react";
