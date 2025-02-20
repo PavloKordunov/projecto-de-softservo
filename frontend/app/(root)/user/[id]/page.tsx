@@ -23,7 +23,7 @@ const UserPage = () => {
         } 
         const getUserById = async() => {
             const res = await fetch(`http://localhost:8080/api/users/id/${userId}`)
-            const data = await res.json()
+            const  data = await res.json()
             setUser(data.body)
             console.log(data)
         } 

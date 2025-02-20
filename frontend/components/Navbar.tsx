@@ -70,7 +70,7 @@ const NavBar = () => {
                 </div>
                 <div
                     className="bg-SecondaryColor w-14 h-14 rounded-[9px] flex items-center justify-center cursor-pointer"
-                    onClick={() => setShowNotification((prev) => !prev)}
+                    onClick={() => setShowNotification(!showNotification)}
                 >
                     <svg className="w-6 h-6">
                         <use href={`/sprite.svg#iconNotification`} />
