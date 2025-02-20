@@ -36,13 +36,13 @@ const UserMenu = () => {
                 </svg>
             </div>
 
-            {show && user && (
+            {show && (
                 <div className="absolute w-[248px] bg-MainColor p-3 top-[100px] right-[37px] flex flex-col gap-4 rounded-[11px]">
-                    <Link href={`/user/${user.id}`} className="flex items-center gap-4">
-                        {renderImage(user.img || "/NavPerson.png", 53, 53, "person")}
+                    <Link href={`/user/${user?.id}`} className="flex items-center gap-4">
+                        {renderImage(user?.img || "/NavPerson.png", 53, 53, "person")}
                         <div>
                             <p className="text-white text-[16px] font-semibold">View Profile</p>
-                            <p className="text-[#97989D] text-[12px]">@{user.username}</p>
+                            <p className="text-[#97989D] text-[12px]">@{user?.username}</p>
                         </div>
                     </Link>
 

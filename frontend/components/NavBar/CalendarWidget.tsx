@@ -68,7 +68,7 @@ const CalendarWidget = ({ onClose }: MovieCalendarProps) => {
     return (
         <div className="fixed inset-0 bg-gray-700 bg-opacity-70 flex justify-center items-center z-50">
             <div ref={calendarRef} className="bg-SecondaryColor p-6 rounded-lg relative w-full max-w-lg text-red">
-                <button className="absolute top-4 right-4 text-2xl text-white bg-SecondaryColor" onClick={onClose}>
+                <button className="absolute top-4 right-4 text-2xl text-white bg-transparent" onClick={onClose}>
                     ✖
                 </button>
                 <Calendar
