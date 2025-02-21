@@ -55,14 +55,14 @@ public class GroupController {
     }
 
     @RequireRoles({RoleType.USER})
-    @PatchMapping("/{groupName}/add/{userId}/")
+    @PatchMapping("/{groupName}/add/{userId}")
     public ApiResponse<?> addMember(@PathVariable @Valid String groupName, @PathVariable @Valid UUID userId) {
         UUID groupId = groupService.addMember(userId, groupName);
         return ApiResponse.apiResponse(true, 200, "User successfully subscribed", groupId);
     }
 
     @RequireRoles({RoleType.USER})
-    @PatchMapping("/{groupName}/remove/{userId}/")
+    @PatchMapping("/{groupName}/remove/{userId}")
     public ApiResponse<?> removeMember(@PathVariable @Valid UUID userId, @PathVariable @Valid String groupName) {
         UUID groupId = groupService.removeMember(userId, groupName);
         return ApiResponse.apiResponse(true, 200, "User successfully unsubscribed", groupId);
