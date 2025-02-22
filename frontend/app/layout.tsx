@@ -8,6 +8,9 @@ import { Security } from "@okta/okta-react";
 import oktaConfig from "@/lib/oktaConfig";
 import { RecoilRoot } from "recoil";
 import { UserProvider } from "@/hooks/useUser";
+import { useMoviesByYear } from "@/hooks/useMoviesByYear";
+import { Providers } from './providers'
+
 
 const oktaAuth = new OktaAuth(oktaConfig.oidc);
 
@@ -25,20 +28,23 @@ export default function RootLayout({
   const customAuthHandler = () => {
     router.push("/login");
   };
+  const { movies } = useMoviesByYear(2025);
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
+      <Providers>
           <Security
-            oktaAuth={oktaAuth}
-            restoreOriginalUri={restoreOriginalUri}
-            onAuthRequired={customAuthHandler}
+              oktaAuth={oktaAuth}
+              restoreOriginalUri={restoreOriginalUri}
+              onAuthRequired={customAuthHandler}
           >
-            <UserProvider>
-            <NavBar />
-            {children}
-            </UserProvider>
+              <UserProvider>
+                  <NavBar movies={movies} />
+                  {children}
+              </UserProvider>
           </Security>
+      </Providers>
       </body>
     </html>
   );
