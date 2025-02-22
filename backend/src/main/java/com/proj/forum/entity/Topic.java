@@ -63,6 +63,7 @@ public class Topic {
     @Column(nullable = false)
     private String director;
 
+    @Lob
     @Column(nullable = false)
     private String image;
 

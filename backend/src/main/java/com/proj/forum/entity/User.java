@@ -34,6 +34,7 @@ public class User {
     @NotBlank(message = "Name is required")
     private String name;
 
+    @Lob
     private String profileImage;
 
     @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
