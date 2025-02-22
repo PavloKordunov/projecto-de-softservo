@@ -61,6 +61,7 @@ public class UserController {
         UserDto userDto = userService.getUserByEmail(email);
         return new ApiResponse<>(true, HttpStatus.OK, "Successful getting", userDto);
     }
+
     @RequireRoles({RoleType.USER})
     @PatchMapping("/update/{id}")
     public ApiResponse<GenericResponse> updateUser(

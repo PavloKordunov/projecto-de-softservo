@@ -1,37 +1,23 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { getAllMoviesByYear, MovieDetails } from "@/api/omdbApi/omdbApi";
+import { MovieDetails } from "@/api/omdbApi/omdbApi";
 
 interface MovieCalendarProps {
     onClose: () => void;
+    movies: MovieDetails[];
 }
 
-const CalendarWidget = ({ onClose }: MovieCalendarProps) => {
+const CalendarWidget = ({ onClose, movies }: MovieCalendarProps) => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-    const [movies, setMovies] = useState<MovieDetails[]>([]);
-    const calendarRef = useRef<HTMLDivElement | null>(null);
+    const modalRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        getAllMoviesByYear(2025)
-            .then((movies) => {
-                const sortedMovies = movies.sort((a, b) => {
-                    const dateA = new Date(a.Released);
-                    const dateB = new Date(b.Released);
-                    return dateA.getTime() - dateB.getTime();
-                });
-                setMovies(sortedMovies);
-            })
-            .catch((error) => {
-                console.error("Error fetching movies:", error);
-            });
-    }, []);
-
-    const handleDateChange = (date: Date | Date[] | null) => {
-        setSelectedDate(date instanceof Date ? date : null);
+    const handleDateChange = (value: Date | [Date, Date] | null, event?: React.MouseEvent<HTMLButtonElement>) => {
+        setSelectedDate(value instanceof Date ? value : null);
     };
+
 
     const movieDates = movies.map((movie) => ({
         date: new Date(movie.Released),
@@ -52,27 +38,24 @@ const CalendarWidget = ({ onClose }: MovieCalendarProps) => {
         return null;
     };
 
-    const handleClickOutside = (event: MouseEvent) => {
-        if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
-            onClose();
-        }
-    };
-
     useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+                onClose();
+            }
+        };
+
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, []);
+    }, [onClose]);
 
     return (
-        <div className="fixed inset-0 bg-gray-700 bg-opacity-70 flex justify-center items-center z-50">
-            <div ref={calendarRef} className="bg-SecondaryColor p-6 rounded-lg relative w-full max-w-lg text-red">
-                <button className="absolute top-4 right-4 text-2xl text-white bg-transparent" onClick={onClose}>
-                    ✖
-                </button>
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+            <div ref={modalRef} className="bg-SecondaryColor w-[380px] h-fit p-[20px] rounded-[10px] relative  max-w-lg text-red">
                 <Calendar
-                    className="react-calendar w-full custom-calendar"
+                    className="react-calendar custom-calendar max-w-full aspect-[1.1]"
                     onChange={handleDateChange}
                     value={selectedDate}
                     tileContent={tileContent}
@@ -83,6 +66,7 @@ const CalendarWidget = ({ onClose }: MovieCalendarProps) => {
                         return "";
                     }}
                 />
+
                 {selectedDate && (
                     <div className="mt-6">
                         <h3 className="text-xl font-semibold text-white">Фільми на {selectedDate.toDateString()}:</h3>

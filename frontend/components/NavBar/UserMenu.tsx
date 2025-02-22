@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useUser } from "@/hooks/useUser";
 import { useOktaAuth } from "@okta/okta-react";
+import ThemeSwitch from "@/components/ThemeSwitch";
 
 const UserMenu = () => {
     const [show, setShow] = useState(false);
@@ -46,7 +47,7 @@ const UserMenu = () => {
                         </div>
                     </Link>
 
-                    <MenuOption icon="NavThemeIcon" label="Dark Mode" />
+                    <ThemeSwitch />
                     <MenuOption icon="NavSettingsIcon" label="Settings" />
                     <Link href="/admin-page" className="ml-2 flex items-center gap-4">
                         <Icon name="iconCrown" />

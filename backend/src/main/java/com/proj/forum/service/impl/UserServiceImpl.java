@@ -81,8 +81,8 @@ public class UserServiceImpl implements UserService {
     private UserDto getUserDto(User user) {
         return UserDto.builder()
                 .id(user.getId())
-                .nickName(user.getName())
-                .firstName(user.getUsername())
+                .nickName(user.getUsername()) //TODO remind ui about change
+                .firstName(user.getName())
                 .following(user.getFollowing().size())
                 .subscribers(user.getSubscribers().size())
                 .followingGroups(user.getCreatedGroups().size())

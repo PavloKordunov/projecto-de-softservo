@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.AccessDeniedException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -106,6 +107,7 @@ public class GroupServiceImpl implements GroupService {
                 .image(groupDto.image())
                 .description(groupDto.description() == null ? StringUtils.EMPTY : groupDto.description())
                 .members(new ArrayList<User>())
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 
