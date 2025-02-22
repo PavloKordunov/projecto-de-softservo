@@ -1,8 +1,12 @@
 package com.proj.forum.service.impl;
 
+import com.proj.forum.dto.CommentDto;
 import com.proj.forum.dto.TopicDto;
+import com.proj.forum.entity.Comment;
 import com.proj.forum.entity.Topic;
+import com.proj.forum.repository.CommentRepository;
 import com.proj.forum.repository.TopicRepository;
+import com.proj.forum.service.CommentService;
 import com.proj.forum.service.TopicService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +24,7 @@ import java.util.UUID;
 public class TopicServiceImpl implements TopicService {
 
     private final TopicRepository topicRepository;
+    private final CommentService commentService;
 
     @Override
     public UUID createTopic(TopicDto topicDto) {
@@ -47,7 +52,7 @@ public class TopicServiceImpl implements TopicService {
         }
 
         return topicList.stream()
-                .map(TopicServiceImpl::getUpdateTopic)
+                .map(this::getUpdateTopic)
                 .toList();
     }
 
@@ -102,7 +107,8 @@ public class TopicServiceImpl implements TopicService {
                 .build();
     }
 
-    private static TopicDto getUpdateTopic(Topic topic) {
+    private TopicDto getUpdateTopic(Topic topic) {
+        List<CommentDto> comments = commentService.mapToListOfCommentsDto(topic.getComments());
         return TopicDto.builder()
                 .id(topic.getId())
                 .title(topic.getTitle())
@@ -119,16 +125,16 @@ public class TopicServiceImpl implements TopicService {
                 .author(topic.getAuthor_id())
                 .topicType(topic.getType())
                 .tag_id(topic.getTag_id())
+                .comments(comments)
                 .build();
     }
 
     @Override
     public List<TopicDto> mapToTopicDtoList(List<Topic> topics) {
         return topics.stream()
-                .map(TopicServiceImpl::getUpdateTopic)
+                .map(this::getUpdateTopic)
                 .toList();
     }
-
 
     @Override
     public void addView(UUID id) {

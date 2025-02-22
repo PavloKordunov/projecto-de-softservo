@@ -1,9 +1,11 @@
 package com.proj.forum.controller;
 
 import com.proj.forum.annotation.Logging;
+import com.proj.forum.annotation.RequireRoles;
 import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.GenericResponse;
 import com.proj.forum.dto.StatisticDto;
+import com.proj.forum.enums.RoleType;
 import com.proj.forum.service.UserStatisticService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class UserStatisticController {
 
     private final UserStatisticService userStatisticService;
 
+    @RequireRoles(RoleType.USER)
     @PostMapping("/new")
     public ApiResponse<StatisticDto> createStatistic(@RequestBody @Valid StatisticDto statisticDto) {
         StatisticDto newStatisticDto = userStatisticService.createStatistic(statisticDto);
@@ -41,6 +44,7 @@ public class UserStatisticController {
         return new ApiResponse<>(true, HttpStatus.OK, "Statistic get by user id successfully", statisticDto);
     }
 
+    @RequireRoles(RoleType.USER)
     @PutMapping
     public ApiResponse<GenericResponse> updateStatistic(@RequestBody @Valid StatisticDto statisticDto) {
         userStatisticService.updateStatistic(statisticDto);

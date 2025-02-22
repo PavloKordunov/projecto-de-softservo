@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -35,9 +36,13 @@ public class Post {
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
+    @Lob
     private String image;
 
     private LocalDateTime createdAt;
 
     private boolean isPinned;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
 }

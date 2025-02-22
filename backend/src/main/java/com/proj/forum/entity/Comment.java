@@ -25,22 +25,20 @@ public class Comment {
     @GeneratedValue
     private UUID id;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = true) // If the comment is under a post
+    private Post post;
+
+    @ManyToOne
+    @JoinColumn(name = "topic_id", nullable = true) // If the comment is under a topic
+    private Topic topic;
+
     @NotBlank
     private String content;
-
-    private LocalDateTime createdAt;
-
-    @NotNull
-    private UUID object; //topic or post
-
-    @NotNull
-    private String userImage;
-
-    @NotBlank
-    private String nickName;
-
-    @NotBlank
-    private String userName;
 
     @ManyToOne
     @JoinColumn(name = "parent_comment_id")
@@ -48,6 +46,8 @@ public class Comment {
 
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> replies;
+
+    private LocalDateTime createdAt;
 
     @PrePersist
     protected void onCreate() {

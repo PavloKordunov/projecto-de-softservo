@@ -9,7 +9,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
+
+import static jakarta.persistence.CascadeType.ALL;
 
 @Entity
 @AllArgsConstructor
@@ -62,4 +65,8 @@ public class Topic {
 
     @Column(nullable = false)
     private String image;
+
+    @OneToMany(mappedBy = "topic")
+    @OrderBy("createdAt DESC")
+    private List<Comment> comments;
 }

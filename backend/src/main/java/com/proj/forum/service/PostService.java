@@ -1,5 +1,6 @@
 package com.proj.forum.service;
 
+import com.proj.forum.dto.CommentDto;
 import com.proj.forum.dto.PostRequestDto;
 import com.proj.forum.dto.PostResponseDto;
 import com.proj.forum.entity.Post;

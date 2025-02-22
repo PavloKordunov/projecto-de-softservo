@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Builder
 public record StatisticDto(
-        @Id UUID id,
+        UUID id,
         @NotNull UUID userId,
         @NotNull UUID objectId,
         Short rate,

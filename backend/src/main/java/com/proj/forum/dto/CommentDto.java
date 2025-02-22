@@ -10,10 +10,11 @@ import java.util.UUID;
 public record CommentDto(
         UUID id,
         @NotBlank String content,
-        @NotNull UUID object,
-        @NotNull String userImage,
-        @NotBlank String nickName,
-        @NotBlank String userName,
+        @NotNull UUID objectId,
+        @NotNull UUID userId,
+        String userImage,
+        String nickName,
+        String userName,
         UUID parentComment
 ) {
 }

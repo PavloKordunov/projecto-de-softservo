@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Builder
@@ -18,7 +19,8 @@ public record PostResponseDto(
         boolean isPinned,
         @NotBlank String group_title,
         LocalDateTime createdAt,
-        int viewCount
+        int viewCount,
+        List<CommentDto> comments
         ) {
 
 }

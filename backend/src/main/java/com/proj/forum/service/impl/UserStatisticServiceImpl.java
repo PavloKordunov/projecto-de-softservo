@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -43,7 +44,7 @@ public class UserStatisticServiceImpl implements UserStatisticService {
         if (statisticDto.saved() != statistic.getSaved()) {
             statistic.setSaved(statisticDto.saved());
         }
-        if (statisticDto.rate() != statistic.getRate()) {
+        if (!Objects.equals(statisticDto.rate(), statistic.getRate())) {
             statistic.setRate(statisticDto.rate());
         }
         return statistic;

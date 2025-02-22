@@ -1,13 +1,16 @@
 package com.proj.forum.service.impl;
 
+import com.proj.forum.dto.CommentDto;
 import com.proj.forum.dto.PostRequestDto;
 import com.proj.forum.dto.PostResponseDto;
 import com.proj.forum.entity.Group;
 import com.proj.forum.entity.Post;
 import com.proj.forum.entity.User;
+import com.proj.forum.repository.CommentRepository;
 import com.proj.forum.repository.GroupRepository;
 import com.proj.forum.repository.PostRepository;
 import com.proj.forum.repository.UserRepository;
+import com.proj.forum.service.CommentService;
 import com.proj.forum.service.PostService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +24,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -30,6 +32,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final CommentService commentService;
 
     @Override
     public UUID createPost(PostRequestDto postDto) {
@@ -52,7 +55,7 @@ public class PostServiceImpl implements PostService {
         }
 
         return postList.stream()
-                .map(PostServiceImpl::getUpdatePost)
+                .map(this::getUpdatePost)
                 .toList();
     }
 
@@ -77,7 +80,7 @@ public class PostServiceImpl implements PostService {
         }
 
         return postList.stream()
-                .map(PostServiceImpl::getUpdatePost)
+                .map(this::getUpdatePost)
                 .toList();
     }
 
@@ -90,7 +93,7 @@ public class PostServiceImpl implements PostService {
         }
 
         return postList.stream()
-                .map(PostServiceImpl::getUpdatePost)
+                .map(this::getUpdatePost)
                 .toList();
     }
 
@@ -148,7 +151,8 @@ public class PostServiceImpl implements PostService {
                 .build();
     }
 
-    private static PostResponseDto getUpdatePost(Post post) {
+    private PostResponseDto getUpdatePost(Post post) {
+        List<CommentDto> comments = commentService.mapToListOfCommentsDto(post.getComments());
 
         return PostResponseDto.builder()
                 .id(post.getId())
@@ -162,13 +166,14 @@ public class PostServiceImpl implements PostService {
                 .group_title(post.getGroup().getTitle())
                 .createdAt(post.getCreatedAt())
                 .viewCount(post.getViewCount())
+                .comments(comments)
                 .build();
     }
 
     @Override
     public List<PostResponseDto> mapToPostDtoList(List<Post> posts) {
         return posts.stream()
-                .map(PostServiceImpl::getUpdatePost)
+                .map(this::getUpdatePost)
                 .toList();
 
     }

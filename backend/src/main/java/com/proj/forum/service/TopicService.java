@@ -1,5 +1,6 @@
 package com.proj.forum.service;
 
+import com.proj.forum.dto.CommentDto;
 import com.proj.forum.dto.TopicDto;
 import com.proj.forum.entity.Topic;
 

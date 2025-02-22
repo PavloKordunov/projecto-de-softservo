@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
+import java.util.List;
 import java.util.UUID;
 
 @Builder
@@ -23,6 +24,7 @@ public record TopicDto(
         @NotBlank String director,
         @NotBlank String image,
         @NotNull TopicType topicType,
-        int viewCount
+        int viewCount,
+        List<CommentDto> comments
 ) {
 }
