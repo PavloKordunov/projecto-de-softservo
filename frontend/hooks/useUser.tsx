@@ -26,11 +26,8 @@ interface UserProviderProps {
 
 export const UserProvider = ({ children }: UserProviderProps) => {
   const [user, setUser] = useState<User | null>(() => {
-    if (typeof window !== 'undefined') {
       const storedUser = localStorage.getItem('user');
       return storedUser ? JSON.parse(storedUser) : null;
-    }
-    return null;
   });
 
   useEffect(() => {

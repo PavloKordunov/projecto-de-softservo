@@ -2,22 +2,47 @@
 
 import Post from "@/components/Post";
 import Image from "next/image";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+
+interface Group {
+    id: string;
+    title: string;
+    description: string;
+}
 
 const Group = () => {
 
-      const [posts, setPosts] = useState<any[]>([]);
+    const [posts, setPosts] = useState<any[]>([]);
+    const params = useParams();
+    const groupId = params.id;
+    const [group, setGroup] = useState<Group | null>(null)
 
     useEffect(() => {
         const getAllPost = async () => {
-          const res = await fetch("http://localhost:8080/api/posts");
+          const res = await fetch(`http://localhost:8080/api/posts/group/${groupId}`);
           const data = await res.json();
           setPosts(data.body);
           console.log(data);
         };
-    
+        const getPostById = async() =>{
+            try {
+                const res = await fetch(`http://localhost:8080/api/groups/${groupId}`)
+                const data = await res.json()
+                setGroup(data.body)
+                console.log(data)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        getPostById()
         getAllPost();
       }, []);
+
+    if (!group) {
+        return <p className="text-white">Group not found</p>;
+    }
 
     return (
         <div> 
@@ -25,18 +50,18 @@ const Group = () => {
                 <div className="flex items-center gap-3">
                     <Image src="/groupImage.png" alt="" width={60} height={60} />
                     <div>
-                        <p className="text-white text-[28px] font-semibold">ФільмиУкраїнською</p>
+                        <p className="text-white text-[28px] font-semibold">{group?.title}</p>
                         <p className="text-[#97989D] text-[20px]">82,645 Постів у цій групі</p>
                     </div>
                 </div>
                 <div className="flex gap-7">
-                    <button className="px-4 py-2 bg-AccnetColor rounded-[10] text-white text-[16px] h-[50px] font-medium">Створити пост</button>
-                    <button className="px-4 py-2 bg-[#3A7F4F] rounded-[10] text-white text-[16px] h-[50px] font-medium">Приєднатися</button>
+                    <button className="px-4 py-2 bg-AccnetColor rounded-[10px] text-white text-[16px] h-[50px] font-medium">Створити пост</button>
+                    <button className="px-4 py-2 bg-[#3A7F4F] rounded-[10px] text-white text-[16px] h-[50px] font-medium">Приєднатися</button>
                 </div>
             </div>
             <div className="flex gap-6">
                 <div className="mt-4 px-5 py-4 bg-MainColor rounded-[21px] h-fit w-[710px]">
-                    <p className="text-white text-[15px] font-semibold mb-3"><strong>Опис:</strong> ця група створена для користувачів, які хочуть першими дізнаватися найцікавішу інформацію про українські фільми... </p>
+                    <p className="text-white text-[15px] font-semibold mb-3 line-clamp-2"><strong>Опис:</strong> {group?.description} </p>
                     <div className="flex gap-3 items-center mb-3">
                         <div className="py-2 w-fit px-3 bg-SecondaryColor rounded-[24px]">
                             <p className="text-[13px] text-[#C5D0E6] font-semibold">фільм</p>
