@@ -25,11 +25,11 @@ public class ChatRoomController {
 
     @PostMapping("/create")
     public ApiResponse<UUID> createRoom(@RequestBody ChatRoomDto chatRoomDto) {
-        return new ApiResponse<>(true, HttpStatus.OK, "", chatRoomService.createChatRoom(chatRoomDto).id());
+        return new ApiResponse<>(true, HttpStatus.OK, "create chat", chatRoomService.createChatRoom(chatRoomDto).id());
     }
 
     @GetMapping("/{chatRoomId}/history")
     public ApiResponse<List<MessageDto>> getChatHistory(@PathVariable UUID chatRoomId) {
-        return new ApiResponse<>(true, HttpStatus.OK, "", messageService.getChatRoomHistory(chatRoomId));
+        return new ApiResponse<>(true, HttpStatus.OK, "history chat", messageService.getChatRoomHistory(chatRoomId));
     }
 }

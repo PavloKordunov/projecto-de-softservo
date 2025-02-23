@@ -2,15 +2,16 @@ package com.proj.forum.controller;
 
 import com.proj.forum.annotation.Logging;
 import com.proj.forum.annotation.RequireRoles;
-import com.proj.forum.dto.*;
+import com.proj.forum.dto.ApiResponse;
+import com.proj.forum.dto.GenericResponse;
+import com.proj.forum.dto.UserDto;
+import com.proj.forum.dto.UserUpdateDto;
 import com.proj.forum.enums.RoleType;
 import com.proj.forum.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class UserController {
         return ApiResponse.apiResponse(true, 201, "Create user", id);
     }
 
-    @PostMapping("/check")
+    @GetMapping("/check")
     public ApiResponse<GenericResponse> checkUser() {
         UUID id = userService.checkOrCreateUserByGoogle();
         return ApiResponse.apiResponse(true, 201, "Create user", id);
