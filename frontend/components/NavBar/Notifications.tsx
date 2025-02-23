@@ -13,7 +13,7 @@ const Notifications = () => {
         <div className="relative">
             <div
                 className="bg-SecondaryColor w-14 h-14 rounded-[9px] flex items-center justify-center cursor-pointer"
-                onClick={() => setShowNotifications((prev) => !prev)}
+                onClick={() => setShowNotifications(!showNotifications)}
             >
                 <svg className="w-6 h-6">
                     <use href={`/sprite.svg#iconNotification`} />

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useUser } from "@/hooks/useUser";
 import { useOktaAuth } from "@okta/okta-react";
+import ThemeSwitch from "@/components/ThemeSwitch";
 
 const UserMenu = () => {
     const [show, setShow] = useState(false);
@@ -30,7 +31,7 @@ const UserMenu = () => {
                 <div className="bg-SecondaryColor w-14 h-14 rounded-[9px] flex items-center justify-center">
                     {user?.img ? renderImage(user.img, 45, 40, "person") : renderImage("/NavPerson.png", 45, 40, "default person")}
                 </div>
-                {user && <span className="text-white text-[21px] font-bold">{user.name}</span>}
+                <p className="text-white text-[21px] font-bold">{user?.nickName}</p>
                 <svg className="w-4 h-3">
                     <use href={`/sprite.svg#iconArrowDown`} />
                 </svg>
@@ -41,12 +42,12 @@ const UserMenu = () => {
                     <Link href={`/user/${user?.id}`} className="flex items-center gap-4">
                         {renderImage(user?.img || "/NavPerson.png", 53, 53, "person")}
                         <div>
-                            <p className="text-white text-[16px] font-semibold">View Profile</p>
-                            <p className="text-[#97989D] text-[12px]">@{user?.username}</p>
+                            <p className="text-white text-[16px] font-semibold">{user?.nickName}</p>
+                            <p className="text-[#97989D] text-[12px]">@{user?.firstName}</p>
                         </div>
                     </Link>
 
-                    <MenuOption icon="NavThemeIcon" label="Dark Mode" />
+                    <ThemeSwitch />
                     <MenuOption icon="NavSettingsIcon" label="Settings" />
                     <Link href="/admin-page" className="ml-2 flex items-center gap-4">
                         <Icon name="iconCrown" />

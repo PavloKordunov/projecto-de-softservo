@@ -1,20 +1,40 @@
+"use client"
+
+import { group } from "console";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const GroupPage = () => {
-    return ( 
-        <Link href='/group/:id' className="mt-4 p-4 bg-MainColor rounded-[21px] flex items-center h-fit w-[1030px] gap-4">
+
+    const [groups, setGroups] = useState<any[]>([]);
+
+    useEffect(() => {
+        const getAllGroups = async () => {
+          const res = await fetch("http://localhost:8080/api/groups");
+          const data = await res.json();
+          setGroups(data.body);
+          console.log(data);
+        };
+    
+        getAllGroups();
+      }, []);    
+
+    return (
+        <div>
+        {groups.map((group) => (
+            <Link key={group.id} href={`/group/${group.id}`} className="mt-4 p-4 bg-MainColor rounded-[21px] flex items-center h-fit w-[1030px] gap-4">
             <Image src="/postImage.png" alt="" width="208" height="237"/>
             <div className="w-full">
                <div className="flex items-center justify-between mb-4">
-                    <p className="text-[24px] text-white font-semibold">/Ржака_Українською</p>
+                    <p className="text-[24px] text-white font-semibold">/{group?.title}</p>
                     <div className="flex items-end gap-4">
 
-                        <button className="px-4 py-2 bg-AccnetColor rounded-[10] text-white text-[22px] font-semibold">Підписатися</button>
+                        <button className="px-4 py-2 bg-AccnetColor rounded-[10px] text-white text-[22px] font-semibold">Підписатися</button>
                     </div>
                </div>
                <p className="text-[14px] text-white mb-6 line-clamp-3">
-                    <strong>Опис:</strong> Ласкаво просимо до Ржака_Українською! Це місце для всіх, хто хоче обговорювати [основна тема групи], ділитися досвідом, задавати питання та знаходити однодумців. Ми прагнемо створити дружню та підтримуючу спільноту, де кожен може відчувати себе комфортно та вільно.
+                    <strong>Опис:</strong>{group?.description}
                </p>
                <div className="flex justify-between">
                <div className="flex gap-3 items-center mb-3">
@@ -32,6 +52,10 @@ const GroupPage = () => {
                 </div>
             </div>
         </Link>
+        
+        )) 
+        }
+        </div>
      );
 }
  

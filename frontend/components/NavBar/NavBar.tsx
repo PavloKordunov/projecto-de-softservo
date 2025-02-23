@@ -6,21 +6,17 @@ import Notifications from "./Notifications";
 import SearchBar from "./SearchBar";
 import CalendarWidget from "./CalendarWidget";
 import UserMenu from "./UserMenu";
+import { MovieDetails } from "@/api/omdbApi/omdbApi";
 
-const NavBar = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+interface NavBarProps {
+    movies: MovieDetails[];
+}
+
+const NavBar = ({ movies }: NavBarProps) => {
     const [isCalendarVisible, setIsCalendarVisible] = useState(false);
-
-    const handleLogout = async () => {
-
-    };
 
     const toggleCalendar = () => {
         setIsCalendarVisible((prev) => !prev);
-    };
-
-    const closeCalendar = () => {
-        setIsCalendarVisible(false);
     };
 
     return (
@@ -40,7 +36,7 @@ const NavBar = () => {
                 <UserMenu />
             </div>
 
-            {isCalendarVisible && <CalendarWidget onClose={closeCalendar} />}
+            {isCalendarVisible && <CalendarWidget onClose={toggleCalendar} movies={movies} />}
         </div>
     );
 };

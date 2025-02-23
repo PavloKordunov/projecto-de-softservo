@@ -1,12 +1,13 @@
 "use client"
 
 import Image from "next/image";
+import Link from "next/link";
 
 const NavPanel = () => {
     return ( 
         <div className="flex flex-col">
         <div className="mt-4  xl:ml-16 p-3 bg-MainColor rounded-[21px] w-fit flex flex-row xl:flex-col gap-3 mb-6">
-            <div className="p-2 bg-[#262D34] flex gap-2 items-center rounded-lg h-[60px] w-90 lg:w-90">
+            <Link href="/topics" className="p-2 bg-[#262D34] flex gap-2 items-center rounded-lg h-[60px] w-90 lg:w-90">
                 <div className="w-9 h-9 bg-SecondaryColor rounded-lg flex items-center justify-center">
                     <svg className="w-6 h-6" >
                         <use href={`/sprite.svg#icon1`} />
@@ -16,7 +17,7 @@ const NavPanel = () => {
                     <p className="text-white text-[12px] lg:text-[16px] font-semibold">КіноКнигаСеріал</p>
                     <p className="text-[#97989D] text-[8px] lg:text-[12px]">Обирай фільми, книги та серіали.</p>
                 </div>
-            </div>
+            </Link>
             <div className="p-2 bg-[#262D34] flex gap-2 items-center rounded-lg h-[60px] w-90 lg:w-90">
                 <div className="w-9 h-9 bg-SecondaryColor rounded-lg flex items-center justify-center">
                     <svg className="w-6 h-6" >

@@ -41,7 +41,7 @@ const PostPage = () => {
 
     if (!post) {
         return <p className="text-white">Завантаження...</p>;
-      }
+    }
 
     return (
         <div>

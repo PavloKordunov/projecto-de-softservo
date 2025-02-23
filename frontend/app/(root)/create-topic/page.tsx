@@ -15,8 +15,9 @@ interface FilmData {
 const AdminPostMenu = () => {
     const router = useRouter();
     const [postMode, setPostMode] = useState("film");
-    const [showModal, setShowModal] = useState(false); //change
+    const [showModal, setShowModal] = useState(false); 
     const [filmData, setFilmData] = useState<FilmData | null>(null);
+    const [base64, setBase64] = useState<string | null>(null);
     const [formData, setFormData] = useState({
         title: '',
         IMDB: '',
@@ -64,6 +65,19 @@ const AdminPostMenu = () => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
+
+    function encodeImageFileAsURL(event: React.ChangeEvent<HTMLInputElement>) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+    
+        const reader = new FileReader();
+        reader.onloadend = function () {
+          const base64String = reader.result as string;
+          setBase64(base64String);
+          console.log('RESULT:', base64String);
+        };
+        reader.readAsDataURL(file);
+    }
 
     return (
         <div className="mt-4 w-[1030px] bg-[#1E1F20] rounded-[31px] px-6 py-10 relative">
@@ -304,6 +318,7 @@ const AdminPostMenu = () => {
                                     type="file"
                                     id="fileInput"
                                     accept=".jpg, .jpeg, .png"
+                                    onChange={encodeImageFileAsURL}
                                     multiple
                                 />
                             </div>
