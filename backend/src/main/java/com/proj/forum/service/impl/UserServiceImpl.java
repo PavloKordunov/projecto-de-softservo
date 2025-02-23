@@ -3,13 +3,14 @@ package com.proj.forum.service.impl;
 import com.proj.forum.dto.UserDto;
 import com.proj.forum.dto.UserUpdateDto;
 import com.proj.forum.entity.User;
-import com.proj.forum.helper.UserHelper;
 import com.proj.forum.exception.TokenTypeException;
+import com.proj.forum.helper.UserHelper;
 import com.proj.forum.repository.UserRepository;
 import com.proj.forum.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -49,7 +50,7 @@ public class UserServiceImpl implements UserService {
             else{
                 String nickName;
                 do{
-                     nickName = UserHelper.createNickname(email);
+                    nickName = UserHelper.createNickname(email);
                 } while(userRepository.existsByUsername(nickName));
 
                 User newUser = User.builder()
@@ -185,6 +186,32 @@ public class UserServiceImpl implements UserService {
 
     public List<UserDto> getByUsernameContain(String name) {
         return mapToUserDtoList(userRepository.findByUsernameContainingIgnoreCase(name));
+    }
+
+    @Override
+    public Boolean followUser(UUID userId) {
+        User followToThisUser = userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException("User not found"));
+
+        //TODO extract this 6 lines to 1 method or AOP coz it's already exist in 43 line
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = new User();
+
+        if (authentication != null && authentication.getPrincipal() instanceof JwtAuthenticationToken token) {
+            var jwt = (Jwt) token.getPrincipal();
+            String email = jwt.getClaims().get("sub").toString();
+            currentUser = userRepository.findByEmail(email).orElseThrow(()-> new EntityNotFoundException("User not found"));
+        }
+        if(currentUser.getFollowing().contains(currentUser))
+        {
+            currentUser.getFollowing().remove(followToThisUser);
+            userRepository.save(currentUser);
+            return false;
+        }
+        else{
+            currentUser.getFollowing().add(followToThisUser);
+            userRepository.save(currentUser);
+            return true;
+        }
     }
 
 //    @Override

@@ -18,5 +18,7 @@ public interface UserService {
     void updateUser(UUID id, UserUpdateDto userDto);
     List<UserDto> mapToUserDtoList(List<User> users);
     List<UserDto> getByUsernameContain(String name);
+
+    Boolean followUser(UUID userId);
     //boolean isCurrentUser(String email);
 }

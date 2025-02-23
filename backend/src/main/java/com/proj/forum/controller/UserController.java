@@ -73,6 +73,13 @@ public class UserController {
     }
 
     @RequireRoles({RoleType.USER})
+    @PatchMapping("follow-user/{userId}")
+    public ApiResponse<Boolean> followUser(@PathVariable UUID userId) {
+        Boolean isFollowing = userService.followUser(userId);
+        return new ApiResponse<>(true, HttpStatus.OK, "Successful follow user", isFollowing);
+    }
+
+    @RequireRoles({RoleType.USER})
     @DeleteMapping("/delete/{id}")
     public ApiResponse<GenericResponse> deleteUser(@PathVariable UUID id) {  //TODO only user can delete/change himself
             userService.deleteUser(id);
