@@ -190,32 +190,30 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean followUser(UUID userId) {
-        User followToThisUser = userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException("User not found"));
+        User followedUser = userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException("User not found"));
 
-        //TODO extract this 6 lines to 1 method or AOP coz it's already exist in 43 line
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = new User();
-
-        if (authentication != null && authentication.getPrincipal() instanceof JwtAuthenticationToken token) {
-            var jwt = (Jwt) token.getPrincipal();
-            String email = jwt.getClaims().get("sub").toString();
-            currentUser = userRepository.findByEmail(email).orElseThrow(()-> new EntityNotFoundException("User not found"));
-        }
+        String email = getEmail();
+        User currentUser = userRepository.findByEmail(email).orElseThrow(()-> new EntityNotFoundException("User not found"));
         if(currentUser.getFollowing().contains(currentUser))
         {
-            currentUser.getFollowing().remove(followToThisUser);
+            currentUser.getFollowing().remove(followedUser);
             userRepository.save(currentUser);
             return false;
         }
         else{
-            currentUser.getFollowing().add(followToThisUser);
+            currentUser.getFollowing().add(followedUser);
             userRepository.save(currentUser);
             return true;
         }
     }
 
-//    @Override
-//    public boolean isCurrentUser(String email){
-//        return false;
-//    }
+    public static String getEmail() {  //fix it later
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.getPrincipal() instanceof JwtAuthenticationToken token) {
+            var jwt = (Jwt) token.getPrincipal();
+            return jwt.getClaims().get("sub").toString();
+        }
+        throw new EntityNotFoundException("User not found");
+    }
 }

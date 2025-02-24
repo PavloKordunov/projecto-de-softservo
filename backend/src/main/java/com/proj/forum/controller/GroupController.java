@@ -72,14 +72,6 @@ public class GroupController {
                 null);
     }
 
-
-//    @RequireRoles({RoleType.USER})
-//    @PatchMapping("/{groupName}/remove/{userId}")
-//    public ApiResponse<?> removeMember(@PathVariable @Valid UUID userId, @PathVariable @Valid String groupName) {
-//        UUID groupId = groupService.removeMember(userId, groupName);
-//        return ApiResponse.apiResponse(true, 200, "User successfully unsubscribed", groupId);
-//    }
-
     @RequireRoles({RoleType.USER})
     @DeleteMapping("/delete/{groupId}/user/{userId}")
     public ApiResponse<GenericResponse> deleteGroup(

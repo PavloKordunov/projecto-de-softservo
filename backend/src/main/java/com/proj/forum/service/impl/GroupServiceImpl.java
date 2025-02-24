@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.AccessDeniedException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +45,6 @@ public class GroupServiceImpl implements GroupService {
         if (group.isEmpty()) {
             throw new EntityNotFoundException("No group");
         }
-
         return getUpdateGroup(group.get());
     }
 
@@ -101,10 +99,10 @@ public class GroupServiceImpl implements GroupService {
         return Group.builder()
                 .author(groupDto.userId())
                 .title(groupDto.title())
-                .image(groupDto.image())
-                .description(groupDto.description() == null ? StringUtils.EMPTY : groupDto.description())
-                .members(new ArrayList<User>())
-                .createdAt(LocalDateTime.now())
+                .image(groupDto.image() == null ? StringUtils.EMPTY : groupDto.image())
+                .description(groupDto.description())
+                .members(new ArrayList<>())
+                .isPublic(groupDto.isPublic())
                 .build();
     }
 
@@ -115,6 +113,10 @@ public class GroupServiceImpl implements GroupService {
                 .description(group.getDescription() == null ? StringUtils.EMPTY : group.getDescription())
                 .image(group.getImage() == null ? StringUtils.EMPTY : group.getImage())
                 .userId(group.getAuthor())
+                .createdAt(group.getCreatedAt())
+                .isPublic(group.isPublic())
+                .memberCount(group.getMembers().size())
+                .postCount(group.getPosts().size())
                 .build();
     }
 
@@ -157,7 +159,6 @@ public class GroupServiceImpl implements GroupService {
         User user = userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException("User not found"));
         return mapToGroupDtoList(groupRepository.findByMembersContains(user));
     }
-
 
 //    @Override
 //    @Transactional

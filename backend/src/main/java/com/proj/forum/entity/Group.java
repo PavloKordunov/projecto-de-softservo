@@ -47,5 +47,13 @@ public class Group {
     )
     private List<User> members;
 
+    private boolean isPublic;
+
     private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        isPublic = false;
+    }
 }
