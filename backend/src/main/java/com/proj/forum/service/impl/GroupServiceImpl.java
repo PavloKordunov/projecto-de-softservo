@@ -2,9 +2,7 @@ package com.proj.forum.service.impl;
 
 import com.proj.forum.dto.GroupDto;
 import com.proj.forum.entity.Group;
-import com.proj.forum.entity.Topic;
 import com.proj.forum.entity.User;
-import com.proj.forum.exception.UserAlreadySubscribeException;
 import com.proj.forum.repository.GroupRepository;
 import com.proj.forum.repository.UserRepository;
 import com.proj.forum.service.GroupService;
@@ -12,7 +10,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -153,6 +150,12 @@ public class GroupServiceImpl implements GroupService {
             userRepository.save(user);
             return true;
         }
+    }
+
+    @Override
+    public List<GroupDto> getFollowedGroups(UUID userId) {
+        User user = userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException("User not found"));
+        return mapToGroupDtoList(groupRepository.findByMembersContains(user));
     }
 
 

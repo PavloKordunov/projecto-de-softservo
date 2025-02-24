@@ -32,6 +32,13 @@ public class GroupController {
         return ApiResponse.apiResponse(true, 201, "Create group", id);
     }
 
+    @GetMapping("/followed/{userId}")
+    public ApiResponse<List<GroupDto>> getFollowedGroups(@PathVariable UUID userId)
+    {
+        List<GroupDto> groups = groupService.getFollowedGroups(userId);
+        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Groups found", groups);
+    }
+
     @GetMapping
     public ApiResponse<List<GroupDto>> getAllGroups() {
         List<GroupDto> groupsDto = groupService.getAllGroups();

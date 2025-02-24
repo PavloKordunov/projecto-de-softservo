@@ -1,6 +1,7 @@
 package com.proj.forum.repository;
 
 import com.proj.forum.entity.Group;
+import com.proj.forum.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -12,5 +13,6 @@ public interface GroupRepository extends JpaRepository<Group, UUID> {
     Optional<Group> findByTitle(String name); //group has title or name?
     Optional<Group> findById(UUID id);
     List<Group> findByTitleContainingIgnoreCase(String name);
-    boolean existsByTitle(String title);
+    //boolean existsByTitle(String title);
+    List<Group> findByMembersContains(User user);
 }
