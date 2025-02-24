@@ -15,6 +15,6 @@ public interface GroupService {
     void updateGroup(UUID id, GroupDto groupDto) throws AccessDeniedException;
     List<GroupDto> mapToGroupDtoList(List<Group> groups);
     List<GroupDto> getByTitleContain(String name);
-    UUID addMember(UUID userId, String groupName);
-    UUID removeMember(UUID userId, String groupName);
+    boolean addMember(UUID userId, String groupName);
+    //UUID removeMember(UUID userId, String groupName);
 }

@@ -134,30 +134,40 @@ public class GroupServiceImpl implements GroupService {
 
     @Transactional
     @Override
-    public UUID addMember(UUID userId, String groupName) {
-        Group group = groupRepository.findByTitle(groupName).orElseThrow(() -> new EntityNotFoundException("Group is not found"));
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User is not found"));
+    public boolean addMember(UUID userId, String groupName) {
+        Group group = groupRepository.findByTitle(groupName)
+                .orElseThrow(() -> new EntityNotFoundException("Group not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         if (group.getMembers().contains(user)) {
-            throw new UserAlreadySubscribeException("User is already subscribed to group");
+            group.getMembers().remove(user);
+            user.getGroups().remove(group);
+            groupRepository.save(group);
+            userRepository.save(user);
+            return false;
+        } else {
+            group.getMembers().add(user);
+            user.getGroups().add(group);
+            groupRepository.save(group);
+            userRepository.save(user);
+            return true;
         }
-        group.getMembers().add(user);
-        groupRepository.save(group);
-        return group.getId();
     }
 
-    @Override
-    @Transactional
-    public UUID removeMember(UUID userId, String groupName) {
-        Group group = groupRepository.findByTitle(groupName).orElseThrow(() -> new EntityNotFoundException("Group is not found"));
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User is not found"));
 
-        if (!group.getMembers().contains(user)) {
-            throw new UserAlreadySubscribeException("User is not subscribed to group");
-        }
-        group.getMembers().remove(user);
-        groupRepository.save(group);
-        return group.getId();
-    }
+//    @Override
+//    @Transactional
+//    public UUID removeMember(UUID userId, String groupName) {
+//        Group group = groupRepository.findByTitle(groupName).orElseThrow(() -> new EntityNotFoundException("Group is not found"));
+//        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User is not found"));
+//
+//        if (!group.getMembers().contains(user)) {
+//            throw new UserAlreadySubscribeException("User is not subscribed to group");
+//        }
+//        group.getMembers().remove(user);
+//        groupRepository.save(group);
+//        return group.getId();
+//    }
 
 }
