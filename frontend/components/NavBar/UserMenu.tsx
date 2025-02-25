@@ -38,7 +38,7 @@ const UserMenu = () => {
             </div>
 
             {show && (
-                <div className="absolute w-[248px] bg-MainColor p-3 top-[100px] right-[37px] flex flex-col gap-4 rounded-[11px]">
+                <div className="absolute w-[248px] z-10 bg-MainColor p-3 top-[100px] right-[37px] flex flex-col gap-4 rounded-[11px]">
                     <Link href={`/user/${user?.id}`} className="flex items-center gap-4">
                         {renderImage(user?.img || "/NavPerson.png", 53, 53, "person")}
                         <div>
