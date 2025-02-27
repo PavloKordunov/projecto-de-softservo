@@ -9,9 +9,7 @@ export default function HomeLayout({children}: { children: React.ReactNode }) {
             <div className="flex justify-center xl:justify-start h-[100%]">
                 <NavPanel/>
             </div>
-
             {children}
-
         </section>
     );
 }

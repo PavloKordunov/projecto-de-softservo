@@ -10,7 +10,7 @@ interface PostProps {
     description: string;
     name: string;
     nickname: string;
-    image?: string;
+    image?: any;
     isPinned: boolean;
     group_title: string;
     viewCount: string;
@@ -21,7 +21,7 @@ interface PostProps {
 const Post: React.FC<PostProps> = ({ className, post }) => {
     return ( 
         <Link href={`/post/${post.id}`} className={`p-6 bg-MainColor rounded-[21px] flex flex-row gap-3 mb-6 items-center w-[1030px] ${className}`}>
-            <Image src="/postImage.png" alt="" width="208" height="237" />
+            <Image src={post?.image} alt="" width="208" height="237" />
             <div className="ml-2">
                 <div className="flex gap-2 mb-4">
                      <Image src='/groupImage.png' alt="" width={25} height={25} />

@@ -19,7 +19,7 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div>
+    <div >
       <CreatePostNav />
       {posts.length > 0 ? (
         posts.map((post) => <Post key={post.id} post={post} />)

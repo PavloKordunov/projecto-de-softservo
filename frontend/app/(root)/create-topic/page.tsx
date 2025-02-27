@@ -1,5 +1,7 @@
 "use client"
 
+import { useUser } from "@/hooks/useUser";
+import { Dirent } from "fs";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -8,23 +10,32 @@ interface FilmData {
     ImdbRating: string;
     Country: string;
     Genre: string;
+    Author: any;
     Runtime: string;
   }
   
 
 const AdminPostMenu = () => {
     const router = useRouter();
+    const {user} = useUser()
     const [postMode, setPostMode] = useState("film");
     const [showModal, setShowModal] = useState(false); 
     const [filmData, setFilmData] = useState<FilmData | null>(null);
     const [base64, setBase64] = useState<string | null>(null);
+    const [limitAge, setLimitAge] = useState<number | null>(null);
     const [formData, setFormData] = useState({
         title: '',
+        author: user?.id,
         IMDB: '',
         country: '',
         genre: '',
         duration: '',
         description: "",
+        limitAge: limitAge,
+        topicType: postMode,
+        actor: "",
+        director: "",
+        image: "",
         seasoneAmount: "",
         runtime: ""
     });
@@ -45,6 +56,7 @@ const AdminPostMenu = () => {
             console.log(error);
         }
 
+        console.log(formData)
         router.push("/home");
     };
 
@@ -61,6 +73,17 @@ const AdminPostMenu = () => {
         }
     }, [filmData]);
 
+    useEffect(() => {
+        if (user) {
+            setFormData((prev) => ({ ...prev, author: user.id }));
+        }
+    }, [user]);
+
+    useEffect(() => {
+        setFormData((prev) => ({ ...prev, limitAge }));
+    }, [limitAge]);
+    
+
     const handleInputChange = (e: any) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
@@ -74,6 +97,10 @@ const AdminPostMenu = () => {
         reader.onloadend = function () {
           const base64String = reader.result as string;
           setBase64(base64String);
+          setFormData((prev) => ({
+            ...prev,
+            image: base64String,
+        }));
           console.log('RESULT:', base64String);
         };
         reader.readAsDataURL(file);
@@ -139,11 +166,11 @@ const AdminPostMenu = () => {
                     <div className="mb-6">
                         <h2 className="text-2xl font-semibold text-[#F4F6F8] mb-4">Вікові обмеження:</h2>
                         <div className="flex items-center gap-4">
-                            <button className="px-6 py-2 bg-[#2c353d] rounded-[26px] text-[#C5D0E6] text-sm">0+</button>
-                            <button className="px-6 py-2 bg-[#2c353d] rounded-[26px] text-[#C5D0E6] text-sm">6+</button>
-                            <button className="px-6 py-2 bg-[#2c353d] rounded-[26px] text-[#C5D0E6] text-sm">12+</button>
-                            <button className="px-6 py-2 bg-[#2c353d] rounded-[26px] text-[#C5D0E6] text-sm">16+</button>
-                            <button className="px-6 py-2 bg-[#2c353d] rounded-[26px] text-[#C5D0E6] text-sm">18+</button>
+                            <button className="px-6 py-2 bg-[#2c353d] rounded-[26px] text-[#C5D0E6] text-sm" onClick={() => setLimitAge(0)}>0+</button>
+                            <button className="px-6 py-2 bg-[#2c353d] rounded-[26px] text-[#C5D0E6] text-sm" onClick={() => setLimitAge(6)}>6+</button>
+                            <button className="px-6 py-2 bg-[#2c353d] rounded-[26px] text-[#C5D0E6] text-sm" onClick={() => setLimitAge(12)}>12+</button>
+                            <button className="px-6 py-2 bg-[#2c353d] rounded-[26px] text-[#C5D0E6] text-sm" onClick={() => setLimitAge(16)}>16+</button>
+                            <button className="px-6 py-2 bg-[#2c353d] rounded-[26px] text-[#C5D0E6] text-sm" onClick={() => setLimitAge(18)}>18+</button>
                         </div>
                     </div>
                     {(postMode === 'film' || postMode === 'serial') && (
@@ -383,7 +410,8 @@ const AdminPostMenu = () => {
                             <input
                                 className="w-[218px] h-[43px] bg-[#2c353d] rounded-md px-3 text-[#C5D0E6] text-sm"
                                 type='text'
-                                name='directorName'
+                                name='director'
+                                value={formData.director}
                                 placeholder='Введіть прізвище та ім’я...'
                                 onChange={handleInputChange}
                             />
@@ -399,14 +427,14 @@ const AdminPostMenu = () => {
                             <input
                                 className="w-[218px] h-[43px] bg-[#2c353d] rounded-md px-3 text-[#C5D0E6] text-sm"
                                 type='text'
-                                name='actorFilmName'
+                                value={formData.actor}
+                                name='actor'
                                 placeholder='Введіть прізвище та ім’я (у фільмі)...'
                                 onChange={handleInputChange}
                             />
                             <input
                                 className="w-[218px] h-[43px] bg-[#2c353d] rounded-md px-3 text-[#C5D0E6] text-sm"
                                 type='text'
-                                name='actorRealName'
                                 placeholder='Введіть прізвище та ім’я (в житті)...'
                                 onChange={handleInputChange}
                             />

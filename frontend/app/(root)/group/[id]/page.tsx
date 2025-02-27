@@ -1,6 +1,7 @@
 "use client"
 
 import Post from "@/components/Post";
+import { useUser } from "@/hooks/useUser";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -16,6 +17,7 @@ const Group = () => {
     const [posts, setPosts] = useState<any[]>([]);
     const params = useParams();
     const groupId = params.id;
+    const {user} = useUser()
     const [group, setGroup] = useState<Group | null>(null)
 
     useEffect(() => {
@@ -40,6 +42,19 @@ const Group = () => {
         getAllPost();
       }, []);
 
+      const getSubscribeUser = async () => {
+        const res = await fetch(`http://localhost:8080/api/groups/${group?.title}/follow/${user?.id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${user?.accessToken}`
+            }
+        }
+        );
+        const data = await res.json();
+        console.log(data);
+      };
+
     if (!group) {
         return <p className="text-white">Group not found</p>;
     }
@@ -56,11 +71,11 @@ const Group = () => {
                 </div>
                 <div className="flex gap-7">
                     <button className="px-4 py-2 bg-AccnetColor rounded-[10px] text-white text-[16px] h-[50px] font-medium">Створити пост</button>
-                    <button className="px-4 py-2 bg-[#3A7F4F] rounded-[10px] text-white text-[16px] h-[50px] font-medium">Приєднатися</button>
+                    <button className="px-4 py-2 bg-[#3A7F4F] rounded-[10px] text-white text-[16px] h-[50px] font-medium" onClick={getSubscribeUser}>Приєднатися</button>
                 </div>
             </div>
-            <div className="flex gap-6">
-                <div className="mt-4 px-5 py-4 bg-MainColor rounded-[21px] h-fit w-[710px]">
+            <div className="flex gap-4">
+                <div className="mt-4 px-5 py-4 bg-MainColor rounded-[21px] h-fit w-[690px]">
                     <p className="text-white text-[15px] font-semibold mb-3 line-clamp-2"><strong>Опис:</strong> {group?.description} </p>
                     <div className="flex gap-3 items-center mb-3">
                         <div className="py-2 w-fit px-3 bg-SecondaryColor rounded-[24px]">
@@ -74,7 +89,7 @@ const Group = () => {
                         </div>
                     </div>
                 </div>
-                <div className="mt-4  px-2 py-4 bg-MainColor rounded-[21px] h-fit w-[295px]">
+                <div className="mt-4  px-4 py-4 bg-MainColor rounded-[21px] h-fit w-[320px]">
                     <div className="flex items-center gap-2 mb-2">
                         <Image src="/sabs.png" alt="" width={24} height={18} />
                         <p className="text-white text-[15px] font-semibold">317,731  підписники</p>
@@ -84,8 +99,8 @@ const Group = () => {
                         <p className="text-white text-[15px] font-semibold">37,731  онлайн</p>
                     </div>
                     <div className="flex items-center">
-                        <div className="py-2 w-fit px-3 bg-SecondaryColor rounded-[24px]">
-                            <p className="text-[13px] text-[#C5D0E6] font-semibold">Публічна група</p>
+                        <div className="py-2 w-fit px-3 bg-SecondaryColor rounded-[24px] mr-2">
+                            <p className="text-[13px] text-[#C5D0E6] font-semibold ">Публічна група</p>
                         </div>
                         <p className="text-white text-[15px] font-semibold">Створена: 31.12.2024</p>
                     </div>

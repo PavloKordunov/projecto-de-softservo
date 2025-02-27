@@ -6,7 +6,6 @@ import OktaAuth, { toRelativeUrl } from "@okta/okta-auth-js";
 import { useRouter } from "next/navigation";
 import { Security } from "@okta/okta-react";
 import oktaConfig from "@/lib/oktaConfig";
-import { RecoilRoot } from "recoil";
 import { UserProvider } from "@/hooks/useUser";
 import { useMoviesByYear } from "@/hooks/useMoviesByYear";
 import { Providers } from './providers'
@@ -41,7 +40,7 @@ export default function RootLayout({
           >
               <UserProvider>
                   <NavBar movies={movies} />
-                  {children}
+                    {children}
               </UserProvider>
           </Security>
       </Providers>

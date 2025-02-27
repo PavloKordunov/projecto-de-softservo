@@ -77,7 +77,7 @@ const CreatePostModal = ({handleShow} : {handleShow : () => void}) => {
         <div className="w-screen h-screen absolute left-0 top-0 bg-black bg-opacity-60 z-50 flex items-center justify-center">
             <div className="bg-MainColor px-10 py-6 rounded-[31px] w-[710px]">
                 <div className="flex items-center justify-between mb-5">
-                    <p className="text-[44px] text-white font-semibold">Створити допис</p>
+                    <p className="text-[36px] text-white font-semibold">Створити допис</p>
                     <svg className="w-8 h-8" fill="#fff" onClick={handleShow}>
                         <use href={`/sprite.svg#closeBtnIcon`} />
                     </svg>

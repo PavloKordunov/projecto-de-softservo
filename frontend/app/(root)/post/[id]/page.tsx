@@ -11,7 +11,7 @@ interface Post {
       description: string;
       name: string;
       nickname: string;
-      image?: string;
+      image?: any;
       isPinned: boolean;
       group_title: string;
       viewCount: string
@@ -69,7 +69,7 @@ const PostPage = () => {
                     <p className="text-[13px] text-[#C5D0E6] font-semibold">страшний</p>
                 </div>
             </div>
-            <Image src="/images.jpeg" alt="" width={980} height={760} className="mb-3" />
+            <Image src={post?.image} alt="" width={980} height={760} className="mb-3" />
             <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
                     <Image src="/person.png" alt="" width={54} height={54}/>

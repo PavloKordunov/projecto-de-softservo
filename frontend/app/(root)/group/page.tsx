@@ -1,5 +1,6 @@
 "use client"
 
+import { useUser } from "@/hooks/useUser";
 import { group } from "console";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,6 +9,7 @@ import { useEffect, useState } from "react";
 const GroupPage = () => {
 
     const [groups, setGroups] = useState<any[]>([]);
+    const {user} = useUser()
 
     useEffect(() => {
         const getAllGroups = async () => {
@@ -18,7 +20,21 @@ const GroupPage = () => {
         };
     
         getAllGroups();
-      }, []);    
+      }, []);  
+      
+      const subscribeUser = async (title: string) => {
+        const res = await fetch(`http://localhost:8080/api/groups/${title}/follow/${user?.id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${user?.accessToken}`
+            }
+        }
+        );
+        const data = await res.json();
+        console.log(data);
+      };
+  
 
     return (
         <div>
@@ -30,11 +46,11 @@ const GroupPage = () => {
                     <p className="text-[24px] text-white font-semibold">/{group?.title}</p>
                     <div className="flex items-end gap-4">
 
-                        <button className="px-4 py-2 bg-AccnetColor rounded-[10px] text-white text-[22px] font-semibold">Підписатися</button>
+                        <button className="px-4 py-2 bg-AccnetColor rounded-[10px] text-white text-[22px] font-semibold" onClick={() => subscribeUser(group?.title)}>Підписатися</button>
                     </div>
                </div>
                <p className="text-[14px] text-white mb-6 line-clamp-3">
-                    <strong>Опис:</strong>{group?.description}
+                    <strong>Опис: </strong>{group?.description}
                </p>
                <div className="flex justify-between">
                <div className="flex gap-3 items-center mb-3">

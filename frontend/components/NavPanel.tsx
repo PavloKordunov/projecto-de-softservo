@@ -2,8 +2,17 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import CreateGroup from "./CreateGroup";
+import { useState } from "react";
 
 const NavPanel = () => {
+
+    const [showGroup, setShowGroup] = useState(false)
+
+    const handleShowCreateGroup = () => {
+        setShowGroup(!showGroup)
+    }
+
     return ( 
         <div className="flex flex-col">
         <div className="mt-4  xl:ml-16 p-3 bg-MainColor rounded-[21px] w-fit flex flex-row xl:flex-col gap-3 mb-6">
@@ -43,12 +52,13 @@ const NavPanel = () => {
         </div>
         <div>
             <div className="hidden xl:ml-16 xl:w-[272px] xl:p-6 xl:bg-MainColor xl:rounded-[21px]  xl:flex xl:flex-col xl:gap-3 xl:mb-6">
-                <div className="flex items-center gap-2 mb-4">
+                <div className="flex items-center gap-2">
                     <p className="text-[21px] text-white font-semibold">Групи</p>
                     <svg className="w-4 h-3" fill="#fff" >
                         <use href={`/sprite.svg#exit-arrow`} />
                     </svg>
                 </div>
+                <button className="border-none bg-AccnetColor w-full h-[40px] rounded-[8px] text-[18px] text-white font-semibold mb-3" onClick={handleShowCreateGroup}>Створити групу</button>
                 <div className="flex gap-2 items-center">
                     <Image src="/groupIcon.png" alt="" width={42} height={42}/>
                     <div className="flex flex-col">
@@ -72,6 +82,7 @@ const NavPanel = () => {
                 </div>
             </div>
         </div>
+        {showGroup && <CreateGroup handleShow={handleShowCreateGroup}/>}
         </div>
      );
 }
