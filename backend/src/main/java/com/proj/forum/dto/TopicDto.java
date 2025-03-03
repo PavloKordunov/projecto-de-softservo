@@ -14,7 +14,7 @@ public record TopicDto(
         UUID tag_id,
         @NotBlank(message = "Title cannot be blank") String title,
         @NotNull UUID author,
-        @NotNull Integer limitAge,
+        @NotNull Integer limitAge, //TODO create enum
         @NotBlank String description,
         @NotBlank String country,
         @NotBlank String duration,

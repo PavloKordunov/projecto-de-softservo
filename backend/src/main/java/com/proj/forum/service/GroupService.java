@@ -16,7 +16,6 @@ public interface GroupService {
     List<GroupDto> mapToGroupDtoList(List<Group> groups);
     List<GroupDto> getByTitleContain(String name);
     boolean addMember(UUID userId, String groupName);
-
     List<GroupDto> getFollowedGroups(UUID userId);
     //UUID removeMember(UUID userId, String groupName);
 }
