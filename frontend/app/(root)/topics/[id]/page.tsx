@@ -1,8 +1,37 @@
 "use client"
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+
+interface Post {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  limitAge: number;
+  IMDB: number;
+  duration: string;
+  country: string;
+  genre: string;
+}
 
 const AdminPost = () => {
+
   const router = useRouter();
+  const params = useParams();
+  const topicId = params.id;
+
+  const [topic, setTopics] = useState<Post | null>(null);
+
+  useEffect(() => {
+      const getAllTopics = async () => {
+        const res = await fetch(`http://localhost:8080/api/topics/${topicId}`);
+        const data = await res.json();
+        setTopics(data.body);
+        console.log(data);
+      };
+    
+      getAllTopics();
+  }, []);
 
   return (
     <div className="ml-6 mt-4 w-[1030px] bg-[#1E1F20] rounded-[31px] p-8">
@@ -11,7 +40,7 @@ const AdminPost = () => {
         <div>
           <img
             className="mb-6"
-            src="/TopicImg.png"
+            src={topic?.image}
             alt="postTitle"
             height={346}
             width={237}
@@ -53,10 +82,10 @@ const AdminPost = () => {
         <div className='w-full'>
           <div className="flex w-full justify-between items-center mb-8">
             <div className='flex items-center '>
-                <h1 className="text-white text-4xl font-extrabold mr-4">Жахаючий 3</h1>
-                <div className="flex justify-center items-center w-[42px] h-[42px] bg-[#FF4155] rounded-[9px]">
+                <h1 className="text-white text-4xl font-extrabold mr-4">{topic?.title}</h1>
+                {topic?.limitAge === 18 && <div className="flex justify-center items-center w-[42px] h-[42px] bg-[#FF4155] rounded-[9px]">
                     <p className="text-white text-2xl font-semibold">18+</p>
-                </div>
+                </div>}
             </div>
             <a onClick={() => router.push('/home')} className="cursor-pointer">
                 <svg className="w-8 h-8 fill-white">
@@ -74,17 +103,17 @@ const AdminPost = () => {
               <p className="text-white text-lg font-bold">Рекомендований вік:</p>
             </li>
             <li>
-              <p className="text-white text-lg">IMBD: <strong>6.5/10</strong> (29К)</p>
+              <p className="text-white text-lg">IMBD: <strong>{topic?.IMDB}/10</strong> (29К)</p>
               <p className="text-white text-lg">2024</p>
-              <p className="text-white text-lg">США</p>
-              <p className="text-white text-lg">2:05</p>
-              <p className="text-white text-lg">Жахи</p>
-              <p className="text-white text-lg">18+ (тільки для дорослих)</p>
+              <p className="text-white text-lg">{topic?.country}</p>
+              <p className="text-white text-lg">{topic?.duration}</p>
+              <p className="text-white text-lg">{topic?.country}</p>
+              <p className="text-white text-lg">{topic?.limitAge}+ {topic?.limitAge === 18 && ("тільки для дорослих")}</p>
             </li>
           </ul>
           <div className="bg-[#2C353D] p-4 w-[660px] rounded-xl">
             <p className="text-white text-lg font-medium">
-              "Жахаючий 3" (англ. Terrifier 3) — американський різдвяний надприродний слешер 2024 року від Демієна Леоне. У головних ролях — Лорен Лавера, Девід Говард Торнтон та інші актори з попередніх частин. У сюжеті Сієнна Шоу намагається налагодити своє життя, але знову зіштовхується з Артом і його новою спільницею, одержимою Вікторією Хейз. Після успіху "Жахаючого 2" Леоне вирішив глибше розкрити образ Вікторії.
+              {topic?.description}
             </p>
           </div>
         </div>
