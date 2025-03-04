@@ -40,6 +40,7 @@ public class Comment {
     @NotBlank
     private String content;
 
+    @Lob
     private String image;
 
     @ManyToOne
