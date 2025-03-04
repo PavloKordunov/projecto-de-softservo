@@ -18,6 +18,7 @@ import java.util.UUID;
 @Logging
 @RequestMapping("/api/comments")
 @RequiredArgsConstructor
+@CrossOrigin("http://localhost:3000")
 public class CommentController {
 
     private final CommentService commentService;
@@ -35,7 +36,7 @@ public class CommentController {
         return new ApiResponse<>(true, HttpStatus.OK, "Get comments by object", comments);
     }
 
-    @RequireRoles({RoleType.USER})
+//    @RequireRoles({RoleType.USER})
     @DeleteMapping("/delete/{id}")
     public ApiResponse<?> deleteComment(@PathVariable @Valid UUID id){
         commentService.deleteComment(id);

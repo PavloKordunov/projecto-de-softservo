@@ -4,6 +4,8 @@ import { useParams } from 'next/navigation';
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from 'react';
+import { useUser } from '@/hooks/useUser';
+import { set } from 'date-fns';
 
 interface Post {
       id: string;
@@ -21,8 +23,33 @@ const PostPage = () => {
 
     const params = useParams();
     const postId = params.id;
+    const {user} = useUser()
+    const [base64, setBase64] = useState<string | null>(null);
+    const [commentData, setCommentData] = useState<any | null>({
+        content: "",
+        userId: user?.id,
+        objectId: postId
+    })
+    const [comments, setComments] = useState<any[]>([])
 
     const [post, setPost] = useState<Post | null>(null)
+
+    function encodeImageFileAsURL(event: React.ChangeEvent<HTMLInputElement>) {
+            const file = event.target.files?.[0];
+            if (!file) return;
+        
+            const reader = new FileReader();
+            reader.onloadend = function () {
+              const base64String = reader.result as string;
+              setBase64(base64String);
+              setCommentData((prev: any) => ({
+                ...prev,
+                image: base64String,
+            }));
+              console.log('RESULT:', base64String);
+            };
+            reader.readAsDataURL(file);
+        }
 
     useEffect(() => {
         const getPostById = async() =>{
@@ -34,10 +61,44 @@ const PostPage = () => {
             } catch (error) {
                 console.log(error)
             }
+        } 
+        
+        const getComments = async() =>{
+            try {
+                const res = await fetch(`http://localhost:8080/api/comments/id/${postId}`)
+                const data = await res.json()
+                console.log(data)
+                setComments(data.body)
+            } catch (error) {
+                console.log(error)
+            }
         }
 
+        getComments()
         getPostById()
     },[])
+
+    const createComment = async() =>{
+        try {
+            const res = await fetch(`http://localhost:8080/api/comments/create`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${user?.accessToken}`
+                },
+                body: JSON.stringify(commentData)
+            })
+            const data = await res.json()
+            commentData.content = ""
+            console.log(data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        console.log(commentData)
+    }, [commentData])
 
     if (!post) {
         return <p className="text-white">Завантаження...</p>;
@@ -102,12 +163,21 @@ const PostPage = () => {
             </div>
         </div>
         <div className="p-4 mt-7 bg-MainColor rounded-[21px] mb-6 w-[1030px]">
-            <input type="text" className=" w-[580px] h-14 py-2 text-white bg-MainColor border-none rounded-[10px] focus:outline-none" placeholder="Поширте те, що коїться у вас в голові..."/>
+            <input type="text" className=" w-[580px] h-14 py-2 text-white bg-MainColor border-none rounded-[10px] focus:outline-none"
+             placeholder="Поширте те, що коїться у вас в голові..."
+             onChange={(e) => setCommentData((prev: any) => {return {...prev, content: e.target.value}})}/>
             <div className="flex items-center justify-between ">
-                <Image src='/addPhoto.png' alt="" width={40} height={40} />
+                <div>
+                <label
+                    className="text-xs text-gray-500 flex items-center gap-2 cursor-pointer"
+                    htmlFor="img"
+                >
+                    <Image src='/addPhoto.png' alt="" width={40} height={40} />
+                </label>
+                <input type="file" id="img" onChange={encodeImageFileAsURL} className="hidden"/>
+                </div>
                 <div className="flex gap-4">
-                    <button className="px-3 py-2 bg-[#434C55] rounded-[17] text-white text-[16px] font-bold">Скасувати</button>
-                    <button className="px-3 py-2 bg-AccnetColor rounded-[17] text-white text-[16px] font-bold">Коментувати</button>
+                    <button className="px-3 py-2 bg-AccnetColor rounded-[17px] text-white text-[16px] font-bold" onClick={createComment}>Коментувати</button>
                 </div>
             </div>
         </div>
@@ -115,7 +185,7 @@ const PostPage = () => {
             <p className="text-[34px] text-white font-bold">Коментарі</p>
             <div className="flex items-center gap-4">
                 <p className="text-[24px] text-white font-semibold">Сортувати:</p>
-                <button className="px-3 py-2 bg-[#434C55] rounded-[17] flex gap-2 items-center">
+                <button className="px-3 py-2 bg-[#434C55] rounded-[17px] flex gap-2 items-center">
                     <p className="text-[16px] text-white font-bold">За вподобаннями</p>
                     <svg className="w-4 h-4" >
                         <use href={`/sprite.svg#iconArrowDown`} />
@@ -123,14 +193,15 @@ const PostPage = () => {
                 </button>
             </div>
         </div>
-        <div className="p-6 mt-7 bg-MainColor rounded-[21px] mb-6 w-[1030px]">
+        {comments.length > 0 ? (comments.map((comment) => 
+        <div key={comment.id} className="p-6 mt-7 bg-MainColor rounded-[21px] mb-6 w-[1030px]">
             <div className="flex items-center mb-6">
                 <Image src="/person.png" alt="" width={40} height={40} className="mr-2" />
-                <p className="text-[16px] text-white mr-4">Домінік Торрето</p>
+                <p className="text-[16px] text-white mr-4">{comment.userName}</p>
                 <p className="text-[16px] text-white">35хв. тому</p>
             </div>
-            <p className="text-[28px] text-white font-bold mb-4">Це теж момент з того фільму?</p>
-            <Image src="/images.jpeg" alt="" width={980} height={760} className="mb-3" />
+            <p className="text-[28px] text-white font-bold mb-4">{comment.content}</p>
+            {comment.image && <Image src="/images.jpeg" alt="" width={980} height={760} className="mb-3" />}
             <div className="flex gap-3">
                 <div className="flex items-center p-2 gap-3 bg-[#2C353D] rounded-[20px]">
                     <svg className="w-6 h-6" fill="#C5D0E6" >
@@ -152,7 +223,9 @@ const PostPage = () => {
                     <p className="text-[18px] text-[#C5D0E6]">10</p>
                 </div>
             </div>
-        </div>
+        </div>)): (
+                <p>Поки що немає коментарів...</p>
+            )}
         </div> 
      );
 }

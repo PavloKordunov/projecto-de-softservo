@@ -35,7 +35,7 @@ const AdminPost = () => {
 
   return (
     <div className="ml-6 mt-4 w-[1030px] bg-[#1E1F20] rounded-[31px] p-8">
-      <div className="flex w-full gap-8 mb-12">
+      <div className="flex w-full gap-8 mb-32">
         {/* Left Section */}
         <div>
           <img

@@ -74,6 +74,7 @@ public class CommentServiceImpl implements CommentService {
                 .post(post)
                 .user(user)
                 .topic(topic)
+                //.parentComment(new Comment())
                 .build();
     }
 
@@ -82,7 +83,8 @@ public class CommentServiceImpl implements CommentService {
         return CommentDto.builder()
                 .id(comment.getId())
                 .content(comment.getContent())
-                .parentComment(comment.getParentComment().getId())
+                .parentComment(comment.getParentComment() == null ? null : comment.getParentComment().getId())
+                .userId(comment.getUser().getId())
                 .nickName(comment.getUser().getUsername())
                 .userName(comment.getUser().getName())
                 .userImage(comment.getUser().getProfileImage())

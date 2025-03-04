@@ -1,10 +1,12 @@
 "use client"
 
+import CreatePostModal from "@/components/CreatePostModal";
 import Post from "@/components/Post";
 import { useUser } from "@/hooks/useUser";
 import Image from "next/image";
+import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 interface Group {
     id: string;
@@ -18,7 +20,9 @@ const Group = () => {
     const params = useParams();
     const groupId = params.id;
     const {user} = useUser()
+    const [userSubscribed, setUserSubscribed] = useState<boolean | null>(null);
     const [group, setGroup] = useState<Group | null>(null)
+    const [show, setShow] = useState(false);
 
     useEffect(() => {
         const getAllPost = async () => {
@@ -37,10 +41,24 @@ const Group = () => {
                 console.log(error)
             }
         }
+        const getFollowedGroups = async () => {
+            try {
+                const res = await fetch(`http://localhost:8080/api/groups/followed/${user?.id}`)
+                const data = await res.json()
+                setUserSubscribed(data.body.some((group: any) => group.id === groupId))
+            } catch (error) {
+                console.log(error)
+            }
+        } 
 
+        getFollowedGroups()
         getPostById()
         getAllPost();
       }, []);
+
+      useEffect(() => { 
+        console.log(userSubscribed)
+      }, [userSubscribed])
 
       const getSubscribeUser = async () => {
         const res = await fetch(`http://localhost:8080/api/groups/${group?.title}/follow/${user?.id}`, {
@@ -52,8 +70,13 @@ const Group = () => {
         }
         );
         const data = await res.json();
+        setUserSubscribed(!userSubscribed);
         console.log(data);
       };
+
+    const handleShow = () => {
+        setShow(!show);
+    }
 
     if (!group) {
         return <p className="text-white">Group not found</p>;
@@ -70,8 +93,8 @@ const Group = () => {
                     </div>
                 </div>
                 <div className="flex gap-7">
-                    <button className="px-4 py-2 bg-AccnetColor rounded-[10px] text-white text-[16px] h-[50px] font-medium">Створити пост</button>
-                    <button className="px-4 py-2 bg-[#3A7F4F] rounded-[10px] text-white text-[16px] h-[50px] font-medium" onClick={getSubscribeUser}>Приєднатися</button>
+                    <button className="px-4 py-2 bg-AccnetColor rounded-[10px] text-white text-[16px] h-[50px] font-medium" onClick={handleShow}>Створити пост</button>
+                    <button className="px-4 py-2 bg-[#3A7F4F] rounded-[10px] text-white text-[16px] h-[50px] font-medium" onClick={getSubscribeUser}>{userSubscribed ? "Відписатися" :"Приєднатися" }</button>
                 </div>
             </div>
             <div className="flex gap-4">
@@ -106,7 +129,7 @@ const Group = () => {
                     </div>
                 </div>
             </div>
-            <div className="mt-4 p-5 bg-MainColor rounded-[21px] h-fit w-[1030px] mb-8">
+             <div className="mt-4 p-5 bg-MainColor rounded-[21px] h-fit w-[1030px] mb-8">
                 <div className="flex items-center gap-1 mb-6">
                     <svg width={30} height={32}>
                         <use href={`/sprite.svg#pinIcon`} />
@@ -114,18 +137,12 @@ const Group = () => {
                     <p className="text-white text-[28px] font-bold">Закріплені пости</p>
                 </div>
                 <div className="flex gap-6">
-                    <div className="bg-SecondaryColor w-[311px] h-[263px] rounded-br-[14px] rounded-bl-[14px]">
-                        <Image src="/ImgPost1.png" alt="" width={311} height={204} className="mb-2" />
-                        <p className=" ml-3 text-white text-[16px] font-bold">Найкращий фільм 2024 року, чи черговий хайп? </p>
-                    </div>
-                    <div className="bg-SecondaryColor w-[311px] h-[263px] rounded-br-[14px] rounded-bl-[14px]">
-                        <Image src="/ImgPost2.png" alt="" width={311} height={204} className="mb-2" />
-                        <p className=" ml-3 text-white text-[16px] font-bold">А взагалі є сенс це дивитися? Це ж вже було... </p>
-                    </div>
-                    <div className="bg-SecondaryColor w-[311px] h-[263px] rounded-br-[14px] rounded-bl-[14px]">
-                        <Image src="/imgPost3.png" alt="" width={311} height={204} className="mb-2" />
-                        <p className=" ml-3 text-white text-[16px] font-bold">Захар Беркут чи Беркут Захар? Ось в чому питання... </p>
-                    </div>
+                {posts.length > 0 && posts.map(post => ( post.isPinned == true && (
+                    <Link href={`/post/${post?.id}`} key={post.id} className="bg-SecondaryColor w-[311px] pb-2 h-fit rounded-br-[14px] rounded-bl-[14px]">
+                        <Image src={post?.image} alt="" width={311} height={204} className="mb-2" />
+                        <p className=" ml-3 text-white text-[16px] font-bold">{post.title}</p>
+                    </Link>
+                    )))}
                 </div>
             </div>
             {posts.length > 0 ? (
@@ -133,6 +150,7 @@ const Group = () => {
             ) : (
                 <p>Поки що немає постів...</p>
             )}
+            {show && <CreatePostModal handleShow={handleShow} group={group} />}
         </div>
      );
 }
