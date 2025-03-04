@@ -40,6 +40,8 @@ public class Comment {
     @NotBlank
     private String content;
 
+    private String image;
+
     @ManyToOne
     @JoinColumn(name = "parent_comment_id")
     private Comment parentComment;

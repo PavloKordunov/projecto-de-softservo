@@ -10,6 +10,7 @@ import java.util.UUID;
 public record CommentDto(
         UUID id,
         @NotBlank String content,
+        String image,
         @NotNull UUID objectId,
         @NotNull UUID userId,
         String userImage,
