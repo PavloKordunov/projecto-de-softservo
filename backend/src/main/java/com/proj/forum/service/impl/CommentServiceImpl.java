@@ -36,7 +36,7 @@ public class CommentServiceImpl implements CommentService {
                 .orElse(null);
         Post post = postRepository.findById(commentDto.objectId())
                 .orElse(null);
-        if(topic == null && post == null) {
+        if (topic == null && post == null) {
             throw new EntityNotFoundException("Topic or Post not found");
         }
 
@@ -54,7 +54,13 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentDto> getCommentsByPostId(UUID objectId) {
-        List<Comment> comments = commentRepository.getAllByPost_Id(objectId);
+        List<Comment> comments;
+        if (postRepository.existsById(objectId)) {
+             comments = commentRepository.findAllByPostIdOrderByCreatedAtDesc(objectId);
+        }
+        else{
+            comments = commentRepository.findAllByTopicIdOrderByCreatedAtDesc(objectId);
+        }
         return mapToListOfCommentsDto(comments);
     }
 
