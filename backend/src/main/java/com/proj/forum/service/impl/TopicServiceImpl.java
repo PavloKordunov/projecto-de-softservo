@@ -72,10 +72,7 @@ public class TopicServiceImpl implements TopicService {
     }
 
     private Topic getUpdateTopic(Topic topic, TopicDto topicDto) {
-        //        if (topicDto.title() != null)         //TODO fix it asap (later)
-//            topic.setTitle(topicDto.title());
-//        if (topicDto.description() != null)
-//            topic.setDescription(topicDto.description());
+        topic = mapToTopic(topicDto);
         return topic;
     }
 
@@ -104,6 +101,7 @@ public class TopicServiceImpl implements TopicService {
                 .author_id(topicDto.author())
                 .type(topicDto.topicType())
                 .tag_id(topicDto.tag_id())
+                .releaseDate(topicDto.releaseDate())
                 .build();
     }
 
@@ -126,6 +124,7 @@ public class TopicServiceImpl implements TopicService {
                 .topicType(topic.getType())
                 .tag_id(topic.getTag_id())
                 .comments(comments)
+                .releaseDate(topic.getReleaseDate())
                 .build();
     }
 

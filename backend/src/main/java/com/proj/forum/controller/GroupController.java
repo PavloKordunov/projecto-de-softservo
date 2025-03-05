@@ -58,7 +58,6 @@ public class GroupController {
             @RequestBody @Valid GroupDto groupDto) throws AccessDeniedException {
         groupService.updateGroup(id, groupDto);
         return ApiResponse.apiResponse(true, 200, "Group successfully updated", id);
-
     }
 
     @RequireRoles({RoleType.USER})

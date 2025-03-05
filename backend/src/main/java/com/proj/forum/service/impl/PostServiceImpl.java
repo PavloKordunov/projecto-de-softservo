@@ -114,7 +114,6 @@ public class PostServiceImpl implements PostService {
         try {
             Post post = postRepository.findById(postId)
                     .orElseThrow(() -> new EntityNotFoundException("Post not found"));
-
             post.setPinned(!post.isPinned());
             postRepository.save(post);
             return post.isPinned();
