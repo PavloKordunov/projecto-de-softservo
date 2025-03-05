@@ -9,7 +9,7 @@ interface NavItemProps {
 const NavItem = ({ href, icon, onClick }: NavItemProps) => {
     const content = (
         <div
-            className="bg-SecondaryColor w-14 h-14 rounded-[9px] flex items-center justify-center cursor-pointer"
+            className="bg-SecondaryColor hover:bg-AccnetColor w-14 h-14 rounded-[9px] flex items-center justify-center cursor-pointer"
             onClick={onClick}
         >
             <svg className="w-6 h-6">

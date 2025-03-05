@@ -26,13 +26,13 @@ const NavBar = ({ movies }: NavBarProps) => {
     };
 
     return (
-        <nav className="w-full py-4 px-6 bg-MainColor flex items-center justify-between relative">
+        <nav className="w-screen py-4 px-6 bg-MainColor rounded-[10px] flex items-center justify-between relative">
 
             <p className="text-AccnetColor font-bold text-[30px]">Logo</p>
 
 
-            <div className="hidden md:flex flex-row gap-6 items-center">
-                <NavItem href="/home" icon="iconHome" />
+            <div className="hidden md:flex flex-row md:gap-[15px] xl:gap-[25px] items-center">
+                <NavItem href="/home" icon="iconHome"/>
                 <NavItem icon="CalendarIcon" onClick={toggleCalendar} />
                 <NavItem href="/group" icon="iconCommunity" />
                 <SearchBar />
@@ -52,18 +52,20 @@ const NavBar = ({ movies }: NavBarProps) => {
                 }`}
             >
                 <div className="flex flex-row items-center gap-6">
+                    <Notifications />
                     <NavItem href="/home" icon="iconHome" />
                     <NavItem icon="CalendarIcon" onClick={toggleCalendar} />
                     <NavItem href="/group" icon="iconCommunity" />
                     <UserMenu />
                 </div>
-                <div className="w-fit">
+                <div className="w-fit flex gap-[10px] flex-row">
+                    <NavItem icon="iconMessage" />
                     <SearchBar/>
                 </div>
 
             </div>
 
-            <div className="hidden md:flex gap-6 items-center">
+            <div className="hidden md:flex flex-row md:gap-[15px] xl:gap-[25px] items-center">
                 <NavItem icon="iconMessage" />
                 <Notifications />
                 <UserMenu />

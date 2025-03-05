@@ -11,7 +11,7 @@ interface Group {
     description: string;
 }
 
-const CreatePostModal = ({handleShow, group} : {handleShow : () => void, group: Group}) => {
+const CreatePostModal = ({handleShow, group} : {handleShow : () => void, group?: Group }) => {
 
     const [fieldMode, setFieldMode] = useState("text")
     const [selectedGroup, setSelecterGroup] = useState<any>(null)
