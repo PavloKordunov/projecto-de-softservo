@@ -27,7 +27,7 @@ const UserMenu = () => {
 
     return (
         <div>
-            <div className="flex gap-4 items-center cursor-pointer" onClick={handleShow}>
+            <div className="flex gap-[5px] items-center cursor-pointer" onClick={handleShow}>
                 <div className="bg-SecondaryColor w-14 h-14 rounded-[9px] flex items-center justify-center">
                     {user?.img ? renderImage(user.img, 45, 40, "person") : renderImage("/NavPerson.png", 45, 40, "default person")}
                 </div>

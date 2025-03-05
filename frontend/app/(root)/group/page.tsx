@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 const GroupPage = () => {
 
     const [groups, setGroups] = useState<any[]>([]);
+    const [userSubscribed, setUserSubscribed] = useState<any[]>([]);
     const {user} = useUser()
 
     useEffect(() => {
@@ -18,7 +19,17 @@ const GroupPage = () => {
           setGroups(data.body);
           console.log(data);
         };
-    
+        const getFollowedGroups = async () => {
+            try {
+                const res = await fetch(`http://localhost:8080/api/groups/followed/${user?.id}`)
+                const data = await res.json()
+                setUserSubscribed(data.body)
+            } catch (error) {
+                console.log(error)
+            }
+        } 
+
+        getFollowedGroups()
         getAllGroups();
       }, []);  
       
@@ -45,8 +56,17 @@ const GroupPage = () => {
                <div className="flex items-center justify-between mb-4">
                     <p className="text-[24px] text-white font-semibold">/{group?.title}</p>
                     <div className="flex items-end gap-4">
+                        <button
+                            className="px-4 py-2 bg-AccnetColor rounded-[10px] text-white text-[22px] font-semibold"
+                            onClick={(e) =>{
+                                e.preventDefault()
+                                e.stopPropagation()
+                                subscribeUser(group?.title)
+                            }}
 
-                        <button className="px-4 py-2 bg-AccnetColor rounded-[10px] text-white text-[22px] font-semibold" onClick={() => subscribeUser(group?.title)}>Підписатися</button>
+                        >
+                            {userSubscribed.some((subscribeGroup) => subscribeGroup.id === group.id) ? "Відписатись" : "Підписатись"}
+                        </button>
                     </div>
                </div>
                <p className="text-[14px] text-white mb-6 line-clamp-3">

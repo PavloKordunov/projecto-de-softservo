@@ -36,7 +36,7 @@ public class CommentServiceImpl implements CommentService {
                 .orElse(null);
         Post post = postRepository.findById(commentDto.objectId())
                 .orElse(null);
-        if(topic == null && post == null) {
+        if (topic == null && post == null) {
             throw new EntityNotFoundException("Topic or Post not found");
         }
 
@@ -54,7 +54,12 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentDto> getCommentsByPostId(UUID objectId) {
-        List<Comment> comments = commentRepository.getAllByPost_Id(objectId);
+        List<Comment> comments;
+        if (postRepository.existsById(objectId)) {
+            comments = commentRepository.findAllByPostIdOrderByCreatedAtDesc(objectId);
+        } else {
+            comments = commentRepository.findAllByTopicIdOrderByCreatedAtDesc(objectId);
+        }
         return mapToListOfCommentsDto(comments);
     }
 
@@ -74,6 +79,8 @@ public class CommentServiceImpl implements CommentService {
                 .post(post)
                 .user(user)
                 .topic(topic)
+                .image(commentDto.image() != null ? commentDto.image() : null)
+                //.parentComment(new Comment())
                 .build();
     }
 
@@ -82,7 +89,9 @@ public class CommentServiceImpl implements CommentService {
         return CommentDto.builder()
                 .id(comment.getId())
                 .content(comment.getContent())
-                .parentComment(comment.getParentComment().getId())
+                .image(comment.getImage())
+                .parentComment(comment.getParentComment() == null ? null : comment.getParentComment().getId())
+                .userId(comment.getUser().getId())
                 .nickName(comment.getUser().getUsername())
                 .userName(comment.getUser().getName())
                 .userImage(comment.getUser().getProfileImage())

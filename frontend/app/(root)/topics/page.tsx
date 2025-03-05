@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const TopicPage = () => {
@@ -9,21 +10,21 @@ const TopicPage = () => {
     const [topic, setTopic] = useState<any[]>([]);
 
     useEffect(() => {
-        const getAllPost = async () => {
+        const getAllTopics = async () => {
           const res = await fetch("http://localhost:8080/api/topics");
           const data = await res.json();
           setTopic(data.body);
           console.log(data);
         };
     
-        getAllPost();
+        getAllTopics();
       }, []);
 
     return ( 
-        <div className="px-5 py-4 flex-wrap flex items-center justify-between h-fit w-[1030px]">
+        <div className="px-5 py-4 flex-wrap flex items-center gap-5 h-fit w-[1030px]">
             {topic.length > 0 ? (
                 topic.map((topic) => (
-                <Link href="/topics/:id" key={topic.id} className="bg-MainColor w-[265px] h-fit rounded-br-[14px] rounded-bl-[14px]">
+                <Link href={`/topics/${topic.id}`} key={topic.id} className="bg-MainColor w-[265px] h-fit rounded-br-[14px] rounded-bl-[14px]">
                     <Image 
                         src={topic.image} 
                         alt="Movie Poster" 

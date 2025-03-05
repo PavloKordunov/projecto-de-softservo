@@ -5,7 +5,13 @@ import React, { useEffect, useState } from "react";
 import GroupList from "./GroupList";
 import { useUser } from "@/hooks/useUser";
 
-const CreatePostModal = ({handleShow} : {handleShow : () => void}) => {
+interface Group {
+    id: string;
+    title: string;
+    description: string;
+}
+
+const CreatePostModal = ({handleShow, group} : {handleShow : () => void, group?: Group }) => {
 
     const [fieldMode, setFieldMode] = useState("text")
     const [selectedGroup, setSelecterGroup] = useState<any>(null)
@@ -15,16 +21,16 @@ const CreatePostModal = ({handleShow} : {handleShow : () => void}) => {
     const [post, setPost] = useState({
         title: "",
         user_id: user?.id,
-        group_id:selectedGroup ? selectedGroup?.id : "" ,
+        group_id:selectedGroup ? selectedGroup?.id : group?.id,
         description: "",
         image: "",
     })
 
-    const selectGroup = (group: any) => {
-        setSelecterGroup(group);
+    const selectGroup = (selectGroup: any) => {
+        setSelecterGroup(selectGroup);
         setPost((prev) => ({
             ...prev,
-            group_id: group.id,
+            group_id: selectGroup?.id,
         }));
     };
 
@@ -74,7 +80,7 @@ const CreatePostModal = ({handleShow} : {handleShow : () => void}) => {
     }, [post])
 
     return ( 
-        <div className="w-screen h-screen absolute left-0 top-0 bg-black bg-opacity-60 z-50 flex items-center justify-center">
+        <div className="w-full h-full absolute left-0 top-0 bg-black bg-opacity-60 z-50 flex items-center justify-center">
             <div className="bg-MainColor px-10 py-6 rounded-[31px] w-[710px]">
                 <div className="flex items-center justify-between mb-5">
                     <p className="text-[36px] text-white font-semibold">Створити допис</p>
@@ -84,7 +90,7 @@ const CreatePostModal = ({handleShow} : {handleShow : () => void}) => {
                 </div>
                 <div onClick={()=> setShowGroupList(!showGroupList)} className="bg-SecondaryColor p-3 rounded-[31px] flex w-fit items-center gap-1 mb-6">
                     <Image src="/sabs.png" alt="" width={24} height={18} />
-                    {selectedGroup ? <p className="text-[18px] text-white font-semibold">{selectedGroup?.title}</p> : <p className="text-[18px] text-white font-semibold">Обрати групу</p>}
+                    {selectedGroup || group ? <p className="text-[18px] text-white font-semibold">{selectedGroup ? `${selectedGroup?.title}` : `${group?.title}`}</p> : <p className="text-[18px] text-white font-semibold">Обрати групу</p>}
                 </div>
                 <div className="flex items-center gap-6 mb-5">
                     <div className="bg-SecondaryColor px-4 py-2 rounded-[31px] w-fit ">
@@ -115,7 +121,7 @@ const CreatePostModal = ({handleShow} : {handleShow : () => void}) => {
                     <button onClick={handleCreatePost} className="px-4 py-2 bg-AccnetColor rounded-[10px] text-white text-[16px] h-[50px] font-medium">Створити пост</button>
                 </div>
             </div>
-            {showGroupList && <GroupList setShowGroupList={setShowGroupList} selectGroup={selectGroup} />}
+            {showGroupList && !group && <GroupList setShowGroupList={setShowGroupList} selectGroup={selectGroup} />}
         </div>
      );
 }

@@ -12,7 +12,7 @@ const Notifications = () => {
     return (
         <div className="relative">
             <div
-                className="bg-SecondaryColor w-14 h-14 rounded-[9px] flex items-center justify-center cursor-pointer"
+                className="bg-SecondaryColor hover:bg-AccnetColor w-14 h-14 rounded-[9px] flex items-center justify-center cursor-pointer"
                 onClick={() => setShowNotifications(!showNotifications)}
             >
                 <svg className="w-6 h-6">

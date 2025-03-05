@@ -1,15 +1,17 @@
 "use client";
 
+import { useUser } from "@/hooks/useUser";
 import { useEffect, useState } from "react";
 
 const GroupList = ({ setShowGroupList, selectGroup }: { setShowGroupList: React.Dispatch<React.SetStateAction<boolean>>, selectGroup: (group: any) => void }) => {
     const [groups, setGroups] = useState<any[]>([]);
     const [filteredGroups, setFilteredGroups] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const { user } = useUser();
 
     useEffect(() => {
         const getAllGroups = async () => {
-            const res = await fetch("http://localhost:8080/api/groups");
+            const res = await fetch(`http://localhost:8080/api/groups/followed/${user?.id}`);
             const data = await res.json();
             setGroups(data.body);
             setFilteredGroups(data.body);
@@ -26,7 +28,7 @@ const GroupList = ({ setShowGroupList, selectGroup }: { setShowGroupList: React.
     }, [searchTerm, groups]);
 
     return (
-        <div className="w-screen h-screen absolute left-0 top-0 bg-black bg-opacity-60 z-50 flex items-center justify-center">
+        <div className="w-full h-full absolute left-0 top-0 bg-black bg-opacity-60 z-50 flex items-center justify-center">
             <div className="bg-MainColor px-10 py-6 rounded-[31px] w-fit">
                 <div className="flex items-center justify-between mb-5">
                     <p className="text-[28px] text-white font-semibold mr-12">Виберіть групу</p>
