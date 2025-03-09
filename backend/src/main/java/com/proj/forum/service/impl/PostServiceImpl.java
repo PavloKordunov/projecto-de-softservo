@@ -6,7 +6,6 @@ import com.proj.forum.dto.PostResponseDto;
 import com.proj.forum.entity.Group;
 import com.proj.forum.entity.Post;
 import com.proj.forum.entity.User;
-import com.proj.forum.repository.CommentRepository;
 import com.proj.forum.repository.GroupRepository;
 import com.proj.forum.repository.PostRepository;
 import com.proj.forum.repository.UserRepository;
@@ -36,8 +35,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public UUID createPost(PostRequestDto postDto) {
-        Group group = groupRepository.findById(postDto.group_id()).orElseThrow(() -> new EntityNotFoundException("Group don't find"));
-        User user = userRepository.findById(postDto.user_id()).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        Group group = groupRepository.findById(postDto.group_id()).orElseThrow(
+                () -> new EntityNotFoundException("Group not found"));
+        User user = userRepository.findById(postDto.user_id()).orElseThrow(
+                () -> new EntityNotFoundException("User not found"));
         if (!user.getGroups().contains(group)) {
             throw new EntityNotFoundException("Group not found");
         }
