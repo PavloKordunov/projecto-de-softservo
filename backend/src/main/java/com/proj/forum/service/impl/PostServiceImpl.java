@@ -40,7 +40,7 @@ public class PostServiceImpl implements PostService {
         User user = userRepository.findById(postDto.user_id()).orElseThrow(
                 () -> new EntityNotFoundException("User not found"));
         if (!user.getGroups().contains(group)) {
-            throw new EntityNotFoundException("Group not found");
+            throw new EntityNotFoundException("User is not in the group");
         }
         Post post = mapToPost(postDto, user, group);
         Post postFromDB = postRepository.save(post);
@@ -52,7 +52,7 @@ public class PostServiceImpl implements PostService {
         List<Post> postList;
         postList = postRepository.findAll();
         if (postList.isEmpty()) {
-            throw new EntityNotFoundException("No posts found");
+            throw new EntityNotFoundException("Posts not found");
         }
 
         return postList.stream()
