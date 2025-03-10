@@ -5,6 +5,9 @@ import com.proj.forum.dto.UserUpdateDto;
 import com.proj.forum.entity.User;
 import com.proj.forum.exception.TokenTypeException;
 import com.proj.forum.helper.UserHelper;
+import com.proj.forum.mapper.UserMapper;
+import com.proj.forum.mapper.Mapper;
+import com.proj.forum.mapper.factory.MapperFactory;
 import com.proj.forum.repository.UserRepository;
 import com.proj.forum.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -28,10 +31,11 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
     public UUID createUser(UserDto userDto) {
-        User user = mapToUser(userDto);
+        User user = userMapper.mapToEntity(userDto);
         User userFromDB = userRepository.save(user);
         return userFromDB.getId();
     }
@@ -76,21 +80,7 @@ public class UserServiceImpl implements UserService {
             throw new EntityNotFoundException("No user found");
         }
 
-        return getUserDto(user.get());
-    }
-
-    private UserDto getUserDto(User user) {
-        return UserDto.builder()
-                .id(user.getId())
-                .nickName(user.getUsername()) //TODO remind ui about change
-                .firstName(user.getName())
-                .following(user.getFollowing().size())
-                .subscribers(user.getSubscribers().size())
-                .followingGroups(user.getCreatedGroups().size())
-                .createdPosts(user.getCreatedPosts().size())
-                .profileImage(user.getProfileImage() == null ? StringUtils.EMPTY : user.getProfileImage())
-                .email(user.getEmail() == null ? StringUtils.EMPTY : user.getEmail())
-                .build();
+        return userMapper.mapToDto(user.get());
     }
 
     @Override
@@ -102,13 +92,13 @@ public class UserServiceImpl implements UserService {
             throw new EntityNotFoundException("No user found");
         }
 
-        return getUserDto(user.get());
+        return userMapper.mapToDto(user.get());
     }
 
     @Override
     public UserDto getUserByEmail(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User don't find"));
-        return getUserDto(user);
+        return userMapper.mapToDto(user);
     }
 
     @Override
@@ -121,7 +111,7 @@ public class UserServiceImpl implements UserService {
         }
 
         return userList.stream()
-                .map(UserServiceImpl::getUpdateUser)
+                .map(userMapper::mapToDto)
                 .toList();
     }
 
@@ -154,33 +144,10 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private static User mapToUser(UserDto userDto) {
-        return User.builder()
-                .name(userDto.firstName())
-                .username(userDto.nickName() == null ? StringUtils.EMPTY : userDto.nickName())
-                .email(userDto.email() == null ? StringUtils.EMPTY : userDto.email())
-                .profileImage(userDto.profileImage() == null ? StringUtils.EMPTY : userDto.profileImage())
-                .build();
-    }
-
-    private static UserDto getUpdateUser(User user) {
-        return UserDto.builder()
-                .id(user.getId())
-                .firstName(user.getName())
-                .nickName(user.getUsername() == null ? StringUtils.EMPTY : user.getUsername())
-                .email(user.getEmail() == null ? StringUtils.EMPTY : user.getEmail())
-                .build();
-    }
-
     @Override
     public List<UserDto> mapToUserDtoList(List<User> users) {
         return users.stream()
-                .map(user -> UserDto.builder()
-                        .id(user.getId())
-                        .firstName(user.getName())
-                        .nickName(user.getUsername() == null ? StringUtils.EMPTY : user.getUsername())
-                        .email(user.getEmail() == null ? StringUtils.EMPTY : user.getEmail())
-                        .build())
+            .map(userMapper::mapToDto)
                 .toList();
     }
 
