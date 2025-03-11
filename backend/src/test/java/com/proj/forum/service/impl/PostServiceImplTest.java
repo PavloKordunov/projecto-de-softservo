@@ -15,26 +15,27 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.proj.forum.testdata.TestDto.getGroup;
+import static com.proj.forum.testdata.TestDto.getPostRequestDto;
+import static com.proj.forum.testdata.TestDto.getUser;
+import static com.proj.forum.testdata.TestDto.getPost;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.openMocks;
 
-@ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PostServiceImplTest {
 
@@ -55,120 +56,75 @@ class PostServiceImplTest {
 
     private PostRequestDto postDto;
     private List<PostResponseDto> postResponseDto;
-    private User user;
-    private Group group;
-    private Post post;
+    private User expectedUser;
+    private Group expectedGroup;
+    private Post expectedPost;
+
+    private AutoCloseable autoCloseable;
 
     @BeforeAll
     void setUp() {
-        UUID userId = UUID.randomUUID();
-        UUID groupId = UUID.randomUUID();
+        autoCloseable = openMocks(this);
 
-        postDto = PostRequestDto.builder()
-                .tag_id(UUID.randomUUID())
-                .title("Test Title")
-                .user_id(userId)
-                .group_id(groupId)
-                .description("Test Description")
-                .image("test-image-url")
-                .build();
-
-        user = User.builder()
-                .id(userId)
-                .username("testUser")
-                .email("test@example.com")
-                .name("Test User")
-                .groups(new ArrayList<>())
-                .build();
-
-        group = Group.builder()
-                .id(groupId)
-                .title("Test Group")
-                .description("Test Group Description")
-                .members(new ArrayList<>())
-                .build();
-
-        post = Post.builder()
-                .id(UUID.randomUUID())
-                .title(postDto.title())
-                .description(postDto.description())
-                .image(postDto.image())
-                .group(group)
-                .author(user)
-                .createdAt(LocalDateTime.now())
-                .viewCount(0)
-                .build();
+        postDto = getPostRequestDto();
+        expectedUser = getUser();
+        expectedGroup = getGroup();
+        expectedPost = getPost();
     }
 
     @AfterEach
-    void tearDown() {
+    void tearDown() throws Exception {
+        autoCloseable.close();
     }
 
     @Test
-    void CreatePost_Success() {
-        user.getGroups().add(group);
+    void createPostSuccessTest() {
+        expectedUser.getGroups().add(expectedGroup);
+        mockServicesInPostServices(expectedGroup, expectedUser, expectedPost);
 
-        when(groupRepository.findById(postDto.group_id())).thenReturn(Optional.of(group));
-        when(userRepository.findById(postDto.user_id())).thenReturn(Optional.of(user));
-        when(postRepository.save(any(Post.class))).thenReturn(post);
+        UUID actualResult = postService.createPost(postDto);
 
-        UUID postId = postService.createPost(postDto);
-
-        assertThat(postId)
+        assertThat(actualResult)
                 .isNotNull()
-                .isEqualTo(post.getId());
+                .isEqualTo(expectedPost.getId());
 
-        verify(groupRepository).findById(postDto.group_id());
-        verify(userRepository).findById(postDto.user_id());
-        verify(postRepository).save(any(Post.class));
+        verifyThatServicesWereExecuted(postDto, false, false, false);
+    }
+
+
+    @Test
+    void createPostGroupNotFoundTest() {
+        when(groupRepository.findById(postDto.groupId())).thenReturn(Optional.empty());
+
+        assertThrowsExactly(EntityNotFoundException.class, () -> postService.createPost(postDto));
+
+        verifyThatServicesWereExecuted(postDto, false, true, true);
     }
 
     @Test
-    void CreatePost_GroupNotFound() {
-        when(groupRepository.findById(postDto.group_id())).thenReturn(Optional.empty());
+    void createPostUserNotFoundTest() {
+        when(groupRepository.findById(postDto.groupId())).thenReturn(Optional.of(expectedGroup));
+        when(userRepository.findById(postDto.userId())).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> postService.createPost(postDto))
-                .isInstanceOf(EntityNotFoundException.class)
-                .hasMessage("Group not found");
+        assertThrowsExactly(EntityNotFoundException.class, () -> postService.createPost(postDto));
 
-        verify(groupRepository).findById(postDto.group_id());
-        verify(userRepository, never()).findById(any());
-        verify(postRepository, never()).save(any());
+        verifyThatServicesWereExecuted(postDto, false, false, true);
     }
 
     @Test
-    void CreatePost_UserNotFound() {
-        when(groupRepository.findById(postDto.group_id())).thenReturn(Optional.of(group));
-        when(userRepository.findById(postDto.user_id())).thenReturn(Optional.empty());
+    void createPostUserNotInGroupTest() {
+        expectedGroup.setMembers(Collections.emptyList());
+        when(groupRepository.findById(postDto.groupId())).thenReturn(Optional.of(expectedGroup));
+        when(userRepository.findById(postDto.userId())).thenReturn(Optional.of(expectedUser));
 
-        assertThatThrownBy(() -> postService.createPost(postDto))
-                .isInstanceOf(EntityNotFoundException.class)
-                .hasMessage("User not found");
+        assertThrowsExactly(EntityNotFoundException.class, () -> postService.createPost(postDto));
 
-        verify(groupRepository).findById(postDto.group_id());
-        verify(userRepository).findById(postDto.user_id());
-        verify(postRepository, never()).save(any());
+        verifyThatServicesWereExecuted(postDto, false, false, true);
     }
 
     @Test
-    void CreatePost_UserNotInGroup() {
-        when(groupRepository.findById(postDto.group_id())).thenReturn(Optional.of(group));
-        when(userRepository.findById(postDto.user_id())).thenReturn(Optional.of(user));
-
-        when(group.getMembers()).thenReturn(Collections.emptyList());
-
-        assertThatThrownBy(() -> postService.createPost(postDto))
-                .isInstanceOf(EntityNotFoundException.class)
-                .hasMessage("User is not in the group");
-
-        verify(groupRepository).findById(postDto.group_id());
-        verify(userRepository).findById(postDto.user_id());
-        verify(postRepository, never()).save(any());
-    }
-
-    @Test
-    void getAllPosts_Success() {
-        List<Post> listPost = List.of(post);
+    void getAllPostsSuccessTest() {
+        List<Post> listPost = List.of(expectedPost);
         when(postRepository.findAll()).thenReturn(listPost);
         when(postService.mapToPostDtoList(listPost)).thenReturn(postResponseDto);
 
@@ -176,12 +132,12 @@ class PostServiceImplTest {
 
         assertThat(result).isNotEmpty();
         assertThat(result).hasSize(1);
-        assertThat(result.getFirst().id()).isEqualTo(post.getId());
+        assertThat(result.getFirst().id()).isEqualTo(expectedPost.getId());
         assertThat(result.getFirst().title()).isEqualTo("Test Title");
     }
 
     @Test
-    void getAllPosts_PostsNotFound(){
+    void getAllPostsPostsNotFoundTest() {
         when(postRepository.findAll()).thenReturn(Collections.emptyList());
 
         assertThatThrownBy(() -> postService.getAllPosts())
@@ -192,7 +148,7 @@ class PostServiceImplTest {
     }
 
     @Test
-    void getPostById() {
+    void getPostByIdTest() {
     }
 
     @Test
@@ -229,5 +185,29 @@ class PostServiceImplTest {
 
     @Test
     void addView() {
+    }
+
+
+    private void mockServicesInPostServices(Group group, User user, Post post) {
+        when(groupRepository.findById(postDto.groupId())).thenReturn(Optional.of(group));
+        when(userRepository.findById(postDto.userId())).thenReturn(Optional.of(user));
+        when(postRepository.save(any(Post.class))).thenReturn(post);
+    }
+
+    private void verifyThatServicesWereExecuted(PostRequestDto postDto,
+                                                boolean isGroupUsedStatementNever,
+                                                boolean isUserUsedStatementNever,
+                                                boolean isPostUsedStatementNever) {
+        if (!isGroupUsedStatementNever)
+            verify(groupRepository).findById(postDto.groupId());
+
+        if (!isUserUsedStatementNever)
+            verify(userRepository).findById(postDto.userId());
+        else
+            verify(userRepository, never()).findById(any());
+        if (!isPostUsedStatementNever)
+            verify(postRepository).save(any(Post.class));
+        else
+            verify(postRepository, never()).save(any());
     }
 }

@@ -9,10 +9,10 @@ import java.util.UUID;
 @Builder
 public record PostRequestDto(
         UUID id,
-        UUID tag_id,
+        UUID tagId,
         @NotBlank(message = "Title cannot be blank") String title,
-        @NotNull UUID user_id,
-        @NotNull UUID group_id,
+        @NotNull UUID userId,
+        @NotNull UUID groupId,
         String description,
         String image
 

@@ -35,9 +35,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public UUID createPost(PostRequestDto postDto) {
-        Group group = groupRepository.findById(postDto.group_id()).orElseThrow(
+        Group group = groupRepository.findById(postDto.groupId()).orElseThrow(
                 () -> new EntityNotFoundException("Group not found"));
-        User user = userRepository.findById(postDto.user_id()).orElseThrow(
+        User user = userRepository.findById(postDto.userId()).orElseThrow(
                 () -> new EntityNotFoundException("User not found"));
         if (!user.getGroups().contains(group)) {
             throw new EntityNotFoundException("User is not in the group");
@@ -159,11 +159,11 @@ public class PostServiceImpl implements PostService {
                 .title(post.getTitle())
                 .description(post.getDescription() == null ? StringUtils.EMPTY : post.getDescription())
                 .image(post.getImage() == null ? StringUtils.EMPTY : post.getImage())
-                .user_image(post.getAuthor().getProfileImage())
+                .userImage(post.getAuthor().getProfileImage())
                 .nickname(post.getAuthor().getUsername())
                 .name(post.getAuthor().getName())
                 .isPinned(post.isPinned())
-                .group_title(post.getGroup().getTitle())
+                .groupTitle(post.getGroup().getTitle())
                 .createdAt(post.getCreatedAt())
                 .viewCount(post.getViewCount())
                 .comments(comments)
