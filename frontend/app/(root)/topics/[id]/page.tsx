@@ -1,4 +1,5 @@
 "use client"
+import { useUser } from '@/hooks/useUser';
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
@@ -18,7 +19,14 @@ const AdminPost = () => {
 
   const router = useRouter();
   const params = useParams();
+  const { user } = useUser();
+  const [comments, setComments] = useState<any[]>([])
   const topicId = params.id;
+  const [commentData, setCommentData] = useState({
+    content: "",
+    objectId: topicId,
+    userId: user?.id
+  })
 
   const [topic, setTopics] = useState<Post | null>(null);
 
@@ -29,9 +37,38 @@ const AdminPost = () => {
         setTopics(data.body);
         console.log(data);
       };
+      const getComments = async() =>{
+        try {
+            const res = await fetch(`http://localhost:8080/api/comments/id/${topicId}`)
+            const data = await res.json()
+            console.log(data)
+            setComments(data.body)
+        } catch (error) {
+            console.log(error)
+        }
+      }
     
+      getComments()
       getAllTopics();
   }, []);
+
+  const createComment = async() =>{
+    try {
+        const res = await fetch(`http://localhost:8080/api/comments/create`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${user?.accessToken}`
+            },
+            body: JSON.stringify(commentData)
+        })
+        const data = await res.json()
+        commentData.content = ""
+        console.log(data)
+    } catch (error) {
+        console.log(error)
+    }
+}
 
   return (
     <div className="ml-6 mt-4 w-[1030px] bg-[#1E1F20] rounded-[31px] p-8">
@@ -129,45 +166,34 @@ const AdminPost = () => {
       </div>
       <div className="flex gap-6">
         <input
-          className="w-[680px] h-[54px] bg-white rounded-[14px] px-6"
+          className="w-[680px] h-[54px] bg-white rounded-[14px] px-6 text-black"
           type="text"
           placeholder="Введіть ваш коментар..."
+          value={commentData.content}
+          onChange={(e) => setCommentData((prev) => {return{...prev, content: e.target.value}})}
         />
-        <button className="w-[193px] h-[58px] bg-[#FF4155] rounded-[13px] text-white text-lg font-semibold">
+        <button className="w-[193px] h-[58px] bg-[#FF4155] rounded-[13px] text-white text-lg font-semibold" onClick={createComment}>
           Створити коментар
         </button>
       </div>
     </div>
-    <div className="bg-[#2C353D] p-5 w-[930px] rounded-xl">
+    {comments.length > 0 ? (<div className="bg-[#2C353D] p-5 w-[930px] rounded-xl">
       <ul>
-        {[
-          {
-            name: 'User',
-            nickname: '@NickName',
-            comment: 'Скажу так Усі жертви маньяка у цій франшизі якісь ДУЖЕ ЖИВУЧІ',
-            time: '2 години тому',
-          },
-          {
-            name: 'User123',
-            nickname: '@NickName123',
-            comment: 'Арт путін та Вікторія-дємон захарова',
-            time: '8 години тому',
-          },
-        ].map((user, index) => (
-          <li key={index} className="bg-[#1E1F20] p-5 w-[900px] rounded-xl mb-5">
+        { comments.map(comment => (
+          <li key={comment.id} className="bg-[#1E1F20] p-5 w-[900px] rounded-xl mb-5">
             <div className="flex items-center gap-2 mb-3">
               <img src="/person.png" alt="avatar" className="w-12 h-12" />
               <div>
-                <p className="text-white text-xl font-semibold">{user.name}</p>
-                <p className="text-[#B5A8A8] text-sm font-semibold">{user.nickname}</p>
+                <p className="text-white text-xl font-semibold">{comment.userName}</p>
+                <p className="text-[#B5A8A8] text-sm font-semibold">{comment.nickname}</p>
               </div>
             </div>
             <div className="bg-[#2C353D] p-5 w-[870px] rounded-xl mb-3">
-              <p className="text-white text-lg font-semibold">{user.comment}</p>
+              <p className="text-white text-lg font-semibold">{comment.content}</p>
             </div>
             <div className="flex justify-between">
               <p className="text-[#B5A8A8] text-sm font-semibold">
-                <i>{user.time}</i>
+                <i>2 години тому</i>
               </p>
               <div className="flex items-center gap-2">
                 <p className="text-[#B5A8A8] text-sm font-semibold">Відповісти</p>
@@ -180,7 +206,9 @@ const AdminPost = () => {
           </li>
         ))}
       </ul>
-    </div>
+    </div>) : (
+        <p>Поки що немає коментарів...</p>
+    )}
     </div>
   );
 };

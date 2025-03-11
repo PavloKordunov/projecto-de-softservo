@@ -31,7 +31,7 @@ const UserMenu = () => {
                 <div className="bg-SecondaryColor w-14 h-14 rounded-[9px] flex items-center justify-center">
                     {user?.img ? renderImage(user.img, 45, 40, "person") : renderImage("/NavPerson.png", 45, 40, "default person")}
                 </div>
-                <p className="text-white text-[21px] font-bold">{user?.nickName}</p>
+                <p className="text-white text-[21px] font-bold">{user?.firstName}</p>
                 <svg className="w-4 h-3">
                     <use href={`/sprite.svg#iconArrowDown`} />
                 </svg>
@@ -42,8 +42,8 @@ const UserMenu = () => {
                     <Link href={`/user/${user?.id}`} className="flex items-center gap-4">
                         {renderImage(user?.img || "/NavPerson.png", 53, 53, "person")}
                         <div>
-                            <p className="text-white text-[16px] font-semibold">{user?.nickName}</p>
-                            <p className="text-[#97989D] text-[12px]">@{user?.firstName}</p>
+                            <p className="text-white text-[16px] font-semibold">{user?.firstName}</p>
+                            <p className="text-[#97989D] text-[12px]">@{user?.nickName}</p>
                         </div>
                     </Link>
 

@@ -165,6 +165,7 @@ const PostPage = () => {
         <div className="p-4 mt-7 bg-MainColor rounded-[21px] mb-6 w-[1030px]">
             <input type="text" className=" w-[580px] h-14 py-2 text-white bg-MainColor border-none rounded-[10px] focus:outline-none"
              placeholder="Поширте те, що коїться у вас в голові..."
+             value={commentData.content}
              onChange={(e) => setCommentData((prev: any) => {return {...prev, content: e.target.value}})}/>
             <div className="flex items-center justify-between ">
                 <div>

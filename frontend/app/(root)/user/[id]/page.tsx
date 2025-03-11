@@ -40,12 +40,12 @@ const UserPage = () => {
                     <Image src="/person.png" alt="" width={110} height={110} />
                     <div className="flex flex-col gap-1">
                         <div className="flex gap-6 items-center">
-                            <p className="text-white text-[48px] font-semibold leading-[48px] m-0">{user?.nickName}</p>
+                            <p className="text-white text-[48px] font-semibold leading-[48px] m-0">{user?.firstName}</p>
                             <svg className="w-9 h-8" fill="#fff">
                                 <use href={`/sprite.svg#changeProfileIcon`} />
                             </svg>
                         </div>
-                        <p className="text-[#97989D] text-[24px] font-semibold leading-[24px] m-0">@{user?.firstName}</p>
+                        <p className="text-[#97989D] text-[24px] font-semibold leading-[24px] m-0">@{user?.nickName}</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-24">
