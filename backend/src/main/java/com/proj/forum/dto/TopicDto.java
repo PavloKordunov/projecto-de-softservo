@@ -11,7 +11,7 @@ import java.util.UUID;
 @Builder
 public record TopicDto(
         UUID id,
-        UUID tag_id,
+        UUID tagId,
         @NotBlank(message = "Title cannot be blank") String title,
         @NotNull UUID author,
         @NotNull String limitAge,

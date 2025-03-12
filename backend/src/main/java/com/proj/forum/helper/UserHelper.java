@@ -1,12 +1,12 @@
 package com.proj.forum.helper;
 
-import java.util.Random;
+import java.util.UUID;
 
 public class UserHelper {
 
     public static String createNickname(String email) {
         String username = email.split("@")[0];
-        int randomNumber = new Random().nextInt(1000, 9999);
+        UUID randomNumber = UUID.randomUUID();
         return username + randomNumber;
     }
 }

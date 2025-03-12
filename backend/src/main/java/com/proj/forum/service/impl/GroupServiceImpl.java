@@ -40,8 +40,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupDto getGroup(UUID id) {
-        Optional<Group> group;
-        group = groupRepository.findById(id);
+        Optional<Group> group = groupRepository.findById(id);
         if (group.isEmpty()) {
             throw new EntityNotFoundException("No group");
         }
@@ -50,8 +49,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<GroupDto> getAllGroups() {
-        List<Group> groupList;
-        groupList = groupRepository.findAll();
+        List<Group> groupList = groupRepository.findAll();
         if (groupList.isEmpty()) {
             throw new EntityNotFoundException("No groups");
         }
@@ -72,19 +70,9 @@ public class GroupServiceImpl implements GroupService {
         groupRepository.save(updatedGroup);
     }
 
-    private Group getUpdateGroup(Group group, GroupDto groupDto) {
-        if (!groupDto.title().equals(group.getTitle()))
-            group.setTitle(groupDto.title());
-        if (!groupDto.description().equals(group.getDescription()))
-            group.setDescription(groupDto.description());
-        if (!groupDto.image().equals(group.getImage()))
-            group.setImage(groupDto.image());
-        return group;
-    }
-
     @Override
     public void deleteGroup(UUID groupId, UUID userId) throws AccessDeniedException {
-        if(!groupRepository.findById(groupId).get().getAuthor().equals(userId) ) {
+        if (!groupRepository.findById(groupId).get().getAuthor().equals(userId)) {
             throw new AccessDeniedException("User has no permission");
         }
         if (groupRepository.existsById(groupId)) {
@@ -94,39 +82,7 @@ public class GroupServiceImpl implements GroupService {
         }
     }
 
-
-    private static Group mapToGroup(GroupDto groupDto) {
-        return Group.builder()
-                .author(groupDto.userId())
-                .title(groupDto.title())
-                .image(groupDto.image() == null ? StringUtils.EMPTY : groupDto.image())
-                .description(groupDto.description())
-                .members(new ArrayList<>())
-                .isPublic(groupDto.isPublic())
-                .build();
-    }
-
-    private static GroupDto getUpdateGroup(Group group) {
-        return GroupDto.builder()
-                .id(group.getId())
-                .title(group.getTitle())
-                .description(group.getDescription() == null ? StringUtils.EMPTY : group.getDescription())
-                .image(group.getImage() == null ? StringUtils.EMPTY : group.getImage())
-                .userId(group.getAuthor())
-                .createdAt(group.getCreatedAt())
-                .isPublic(group.isPublic())
-                .memberCount(group.getMembers().size())
-                .postCount(group.getPosts().size())
-                .build();
-    }
-
     @Override
-    public List<GroupDto> mapToGroupDtoList(List<Group> groups) {
-        return groups.stream()
-                .map(GroupServiceImpl::getUpdateGroup)
-                .toList();
-    }
-
     public List<GroupDto> getByTitleContain(String name) {
         return mapToGroupDtoList(groupRepository.findByTitleContainingIgnoreCase(name));
     }
@@ -156,10 +112,51 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<GroupDto> getFollowedGroups(UUID userId) {
-        User user = userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
         return mapToGroupDtoList(groupRepository.findByMembersContains(user));
     }
 
+    @Override
+    public List<GroupDto> mapToGroupDtoList(List<Group> groups) {
+        return groups.stream()
+                .map(GroupServiceImpl::getUpdateGroup)
+                .toList();
+    }
+
+    private static Group mapToGroup(GroupDto groupDto) {
+        return Group.builder()
+                .author(groupDto.userId())
+                .title(groupDto.title())
+                .image(groupDto.image() == null ? StringUtils.EMPTY : groupDto.image())
+                .description(groupDto.description())
+                .members(new ArrayList<>())
+                .isPublic(groupDto.isPublic())
+                .build();
+    }
+
+    private static GroupDto getUpdateGroup(Group group) {
+        return GroupDto.builder()
+                .id(group.getId())
+                .title(group.getTitle())
+                .description(group.getDescription() == null ? StringUtils.EMPTY : group.getDescription())
+                .image(group.getImage() == null ? StringUtils.EMPTY : group.getImage())
+                .userId(group.getAuthor())
+                .createdAt(group.getCreatedAt())
+                .isPublic(group.isPublic())
+                .memberCount(group.getMembers().size())
+                .postCount(group.getPosts().size())
+                .build();
+    }
+
+    private Group getUpdateGroup(Group group, GroupDto groupDto) {
+        if (!groupDto.title().equals(group.getTitle()))
+            group.setTitle(groupDto.title());
+        if (!groupDto.description().equals(group.getDescription()))
+            group.setDescription(groupDto.description());
+        if (!groupDto.image().equals(group.getImage()))
+            group.setImage(groupDto.image());
+        return group;
+    }
 //    @Override
 //    @Transactional
 //    public UUID removeMember(UUID userId, String groupName) {

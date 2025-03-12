@@ -6,7 +6,6 @@ import com.proj.forum.repository.UserStatisticRepository;
 import com.proj.forum.service.UserStatisticService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,20 +33,7 @@ public class UserStatisticServiceImpl implements UserStatisticService {
     public void updateStatistic(StatisticDto statisticDto) {
         Statistic statistic = userStatisticRepository.findById(statisticDto.id())
                 .map(stat -> updateStatistic(stat, statisticDto))
-                .orElseThrow(() -> new EntityNotFoundException("Not find statistic"));
-    }
-
-    private Statistic updateStatistic(Statistic statistic, StatisticDto statisticDto) {
-        if (statisticDto.liked() != statistic.getLiked()) {
-            statistic.setLiked(statisticDto.liked());
-        }
-        if (statisticDto.saved() != statistic.getSaved()) {
-            statistic.setSaved(statisticDto.saved());
-        }
-        if (!Objects.equals(statisticDto.rate(), statistic.getRate())) {
-            statistic.setRate(statisticDto.rate());
-        }
-        return statistic;
+                .orElseThrow(() -> new EntityNotFoundException("Statistic not found"));
     }
 
     @Override
@@ -67,14 +53,27 @@ public class UserStatisticServiceImpl implements UserStatisticService {
         if(userStatisticRepository.existsById(id))
             userStatisticRepository.deleteById(id);
         else
-            throw new EntityNotFoundException("Statistic don't find");
+            throw new EntityNotFoundException("Statistic not found");
     }
 
     @Transactional
     @Override
     public void updateStatisticPartially(UUID id, Boolean liked) {
         Statistic stat = userStatisticRepository.findById(id).map(statistic -> updatePartially(statistic, liked))
-                .orElseThrow(()-> new EntityNotFoundException("Statistic don't find"));
+                .orElseThrow(()-> new EntityNotFoundException("Statistic not found"));
+    }
+
+    private Statistic updateStatistic(Statistic statistic, StatisticDto statisticDto) {
+        if (statisticDto.liked() != statistic.getLiked()) {
+            statistic.setLiked(statisticDto.liked());
+        }
+        if (statisticDto.saved() != statistic.getSaved()) {
+            statistic.setSaved(statisticDto.saved());
+        }
+        if (!Objects.equals(statisticDto.rate(), statistic.getRate())) {
+            statistic.setRate(statisticDto.rate());
+        }
+        return statistic;
     }
 
     private static Statistic updatePartially(Statistic statistic, Boolean liked){

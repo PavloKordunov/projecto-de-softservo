@@ -6,8 +6,6 @@ import com.proj.forum.entity.User;
 import com.proj.forum.exception.TokenTypeException;
 import com.proj.forum.helper.UserHelper;
 import com.proj.forum.mapper.UserMapper;
-import com.proj.forum.mapper.Mapper;
-import com.proj.forum.mapper.factory.MapperFactory;
 import com.proj.forum.repository.UserRepository;
 import com.proj.forum.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -45,53 +43,30 @@ public class UserServiceImpl implements UserService {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.getPrincipal() instanceof JwtAuthenticationToken token) {
-            var jwt= (Jwt) token.getPrincipal();
+            var jwt = (Jwt) token.getPrincipal();
             String email = jwt.getClaims().get("sub").toString();
             Optional<User> user = userRepository.findByEmail(email);
-            if (user.isPresent()) {
-                return user.get().getId();
-            }
-            else{
-                String nickName;
-                do{
-                    nickName = UserHelper.createNickname(email);
-                } while(userRepository.existsByUsername(nickName));
-
-                User newUser = User.builder()
-                        .name(nickName)
-                        .profileImage(StringUtils.EMPTY)
-                        .email(email)
-                        .username(nickName)
-                        .build();
-
-                User savedUser = userRepository.save(newUser);
-                return savedUser.getId();
-            }
+            return getExistingOrNewCreatingUserId(user, email);
         }
         throw new TokenTypeException("User not found");
     }
 
+
     @Override
     public UserDto getUser(UUID id) {
-        Optional<User> user;
-
-        user = userRepository.findById(id);
+        Optional<User> user = userRepository.findById(id);
         if (user.isEmpty()) {
-            throw new EntityNotFoundException("No user found");
+            throw new EntityNotFoundException("User not found");
         }
-
         return userMapper.mapToDto(user.get());
     }
 
     @Override
     public UserDto getUserByUsername(String username) {
-        Optional<User> user;
-
-        user = userRepository.findByUsername(username);
+        Optional<User> user = userRepository.findByUsername(username);
         if (user.isEmpty()) {
-            throw new EntityNotFoundException("No user found");
+            throw new EntityNotFoundException("User not found");
         }
-
         return userMapper.mapToDto(user.get());
     }
 
@@ -103,13 +78,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAllUsers() {
-        List<User> userList;
-
-        userList = userRepository.findAll();
+        List<User> userList = userRepository.findAll();
         if (userList.isEmpty()) {
-            throw new EntityNotFoundException("No users");
+            throw new EntityNotFoundException("Users not found");
         }
-
         return userList.stream()
                 .map(userMapper::mapToDto)
                 .toList();
@@ -118,21 +90,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void updateUser(UUID id, UserUpdateDto userDto) {
-        User updatedUser;
-        updatedUser = userRepository.findById(id)
+        User updatedUser = userRepository.findById(id)
                 .map(user -> getUpdateUser(user, userDto))
-                .orElseThrow(() -> new EntityNotFoundException("User is not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
         userRepository.save(updatedUser);
-    }
-
-    private User getUpdateUser(User user, UserUpdateDto userDto) {
-        if (userDto.firstName() != null)
-            user.setName(userDto.firstName());
-        if (userDto.nickName() != null)
-            user.setUsername(userDto.nickName());
-        if (userDto.profileImage() != null)
-            user.setProfileImage(userDto.profileImage());
-        return user;
     }
 
     @Override
@@ -147,34 +108,51 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> mapToUserDtoList(List<User> users) {
         return users.stream()
-            .map(userMapper::mapToDto)
+                .map(userMapper::mapToDto)
                 .toList();
     }
 
+    @Override
     public List<UserDto> getByUsernameContain(String name) {
         return mapToUserDtoList(userRepository.findByUsernameContainingIgnoreCase(name));
     }
 
     @Override
     public Boolean followUser(UUID userId) {
-        User followedUser = userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException("User not found"));
+        User followedUser = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         String email = getEmail();
-        User currentUser = userRepository.findByEmail(email).orElseThrow(()-> new EntityNotFoundException("User not found"));
-        if(currentUser.getFollowing().contains(currentUser))
-        {
+        User currentUser = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        if (currentUser.getFollowing().contains(currentUser)) {
             currentUser.getFollowing().remove(followedUser);
             userRepository.save(currentUser);
             return false;
-        }
-        else{
+        } else {
             currentUser.getFollowing().add(followedUser);
             userRepository.save(currentUser);
             return true;
         }
     }
 
-    public static String getEmail() {  //fix it later
+    private UUID getExistingOrNewCreatingUserId(Optional<User> user, String email) {
+        if (user.isPresent()) {
+            return user.get().getId();
+        } else {
+            String nickName = UserHelper.createNickname(email);
+
+            User newUser = User.builder()
+                    .name(nickName)
+                    .profileImage(StringUtils.EMPTY)
+                    .email(email)
+                    .username(nickName)
+                    .build();
+
+            User savedUser = userRepository.save(newUser);
+            return savedUser.getId();
+        }
+    }
+
+    private static String getEmail() {  //fix it later
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.getPrincipal() instanceof JwtAuthenticationToken token) {
@@ -182,5 +160,15 @@ public class UserServiceImpl implements UserService {
             return jwt.getClaims().get("sub").toString();
         }
         throw new EntityNotFoundException("User not found");
+    }
+
+    private User getUpdateUser(User user, UserUpdateDto userDto) {
+        if (userDto.firstName() != null)
+            user.setName(userDto.firstName());
+        if (userDto.nickName() != null)
+            user.setUsername(userDto.nickName());
+        if (userDto.profileImage() != null)
+            user.setProfileImage(userDto.profileImage());
+        return user;
     }
 }
