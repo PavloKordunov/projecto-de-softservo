@@ -40,7 +40,7 @@ public class PostServiceImpl implements PostService {
         User user = userRepository.findById(postDto.userId()).orElseThrow(
                 () -> new EntityNotFoundException("User not found"));
         if (!user.getGroups().contains(group)) {
-            throw new EntityNotFoundException("Group not found");
+            throw new EntityNotFoundException("User is not in the group");
         }
         Post post = mapToPost(postDto, user, group);
         Post postFromDB = postRepository.save(post);
@@ -49,12 +49,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostResponseDto> getAllPosts() {
-        List<Post> postList;
-        postList = postRepository.findAll();
+        List<Post> postList = postRepository.findAll();
         if (postList.isEmpty()) {
-            throw new EntityNotFoundException("No posts found");
+            throw new EntityNotFoundException("Posts not found");
         }
-
         return postList.stream()
                 .map(this::getUpdatePost)
                 .toList();
@@ -62,20 +60,16 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostResponseDto getPostById(UUID id) {
-        Optional<Post> post;
-
-        post = postRepository.findById(id);
+        Optional<Post> post = postRepository.findById(id);
         if (post.isEmpty()) {
             throw new EntityNotFoundException("No post");
         }
-
         return getUpdatePost(post.get());
     }
 
     @Override
     public List<PostResponseDto> getPostsByUser(UUID userId) {
-        List<Post> postList;
-        postList = postRepository.findAllByAuthor_Id(userId);
+        List<Post> postList = postRepository.findAllByAuthor_Id(userId);
         if (postList.isEmpty()) {
             throw new EntityNotFoundException("No posts");
         }
@@ -87,8 +81,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostResponseDto> getPostsByGroup(UUID groupId) {
-        List<Post> postList;
-        postList = postRepository.findAllByGroup_Id(groupId);
+        List<Post> postList = postRepository.findAllByGroup_Id(groupId);
         if (postList.isEmpty()) {
             throw new EntityNotFoundException("No posts");
         }
@@ -101,8 +94,7 @@ public class PostServiceImpl implements PostService {
     @Transactional
     @Override
     public void updatePost(UUID postId, PostRequestDto postDto) {
-        Post updatedPost;
-        updatedPost = postRepository.findById(postId)
+        Post updatedPost = postRepository.findById(postId)
                 .map(post -> getUpdatePost(post, postDto))
                 .orElseThrow(() -> new EntityNotFoundException("Post didn't find"));
 
@@ -112,14 +104,42 @@ public class PostServiceImpl implements PostService {
     @Transactional
     @Override
     public boolean pinPost(UUID postId) {
-        try {
             Post post = postRepository.findById(postId)
                     .orElseThrow(() -> new EntityNotFoundException("Post not found"));
             post.setPinned(!post.isPinned());
             postRepository.save(post);
             return post.isPinned();
-        } catch (RuntimeException ex) {
-            throw new EntityNotFoundException("Error occurred while pinning/unpinning post", ex);
+    }
+
+
+    @Override
+    public void deletePost(UUID id) {
+        postRepository.deleteById(id);
+    }
+
+    @Override
+    public List<PostResponseDto> getByTitleContain(String name) {
+        return mapToPostDtoList(postRepository.findByTitleContainingIgnoreCase(name));
+    }
+
+
+    @Override
+    public void addView(UUID id) {
+        Optional<Post> post = postRepository.findById(id);
+        if (post.isEmpty()) {
+            throw new EntityNotFoundException("No post");
+        }
+        post.get().setViewCount((post.get().getViewCount()) + 1);
+    }
+
+    @Override
+    public void isAuthor(UUID postId, UUID userId) throws AccessDeniedException {
+        if (!postRepository.findById(postId)
+                .map(Post::getAuthor)
+                .map(User::getId)
+                .map(id -> id.equals(userId))
+                .orElse(false)) {
+            throw new AccessDeniedException("User is not the author of this post.");
         }
     }
 
@@ -131,11 +151,6 @@ public class PostServiceImpl implements PostService {
         if (postDto.image() != null)
             post.setImage(postDto.image());
         return post;
-    }
-
-    @Override
-    public void deletePost(UUID id) {
-        postRepository.deleteById(id);
     }
 
     private static Post mapToPost(PostRequestDto postDto, User user, Group group) {
@@ -159,11 +174,11 @@ public class PostServiceImpl implements PostService {
                 .title(post.getTitle())
                 .description(post.getDescription() == null ? StringUtils.EMPTY : post.getDescription())
                 .image(post.getImage() == null ? StringUtils.EMPTY : post.getImage())
-                .user_image(post.getAuthor().getProfileImage())
+                .userImage(post.getAuthor().getProfileImage())
                 .nickname(post.getAuthor().getUsername())
                 .name(post.getAuthor().getName())
                 .isPinned(post.isPinned())
-                .group_title(post.getGroup().getTitle())
+                .groupTitle(post.getGroup().getTitle())
                 .createdAt(post.getCreatedAt())
                 .viewCount(post.getViewCount())
                 .comments(comments)
@@ -176,32 +191,6 @@ public class PostServiceImpl implements PostService {
                 .map(this::getUpdatePost)
                 .toList();
 
-    }
-
-    @Override
-    public void isAuthor(UUID postId, UUID userId) throws AccessDeniedException {
-        if (!postRepository.findById(postId)
-                .map(Post::getAuthor)
-                .map(User::getId)
-                .map(id -> id.equals(userId))
-                .orElse(false)) {
-            throw new AccessDeniedException("User is not the author of this post.");
-        }
-    }
-
-    public List<PostResponseDto> getByTitleContain(String name) {
-        return mapToPostDtoList(postRepository.findByTitleContainingIgnoreCase(name));
-    }
-
-
-    @Override
-    public void addView(UUID id) {
-        Optional<Post> post;
-        post = postRepository.findById(id);
-        if (post.isEmpty()) {
-            throw new EntityNotFoundException("No post");
-        }
-        post.get().setViewCount((post.get().getViewCount()) + 1);
     }
 }
 
