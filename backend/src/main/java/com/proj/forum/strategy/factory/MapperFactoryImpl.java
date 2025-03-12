@@ -1,6 +1,6 @@
-package com.proj.forum.mapper.factory;
+package com.proj.forum.strategy.factory;
 
-import com.proj.forum.mapper.Mapper;
+import com.proj.forum.strategy.Mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

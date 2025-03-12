@@ -1,4 +1,4 @@
-package com.proj.forum.mapper;
+package com.proj.forum.strategy;
 
 public interface Mapper <S,T> {
     T mapToDto (S source);

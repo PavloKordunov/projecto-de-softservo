@@ -1,4 +1,4 @@
-package com.proj.forum.mapper;
+package com.proj.forum.strategy;
 
 import com.proj.forum.dto.UserDto;
 import com.proj.forum.entity.User;

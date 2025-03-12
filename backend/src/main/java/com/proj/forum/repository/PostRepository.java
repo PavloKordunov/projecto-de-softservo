@@ -6,17 +6,15 @@ import com.proj.forum.entity.PrivacyPolicy;
 import com.proj.forum.entity.Topic;
 import org.hibernate.annotations.Comments;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-public interface PostRepository extends JpaRepository<Post, UUID> {
+@Repository
+public interface PostRepository extends JpaRepository<Post, UUID> { //TODO remove unnecessary methods
     List<Post> findAllByGroup_Id(UUID groupId);
     List<Post> findAllByAuthor_Id(UUID authorId);
-    List<Post> findAll();
-    Post findByTitle(String name);
-    Optional<Post> findById(UUID id);
     List<Post> findByTitleContainingIgnoreCase(String name);
 
 }
