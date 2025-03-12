@@ -23,7 +23,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    //@RequireRoles({RoleType.USER})
+    @RequireRoles({RoleType.USER})
     @PostMapping("/create")
     public ApiResponse<CommentDto> createComment(@RequestBody @Valid CommentDto commentDto){
         CommentDto comment = commentService.createComment(commentDto);
@@ -36,7 +36,7 @@ public class CommentController {
         return new ApiResponse<>(true, HttpStatus.OK, "Get comments by object", comments);
     }
 
-//    @RequireRoles({RoleType.USER})
+    @RequireRoles({RoleType.USER})
     @DeleteMapping("/delete/{id}")
     public ApiResponse<?> deleteComment(@PathVariable @Valid UUID id){
         commentService.deleteComment(id);
