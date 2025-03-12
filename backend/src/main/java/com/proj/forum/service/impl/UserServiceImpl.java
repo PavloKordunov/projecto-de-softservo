@@ -5,9 +5,7 @@ import com.proj.forum.dto.UserUpdateDto;
 import com.proj.forum.entity.User;
 import com.proj.forum.exception.TokenTypeException;
 import com.proj.forum.helper.UserHelper;
-import com.proj.forum.mapper.UserMapper;
-import com.proj.forum.mapper.Mapper;
-import com.proj.forum.mapper.factory.MapperFactory;
+import com.proj.forum.strategy.UserMapper;
 import com.proj.forum.repository.UserRepository;
 import com.proj.forum.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -48,34 +46,15 @@ public class UserServiceImpl implements UserService {
             var jwt= (Jwt) token.getPrincipal();
             String email = jwt.getClaims().get("sub").toString();
             Optional<User> user = userRepository.findByEmail(email);
-            if (user.isPresent()) {
-                return user.get().getId();
-            }
-            else{
-                String nickName;
-                do{
-                    nickName = UserHelper.createNickname(email);
-                } while(userRepository.existsByUsername(nickName));
-
-                User newUser = User.builder()
-                        .name(nickName)
-                        .profileImage(StringUtils.EMPTY)
-                        .email(email)
-                        .username(nickName)
-                        .build();
-
-                User savedUser = userRepository.save(newUser);
-                return savedUser.getId();
-            }
+            return getUserNickOrGenerateNew(user, email);
         }
         throw new TokenTypeException("User not found");
     }
 
     @Override
     public UserDto getUser(UUID id) {
-        Optional<User> user;
+        Optional<User> user = userRepository.findById(id);
 
-        user = userRepository.findById(id);
         if (user.isEmpty()) {
             throw new EntityNotFoundException("No user found");
         }
@@ -174,7 +153,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public static String getEmail() {  //fix it later
+    private String getEmail() {  //fix it later
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.getPrincipal() instanceof JwtAuthenticationToken token) {
@@ -182,5 +161,23 @@ public class UserServiceImpl implements UserService {
             return jwt.getClaims().get("sub").toString();
         }
         throw new EntityNotFoundException("User not found");
+    }
+
+    private UUID getUserNickOrGenerateNew(Optional<User> user, String email) {
+        if (user.isPresent()) {
+            return user.get().getId();
+        }
+        else{
+            String nickName = UserHelper.createNickname(email);
+            User newUser = User.builder()
+                    .name(nickName)
+                    .profileImage(StringUtils.EMPTY)
+                    .email(email)
+                    .username(nickName)
+                    .build();
+
+            User savedUser = userRepository.save(newUser);
+            return savedUser.getId();
+        }
     }
 }
