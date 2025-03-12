@@ -31,7 +31,7 @@ public class TopicMapper implements Mapper<Topic, TopicDto> {
                 .viewCount(0)
                 .author_id(topicDto.author())
                 .type(topicDto.topicType())
-                .tag_id(topicDto.tag_id())
+                .tag_id(topicDto.tagId())
                 .releaseDate(topicDto.releaseDate())
                 .build();
     }
@@ -54,7 +54,7 @@ public class TopicMapper implements Mapper<Topic, TopicDto> {
                 .viewCount(topic.getViewCount())
                 .author(topic.getAuthor_id())
                 .topicType(topic.getType())
-                .tag_id(topic.getTag_id())
+                .tagId(topic.getTag_id())
                 .comments(comments)
                 .releaseDate(topic.getReleaseDate())
                 .build();
