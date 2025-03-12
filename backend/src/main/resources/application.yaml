@@ -1,11 +1,13 @@
 spring:
   application:
     name: backend
+
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: password
+
   jpa:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
