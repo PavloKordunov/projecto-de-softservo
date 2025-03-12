@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional("postgreTransactionManager")
 @RequiredArgsConstructor
 @Logging
 public class ChatRoomServiceImpl implements ChatRoomService {

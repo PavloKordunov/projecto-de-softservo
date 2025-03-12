@@ -15,7 +15,7 @@ import java.util.UUID;
 
 
 @Service
-@Transactional
+@Transactional("postgreTransactionManager")
 @RequiredArgsConstructor
 public class UserStatisticServiceImpl implements UserStatisticService {
 
@@ -28,7 +28,6 @@ public class UserStatisticServiceImpl implements UserStatisticService {
         return mapToStatisticDto(createdStatistic);
     }
 
-    @Transactional
     @Override
     public void updateStatistic(StatisticDto statisticDto) {
         Statistic statistic = userStatisticRepository.findById(statisticDto.id())
@@ -56,7 +55,6 @@ public class UserStatisticServiceImpl implements UserStatisticService {
             throw new EntityNotFoundException("Statistic not found");
     }
 
-    @Transactional
     @Override
     public void updateStatisticPartially(UUID id, Boolean liked) {
         Statistic stat = userStatisticRepository.findById(id).map(statistic -> updatePartially(statistic, liked))

@@ -24,7 +24,7 @@ import java.util.UUID;
 
 
 @Service
-@Transactional
+@Transactional("postgreTransactionManager")
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
@@ -94,7 +94,6 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
-    @Transactional
     @Override
     public void updateUser(UUID id, UserUpdateDto userDto) {
         User updatedUser;

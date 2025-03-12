@@ -11,9 +11,9 @@ import com.proj.forum.repository.ChatRoomRepository;
 import com.proj.forum.repository.UserRepository;
 import com.proj.forum.service.ChatMessageService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -77,8 +77,9 @@ import java.util.stream.Collectors;
 //    }
 //}
 @Service
-@Transactional
+@Transactional("postgreTransactionManager")
 @RequiredArgsConstructor
+@Logging
 public class ChatMessageServiceImpl implements ChatMessageService {
 
     private final ChatMessageRepository messageRepository;

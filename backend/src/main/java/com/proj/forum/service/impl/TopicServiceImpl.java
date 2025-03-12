@@ -17,7 +17,7 @@ import java.util.UUID;
 
 
 @Service
-@Transactional
+@Transactional("postgreTransactionManager")
 @RequiredArgsConstructor
 public class TopicServiceImpl implements TopicService {
 
@@ -52,7 +52,6 @@ public class TopicServiceImpl implements TopicService {
                 .toList();
     }
 
-    @Transactional
     @Override
     public void updateTopic(UUID id, TopicDto topicDto) {
         Topic updatedTopic = topicRepository.findById(id)

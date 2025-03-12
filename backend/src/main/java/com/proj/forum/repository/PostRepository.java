@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
 @Repository
 public interface PostRepository extends JpaRepository<Post, UUID> { //TODO remove unnecessary methods
     List<Post> findAllByGroup_Id(UUID groupId);

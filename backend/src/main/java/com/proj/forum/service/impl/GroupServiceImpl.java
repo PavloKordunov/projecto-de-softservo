@@ -22,14 +22,13 @@ import java.util.UUID;
 
 @Slf4j
 @Service
-@Transactional
+@Transactional("postgreTransactionManager")
 @RequiredArgsConstructor
 public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
 
-    @Transactional
     @Override
     public UUID createGroup(GroupDto groupDto) {
         Group group = mapToGroup(groupDto);
@@ -59,7 +58,6 @@ public class GroupServiceImpl implements GroupService {
                 .toList();
     }
 
-    @Transactional
     @Override
     public void updateGroup(UUID id, GroupDto groupDto) throws AccessDeniedException {
         Group updatedGroup = groupRepository.findById(id)
@@ -87,7 +85,6 @@ public class GroupServiceImpl implements GroupService {
         return mapToGroupDtoList(groupRepository.findByTitleContainingIgnoreCase(name));
     }
 
-    @Transactional
     @Override
     public boolean addMember(UUID userId, String groupName) {
         Group group = groupRepository.findByTitle(groupName)

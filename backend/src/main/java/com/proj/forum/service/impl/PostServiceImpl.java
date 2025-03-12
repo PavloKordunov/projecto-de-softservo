@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@Transactional
+@Transactional("postgreTransactionManager")
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
 
@@ -91,7 +91,6 @@ public class PostServiceImpl implements PostService {
                 .toList();
     }
 
-    @Transactional
     @Override
     public void updatePost(UUID postId, PostRequestDto postDto) {
         Post updatedPost = postRepository.findById(postId)
@@ -101,7 +100,6 @@ public class PostServiceImpl implements PostService {
         postRepository.save(updatedPost);
     }
 
-    @Transactional
     @Override
     public boolean pinPost(UUID postId) {
             Post post = postRepository.findById(postId)

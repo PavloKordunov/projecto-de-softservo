@@ -11,7 +11,7 @@ import java.util.List;
 
 
 @Service
-@Transactional
+@Transactional("postgreTransactionManager")
 @RequiredArgsConstructor
 public class SearchServiceImpl implements SearchService {
 

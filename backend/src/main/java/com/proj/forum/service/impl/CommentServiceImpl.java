@@ -22,7 +22,7 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-@Transactional
+@Transactional("postgreTransactionManager")
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;

@@ -15,7 +15,7 @@ import java.util.UUID;
 
 
 @Service
-@Transactional
+@Transactional("postgreTransactionManager")
 @RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
 
