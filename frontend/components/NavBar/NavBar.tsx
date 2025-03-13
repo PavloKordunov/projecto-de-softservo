@@ -26,7 +26,7 @@ const NavBar = ({ movies }: NavBarProps) => {
     };
 
     return (
-        <nav className="w-screen py-4 px-6 bg-MainColor rounded-[10px] flex items-center justify-between relative">
+        <nav className="w-full py-4 px-6 bg-MainColor rounded-[10px] flex items-center justify-between relative">
 
             <p className="text-AccnetColor font-bold text-[30px]">Logo</p>
 

@@ -7,7 +7,7 @@ interface User {
   sub: string;
   name: string;
   email: string;
-  img?: string;
+  profileImage?: string;
   accessToken: string;
   [key: string]: any;
 }

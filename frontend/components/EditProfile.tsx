@@ -8,7 +8,7 @@ const EditProfile = ({ handleShow }: { handleShow: () => void }) => {
     const [updateUser, setUpdateUser] = useState({
         firstName: user?.firstName || "",
         nickName: user?.nickName || "",
-        image: user?.img || "",
+        profileImage: user?.profileImage || "",
     });
 
     useEffect(() => {
@@ -16,7 +16,7 @@ const EditProfile = ({ handleShow }: { handleShow: () => void }) => {
             setUpdateUser({
                 firstName: user.firstName || "",
                 nickName: user.nickName || "",
-                image: user.img || ""
+                profileImage: user.profileImage || ""
             });
         }
     }, [user]);
@@ -46,7 +46,7 @@ const EditProfile = ({ handleShow }: { handleShow: () => void }) => {
                 ...user,
                 firstName: updateUser.firstName,
                 nickName: updateUser.nickName,
-                img: updateUser.image || user?.img,
+                profileImage: updateUser.profileImage || user?.profileImage,
                 id: user?.id ?? "",
                 sub: user?.sub ?? "", 
                 name: user?.name ?? "",
@@ -70,7 +70,7 @@ const EditProfile = ({ handleShow }: { handleShow: () => void }) => {
             setBase64(base64String);
             setUpdateUser((prev) => ({
             ...prev,
-            image: base64String,
+            profileImage: base64String,
         }));
             console.log('RESULT:', base64String);
         };
