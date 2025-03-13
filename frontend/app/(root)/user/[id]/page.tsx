@@ -1,6 +1,8 @@
 "use client"
 
+import EditProfile from "@/components/EditProfile";
 import Post from "@/components/Post";
+import { Edit } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -9,10 +11,9 @@ const UserPage = () => {
 
     const [posts, setPosts] = useState<any[]>([])
     const [user, setUser] = useState<any>(null)
-        const params = useParams();
-        const userId = params.id;
-
-        console.log(userId)
+    const params = useParams();
+    const userId = params.id;
+    const [showUpdateUser, setShowUpdateUser] = useState(false)
     
     useEffect(() => {
         const getAllPost = async() => {
@@ -33,6 +34,10 @@ const UserPage = () => {
         getAllPost()
     }, [])
 
+    const handleShow = () => {
+        setShowUpdateUser(!showUpdateUser)
+    }
+
     return (
         <div className="px-3 py-12 mt-4 bg-MainColor rounded-[21px] mb-6 w-[1050px]">
             <div className="flex items-center ml-9 mb-8">
@@ -41,7 +46,7 @@ const UserPage = () => {
                     <div className="flex flex-col gap-1">
                         <div className="flex gap-6 items-center">
                             <p className="text-white text-[48px] font-semibold leading-[48px] m-0">{user?.firstName}</p>
-                            <svg className="w-9 h-8" fill="#fff">
+                            <svg className="w-9 h-8" fill="#fff" onClick={handleShow} >
                                 <use href={`/sprite.svg#changeProfileIcon`} />
                             </svg>
                         </div>
@@ -94,6 +99,11 @@ const UserPage = () => {
             ) : (
                 <p>Поки що немає постів...</p>
             )}
+
+            {showUpdateUser && (
+                <EditProfile handleShow={handleShow} />
+            )    
+            }
         </div>
     );
 };
