@@ -6,7 +6,6 @@ import com.proj.forum.repository.TagRepository;
 import com.proj.forum.service.TagService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,27 +30,20 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public TagDto getTag(UUID id) {
-        Optional<Tag> tag;
-        tag = tagRepository.findById(id);
-        if (tag.isEmpty()) {
-            throw new EntityNotFoundException("No tag");
+        Optional<Tag> tagEntity = tagRepository.findById(id);
+        if (tagEntity.isEmpty()) {
+            throw new EntityNotFoundException("Tag not found");
         }
-
-
-        return TagDto.builder()
-                .id(id)
-                .name(tag.get().getName())
-                .build();
+        Tag tag = tagEntity.get();
+        return getUpdateTag(tag);
     }
 
     @Override
     public List<TagDto> getAllTags() {
-        List<Tag> tagList;
-        tagList = tagRepository.findAll();
+        List<Tag> tagList = tagRepository.findAll();
         if (tagList.isEmpty()) {
-            throw new EntityNotFoundException("No tags");
+            throw new EntityNotFoundException("Tag not found");
         }
-
         return tagList.stream()
                 .map(TagServiceImpl::getUpdateTag)
                 .toList();

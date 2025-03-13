@@ -10,7 +10,15 @@ import com.proj.forum.service.GroupService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.nio.file.AccessDeniedException;
 import java.util.List;
@@ -33,8 +41,7 @@ public class GroupController {
     }
 
     @GetMapping("/followed/{userId}")
-    public ApiResponse<List<GroupDto>> getFollowedGroups(@PathVariable UUID userId)
-    {
+    public ApiResponse<List<GroupDto>> getFollowedGroups(@PathVariable UUID userId) {
         List<GroupDto> groups = groupService.getFollowedGroups(userId);
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Groups found", groups);
     }
@@ -58,7 +65,6 @@ public class GroupController {
             @RequestBody @Valid GroupDto groupDto) throws AccessDeniedException {
         groupService.updateGroup(id, groupDto);
         return ApiResponse.apiResponse(true, 200, "Group successfully updated", id);
-
     }
 
     @RequireRoles({RoleType.USER})
@@ -77,7 +83,7 @@ public class GroupController {
     public ApiResponse<GenericResponse> deleteGroup(
             @PathVariable @Valid UUID groupId,
             @PathVariable @Valid UUID userId
-            ) throws AccessDeniedException {
+    ) throws AccessDeniedException {
         groupService.deleteGroup(groupId, userId);
         return ApiResponse.apiResponse(true, 200, "Group successfully deleted", groupId);
 

@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,7 +44,7 @@ public class Topic {
     private Integer viewCount;
 
     @Column(nullable = false)
-    private Integer limitAge;
+    private String limitAge;
 
     @Column(nullable = false)
     private String country;
@@ -62,6 +63,9 @@ public class Topic {
 
     @Column(nullable = false)
     private String director;
+
+    @Column(nullable = false)
+    private String releaseDate;
 
     @Lob
     @Column(nullable = false)

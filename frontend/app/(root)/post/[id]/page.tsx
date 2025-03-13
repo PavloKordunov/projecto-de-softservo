@@ -1,23 +1,23 @@
 "use client";
 
-import { useParams } from 'next/navigation';
+import {useParams} from 'next/navigation';
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from 'react';
-import { useUser } from '@/hooks/useUser';
-import { set } from 'date-fns';
+import {useEffect, useState} from 'react';
+import {useUser} from '@/hooks/useUser';
+import {set} from 'date-fns';
 
 interface Post {
-      id: string;
-      title: string;
-      description: string;
-      name: string;
-      nickname: string;
-      image?: any;
-      isPinned: boolean;
-      group_title: string;
-      viewCount: string
-  }
+    id: string;
+    title: string;
+    description: string;
+    name: string;
+    nickname: string;
+    image?: any;
+    isPinned: boolean;
+    group_title: string;
+    viewCount: string
+}
 
 const PostPage = () => {
 
@@ -35,24 +35,24 @@ const PostPage = () => {
     const [post, setPost] = useState<Post | null>(null)
 
     function encodeImageFileAsURL(event: React.ChangeEvent<HTMLInputElement>) {
-            const file = event.target.files?.[0];
-            if (!file) return;
-        
-            const reader = new FileReader();
-            reader.onloadend = function () {
-              const base64String = reader.result as string;
-              setBase64(base64String);
-              setCommentData((prev: any) => ({
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onloadend = function () {
+            const base64String = reader.result as string;
+            setBase64(base64String);
+            setCommentData((prev: any) => ({
                 ...prev,
                 image: base64String,
             }));
-              console.log('RESULT:', base64String);
-            };
-            reader.readAsDataURL(file);
-        }
+            console.log('RESULT:', base64String);
+        };
+        reader.readAsDataURL(file);
+    }
 
     useEffect(() => {
-        const getPostById = async() =>{
+        const getPostById = async () => {
             try {
                 const res = await fetch(`http://localhost:8080/api/posts/${postId}`)
                 const data = await res.json()
@@ -61,9 +61,9 @@ const PostPage = () => {
             } catch (error) {
                 console.log(error)
             }
-        } 
-        
-        const getComments = async() =>{
+        }
+
+        const getComments = async () => {
             try {
                 const res = await fetch(`http://localhost:8080/api/comments/id/${postId}`)
                 const data = await res.json()
@@ -76,9 +76,9 @@ const PostPage = () => {
 
         getComments()
         getPostById()
-    },[])
+    }, [])
 
-    const createComment = async() =>{
+    const createComment = async () => {
         try {
             const res = await fetch(`http://localhost:8080/api/comments/create`, {
                 method: "POST",
@@ -181,54 +181,54 @@ const PostPage = () => {
                     <button className="px-3 py-2 bg-AccnetColor rounded-[17px] text-white text-[16px] font-bold" onClick={createComment}>Коментувати</button>
                 </div>
             </div>
-        </div>
-        <div className="py-5 px-7 mt-4 bg-MainColor rounded-[21px] mb-6 w-[1030px] flex items-center justify-between">
-            <p className="text-[34px] text-white font-bold">Коментарі</p>
-            <div className="flex items-center gap-4">
-                <p className="text-[24px] text-white font-semibold">Сортувати:</p>
-                <button className="px-3 py-2 bg-[#434C55] rounded-[17px] flex gap-2 items-center">
-                    <p className="text-[16px] text-white font-bold">За вподобаннями</p>
-                    <svg className="w-4 h-4" >
-                        <use href={`/sprite.svg#iconArrowDown`} />
-                    </svg>
-                </button>
-            </div>
-        </div>
-        {comments.length > 0 ? (comments.map((comment) => 
-        <div key={comment.id} className="p-6 mt-7 bg-MainColor rounded-[21px] mb-6 w-[1030px]">
-            <div className="flex items-center mb-6">
-                <Image src="/person.png" alt="" width={40} height={40} className="mr-2" />
-                <p className="text-[16px] text-white mr-4">{comment.userName}</p>
-                <p className="text-[16px] text-white">35хв. тому</p>
-            </div>
-            <p className="text-[28px] text-white font-bold mb-4">{comment.content}</p>
-            {comment.image && <Image src="/images.jpeg" alt="" width={980} height={760} className="mb-3" />}
-            <div className="flex gap-3">
-                <div className="flex items-center p-2 gap-3 bg-[#2C353D] rounded-[20px]">
-                    <svg className="w-6 h-6" fill="#C5D0E6" >
-                        <use href={`/sprite.svg#iconLike`} />
-                    </svg>
-                    <p className="text-[18px] text-[#C5D0E6]">120</p>
-                    <Image src='/brokeHeart.png' alt="" width={29} height={29} />
-                </div>
-                <div className="flex items-center p-2 gap-3 bg-[#2C353D] rounded-[20px]">
-                    <svg className="w-6 h-6" fill="#C5D0E6" >
-                        <use href={`/sprite.svg#icon-comment`} />
-                    </svg>
-                    <p className="text-[18px] text-[#C5D0E6]">56</p>
-                </div>
-                <div className="flex items-center p-2 gap-3 bg-[#2C353D] rounded-[20px]">
-                    <svg className="w-5 h-6" fill="#C5D0E6" >
-                        <use href={`/sprite.svg#icon-save`} />
-                    </svg>
-                    <p className="text-[18px] text-[#C5D0E6]">10</p>
+            <div
+                className="py-5 px-7 mt-4 bg-MainColor rounded-[21px] mb-6 w-[1030px] flex items-center justify-between">
+                <p className="text-[34px] text-white font-bold">Коментарі</p>
+                <div className="flex items-center gap-4">
+                    <p className="text-[24px] text-white font-semibold">Сортувати:</p>
+                    <button className="px-3 py-2 bg-[#434C55] rounded-[17px] flex gap-2 items-center">
+                        <p className="text-[16px] text-white font-bold">За вподобаннями</p>
+                        <svg className="w-4 h-4">
+                            <use href={`/sprite.svg#iconArrowDown`}/>
+                        </svg>
+                    </button>
                 </div>
             </div>
-        </div>)): (
+            {comments.length > 0 ? (comments.map((comment) =>
+                <div key={comment.id} className="p-6 mt-7 bg-MainColor rounded-[21px] mb-6 w-[1030px]">
+                    <div className="flex items-center mb-6">
+                        <Image src="/person.png" alt="" width={40} height={40} className="mr-2"/>
+                        <p className="text-[16px] text-white mr-4">{comment.userName}</p>
+                        <p className="text-[16px] text-white">35хв. тому</p>
+                    </div>
+                    <p className="text-[28px] text-white font-bold mb-4">{comment.content}</p>
+                    {comment.image && <Image src="/images.jpeg" alt="" width={980} height={760} className="mb-3"/>}
+                    <div className="flex gap-3">
+                        <div className="flex items-center p-2 gap-3 bg-[#2C353D] rounded-[20px]">
+                            <svg className="w-6 h-6" fill="#C5D0E6">
+                                <use href={`/sprite.svg#iconLike`}/>
+                            </svg>
+                            <p className="text-[18px] text-[#C5D0E6]">120</p>
+                            <Image src='/brokeHeart.png' alt="" width={29} height={29}/>
+                        </div>
+                        <div className="flex items-center p-2 gap-3 bg-[#2C353D] rounded-[20px]">
+                            <svg className="w-6 h-6" fill="#C5D0E6">
+                                <use href={`/sprite.svg#icon-comment`}/>
+                            </svg>
+                            <p className="text-[18px] text-[#C5D0E6]">56</p>
+                        </div>
+                        <div className="flex items-center p-2 gap-3 bg-[#2C353D] rounded-[20px]">
+                            <svg className="w-5 h-6" fill="#C5D0E6">
+                                <use href={`/sprite.svg#icon-save`}/>
+                            </svg>
+                            <p className="text-[18px] text-[#C5D0E6]">10</p>
+                        </div>
+                    </div>
+                </div>)) : (
                 <p>Поки що немає коментарів...</p>
             )}
-        </div> 
-     );
+        </div>
+    );
 }
- 
+
 export default PostPage;

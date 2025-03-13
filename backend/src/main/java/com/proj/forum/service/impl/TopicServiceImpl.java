@@ -2,9 +2,7 @@ package com.proj.forum.service.impl;
 
 import com.proj.forum.dto.CommentDto;
 import com.proj.forum.dto.TopicDto;
-import com.proj.forum.entity.Comment;
 import com.proj.forum.entity.Topic;
-import com.proj.forum.repository.CommentRepository;
 import com.proj.forum.repository.TopicRepository;
 import com.proj.forum.service.CommentService;
 import com.proj.forum.service.TopicService;
@@ -35,20 +33,18 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public TopicDto getTopic(UUID id) {
-        Optional<Topic> topic;
-        topic = topicRepository.findById(id);
+        Optional<Topic> topic = topicRepository.findById(id);
         if (topic.isEmpty()) {
-            throw new EntityNotFoundException("No topic");
+            throw new EntityNotFoundException("Topic not found");
         }
         return getUpdateTopic(topic.get());
     }
 
     @Override
     public List<TopicDto> getAllTopics() {
-        List<Topic> topicList;
-        topicList = topicRepository.findAll();
+        List<Topic> topicList = topicRepository.findAll();
         if (topicList.isEmpty()) {
-            throw new EntityNotFoundException("No topics");
+            throw new EntityNotFoundException("Topics not found");
         }
 
         return topicList.stream()
@@ -59,24 +55,15 @@ public class TopicServiceImpl implements TopicService {
     @Transactional
     @Override
     public void updateTopic(UUID id, TopicDto topicDto) {
-        Topic updatedTopic;
-        try {
-            updatedTopic = topicRepository.findById(id)
-                    .map(topic -> getUpdateTopic(topic, topicDto))
-                    .orElseThrow(() -> new EntityNotFoundException("Topic didn't find"));
+        Topic updatedTopic = topicRepository.findById(id)
+                .map(topic -> getUpdateTopic(topicDto))
+                .orElseThrow(() -> new EntityNotFoundException("Topic not found"));
 
-            topicRepository.save(updatedTopic);
-        } catch (RuntimeException ex) {
-            throw new EntityNotFoundException(ex);
-        }
+        topicRepository.save(updatedTopic);
     }
 
-    private Topic getUpdateTopic(Topic topic, TopicDto topicDto) {
-        //        if (topicDto.title() != null)         //TODO fix it asap (later)
-//            topic.setTitle(topicDto.title());
-//        if (topicDto.description() != null)
-//            topic.setDescription(topicDto.description());
-        return topic;
+    private Topic getUpdateTopic(TopicDto topicDto) {
+        return mapToTopic(topicDto);
     }
 
     @Override
@@ -84,8 +71,22 @@ public class TopicServiceImpl implements TopicService {
         if (topicRepository.existsById(id)) {
             topicRepository.deleteById(id);
         } else {
-            throw new EntityNotFoundException("Not found topic");
+            throw new EntityNotFoundException("Topic not found");
         }
+    }
+
+    @Override
+    public void addView(UUID id) {
+        Optional<Topic> topic = topicRepository.findById(id);
+        if (topic.isEmpty()) {
+            throw new EntityNotFoundException("Topic not found");
+        }
+        topic.get().setViewCount((topic.get().getViewCount()) + 1);
+    }
+
+    @Override
+    public List<TopicDto> getByTitleContain(String name) {
+        return mapToTopicDtoList(topicRepository.findByTitleContainingIgnoreCase(name));
     }
 
     private static Topic mapToTopic(TopicDto topicDto) {
@@ -103,7 +104,8 @@ public class TopicServiceImpl implements TopicService {
                 .viewCount(0)
                 .author_id(topicDto.author())
                 .type(topicDto.topicType())
-                .tag_id(topicDto.tag_id())
+                .tag_id(topicDto.tagId())
+                .releaseDate(topicDto.releaseDate())
                 .build();
     }
 
@@ -124,8 +126,9 @@ public class TopicServiceImpl implements TopicService {
                 .viewCount(topic.getViewCount())
                 .author(topic.getAuthor_id())
                 .topicType(topic.getType())
-                .tag_id(topic.getTag_id())
+                .tagId(topic.getTag_id())
                 .comments(comments)
+                .releaseDate(topic.getReleaseDate())
                 .build();
     }
 
@@ -135,19 +138,4 @@ public class TopicServiceImpl implements TopicService {
                 .map(this::getUpdateTopic)
                 .toList();
     }
-
-    @Override
-    public void addView(UUID id) {
-        Optional<Topic> topic;
-        topic = topicRepository.findById(id);
-        if (topic.isEmpty()) {
-            throw new EntityNotFoundException("No topic");
-        }
-        topic.get().setViewCount((topic.get().getViewCount()) + 1);
-    }
-
-    public List<TopicDto> getByTitleContain(String name) {
-        return mapToTopicDtoList(topicRepository.findByTitleContainingIgnoreCase(name));
-    }
-
 }

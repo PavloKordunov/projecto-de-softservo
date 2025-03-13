@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
-public record GroupDto(
+public record   GroupDto(
         UUID id,
         @NotBlank(message = "Title cannot be blank")
         String title,

@@ -11,10 +11,10 @@ import java.util.UUID;
 @Builder
 public record TopicDto(
         UUID id,
-        UUID tag_id,
+        UUID tagId,
         @NotBlank(message = "Title cannot be blank") String title,
         @NotNull UUID author,
-        @NotNull Integer limitAge, //TODO create enum
+        @NotNull String limitAge,
         @NotBlank String description,
         @NotBlank String country,
         @NotBlank String duration,
@@ -24,6 +24,7 @@ public record TopicDto(
         @NotBlank String director,
         @NotBlank String image,
         @NotNull TopicType topicType,
+        @NotNull String releaseDate,
         int viewCount,
         List<CommentDto> comments
 ) {

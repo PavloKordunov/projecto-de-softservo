@@ -12,6 +12,7 @@ import com.proj.forum.repository.UserRepository;
 import com.proj.forum.service.CommentService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -79,7 +80,7 @@ public class CommentServiceImpl implements CommentService {
                 .post(post)
                 .user(user)
                 .topic(topic)
-                .image(commentDto.image() != null ? commentDto.image() : null)
+                .image(commentDto.image() != null ? commentDto.image() : StringUtils.EMPTY)
                 //.parentComment(new Comment())
                 .build();
     }

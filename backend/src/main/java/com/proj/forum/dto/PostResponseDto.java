@@ -15,9 +15,9 @@ public record PostResponseDto(
         String image,
         String name,
         @NotBlank String nickname,
-        @NotBlank String user_image,
+        @NotBlank String userImage,
         boolean isPinned,
-        @NotBlank String group_title,
+        @NotBlank String groupTitle,
         LocalDateTime createdAt,
         int viewCount,
         List<CommentDto> comments
