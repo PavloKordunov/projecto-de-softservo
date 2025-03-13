@@ -33,7 +33,7 @@ public class AuthorizationAspect {
             throw new AccessDeniedException("User doesn't have roles");
 
         List<String> roleValues = Arrays
-                .stream(RoleType.values())
+                .stream(requireRole.value())
                 .map(RoleType::getValue)
                 .toList();
 

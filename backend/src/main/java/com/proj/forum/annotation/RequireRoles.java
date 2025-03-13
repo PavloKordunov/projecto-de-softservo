@@ -1,6 +1,7 @@
 package com.proj.forum.annotation;
 
 import com.proj.forum.enums.RoleType;
+import jakarta.validation.constraints.NotNull;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
