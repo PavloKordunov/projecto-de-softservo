@@ -28,7 +28,7 @@ public class HomeController {
     private final PostService postService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<HomePageDto>> getHomePageData() {
+    public ApiResponse<HomePageDto> getHomePageData() {
 
         List<TagDto> tags = tagService.getAllTags();
         List<GroupDto> groups = groupService.getAllGroups();
@@ -36,14 +36,9 @@ public class HomeController {
 
         HomePageDto response = new HomePageDto(tags, groups, posts);
 
-        ApiResponse<HomePageDto> apiResponse = new ApiResponse<>(
-                true,
-                HttpStatus.OK,
-                "Homepage data fetched successfully.",
-                response
+        return new ApiResponse<>(true, HttpStatus.OK,
+                "Homepage data fetched successfully.", response
         );
-
-        return ResponseEntity.ok(apiResponse);
     }
 
 }

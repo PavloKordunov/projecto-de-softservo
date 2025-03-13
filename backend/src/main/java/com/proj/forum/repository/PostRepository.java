@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface PostRepository extends JpaRepository<Post, UUID> { //TODO remove unnecessary methods
+public interface PostRepository extends JpaRepository<Post, UUID> {
     List<Post> findAllByGroup_Id(UUID groupId);
     List<Post> findAllByAuthor_Id(UUID authorId);
     List<Post> findByTitleContainingIgnoreCase(String name);

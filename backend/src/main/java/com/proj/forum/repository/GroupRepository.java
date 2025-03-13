@@ -11,10 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface GroupRepository extends JpaRepository<Group, UUID> {
-    List<Group> findAll();
     Optional<Group> findByTitle(String name); //group has title or name?
-    Optional<Group> findById(UUID id);
     List<Group> findByTitleContainingIgnoreCase(String name);
-    //boolean existsByTitle(String title);
     List<Group> findByMembersContains(User user);
 }

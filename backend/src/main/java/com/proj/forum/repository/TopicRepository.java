@@ -11,8 +11,5 @@ import java.util.UUID;
 
 @Repository
 public interface TopicRepository extends JpaRepository<Topic, UUID> {
-    List<Topic> findAll();
-    Topic findByTitle(String name);
-    Optional<Topic> findById(UUID id);
     List<Topic> findByTitleContainingIgnoreCase(String name);
 }

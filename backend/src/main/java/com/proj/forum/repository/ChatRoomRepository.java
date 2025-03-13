@@ -11,7 +11,4 @@ import java.util.UUID;
 //@Transactional(transactionManager = "postgresTransactionManager")
 @Repository
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, UUID> {
-    Optional<ChatRoom> findByName(String name);
-    Optional<ChatRoom> findById(UUID id);
-
 }

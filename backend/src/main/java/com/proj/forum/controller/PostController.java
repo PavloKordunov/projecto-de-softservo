@@ -80,7 +80,7 @@ public class PostController {
     }
 
     @RequireRoles({RoleType.USER})
-    @DeleteMapping("/delete/{postId}/author/{authorId}") //TODO maybe dont put author in endpoint but get it from token
+    @DeleteMapping("/delete/{postId}/author/{authorId}")
     public ApiResponse<GenericResponse> deletePost(@PathVariable UUID postId, @PathVariable UUID authorId) throws AccessDeniedException {
         postService.isAuthor(postId, authorId);
         postService.deletePost(postId);
