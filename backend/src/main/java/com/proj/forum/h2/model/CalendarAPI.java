@@ -15,10 +15,18 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 @Builder
-@Table(name = "Calendar")
+@Table(name = "CalendarAPI")
 public class CalendarAPI {
     @Id
     private UUID id;
 
     private String content;
 }
+
+//Query to create entity
+//create table CALENDARAPI
+//        (
+//                ID      UUID not null
+//                        primary key,
+//                CONTENT CHARACTER VARYING(255)
+//);

@@ -30,7 +30,7 @@ public class UserStatisticServiceImpl implements UserStatisticService {
 
     @Override
     public void updateStatistic(StatisticDto statisticDto) {
-        Statistic statistic = userStatisticRepository.findById(statisticDto.id())
+        userStatisticRepository.findById(statisticDto.id())
                 .map(stat -> updateStatistic(stat, statisticDto))
                 .orElseThrow(() -> new EntityNotFoundException("Statistic not found"));
     }
@@ -49,7 +49,7 @@ public class UserStatisticServiceImpl implements UserStatisticService {
 
     @Override
     public void deleteStatistic(UUID id) {
-        if(userStatisticRepository.existsById(id))
+        if (userStatisticRepository.existsById(id))
             userStatisticRepository.deleteById(id);
         else
             throw new EntityNotFoundException("Statistic not found");
@@ -57,8 +57,8 @@ public class UserStatisticServiceImpl implements UserStatisticService {
 
     @Override
     public void updateStatisticPartially(UUID id, Boolean liked) {
-        Statistic stat = userStatisticRepository.findById(id).map(statistic -> updatePartially(statistic, liked))
-                .orElseThrow(()-> new EntityNotFoundException("Statistic not found"));
+        userStatisticRepository.findById(id).map(statistic -> updatePartially(statistic, liked))
+                .orElseThrow(() -> new EntityNotFoundException("Statistic not found"));
     }
 
     private Statistic updateStatistic(Statistic statistic, StatisticDto statisticDto) {
@@ -74,8 +74,8 @@ public class UserStatisticServiceImpl implements UserStatisticService {
         return statistic;
     }
 
-    private Statistic updatePartially(Statistic statistic, Boolean liked){
-        if(statistic.getLiked() != liked)
+    private Statistic updatePartially(Statistic statistic, Boolean liked) {
+        if (statistic.getLiked() != liked)
             statistic.setLiked(liked);
         return statistic;
     }

@@ -1,7 +1,6 @@
 package com.proj.forum.repository;
 
 import com.proj.forum.entity.Comment;
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

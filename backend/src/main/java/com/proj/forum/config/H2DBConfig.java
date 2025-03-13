@@ -46,7 +46,10 @@ public class H2DBConfig {
                 .dataSource(dataSource)
                 .packages("com.proj.forum.h2.model")
                 .persistenceUnit("h2PU")
-                .properties(Map.of("hibernate.hbm2ddl.auto", "create-drop"))
+                .properties(Map.of(
+                                "hibernate.hbm2ddl.auto", "create-drop",
+                                "hibernate.dialect", "org.hibernate.dialect.H2Dialect",
+                                "hibernate.show_sql", "true"))
                 .build();
     }
 

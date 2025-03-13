@@ -1,6 +1,5 @@
 package com.proj.forum.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
