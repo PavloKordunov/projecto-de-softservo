@@ -60,11 +60,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostResponseDto getPostById(UUID id) {
-        Optional<Post> post = postRepository.findById(id);
-        if (post.isEmpty()) {
-            throw new EntityNotFoundException("Post not found");
-        }
-        return getUpdatePost(post.get());
+        Post post = postRepository.findById(id).orElseThrow(
+                ()->new EntityNotFoundException("Post not found"));
+        return getUpdatePost(post);
     }
 
     @Override
@@ -123,11 +121,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void addView(UUID id) {
-        Optional<Post> post = postRepository.findById(id);
-        if (post.isEmpty()) {
-            throw new EntityNotFoundException("Post not found");
-        }
-        post.get().setViewCount((post.get().getViewCount()) + 1);
+        Post post = postRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Post not found"));
+        post.setViewCount((post.getViewCount()) + 1);
     }
 
     @Override

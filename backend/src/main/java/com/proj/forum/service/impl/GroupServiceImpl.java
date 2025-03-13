@@ -32,18 +32,17 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public UUID createGroup(GroupDto groupDto) {
         Group group = mapToGroup(groupDto);
-        group.getMembers().add(userRepository.findById(groupDto.userId()).get());
+        group.getMembers().add(userRepository.findById(groupDto.userId()).orElseThrow(
+                () -> new EntityNotFoundException("Member not found")));
         Group groupFromDB = groupRepository.save(group);
         return groupFromDB.getId();
     }
 
     @Override
     public GroupDto getGroup(UUID id) {
-        Optional<Group> group = groupRepository.findById(id);
-        if (group.isEmpty()) {
-            throw new EntityNotFoundException("Group not found");
-        }
-        return getUpdateGroup(group.get());
+        Group group = groupRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Group not found"));
+        return getUpdateGroup(group);
     }
 
     @Override
@@ -70,14 +69,12 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void deleteGroup(UUID groupId, UUID userId) throws AccessDeniedException {
-        if (!groupRepository.findById(groupId).get().getAuthor().equals(userId)) {
+        boolean equalityByUserId = groupRepository.findById(groupId).orElseThrow(
+                () -> new EntityNotFoundException("Group not found")).getAuthor().equals(userId);
+        if (!equalityByUserId) {
             throw new AccessDeniedException("User has no permission");
         }
-        if (groupRepository.existsById(groupId)) {
-            groupRepository.deleteById(groupId);
-        } else {
-            throw new EntityNotFoundException("Group not found");
-        }
+        groupRepository.deleteById(groupId);
     }
 
     @Override

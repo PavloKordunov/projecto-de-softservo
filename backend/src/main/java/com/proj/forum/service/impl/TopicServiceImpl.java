@@ -33,11 +33,8 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public TopicDto getTopic(UUID id) {
-        Optional<Topic> topic = topicRepository.findById(id);
-        if (topic.isEmpty()) {
-            throw new EntityNotFoundException("Topic not found");
-        }
-        return getUpdateTopic(topic.get());
+        Topic topic = topicRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Topic not found"));
+        return getUpdateTopic(topic);
     }
 
     @Override
@@ -76,11 +73,9 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public void addView(UUID id) {
-        Optional<Topic> topic = topicRepository.findById(id);
-        if (topic.isEmpty()) {
-            throw new EntityNotFoundException("Topic not found");
-        }
-        topic.get().setViewCount((topic.get().getViewCount()) + 1);
+        Topic topic = topicRepository.findById(id).orElseThrow(
+                ()-> new EntityNotFoundException("Topic not found"));
+        topic.setViewCount((topic.getViewCount()) + 1);
     }
 
     @Override

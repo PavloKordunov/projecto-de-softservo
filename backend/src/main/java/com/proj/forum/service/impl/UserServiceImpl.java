@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.getPrincipal() instanceof JwtAuthenticationToken token) {
-            var jwt= (Jwt) token.getPrincipal();
+            var jwt = (Jwt) token.getPrincipal();
             String email = jwt.getClaims().get("sub").toString();
             Optional<User> user = userRepository.findByEmail(email);
             return getUserNickOrGenerateNew(user, email);
@@ -53,40 +53,31 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUser(UUID id) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isEmpty()) {
-            throw new EntityNotFoundException("User not found");
-        }
-        return userMapper.mapToDto(user.get());
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("User not found"));
+        return userMapper.mapToDto(user);
     }
 
     @Override
     public UserDto getUserByUsername(String username) {
-        Optional<User> user;
-
-        user = userRepository.findByUsername(username);
-        if (user.isEmpty()) {
-            throw new EntityNotFoundException("User not found");
-        }
-
-        return userMapper.mapToDto(user.get());
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new EntityNotFoundException("User not found"));
+        return userMapper.mapToDto(user);
     }
 
     @Override
     public UserDto getUserByEmail(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("User not found"));
         return userMapper.mapToDto(user);
     }
 
     @Override
     public List<UserDto> getAllUsers() {
-        List<User> userList;
-
-        userList = userRepository.findAll();
+        List<User> userList = userRepository.findAll();
         if (userList.isEmpty()) {
             throw new EntityNotFoundException("User not found");
         }
-
         return userList.stream()
                 .map(userMapper::mapToDto)
                 .toList();
@@ -94,8 +85,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(UUID id, UserUpdateDto userDto) {
-        User updatedUser;
-        updatedUser = userRepository.findById(id)
+        User updatedUser = userRepository.findById(id)
                 .map(user -> getUpdateUser(user, userDto))
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         userRepository.save(updatedUser);
@@ -111,31 +101,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> mapToUserDtoList(List<User> users) {
-        return users.stream()
-            .map(userMapper::mapToDto)
-                .toList();
-    }
-
-    @Override
     public Boolean followUser(UUID userId) {
-        User followedUser = userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException("User not found"));
+        User followedUser = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         String email = getEmail();
-        User currentUser = userRepository.findByEmail(email).orElseThrow(()-> new EntityNotFoundException("User not found"));
-        if(currentUser.getFollowing().contains(currentUser))
-        {
+        User currentUser = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        if (currentUser.getFollowing().contains(currentUser)) {
             currentUser.getFollowing().remove(followedUser);
             userRepository.save(currentUser);
             return false;
-        }
-        else{
+        } else {
             currentUser.getFollowing().add(followedUser);
             userRepository.save(currentUser);
             return true;
         }
     }
 
+    @Override
     public List<UserDto> getByUsernameContain(String name) {
         return mapToUserDtoList(userRepository.findByUsernameContainingIgnoreCase(name));
     }
@@ -163,8 +145,7 @@ public class UserServiceImpl implements UserService {
     private UUID getUserNickOrGenerateNew(Optional<User> user, String email) {
         if (user.isPresent()) {
             return user.get().getId();
-        }
-        else{
+        } else {
             String nickName = UserHelper.createNickname(email);
             User newUser = User.builder()
                     .name(nickName)
@@ -176,5 +157,11 @@ public class UserServiceImpl implements UserService {
             User savedUser = userRepository.save(newUser);
             return savedUser.getId();
         }
+    }
+    @Override
+    public List<UserDto> mapToUserDtoList(List<User> users) {
+        return users.stream()
+                .map(userMapper::mapToDto)
+                .toList();
     }
 }

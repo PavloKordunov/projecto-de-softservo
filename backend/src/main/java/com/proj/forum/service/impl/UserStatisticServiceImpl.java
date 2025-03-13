@@ -74,7 +74,7 @@ public class UserStatisticServiceImpl implements UserStatisticService {
         return statistic;
     }
 
-    private static Statistic updatePartially(Statistic statistic, Boolean liked){
+    private Statistic updatePartially(Statistic statistic, Boolean liked){
         if(statistic.getLiked() != liked)
             statistic.setLiked(liked);
         return statistic;

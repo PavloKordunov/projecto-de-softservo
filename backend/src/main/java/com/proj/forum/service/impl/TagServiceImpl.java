@@ -30,11 +30,8 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public TagDto getTag(UUID id) {
-        Optional<Tag> tagEntity = tagRepository.findById(id);
-        if (tagEntity.isEmpty()) {
-            throw new EntityNotFoundException("Tag not found");
-        }
-        Tag tag = tagEntity.get();
+        Tag tag = tagRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Tag not found"));
         return getUpdateTag(tag);
     }
 
