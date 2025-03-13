@@ -15,6 +15,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
+import java.util.Map;
 
 @Configuration
 @EnableTransactionManagement
@@ -45,6 +46,7 @@ public class H2DBConfig {
                 .dataSource(dataSource)
                 .packages("com.proj.forum.h2.model")
                 .persistenceUnit("h2PU")
+                .properties(Map.of("hibernate.hbm2ddl.auto", "create"))
                 .build();
     }
 

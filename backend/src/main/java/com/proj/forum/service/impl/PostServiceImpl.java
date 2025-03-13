@@ -62,7 +62,7 @@ public class PostServiceImpl implements PostService {
     public PostResponseDto getPostById(UUID id) {
         Optional<Post> post = postRepository.findById(id);
         if (post.isEmpty()) {
-            throw new EntityNotFoundException("No post");
+            throw new EntityNotFoundException("Post not found");
         }
         return getUpdatePost(post.get());
     }
@@ -71,7 +71,7 @@ public class PostServiceImpl implements PostService {
     public List<PostResponseDto> getPostsByUser(UUID userId) {
         List<Post> postList = postRepository.findAllByAuthor_Id(userId);
         if (postList.isEmpty()) {
-            throw new EntityNotFoundException("No posts");
+            throw new EntityNotFoundException("Posts not found");
         }
 
         return postList.stream()
@@ -83,7 +83,7 @@ public class PostServiceImpl implements PostService {
     public List<PostResponseDto> getPostsByGroup(UUID groupId) {
         List<Post> postList = postRepository.findAllByGroup_Id(groupId);
         if (postList.isEmpty()) {
-            throw new EntityNotFoundException("No posts");
+            throw new EntityNotFoundException("Posts not found");
         }
 
         return postList.stream()
@@ -95,7 +95,7 @@ public class PostServiceImpl implements PostService {
     public void updatePost(UUID postId, PostRequestDto postDto) {
         Post updatedPost = postRepository.findById(postId)
                 .map(post -> getUpdatePost(post, postDto))
-                .orElseThrow(() -> new EntityNotFoundException("Post didn't find"));
+                .orElseThrow(() -> new EntityNotFoundException("Post not found"));
 
         postRepository.save(updatedPost);
     }
@@ -125,7 +125,7 @@ public class PostServiceImpl implements PostService {
     public void addView(UUID id) {
         Optional<Post> post = postRepository.findById(id);
         if (post.isEmpty()) {
-            throw new EntityNotFoundException("No post");
+            throw new EntityNotFoundException("Post not found");
         }
         post.get().setViewCount((post.get().getViewCount()) + 1);
     }

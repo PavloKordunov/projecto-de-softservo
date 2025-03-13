@@ -41,7 +41,7 @@ public class GroupServiceImpl implements GroupService {
     public GroupDto getGroup(UUID id) {
         Optional<Group> group = groupRepository.findById(id);
         if (group.isEmpty()) {
-            throw new EntityNotFoundException("No group");
+            throw new EntityNotFoundException("Group not found");
         }
         return getUpdateGroup(group.get());
     }
@@ -50,7 +50,7 @@ public class GroupServiceImpl implements GroupService {
     public List<GroupDto> getAllGroups() {
         List<Group> groupList = groupRepository.findAll();
         if (groupList.isEmpty()) {
-            throw new EntityNotFoundException("No groups");
+            throw new EntityNotFoundException("Group not found");
         }
 
         return groupList.stream()
@@ -62,7 +62,7 @@ public class GroupServiceImpl implements GroupService {
     public void updateGroup(UUID id, GroupDto groupDto) throws AccessDeniedException {
         Group updatedGroup = groupRepository.findById(id)
                 .map(group -> getUpdateGroup(group, groupDto))
-                .orElseThrow(() -> new EntityNotFoundException("Group is not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Group not found"));
         if (updatedGroup.getAuthor() != id)
             throw new AccessDeniedException("No permission");
         groupRepository.save(updatedGroup);

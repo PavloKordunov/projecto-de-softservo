@@ -7,6 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
-@Transactional("postgreTransactionManager")
+@Transactional("h2TransactionManager")
 public class CalendarServiceImpl implements CalendarService {
 }

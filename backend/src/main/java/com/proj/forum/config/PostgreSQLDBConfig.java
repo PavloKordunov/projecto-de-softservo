@@ -16,6 +16,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
+import java.util.Map;
 
 @Configuration
 @EnableTransactionManagement
@@ -49,6 +50,7 @@ public class PostgreSQLDBConfig {
                 .dataSource(dataSource)
                 .packages("com.proj.forum.entity")
                 .persistenceUnit("postgrePU")
+                .properties(Map.of("hibernate.hbm2ddl.auto", "update"))
                 .build();
     }
 

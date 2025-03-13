@@ -21,13 +21,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ExceptionHandler(value = {EntityNotFoundException.class})
     public ApiResponse<?> handleEntityNotFound(RuntimeException ex) {
-        return new ApiResponse<>(true, HttpStatus.NOT_FOUND, ex.getCause().toString(), null);
+        return new ApiResponse<>(true, HttpStatus.NOT_FOUND, ex.getMessage(), null);
     }
 
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = SQLException.class)
     public ApiResponse<?> handleSqlDb(RuntimeException ex) {
-        return new ApiResponse<>(false, HttpStatus.INTERNAL_SERVER_ERROR, ex.getCause().toString(), null);
+        return new ApiResponse<>(false, HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), null);
     }
 //
 //    @ExceptionHandler(value = DataIntegrityViolationException.class)
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(value = {TokenTypeException.class, AuthenticationException.class})
     public ApiResponse<?> handleAuthentication(RuntimeException ex){
-        return new ApiResponse<>(false, HttpStatus.UNAUTHORIZED, ex.getCause().toString(), null);
+        return new ApiResponse<>(false, HttpStatus.UNAUTHORIZED, ex.getMessage(), null);
     }
 
     //    @ExceptionHandler(JDBCConnectionException.class)

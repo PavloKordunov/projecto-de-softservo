@@ -54,11 +54,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUser(UUID id) {
         Optional<User> user = userRepository.findById(id);
-
         if (user.isEmpty()) {
-            throw new EntityNotFoundException("No user found");
+            throw new EntityNotFoundException("User not found");
         }
-
         return userMapper.mapToDto(user.get());
     }
 
@@ -68,7 +66,7 @@ public class UserServiceImpl implements UserService {
 
         user = userRepository.findByUsername(username);
         if (user.isEmpty()) {
-            throw new EntityNotFoundException("No user found");
+            throw new EntityNotFoundException("User not found");
         }
 
         return userMapper.mapToDto(user.get());
@@ -76,7 +74,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserByEmail(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User don't find"));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found"));
         return userMapper.mapToDto(user);
     }
 
@@ -86,7 +84,7 @@ public class UserServiceImpl implements UserService {
 
         userList = userRepository.findAll();
         if (userList.isEmpty()) {
-            throw new EntityNotFoundException("No users");
+            throw new EntityNotFoundException("User not found");
         }
 
         return userList.stream()
@@ -99,18 +97,8 @@ public class UserServiceImpl implements UserService {
         User updatedUser;
         updatedUser = userRepository.findById(id)
                 .map(user -> getUpdateUser(user, userDto))
-                .orElseThrow(() -> new EntityNotFoundException("User is not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
         userRepository.save(updatedUser);
-    }
-
-    private User getUpdateUser(User user, UserUpdateDto userDto) {
-        if (userDto.firstName() != null)
-            user.setName(userDto.firstName());
-        if (userDto.nickName() != null)
-            user.setUsername(userDto.nickName());
-        if (userDto.profileImage() != null)
-            user.setProfileImage(userDto.profileImage());
-        return user;
     }
 
     @Override
@@ -127,10 +115,6 @@ public class UserServiceImpl implements UserService {
         return users.stream()
             .map(userMapper::mapToDto)
                 .toList();
-    }
-
-    public List<UserDto> getByUsernameContain(String name) {
-        return mapToUserDtoList(userRepository.findByUsernameContainingIgnoreCase(name));
     }
 
     @Override
@@ -150,6 +134,20 @@ public class UserServiceImpl implements UserService {
             userRepository.save(currentUser);
             return true;
         }
+    }
+
+    public List<UserDto> getByUsernameContain(String name) {
+        return mapToUserDtoList(userRepository.findByUsernameContainingIgnoreCase(name));
+    }
+
+    private User getUpdateUser(User user, UserUpdateDto userDto) {
+        if (userDto.firstName() != null)
+            user.setName(userDto.firstName());
+        if (userDto.nickName() != null)
+            user.setUsername(userDto.nickName());
+        if (userDto.profileImage() != null)
+            user.setProfileImage(userDto.profileImage());
+        return user;
     }
 
     private String getEmail() {  //fix it later
