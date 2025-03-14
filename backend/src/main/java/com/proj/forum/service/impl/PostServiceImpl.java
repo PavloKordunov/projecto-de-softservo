@@ -60,7 +60,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostResponseDto getPostById(UUID id) {
         Post post = postRepository.findById(id).orElseThrow(
-                ()->new EntityNotFoundException("Post not found"));
+                () -> new EntityNotFoundException("Post not found"));
         return getUpdatePost(post);
     }
 
@@ -99,11 +99,11 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public boolean pinPost(UUID postId) {
-            Post post = postRepository.findById(postId)
-                    .orElseThrow(() -> new EntityNotFoundException("Post not found"));
-            post.setPinned(!post.isPinned());
-            postRepository.save(post);
-            return post.isPinned();
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("Post not found"));
+        post.setPinned(!post.isPinned());
+        postRepository.save(post);
+        return post.isPinned();
     }
 
 

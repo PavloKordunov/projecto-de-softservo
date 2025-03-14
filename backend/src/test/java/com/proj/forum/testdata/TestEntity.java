@@ -11,7 +11,7 @@ import static com.proj.forum.testdata.TestConstants.*;
 import java.util.ArrayList;
 
 @UtilityClass
-public class TestDto {
+public class TestEntity {
     public static PostRequestDto getPostRequestDto() {
         return PostRequestDto.builder()
                 .tagId(tagId)
