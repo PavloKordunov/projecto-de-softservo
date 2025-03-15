@@ -9,7 +9,6 @@ import com.proj.forum.repository.GroupRepository;
 import com.proj.forum.repository.PostRepository;
 import com.proj.forum.repository.UserRepository;
 import com.proj.forum.service.CommentService;
-import com.proj.forum.testdata.TestEntity;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.junit.jupiter.api.AfterEach;
@@ -29,7 +28,6 @@ import static com.proj.forum.testdata.TestEntity.getPostRequestDto;
 import static com.proj.forum.testdata.TestEntity.getUser;
 import static com.proj.forum.testdata.TestEntity.getPost;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
@@ -141,41 +139,42 @@ class PostServiceImplTest {
     void getAllPostsPostsNotFoundTest() {
         when(postRepository.findAll()).thenReturn(Collections.emptyList());
 
-        assertThrowsExactly(EntityNotFoundException.class, () -> postService.getAllPosts());
+        assertThrowsExactly(EntityNotFoundException.class,
+                () -> postService.getAllPosts());
 
         verify(postRepository).findAll();
     }
 
     @Test
     void getPostByIdSuccessTest() {
-        when(postRepository.findById(TestEntity.getPost().getId())).thenReturn(Optional.of(expectedPost));
+        when(postRepository.findById(expectedPost.getId())).thenReturn(Optional.of(expectedPost));
 
-        Optional<Post> result = postRepository.findById(TestEntity.getPost().getId());
+        Optional<Post> result = postRepository.findById(expectedPost.getId());
 
         assertThat(result).isNotEmpty();
         assertThat(result.get().getId()).isEqualTo(expectedPost.getId());
 
-        verify(postRepository).findById(TestEntity.getPost().getId());
+        verify(postRepository).findById(expectedPost.getId());
     }
 
     @Test
     void getPostByIdPostNotFoundTest() {
-        when(postRepository.findById(TestEntity.getPost().getId())).thenReturn(Optional.empty());
+        when(postRepository.findById(expectedPost.getId())).thenReturn(Optional.empty());
 
         assertThrowsExactly(EntityNotFoundException.class,
-                () -> postService.getPostById(TestEntity.getPost().getId()));
+                () -> postService.getPostById(expectedPost.getId()));
 
-        verify(postRepository).findById(TestEntity.getPost().getId());
+        verify(postRepository).findById(expectedPost.getId());
     }
 
 
     @Test
     void getPostsByUserSuccessTest() {
         List<Post> listPost = List.of(expectedPost);
-        when(postRepository.findAllByAuthor_Id(TestEntity.getUser().getId())).thenReturn(listPost);
+        when(postRepository.findAllByAuthor_Id(expectedUser.getId())).thenReturn(listPost);
         when(postService.mapToPostDtoList(listPost)).thenReturn(postResponseDto);
 
-        List<PostResponseDto> result = postService.getPostsByUser(TestEntity.getUser().getId());
+        List<PostResponseDto> result = postService.getPostsByUser(expectedUser.getId());
 
         assertThat(result)
                 .isNotEmpty()
@@ -183,29 +182,90 @@ class PostServiceImplTest {
         assertThat(result.getFirst().id()).isEqualTo(expectedPost.getId());
         assertThat(result.getFirst().title()).isEqualTo(expectedPost.getTitle());
 
-        verify(postRepository).findAllByAuthor_Id(TestEntity.getUser().getId());
+        verify(postRepository).findAllByAuthor_Id(expectedUser.getId());
     }
 
     @Test
     void getPostsByUserPostsNotFoundTest() {
-        when(postRepository.findAllByAuthor_Id(TestEntity.getUser().getId())).thenReturn(Collections.emptyList());
+        when(postRepository.findAllByAuthor_Id(expectedUser.getId())).thenReturn(Collections.emptyList());
 
         assertThrowsExactly(EntityNotFoundException.class,
-                () -> postService.getPostsByUser(TestEntity.getUser().getId()));
+                () -> postService.getPostsByUser(expectedUser.getId()));
 
-        verify(postRepository).findAllByAuthor_Id(TestEntity.getUser().getId());
+        verify(postRepository).findAllByAuthor_Id(expectedUser.getId());
     }
 
     @Test
-    void getPostsByGroup() {
+    void getPostsByGroupSuccessTest() {
+        List<Post> listPost = List.of(expectedPost);
+        when(postRepository.findAllByGroup_Id(expectedGroup.getId())).thenReturn(listPost);
+        when(postService.mapToPostDtoList(listPost)).thenReturn(postResponseDto);
+
+        List<PostResponseDto> result = postService.getPostsByGroup(expectedGroup.getId());
+
+        assertThat(result)
+                .isNotEmpty()
+                .hasSize(1);
+        assertThat(result.getFirst().id()).isEqualTo(expectedPost.getId());
+        assertThat(result.getFirst().title()).isEqualTo(expectedPost.getTitle());
+
+        verify(postRepository).findAllByGroup_Id(expectedGroup.getId());
     }
 
     @Test
-    void updatePost() {
+    void getPostsByGroupPostsNotFoundTest() {
+        when(postRepository.findAllByGroup_Id(expectedGroup.getId())).thenReturn(Collections.emptyList());
+
+        assertThrowsExactly(EntityNotFoundException.class,
+                () -> postService.getPostsByGroup(expectedGroup.getId()));
+
+        verify(postRepository).findAllByGroup_Id(expectedGroup.getId());
     }
 
     @Test
-    void pinPost() {
+    void updatePostSuccessTest() {
+        when(postRepository.findById(expectedPost.getId())).thenReturn(Optional.of(expectedPost));
+        when(postRepository.save(any(Post.class))).thenReturn(expectedPost);
+
+        postService.updatePost(expectedPost.getId(), postDto);
+
+        verify(postRepository).findById(expectedPost.getId());
+        verify(postRepository).save(any(Post.class));
+    }
+
+    @Test
+    void updatePostPostNotFoundTest() {
+        when(postRepository.findById(expectedPost.getId())).thenReturn(Optional.empty());
+
+        assertThrowsExactly(EntityNotFoundException.class,
+                () -> postService.updatePost(expectedPost.getId(), postDto));
+
+        verify(postRepository).findById(expectedPost.getId());
+        verify(postRepository, never()).save(any(Post.class));
+    }
+
+    @Test
+    void pinPostSuccessTest() {
+        when(postRepository.findById(expectedPost.getId())).thenReturn(Optional.of(expectedPost));
+        expectedPost.setPinned(!expectedPost.isPinned());
+        when(postRepository.save(any(Post.class))).thenReturn(expectedPost);
+
+        boolean result = postService.pinPost(expectedPost.getId());
+        assertThat(result).isEqualTo(expectedPost.isPinned());
+
+        verify(postRepository).findById(expectedPost.getId());
+        verify(postRepository).save(any(Post.class));
+    }
+
+    @Test
+    void pinPostPostNotFoundTest() {
+        when(postRepository.findById(expectedPost.getId())).thenReturn(Optional.empty());
+
+        assertThrowsExactly(EntityNotFoundException.class,
+                () -> postService.pinPost(expectedPost.getId()));
+
+        verify(postRepository).findById(expectedPost.getId());
+        verify(postRepository, never()).save(any(Post.class));
     }
 
     @Test

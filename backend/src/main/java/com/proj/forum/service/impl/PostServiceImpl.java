@@ -71,9 +71,7 @@ public class PostServiceImpl implements PostService {
             throw new EntityNotFoundException("Posts not found");
         }
 
-        return postList.stream()
-                .map(this::getUpdatePost)
-                .toList();
+        return mapToPostDtoList(postList);
     }
 
     @Override
@@ -83,9 +81,7 @@ public class PostServiceImpl implements PostService {
             throw new EntityNotFoundException("Posts not found");
         }
 
-        return postList.stream()
-                .map(this::getUpdatePost)
-                .toList();
+        return mapToPostDtoList(postList);
     }
 
     @Override
@@ -106,7 +102,6 @@ public class PostServiceImpl implements PostService {
         return post.isPinned();
     }
 
-
     @Override
     public void deletePost(UUID id) {
         postRepository.deleteById(id);
@@ -116,7 +111,6 @@ public class PostServiceImpl implements PostService {
     public List<PostResponseDto> getByTitleContain(String name) {
         return mapToPostDtoList(postRepository.findByTitleContainingIgnoreCase(name));
     }
-
 
     @Override
     public void addView(UUID id) {
