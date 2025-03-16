@@ -116,7 +116,7 @@ public class PostServiceImpl implements PostService {
     public void addView(UUID id) {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Post not found"));
-        post.setViewCount((post.getViewCount()) + 1);
+        post.setViewCount((post.getViewCount()) + 1);   //maybe should save explicit
     }
 
     @Override

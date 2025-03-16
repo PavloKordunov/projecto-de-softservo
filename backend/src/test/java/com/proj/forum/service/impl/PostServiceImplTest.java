@@ -9,6 +9,7 @@ import com.proj.forum.repository.GroupRepository;
 import com.proj.forum.repository.PostRepository;
 import com.proj.forum.repository.UserRepository;
 import com.proj.forum.service.CommentService;
+import com.proj.forum.testdata.TestConstants;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.junit.jupiter.api.AfterEach;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.nio.file.AccessDeniedException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -269,25 +271,74 @@ class PostServiceImplTest {
     }
 
     @Test
-    void deletePost() {
+    void deletePostSuccessTest() {
+        postService.deletePost(expectedPost.getId());
+
+        verify(postRepository).deleteById(expectedPost.getId());
+    }
+
+
+    @Test
+    void getByTitleContainSuccessTest() {
+        List<Post> posts = List.of(expectedPost);
+        when(postRepository.findByTitleContainingIgnoreCase(TestConstants.subtitlePost)).thenReturn(posts);
+
+        List<PostResponseDto> result = postService.getByTitleContain(TestConstants.subtitlePost);
+
+        assertThat(result).isNotEmpty().hasSize(1);
+        assertThat(result.getFirst().id()).isEqualTo(expectedPost.getId());
+
+        verify(postRepository).findByTitleContainingIgnoreCase(TestConstants.subtitlePost);
+    }
+
+//    @Test
+//    void getByTitleContainSuccessTest() {
+//
+//    }
+
+    @Test
+    void addViewSuccessTest() {
+        when(postRepository.findById(expectedPost.getId())).thenReturn(Optional.of(expectedPost));
+
+        postService.addView(expectedPost.getId());
+
+        verify(postRepository).findById(expectedPost.getId());
+    }
+
+    @Test
+    void addViewPostNotFoundTest() {
+        when(postRepository.findById(expectedPost.getId())).thenReturn(Optional.empty());
+
+        assertThrowsExactly(EntityNotFoundException.class,
+                () -> postService.addView(expectedPost.getId()));
+
+        verify(postRepository).findById(expectedPost.getId());
+    }
+
+    @Test
+    void isAuthorSuccessTest() throws AccessDeniedException {
+        when(postRepository.findById(expectedPost.getId())).thenReturn(Optional.of(expectedPost));
+
+        postService.isAuthor(expectedPost.getId(), expectedUser.getId());
+
+        assertThat(expectedPost.getAuthor().getId()).isEqualTo(expectedUser.getId());
+
+        verify(postRepository).findById(expectedPost.getId());
+    }
+
+    @Test
+    void isAuthorUserIsNotAuthorTest() throws AccessDeniedException {
+        when(postRepository.findById(expectedPost.getId())).thenReturn(Optional.empty());
+
+        assertThrowsExactly(AccessDeniedException.class,
+                () -> postService.isAuthor(expectedPost.getId(), expectedUser.getId()));
+
+        verify(postRepository).findById(expectedPost.getId());
     }
 
     @Test
     void mapToPostDtoList() {
     }
-
-    @Test
-    void isAuthor() {
-    }
-
-    @Test
-    void getByTitleContain() {
-    }
-
-    @Test
-    void addView() {
-    }
-
 
     private void mockServicesInPostServices(Group group, User user, Post post) {
         when(groupRepository.findById(postDto.groupId())).thenReturn(Optional.of(group));
