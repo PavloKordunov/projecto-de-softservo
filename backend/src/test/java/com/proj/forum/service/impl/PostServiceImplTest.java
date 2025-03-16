@@ -327,7 +327,7 @@ class PostServiceImplTest {
     }
 
     @Test
-    void isAuthorUserIsNotAuthorTest() throws AccessDeniedException {
+    void isAuthorUserIsNotAuthorTest(){
         when(postRepository.findById(expectedPost.getId())).thenReturn(Optional.empty());
 
         assertThrowsExactly(AccessDeniedException.class,
