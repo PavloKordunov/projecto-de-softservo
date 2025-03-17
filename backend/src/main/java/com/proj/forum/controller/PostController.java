@@ -58,12 +58,11 @@ public class PostController {
     }
 
     @RequireRoles({RoleType.USER})
-    @PatchMapping("/update/{postId}/{userId}")
+    @PatchMapping("/update/{postId}")
     public ApiResponse<GenericResponse> updatePost(
             @PathVariable UUID postId,
-            @PathVariable UUID userId,
             @RequestBody @Valid PostRequestDto postDto) throws AccessDeniedException {
-        postService.isAuthor(postId, userId);
+        postService.isAuthor(postId, postDto.userId()); //TODO fix?
         postService.updatePost(postId, postDto);
         return ApiResponse.apiResponse(true, 200, "Post updated", postId);
     }
