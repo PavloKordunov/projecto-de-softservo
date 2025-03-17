@@ -50,7 +50,9 @@ public class PostgreSQLDBConfig {
                 .dataSource(dataSource)
                 .packages("com.proj.forum.entity")
                 .persistenceUnit("postgrePU")
-                .properties(Map.of("hibernate.hbm2ddl.auto", "update"))
+                .properties(Map.of("hibernate.hbm2ddl.auto", "update",
+                        "hibernate.physical_naming_strategy", "org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy"
+                ))
                 .build();
     }
 
