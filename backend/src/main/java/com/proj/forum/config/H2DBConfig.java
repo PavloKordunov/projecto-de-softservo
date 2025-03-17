@@ -34,6 +34,7 @@ public class H2DBConfig {
         dataSource.setDriverClassName("org.h2.Driver");
         dataSource.setUsername("sa");
         dataSource.setPassword("");
+        dataSource.setSchema("PUBLIC");
         return dataSource;
         //return DataSourceBuilder.create().build();
     }
@@ -47,7 +48,7 @@ public class H2DBConfig {
                 .packages("com.proj.forum.h2.model")
                 .persistenceUnit("h2PU")
                 .properties(Map.of(
-                                "hibernate.hbm2ddl.auto", "create-drop",
+                                "hibernate.hbm2ddl.auto", "create",
                                 "hibernate.dialect", "org.hibernate.dialect.H2Dialect",
                                 "hibernate.show_sql", "true"))
                 .build();

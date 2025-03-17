@@ -72,4 +72,4 @@ okta:
 omdb:
   api:
     key: ce9b484a
-    url: http://www.omdbapi.com/
+    url: https://www.omdbapi.com/

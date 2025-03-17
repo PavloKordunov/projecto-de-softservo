@@ -1,6 +1,7 @@
 package com.proj.forum.h2.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -15,16 +16,17 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 @Builder
-@Table(name = "CalendarAPI")
-public class CalendarAPI {
+@Table(name = "Calendar")
+public class Calendar {
     @Id
+    @GeneratedValue
     private UUID id;
 
     private String content;
 }
 
 //Query to create entity
-//create table CALENDARAPI
+//create table CALENDAR
 //        (
 //                ID      UUID not null
 //                        primary key,
