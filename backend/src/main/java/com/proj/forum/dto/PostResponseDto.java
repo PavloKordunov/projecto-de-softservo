@@ -17,6 +17,7 @@ public record PostResponseDto(
         @NotBlank String nickname,
         @NotBlank UUID groupId,
         @NotBlank String userImage,
+        UUID userId,
         boolean isPinned,
         @NotBlank String groupTitle,
         LocalDateTime createdAt,
