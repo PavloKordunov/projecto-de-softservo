@@ -27,16 +27,15 @@ import java.util.Map;
 public class H2DBConfig {
 
     @Bean(name = "h2DataSource")
-    //@ConfigurationProperties(prefix = "spring.datasource.h2")
+    @ConfigurationProperties(prefix = "spring.datasource.h2")
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setUrl("jdbc:h2:mem:testdb");
-        dataSource.setDriverClassName("org.h2.Driver");
-        dataSource.setUsername("sa");
-        dataSource.setPassword("");
-        dataSource.setSchema("PUBLIC");
-        return dataSource;
-        //return DataSourceBuilder.create().build();
+//        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+//        dataSource.setUrl("jdbc:h2:mem:testdb");  //;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE
+//        dataSource.setDriverClassName("org.h2.Driver");
+//        dataSource.setUsername("sa");
+//        dataSource.setPassword("");
+//        return dataSource;
+        return DataSourceBuilder.create().build();
     }
 
     @Bean(name = "h2EntityManagerFactory")
@@ -48,9 +47,9 @@ public class H2DBConfig {
                 .packages("com.proj.forum.h2.model")
                 .persistenceUnit("h2PU")
                 .properties(Map.of(
-                                "hibernate.hbm2ddl.auto", "create",
-                                "hibernate.dialect", "org.hibernate.dialect.H2Dialect",
-                                "hibernate.show_sql", "true"))
+                        "hibernate.dialect", "org.hibernate.dialect.H2Dialect",
+                        "hibernate.show_sql", "true",
+                        "hibernate.hbm2ddl.auto", "create-drop"))
                 .build();
     }
 

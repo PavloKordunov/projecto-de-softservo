@@ -8,5 +8,4 @@ import java.util.UUID;
 
 @Repository
 public interface CalendarRepository extends JpaRepository<Calendar, UUID> {
-    Calendar save(Calendar calendar);
 }

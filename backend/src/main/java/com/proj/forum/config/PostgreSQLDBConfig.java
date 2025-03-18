@@ -29,16 +29,16 @@ public class PostgreSQLDBConfig {
 
     @Primary
     @Bean(name = "postgreDataSource")
-    //@ConfigurationProperties(prefix = "spring.datasource.postgres")
+    @ConfigurationProperties(prefix = "spring.datasource.postgres")
     public DataSource dataSource()
     {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/postgres");
-        dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUsername("postgres");
-        dataSource.setPassword("password");
-        return dataSource;
-        //return DataSourceBuilder.create().build();
+//        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+//        dataSource.setUrl("jdbc:postgresql://localhost:5432/postgres");
+//        dataSource.setDriverClassName("org.postgresql.Driver");
+//        dataSource.setUsername("postgres");
+//        dataSource.setPassword("password");
+//        return dataSource;
+        return DataSourceBuilder.create().build();
     }
 
     @Primary
@@ -51,7 +51,8 @@ public class PostgreSQLDBConfig {
                 .packages("com.proj.forum.entity")
                 .persistenceUnit("postgrePU")
                 .properties(Map.of("hibernate.hbm2ddl.auto", "update",
-                        "hibernate.physical_naming_strategy", "org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy"
+                        "hibernate.physical_naming_strategy", "org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy",
+                        "hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect"
                 ))
                 .build();
     }

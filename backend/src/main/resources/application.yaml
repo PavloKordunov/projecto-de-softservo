@@ -1,20 +1,25 @@
 spring:
   application:
     name: backend
+
   datasource:
-    postgres:
-      url: jdbc:postgresql://localhost:5432/postgres
-      driver-class-name: org.postgresql.Driver
-      username: postgres
-      password: password
     h2:
-      url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      jdbc-url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
       driver-class-name: org.h2.Driver
       username: sa
       password:
+    postgres:
+      jdbc-url: jdbc:postgresql://localhost:5432/postgres
+      driver-class-name: org.postgresql.Driver
+      username: postgres
+      password: password
 
   jpa:
-    show-sql: true
+    properties:
+      hibernate:
+        default_schema: public
+    hibernate:
+        ddl-auto: none
 
   h2:
     console:

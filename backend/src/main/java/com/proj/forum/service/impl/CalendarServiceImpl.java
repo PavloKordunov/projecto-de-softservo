@@ -1,6 +1,7 @@
 package com.proj.forum.service.impl;
 
 
+import com.proj.forum.config.OMDbConfig;
 import com.proj.forum.h2.model.Calendar;
 import com.proj.forum.h2.repository.CalendarRepository;
 import com.proj.forum.service.CalendarService;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
@@ -17,13 +19,19 @@ import java.util.Map;
 @AllArgsConstructor
 public class CalendarServiceImpl implements CalendarService {
 
-    final private CalendarRepository calendarRepository;
+    private final OMDbConfig omdbConfig;
+    private final RestTemplate restTemplate;
+    private final CalendarRepository calendarRepository;
 
     @Override
-    public void saveCalendar(ResponseEntity<Map> response) {
+    public ResponseEntity<Map> saveCalendar(String nameMovie) {
+        String apiUrl = String.format("%s/?apikey=%s&t=%s", omdbConfig.getUrl(), omdbConfig.getKey(), nameMovie);
+
+        ResponseEntity<Map> response = restTemplate.getForEntity(apiUrl, Map.class);
         Calendar calendar = Calendar.builder()
                 .content(response.getBody().get("Title").toString())
                 .build();
-        var calendarEntity = calendarRepository.save(calendar);
+        //var calendarEntity = calendarRepository.save(calendar);
+        return response;
     }
 }

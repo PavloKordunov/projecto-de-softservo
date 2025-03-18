@@ -6,5 +6,5 @@ import java.util.Map;
 
 public interface CalendarService {
 
-    void saveCalendar(ResponseEntity<Map> response);
+    ResponseEntity<Map> saveCalendar(String nameMovie);
 }
