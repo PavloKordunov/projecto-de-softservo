@@ -1,9 +1,9 @@
 package com.proj.forum.config;
 
 import jakarta.persistence.EntityManagerFactory;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,8 +18,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 import java.util.Map;
 
+@Data
 @Configuration
 @EnableTransactionManagement
+@ConfigurationProperties(prefix = "spring.datasource.postgres")
 @EnableJpaRepositories(
         basePackages = "com.proj.forum.repository",
         entityManagerFactoryRef = "postgreEntityManagerFactory",
@@ -27,18 +29,21 @@ import java.util.Map;
 )
 public class PostgreSQLDBConfig {
 
+    private String jdbcUrl;
+    private String driverClassName;
+    private String username;
+    private String password;
+
     @Primary
     @Bean(name = "postgreDataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.postgres")
     public DataSource dataSource()
     {
-//        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-//        dataSource.setUrl("jdbc:postgresql://localhost:5432/postgres");
-//        dataSource.setDriverClassName("org.postgresql.Driver");
-//        dataSource.setUsername("postgres");
-//        dataSource.setPassword("password");
-//        return dataSource;
-        return DataSourceBuilder.create().build();
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setUrl(jdbcUrl);
+        dataSource.setDriverClassName(driverClassName);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+        return dataSource;
     }
 
     @Primary
