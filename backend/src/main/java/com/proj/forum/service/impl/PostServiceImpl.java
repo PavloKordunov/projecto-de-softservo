@@ -169,6 +169,7 @@ public class PostServiceImpl implements PostService {
                 .createdAt(post.getCreatedAt())
                 .viewCount(post.getViewCount())
                 .comments(comments)
+                .groupId(post.getGroup().getId())
                 .build();
     }
 

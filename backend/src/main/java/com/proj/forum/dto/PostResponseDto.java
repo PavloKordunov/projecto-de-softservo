@@ -15,6 +15,7 @@ public record PostResponseDto(
         String image,
         String name,
         @NotBlank String nickname,
+        @NotBlank UUID groupId,
         @NotBlank String userImage,
         boolean isPinned,
         @NotBlank String groupTitle,
