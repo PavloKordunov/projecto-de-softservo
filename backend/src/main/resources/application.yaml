@@ -76,5 +76,12 @@ okta:
 
 omdb:
   api:
-    key: ce9b484a
-    url: https://www.omdbapi.com/
+    key-omdb: ce9b484a
+    key: 41e7cf8ac3214709785e986eccb765d4
+    url-omdb: http://www.omdbapi.com
+    url: https://api.themoviedb.org/3/discover/movie
+
+#access token to read
+#eyJhbGciOiJIUzI1NiJ9:
+#  eyJhdWQiOiI0MWU3Y2Y4YWMzMjE0NzA5Nzg1ZTk4NmVjY2I3NjVkNCIsIm5iZiI6MTc0MjQxMjM2Ny4zMjksInN1YiI6IjY3ZGIxYTRmOWYzNThmNGExMzdmN2FiNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ:
+#    6N6dD_uS27KkehCkIYuHgBEIv_s8e470WLQGFeMyWkM:

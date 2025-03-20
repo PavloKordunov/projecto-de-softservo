@@ -12,8 +12,10 @@ import com.proj.forum.service.CommentService;
 import com.proj.forum.testdata.TestConstants;
 import jakarta.persistence.EntityNotFoundException;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.InjectMocks;
@@ -33,6 +35,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
@@ -63,7 +66,7 @@ class PostServiceImplTest {
 
     private AutoCloseable autoCloseable;
 
-    @BeforeAll
+    @BeforeEach
     void setUp() {
         autoCloseable = openMocks(this);
 
@@ -333,7 +336,7 @@ class PostServiceImplTest {
         assertThrowsExactly(AccessDeniedException.class,
                 () -> postService.isAuthor(expectedPost.getId(), expectedUser.getId()));
 
-        verify(postRepository).findById(expectedPost.getId());
+        verify(postRepository, times(2)).findById(expectedPost.getId());
     }
 
     @Test
