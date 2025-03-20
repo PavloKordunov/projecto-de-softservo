@@ -3,6 +3,8 @@ package com.proj.forum.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proj.forum.config.TMDbConfig;
+import com.proj.forum.exception.JsonCastException;
+import com.proj.forum.exception.TooManyRetryRequestException;
 import com.proj.forum.pojo.MoviePOJO;
 import com.proj.forum.pojo.MoviesResponse;
 import com.proj.forum.service.TMDbService;
@@ -88,13 +90,13 @@ public class TMDbServiceImpl implements TMDbService {
                     throw new RuntimeException("Error API: " + response.getStatusCode());
                 }
             } catch (JsonProcessingException e) {
-                throw new RuntimeException("Error processing JSON", e);
+                throw new JsonCastException("Error processing JSON", e);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 throw new RuntimeException("Thread interrupted", e);
             }
         }
-        throw new RuntimeException("Retry limit exceeded for API");
+        throw new TooManyRetryRequestException("Retry limit exceeded for API");
     }
 
 }
