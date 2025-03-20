@@ -1,6 +1,5 @@
 package com.proj.forum.service.impl;
 
-import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proj.forum.config.TMDbConfig;
@@ -8,6 +7,8 @@ import com.proj.forum.pojo.MoviePOJO;
 import com.proj.forum.pojo.MoviesResponse;
 import com.proj.forum.service.TMDbService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -51,6 +52,15 @@ public class TMDbServiceImpl implements TMDbService {
         return allMovies;
     }
 
+
+    private CompletableFuture<MoviesResponse> getMoviesResponseCompletableFuture(Integer year, int finalPage) {
+        return CompletableFuture.supplyAsync(() -> {
+            String url = String.format("%s?api_key=%s&primary_release_year=%d&page=%d",
+                    tmdbConfig.getUrl(), tmdbConfig.getKey(), year, finalPage);
+            return fetchWithRetry(url, 3);
+        }, executorService);
+    }
+
     private static int getTotalPages(int currentPage, CompletableFuture<MoviesResponse> future, List<MoviePOJO> allMovies, int totalPages) {
         if (currentPage == 1) {
             MoviesResponse firstPageMovies = future.join();
@@ -62,17 +72,29 @@ public class TMDbServiceImpl implements TMDbService {
         return totalPages;
     }
 
-    private CompletableFuture<MoviesResponse> getMoviesResponseCompletableFuture(Integer year, int finalPage) {
-        return CompletableFuture.supplyAsync(() -> {
-            String url = String.format("%s?api_key=%s&primary_release_year=%d&page=%d",
-                    tmdbConfig.getUrl(), tmdbConfig.getKey(), year, finalPage);
+    private MoviesResponse fetchWithRetry(String url, int maxRetries) {
+        int attempt = 0;
+        while (attempt < maxRetries) {
             try {
-                String jsonResponse = restTemplate.getForObject(url, String.class);
-                return objectMapper.readValue(jsonResponse, MoviesResponse.class);
+                ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+                if (response.getStatusCode() == HttpStatus.TOO_MANY_REQUESTS) {
+                    int waitTime = (int) Math.pow(2, attempt) * 500;
+                    Thread.sleep(waitTime);
+                    attempt++;
+                } else if (response.getStatusCode().is2xxSuccessful()) {
+                    return objectMapper.readValue(response.getBody(), MoviesResponse.class);
+                } else {
+                    throw new RuntimeException("Error API: " + response.getStatusCode());
+                }
             } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Error processing JSON", e);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException("Thread interrupted", e);
             }
-        }, executorService);
+        }
+        throw new RuntimeException("Retry limit exceeded for API");
     }
 
 }

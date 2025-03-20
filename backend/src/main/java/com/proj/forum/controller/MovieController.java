@@ -5,7 +5,6 @@ import com.proj.forum.annotation.Logging;
 import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.MovieDto;
 import com.proj.forum.pojo.MoviePOJO;
-import com.proj.forum.pojo.MoviesResponse;
 import com.proj.forum.service.MovieService;
 import com.proj.forum.service.TMDbService;
 import jakarta.validation.constraints.Max;
