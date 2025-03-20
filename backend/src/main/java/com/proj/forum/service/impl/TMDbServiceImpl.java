@@ -90,7 +90,7 @@ public class TMDbServiceImpl implements TMDbService {
                     throw new RuntimeException("Error API: " + response.getStatusCode());
                 }
             } catch (JsonProcessingException e) {
-                throw new JsonCastException("Error processing JSON", e);
+                throw new JsonCastException("Error processing JSON");
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 throw new RuntimeException("Thread interrupted", e);
