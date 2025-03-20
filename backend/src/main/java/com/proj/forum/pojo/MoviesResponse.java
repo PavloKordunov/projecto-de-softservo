@@ -8,6 +8,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 public class MoviesResponse {
-    //private int page;
+    private int page;
     private List<MoviePOJO> results;
+    private int total_pages;
 }

@@ -1,8 +1,10 @@
 package com.proj.forum.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.proj.forum.annotation.Logging;
 import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.MovieDto;
+import com.proj.forum.pojo.MoviePOJO;
 import com.proj.forum.pojo.MoviesResponse;
 import com.proj.forum.service.MovieService;
 import com.proj.forum.service.TMDbService;
@@ -29,9 +31,9 @@ public class MovieController {
     private final TMDbService tmDbService;
 
     @GetMapping("/year/{year}")
-    public ApiResponse<?> fetchMoviesFromApiByYear(@PathVariable Integer year) {
-        MoviesResponse moviesByYear = tmDbService.getMoviesByYear(year);
-        List<MovieDto> response = movieService.saveMovies(moviesByYear.getResults());
+    public ApiResponse<?> fetchMoviesFromApiByYear(@PathVariable Integer year) throws JsonProcessingException {
+        List<MoviePOJO> moviesByYear = tmDbService.getMoviesByYear(year);
+        List<MovieDto> response = movieService.saveMovies(moviesByYear);
         return new ApiResponse<>(true, HttpStatus.OK, "Get movies from API", response);
     }
 
