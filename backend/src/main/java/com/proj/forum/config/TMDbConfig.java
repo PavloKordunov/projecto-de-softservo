@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "omdb.api")
-public class OMDbConfig {
+public class TMDbConfig {
     private String key;
     private String url;
 

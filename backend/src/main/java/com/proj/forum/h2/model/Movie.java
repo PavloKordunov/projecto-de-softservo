@@ -3,6 +3,7 @@ package com.proj.forum.h2.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,19 +17,18 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 @Builder
-@Table(name = "Calendar")
-public class Calendar {
+@Table(name = "Movie")
+public class Movie {
     @Id
     @GeneratedValue
     private UUID id;
 
-    private String content;
+    private String title;
+    private String releaseDate;
+    @Lob
+    private String description;
+    private String language;
+    private Double rating;
+    private String posterPath;
+    private String backdropPath;
 }
-
-//Query to create entity
-//create table CALENDAR
-//        (
-//                ID      UUID not null
-//                        primary key,
-//                CONTENT CHARACTER VARYING(255)
-//);

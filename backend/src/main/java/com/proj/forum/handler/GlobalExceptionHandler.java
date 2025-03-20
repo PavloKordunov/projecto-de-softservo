@@ -1,7 +1,9 @@
 package com.proj.forum.handler;
 
 import com.proj.forum.dto.ApiResponse;
+import com.proj.forum.exception.JsonCastException;
 import com.proj.forum.exception.TokenTypeException;
+import com.proj.forum.exception.TooManyRetryRequestException;
 import com.proj.forum.exception.UserAlreadySubscribeException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -54,6 +56,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
     public ApiResponse<?> handleAuthentication(RuntimeException ex){
         return new ApiResponse<>(false, HttpStatus.UNAUTHORIZED, ex.getMessage(), null);
     }
+
+    @ResponseStatus(value = HttpStatus.TOO_MANY_REQUESTS)
+    @ExceptionHandler(value = TooManyRetryRequestException.class)
+    public ApiResponse<?> handleRetryRequest(RuntimeException ex){
+        return new ApiResponse<>(false, HttpStatus.TOO_MANY_REQUESTS, ex.getMessage(), null);
+    }
+
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(value = JsonCastException.class)
+    public ApiResponse<?> handleBadJsonConvert(RuntimeException ex){
+        return new ApiResponse<>(false, HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), null);
+    }
+
 
     //    @ExceptionHandler(JDBCConnectionException.class)
     //    public ApiResponse<?> handleDisconnectDb(RuntimeException ex) {
