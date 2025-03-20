@@ -57,7 +57,7 @@ public class PostController {
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Post found", post);
     }
 
-    @RequireRoles({RoleType.USER})
+//    @RequireRoles({RoleType.USER})
     @PatchMapping("/update/{postId}")
     public ApiResponse<GenericResponse> updatePost(
             @PathVariable UUID postId,

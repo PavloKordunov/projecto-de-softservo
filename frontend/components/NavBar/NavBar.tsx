@@ -15,7 +15,7 @@ interface NavBarProps {
 
 const NavBar = ({ movies }: NavBarProps) => {
     const [isCalendarVisible, setIsCalendarVisible] = useState(false);
-    const [isMenuOpen, setIsMenuOpen] = useState(false); // Стан бургер-меню
+    const [isMenuOpen, setIsMenuOpen] = useState(false); 
 
     const toggleCalendar = () => {
         setIsCalendarVisible((prev) => !prev);

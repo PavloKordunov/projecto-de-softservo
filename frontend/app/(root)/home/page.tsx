@@ -21,7 +21,7 @@ const HomePage = () => {
   return (
     <div >
       <CreatePostNav />
-      {posts.length > 0 ? (
+      {posts ? (
         posts.map((post) => <Post key={post.id} post={post} />)
       ) : (
         <p>Поки що немає постів...</p>

@@ -12,7 +12,7 @@ interface PostProps {
     nickname: string;
     image?: any;
     isPinned: boolean;
-    group_title: string;
+    groupTitle: string;
     viewCount: string;
   };
   className?: string;
@@ -25,7 +25,7 @@ const Post: React.FC<PostProps> = ({ className, post }) => {
             <div className="ml-2">
                 <div className="flex gap-2 mb-4">
                      <Image src='/groupImage.png' alt="" width={25} height={25} />
-                     <p className="text-[16px] text-white font-semibold">/{post.group_title}</p>
+                     <p className="text-[16px] text-white font-semibold">/{post.groupTitle}</p>
                 </div>
                 <p className="text-[24px] mb-3 text-white font-semibold w-[650px]">{post.title}</p>
                 <div className="flex gap-3 items-center mb-5">

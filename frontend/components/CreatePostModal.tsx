@@ -20,8 +20,8 @@ const CreatePostModal = ({handleShow, group} : {handleShow : () => void, group?:
     const {user} = useUser()
     const [post, setPost] = useState({
         title: "",
-        user_id: user?.id,
-        group_id:selectedGroup ? selectedGroup?.id : group?.id,
+        userId: user?.id,
+        groupId:selectedGroup ? selectedGroup?.id : group?.id,
         description: "",
         image: "",
     })
@@ -30,7 +30,7 @@ const CreatePostModal = ({handleShow, group} : {handleShow : () => void, group?:
         setSelecterGroup(selectGroup);
         setPost((prev) => ({
             ...prev,
-            group_id: selectGroup?.id,
+            groupId: selectGroup?.id,
         }));
     };
 
@@ -76,7 +76,6 @@ const CreatePostModal = ({handleShow, group} : {handleShow : () => void, group?:
 
     useEffect(() => {
         console.log(post)
-        console.log(selectedGroup)
     }, [post])
 
     return ( 
