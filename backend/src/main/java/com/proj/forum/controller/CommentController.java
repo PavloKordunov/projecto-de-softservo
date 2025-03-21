@@ -18,7 +18,7 @@ import java.util.UUID;
 @Logging
 @RequestMapping("/api/comments")
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("https://localhost:3000")
 public class CommentController {
 
     private final CommentService commentService;

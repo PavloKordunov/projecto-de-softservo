@@ -9,7 +9,6 @@ import com.proj.forum.enums.RoleType;
 import com.proj.forum.service.UserStatisticService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +19,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user-statistic")
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("https://localhost:3000")
 public class UserStatisticController {
 
     private final UserStatisticService userStatisticService;

@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/movies")
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("https://localhost:3000")
 public class MovieController {
 
     private final MovieService movieService;
