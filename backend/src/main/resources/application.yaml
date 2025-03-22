@@ -42,7 +42,7 @@ okta:
     client-id: 0oalmv1c9zXfKRxLb5d7
     issuer: https://${okta.domain}/oauth2/default
 
-omdb:
+tmdb:
   api:
 #    key-omdb: ce9b484a
     key: ${api-key}
