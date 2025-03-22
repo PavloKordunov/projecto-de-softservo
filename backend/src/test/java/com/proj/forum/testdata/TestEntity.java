@@ -31,6 +31,7 @@ public class TestEntity {
                 .name(nameOfUser)
                 .profileImage(profileImage)
                 .groups(new ArrayList<>())
+                .createdPosts(new ArrayList<>())
                 .build();
     }
 
@@ -42,6 +43,7 @@ public class TestEntity {
                 .isPublic(isPublic)
                 .author(authorId)
                 .members(new ArrayList<>())
+                .posts(new ArrayList<>())
                 .build();
     }
 
@@ -51,8 +53,6 @@ public class TestEntity {
                 .title(titlePost)
                 .description(descriptionPost)
                 .image(imagePost)
-                .group(getGroup())
-                .author(getUser())
                 .createdAt(createdAt)
                 .viewCount(counterPost)
                 .build();

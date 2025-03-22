@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 @Data
 @Configuration
 @DependsOn("loadEnv")
-@ConfigurationProperties(prefix = "omdb.api")
+@ConfigurationProperties(prefix = "tmdb.api")
 public class TMDbConfig {
     private String key;
     private String url;

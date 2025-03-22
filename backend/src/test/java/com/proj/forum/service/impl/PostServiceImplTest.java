@@ -74,6 +74,16 @@ class PostServiceImplTest {
         expectedUser = getUser();
         expectedGroup = getGroup();
         expectedPost = getPost();
+        //User
+        expectedUser.setGroups(List.of(expectedGroup));
+        expectedUser.setCreatedPosts(List.of(expectedPost));
+        //Group
+        expectedGroup.setMembers(List.of(expectedUser));
+        expectedGroup.setPosts(List.of(expectedPost));
+        //Post
+        expectedPost.setAuthor(expectedUser);
+        expectedPost.setGroup(expectedGroup);
+
     }
 
     @AfterEach
@@ -83,7 +93,6 @@ class PostServiceImplTest {
 
     @Test
     void createPostSuccessTest() {
-        expectedUser.getGroups().add(expectedGroup);
         mockServicesInPostServices(expectedGroup, expectedUser, expectedPost);
 
         UUID actualResult = postService.createPost(postDto);

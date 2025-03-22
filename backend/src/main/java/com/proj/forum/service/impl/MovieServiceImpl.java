@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -46,7 +48,6 @@ public class MovieServiceImpl implements MovieService {
         LocalDate endDate = startDate.plusMonths(1).minusDays(1);
 
         List<Movie> movies = movieRepository.findByReleaseDateBetween(startDate.toString(), endDate.toString());
-        //List<Movie> movies = movieRepository.findDistinctByReleaseDateBetween(startDate.toString(), endDate.toString());
         return getMovieDtoList(movies);
     }
 
