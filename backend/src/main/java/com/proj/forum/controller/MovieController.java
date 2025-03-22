@@ -33,7 +33,7 @@ public class MovieController {
     public ApiResponse<?> fetchMoviesFromApiByYear(@PathVariable Integer year) throws JsonProcessingException {
         List<MoviePOJO> moviesByYear = tmDbService.getMoviesByYear(year);
         List<MovieDto> response = movieService.saveMovies(moviesByYear);
-        return new ApiResponse<>(true, HttpStatus.OK, "Get movies from API", response);
+        return new ApiResponse<>(true, HttpStatus.OK, "Get movies from API", null);
     }
 
     @GetMapping("/year/{year}/month/{month}")

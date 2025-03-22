@@ -45,7 +45,7 @@ okta:
 omdb:
   api:
 #    key-omdb: ce9b484a
-    key: 41e7cf8ac3214709785e986eccb765d4
+    key: ${api-key}
 #    url-omdb: http://www.omdbapi.com
     url: https://api.themoviedb.org/3/discover/movie
 

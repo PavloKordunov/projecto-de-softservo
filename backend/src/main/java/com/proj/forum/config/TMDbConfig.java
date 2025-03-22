@@ -4,10 +4,12 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.web.client.RestTemplate;
 
 @Data
 @Configuration
+@DependsOn("loadEnv")
 @ConfigurationProperties(prefix = "omdb.api")
 public class TMDbConfig {
     private String key;

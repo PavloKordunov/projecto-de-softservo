@@ -32,3 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 /src/main/resources/softservo-keystore.p12
+/src/main/resources/.env

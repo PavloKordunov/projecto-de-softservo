@@ -46,6 +46,7 @@ public class MovieServiceImpl implements MovieService {
         LocalDate endDate = startDate.plusMonths(1).minusDays(1);
 
         List<Movie> movies = movieRepository.findByReleaseDateBetween(startDate.toString(), endDate.toString());
+        //List<Movie> movies = movieRepository.findDistinctByReleaseDateBetween(startDate.toString(), endDate.toString());
         return getMovieDtoList(movies);
     }
 
