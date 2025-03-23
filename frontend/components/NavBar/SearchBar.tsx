@@ -51,7 +51,9 @@ const SearchBar = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch(`http://localhost:8080/api/search/${searchInfo}`);
+                const res = await fetch(`https://localhost:8080/api/search/${searchInfo}`, {
+                    mode: "cors",
+                });
                 const data = await res.json();
                 setPosts(data.body.posts);
                 setGroups(data.body.groups);

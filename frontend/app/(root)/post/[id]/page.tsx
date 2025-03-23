@@ -56,7 +56,9 @@ const PostPage = () => {
     useEffect(() => {
         const getPostById = async () => {
             try {
-                const res = await fetch(`http://localhost:8080/api/posts/${postId}`)
+                const res = await fetch(`https://localhost:8080/api/posts/${postId}`, {
+                    mode: "cors",
+                })
                 const data = await res.json()
                 setPost(data.body)
                 console.log(data)
@@ -67,7 +69,9 @@ const PostPage = () => {
 
         const getComments = async () => {
             try {
-                const res = await fetch(`http://localhost:8080/api/comments/id/${postId}`)
+                const res = await fetch(`https://localhost:8080/api/comments/id/${postId}`, {
+                    mode: "cors",
+                })
                 const data = await res.json()
                 console.log(data)
                 setComments(data.body)
@@ -82,7 +86,8 @@ const PostPage = () => {
 
     const createComment = async () => {
         try {
-            const res = await fetch(`http://localhost:8080/api/comments/create`, {
+            const res = await fetch(`https://localhost:8080/api/comments/create`, {
+                mode: "cors",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

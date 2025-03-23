@@ -32,7 +32,8 @@ const EditPost = ({ handleShow, post }: { handleShow: () => void; post: any }) =
     const handleUpdatePost = async () => {
         console.log(updatePost)
         try {
-            const res = await fetch(`http://localhost:8080/api/posts/update/${post?.id}`, {
+            const res = await fetch(`https://localhost:8080/api/posts/update/${post?.id}`, {
+                mode: "cors",
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",

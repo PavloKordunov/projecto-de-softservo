@@ -18,14 +18,18 @@ const UserPage = () => {
 
     useEffect(() => {
         const getAllPost = async () => {
-            const res = await fetch("http://localhost:8080/api/posts");
+            const res = await fetch("https://localhost:8080/api/posts", {
+                mode: "cors",
+            });
             const data = await res.json();
             setPosts(data.body);
             console.log(data);
         };
 
         const getUserById = async () => {
-            const res = await fetch(`http://localhost:8080/api/users/id/${userId}`);
+            const res = await fetch(`https://localhost:8080/api/users/id/${userId}`, {
+                mode: "cors",
+            });
             const data = await res.json();
             setUserState(data.body); 
             console.log(data);

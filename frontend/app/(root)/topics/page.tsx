@@ -11,7 +11,9 @@ const TopicPage = () => {
 
     useEffect(() => {
         const getAllTopics = async () => {
-          const res = await fetch("http://localhost:8080/api/topics");
+          const res = await fetch("https://localhost:8080/api/topics", {
+            mode: "cors",
+          });
           const data = await res.json();
           setTopic(data.body);
           console.log(data);

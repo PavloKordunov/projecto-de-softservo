@@ -26,14 +26,18 @@ const Group = () => {
 
     useEffect(() => {
         const getAllPost = async () => {
-          const res = await fetch(`http://localhost:8080/api/posts/group/${groupId}`);
+          const res = await fetch(`https://localhost:8080/api/posts/group/${groupId}`, {
+            mode: "cors",
+          });
           const data = await res.json();
           setPosts(data.body);
           console.log(data);
         };
         const getPostById = async() =>{
             try {
-                const res = await fetch(`http://localhost:8080/api/groups/${groupId}`)
+                const res = await fetch(`https://localhost:8080/api/groups/${groupId}`, {
+                    mode: "cors",
+                })
                 const data = await res.json()
                 setGroup(data.body)
                 console.log(data)
@@ -43,7 +47,9 @@ const Group = () => {
         }
         const getFollowedGroups = async () => {
             try {
-                const res = await fetch(`http://localhost:8080/api/groups/followed/${user?.id}`)
+                const res = await fetch(`https://localhost:8080/api/groups/followed/${user?.id}`, {
+                    mode: "cors",
+                })
                 const data = await res.json()
                 setUserSubscribed(data.body.some((group: any) => group.id === groupId))
             } catch (error) {
@@ -61,7 +67,7 @@ const Group = () => {
       }, [userSubscribed])
 
       const getSubscribeUser = async () => {
-        const res = await fetch(`http://localhost:8080/api/groups/${group?.title}/follow/${user?.id}`, {
+        const res = await fetch(`https://localhost:8080/api/groups/${group?.title}/follow/${user?.id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",

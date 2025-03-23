@@ -41,7 +41,8 @@ const CreatePostModal = ({handleShow, group} : {handleShow : () => void, group?:
 
     const handleCreatePost = async () => {
         try {
-            const res = await fetch("http://localhost:8080/api/posts/create", {
+            const res = await fetch("https://localhost:8080/api/posts/create", {
+                mode: "cors",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

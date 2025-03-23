@@ -35,7 +35,9 @@ const LoginWidget: React.FC<LoginWidgetProps> = ({ config }) => {
 
     if (userData) {
       try {
-        const res = await fetch(`http://localhost:8080/api/users/email/${userData.email}`);
+        const res = await fetch(`https://localhost:8080/api/users/email/${userData.email}`, {
+          mode: "cors",
+        });
         if (!res.ok) {
           throw new Error(`Failed to fetch user: ${res.status} ${res.statusText}`);
         }

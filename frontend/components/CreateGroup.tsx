@@ -19,7 +19,8 @@ const CreateGroup = ({handleShow} : {handleShow : () => void}) => {
 
     const handleCreateGroup = async () => {
         try {
-            const res = await fetch("http://localhost:8080/api/groups/create", {
+            const res = await fetch("https://localhost:8080/api/groups/create", {
+                mode: "cors",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
