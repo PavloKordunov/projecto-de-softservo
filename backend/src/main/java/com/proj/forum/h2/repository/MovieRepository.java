@@ -9,5 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, UUID> {
-    List<Movie> findByReleaseDateBetween(String startDate, String endDate);
+    List<Movie> findByReleaseDateBetweenAndLanguageContaining(String releaseDateAfter, String releaseDateBefore, String language);
 }

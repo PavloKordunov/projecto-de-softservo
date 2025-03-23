@@ -7,7 +7,7 @@ import lombok.Builder;
 public record MovieDto(
         @NotNull String title,
         @NotNull String releaseDate,
-        String language,
-        String description
+        String language
+        //String description
 ) {
 }

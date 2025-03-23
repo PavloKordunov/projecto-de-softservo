@@ -57,7 +57,7 @@ public class TMDbServiceImpl implements TMDbService {
 
     private CompletableFuture<MoviesResponse> getMoviesResponseCompletableFuture(Integer year, int finalPage) {
         return CompletableFuture.supplyAsync(() -> {
-            String url = String.format("%s?api_key=%s&primary_release_year=%d&page=%d",
+            String url = String.format("%s?api_key=%s&sort_by=release_date.asc&primary_release_year=%d&page=%d",
                     tmdbConfig.getUrl(), tmdbConfig.getKey(), year, finalPage);
             return fetchWithRetry(url, 3);
         }, executorService);
