@@ -45,7 +45,7 @@ public class MovieServiceImpl implements MovieService {
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.plusMonths(1).minusDays(1);
 
-        List<Movie> movies = movieRepository.findByReleaseDateBetween(startDate.toString(), endDate.toString());
+        List<Movie> movies = movieRepository.findByReleaseDateBetweenAndLanguageContaining(startDate.toString(), endDate.toString(), "en");
         return getMovieDtoList(movies);
     }
 
@@ -72,7 +72,7 @@ public class MovieServiceImpl implements MovieService {
                 .title(movie.getTitle())
                 .releaseDate(movie.getReleaseDate())
                 .language(movie.getLanguage())
-                .description(movie.getDescription())
+                //.description(movie.getDescription())
                 .build();
     }
 }
