@@ -8,6 +8,7 @@ import CalendarWidget from "./CalendarWidget";
 import UserMenu from "./UserMenu";
 import { MovieDetails } from "@/api/omdbApi/omdbApi";
 import { FiMenu, FiX } from "react-icons/fi";
+import Messanger from "./Messanger";
 
 interface NavBarProps {
     movies: MovieDetails[];
@@ -16,6 +17,7 @@ interface NavBarProps {
 const NavBar = ({ movies }: NavBarProps) => {
     const [isCalendarVisible, setIsCalendarVisible] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false); 
+    const [isOpenMessanger, setIsOpenMessanger] = useState(false);
 
     const toggleCalendar = () => {
         setIsCalendarVisible((prev) => !prev);
@@ -23,6 +25,10 @@ const NavBar = ({ movies }: NavBarProps) => {
 
     const toggleMenu = () => {
         setIsMenuOpen((prev) => !prev);
+    };
+
+    const handleShowMessanger = () => {
+        setIsOpenMessanger(!isOpenMessanger);
     };
 
     return (
@@ -66,11 +72,12 @@ const NavBar = ({ movies }: NavBarProps) => {
             </div>
 
             <div className="hidden md:flex flex-row md:gap-[15px] xl:gap-[25px] items-center">
-                <NavItem icon="iconMessage" />
+                <NavItem icon="iconMessage" onClick={handleShowMessanger} />
                 <Notifications />
                 <UserMenu />
             </div>
 
+            {isOpenMessanger && (<Messanger handleShow={handleShowMessanger} />)}
             {isCalendarVisible && <CalendarWidget onClose={toggleCalendar} movies={movies} />}
         </nav>
     );

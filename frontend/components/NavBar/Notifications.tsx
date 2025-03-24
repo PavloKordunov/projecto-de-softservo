@@ -22,7 +22,7 @@ const Notifications = () => {
             </div>
 
             {showNotifications && (
-                <div className="absolute w-[370px] z-10 bg-SecondaryColor p-3 top-[100px] right-[37px] flex flex-col gap-4 rounded-[11px]">
+                <div className="absolute w-[370px] z-10 bg-SecondaryColor p-3 top-[100px] right-[30px] flex flex-col gap-4 rounded-[11px]">
                     <h3 className="text-lg font-semibold">Повідомлення</h3>
                     {notifications.length > 0 ? (
                         <ul className="space-y-3">
