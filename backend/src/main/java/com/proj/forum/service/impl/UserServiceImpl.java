@@ -1,10 +1,13 @@
 package com.proj.forum.service.impl;
 
+import com.proj.forum.dto.StatisticDto;
 import com.proj.forum.dto.UserDto;
 import com.proj.forum.dto.UserUpdateDto;
+import com.proj.forum.entity.Statistic;
 import com.proj.forum.entity.User;
 import com.proj.forum.exception.TokenTypeException;
 import com.proj.forum.helper.UserHelper;
+import com.proj.forum.repository.UserStatisticRepository;
 import com.proj.forum.strategy.UserMapper;
 import com.proj.forum.repository.UserRepository;
 import com.proj.forum.service.UserService;
@@ -30,6 +33,8 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+
+    //private final UserStatisticRepository userStatisticRepository;
 
     @Override
     public UUID createUser(UserDto userDto) {
@@ -100,13 +105,23 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+//    @Override
+//    public void changeStat(StatisticDto statisticDto) {
+//        if(userStatisticRepository.existsByObjectIdAndUserId(statisticDto.userId(), statisticDto.objectId())){
+//            Statistic statistic = userStatisticRepository.getStatisticByUserIdAndObjectId(statisticDto.userId(), statisticDto.objectId());
+//            User user = userRepository.findById(statisticDto.userId()).get();
+//
+//            user.getStatisticList()
+//        }
+//    }
+
     @Override
     public Boolean followUser(UUID userId) {
         User followedUser = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         String email = getEmail();
         User currentUser = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found"));
-        if (currentUser.getFollowing().contains(currentUser)) {
+        if (currentUser.getFollowing().contains(followedUser)) {
             currentUser.getFollowing().remove(followedUser);
             userRepository.save(currentUser);
             return false;
