@@ -42,15 +42,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UUID checkOrCreateUserByGoogle() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication != null && authentication.getPrincipal() instanceof JwtAuthenticationToken token) {
-            var jwt = (Jwt) token.getPrincipal();
-            String email = jwt.getClaims().get("sub").toString();
-            Optional<User> user = userRepository.findByEmail(email);
-            return getUserNickOrGenerateNew(user, email);
-        }
-        throw new TokenTypeException("User not found");
+        String email = getEmail();
+        Optional<User> user = userRepository.findByEmail(email);
+        return getUserOrGenerateNew(user, email);
     }
 
     @Override
@@ -123,7 +117,7 @@ public class UserServiceImpl implements UserService {
             followedUser.getSubscribers().remove(currentUser);
             userRepository.save(currentUser);
             userRepository.save(followedUser);
-            return false;   
+            return false;
         } else {
             currentUser.getFollowing().add(followedUser);
             followedUser.getSubscribers().add(currentUser);
@@ -148,23 +142,23 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    private String getEmail() {  //fix it later
+    private String getEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof JwtAuthenticationToken token)) {
-            throw new EntityNotFoundException("User not found");
+            throw new TokenTypeException("User not found");
         }
         var jwt = (Jwt) token.getPrincipal();
         return jwt.getClaims().get("sub").toString();
     }
 
-    private UUID getUserNickOrGenerateNew(Optional<User> user, String email) {
+    private UUID getUserOrGenerateNew(Optional<User> user, String email) {
         if (user.isPresent()) {
             return user.get().getId();
         } else {
             String nickName = UserHelper.createNickname(email);
             User newUser = User.builder()
                     .name(nickName)
-                    .profileImage(StringUtils.EMPTY)
+//                    .profileImage(StringUtils.EMPTY)
                     .email(email)
                     .username(nickName)
                     .build();
@@ -173,6 +167,7 @@ public class UserServiceImpl implements UserService {
             return savedUser.getId();
         }
     }
+
     @Override
     public List<UserDto> mapToUserDtoList(List<User> users) {
         return users.stream()
