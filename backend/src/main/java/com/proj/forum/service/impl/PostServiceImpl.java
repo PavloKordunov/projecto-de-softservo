@@ -59,13 +59,9 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostResponseDto> getAllPosts() {
         List<Post> postList = postRepository.findAll();
-        if (postList.isEmpty()) {
-            throw new EntityNotFoundException("Posts not found");
-        }
-        return postList.stream()
-                .map(this::getUpdatePost)
-                .toList();
+        return getPostResponseDtos(postList);
     }
+
 
     @Override
     public PostResponseDto getPostById(UUID id) {
@@ -88,32 +84,13 @@ public class PostServiceImpl implements PostService {
         if (postList.isEmpty()) {
             throw new EntityNotFoundException("Posts not found");
         }
-
         return mapToPostDtoList(postList);
     }
 
     @Override
     public List<PostResponseDto> getPostsByGroup(UUID groupId) {
         List<Post> postList = postRepository.findAllByGroup_Id(groupId);
-        if (postList.isEmpty()) {
-            throw new EntityNotFoundException("Posts not found");
-        }
-
-        List<PostResponseDto> postDtoList = new ArrayList<>();
-        String email = getEmail();
-
-        if(email == null) {
-            for (Post post: postList)
-                postDtoList.add(stickPostDtoAndStatistic(post, null));
-            return postDtoList;
-        }
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(()-> new EntityNotFoundException("User not found"));
-        for(Post post: postList){
-            Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(post.getId(), user.getId()).orElse(null);
-            postDtoList.add(stickPostDtoAndStatistic(post, statistic));
-        }
-        return postDtoList;
+        return getPostResponseDtos(postList);
     }
 
     @Override
@@ -162,6 +139,28 @@ public class PostServiceImpl implements PostService {
         }
     }
 
+
+private List<PostResponseDto> getPostResponseDtos(List<Post> postList) {
+    if (postList.isEmpty()) {
+        throw new EntityNotFoundException("Posts not found");
+    }
+
+    List<PostResponseDto> postDtoList = new ArrayList<>();
+    String email = getEmail();
+
+    if (email == null) {
+        for (Post post : postList)
+            postDtoList.add(stickPostDtoAndStatistic(post, null));
+        return postDtoList;
+    }
+    User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new EntityNotFoundException("User not found"));
+    for (Post post : postList) {
+        Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(post.getId(), user.getId()).orElse(null);
+        postDtoList.add(stickPostDtoAndStatistic(post, statistic));
+    }
+    return postDtoList;
+}
     private Post getUpdatePost(Post post, PostRequestDto postDto) {
         if (postDto.title() != null)
             post.setTitle(postDto.title());
