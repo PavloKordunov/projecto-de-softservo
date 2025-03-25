@@ -6,13 +6,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface UserStatisticRepository extends JpaRepository<Statistic, UUID> {
-    List<Statistic> findByUserId(@NotNull UUID userId);
+    //List<Statistic> findByUserId(@NotNull UUID userId);
 
     boolean existsByObjectIdAndUserId(@NotNull UUID objectId, @NotNull UUID userId);
 
-    Statistic getStatisticByUserIdAndObjectId(@NotNull UUID userId, @NotNull UUID objectId);
+    Optional<Statistic> getStatisticByObjectIdAndUserId(@NotNull UUID objectId, @NotNull UUID userId);
 }

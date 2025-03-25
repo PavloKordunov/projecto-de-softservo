@@ -1,6 +1,5 @@
 package com.proj.forum.dto;
 
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
@@ -13,5 +12,5 @@ public record StatisticDto(
         @NotNull UUID objectId,
         Short rate,
         Boolean liked,
-        @NotNull Boolean saved
+        Boolean saved
         ) { }

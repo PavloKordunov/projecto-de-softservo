@@ -4,14 +4,11 @@ import com.proj.forum.dto.StatisticDto;
 import com.proj.forum.entity.Statistic;
 import com.proj.forum.repository.UserStatisticRepository;
 import com.proj.forum.service.UserStatisticService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 
 @Service
@@ -23,13 +20,13 @@ public class UserStatisticServiceImpl implements UserStatisticService {
 
     @Override
     public StatisticDto likePost(StatisticDto statisticDto) {
-        if(userStatisticRepository.existsByObjectIdAndUserId(statisticDto.objectId(), statisticDto.userId())){
-            Statistic statistic = userStatisticRepository.getStatisticByUserIdAndObjectId(statisticDto.objectId(), statisticDto.userId());
+        if (userStatisticRepository.existsByObjectIdAndUserId(statisticDto.objectId(), statisticDto.userId())) {
+            Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(statisticDto.objectId(), statisticDto.userId()).get();
 
-            if(statisticDto.liked() != statistic.getLiked())
+            if (statisticDto.liked() != statistic.getLiked())
                 statistic.setLiked((statisticDto.liked()));
 
-            if(statistic.getLiked() == null && !statistic.getSaved() && statistic.getRate() == null){
+            if (statistic.getLiked() == null && !statistic.getSaved() && statistic.getRate() == null) {
                 userStatisticRepository.deleteById(statistic.getId());
                 return statisticDto;
             }
@@ -74,13 +71,12 @@ public class UserStatisticServiceImpl implements UserStatisticService {
 
     @Override
     public StatisticDto savePost(StatisticDto statisticDto) {
-        if(userStatisticRepository.existsByObjectIdAndUserId(statisticDto.objectId(), statisticDto.userId())){
-            Statistic statistic = userStatisticRepository.getStatisticByUserIdAndObjectId(statisticDto.objectId(), statisticDto.userId());
-
-            if(statisticDto.saved() != statistic.getSaved())
+        if (userStatisticRepository.existsByObjectIdAndUserId(statisticDto.objectId(), statisticDto.userId())) {
+            Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(statisticDto.objectId(), statisticDto.userId()).get();
+            if (statisticDto.saved() != statistic.getSaved() && statisticDto.saved() != null)
                 statistic.setSaved(statisticDto.saved());
 
-            if(statistic.getLiked() == null && !statistic.getSaved() && statistic.getRate() == null){
+            if (statistic.getLiked() == null && Boolean.FALSE.equals(statistic.getSaved()) && statistic.getRate() == null) {
                 userStatisticRepository.deleteById(statistic.getId());
                 return statisticDto;
             }
@@ -99,13 +95,13 @@ public class UserStatisticServiceImpl implements UserStatisticService {
 
     @Override
     public StatisticDto rateTopic(StatisticDto statisticDto) {
-        if(userStatisticRepository.existsByObjectIdAndUserId(statisticDto.objectId(), statisticDto.userId())){
-            Statistic statistic = userStatisticRepository.getStatisticByUserIdAndObjectId(statisticDto.objectId(), statisticDto.userId());
+        if (userStatisticRepository.existsByObjectIdAndUserId(statisticDto.objectId(), statisticDto.userId())) {
+            Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(statisticDto.objectId(), statisticDto.userId()).get();
 
-            if(!Objects.equals(statisticDto.rate(), statistic.getRate()))
+            if (!Objects.equals(statisticDto.rate(), statistic.getRate()))
                 statistic.setRate(statisticDto.rate());
 
-            if(statistic.getLiked() == null && !statistic.getSaved() && statistic.getRate() == null){
+            if (statistic.getLiked() == null && !statistic.getSaved() && statistic.getRate() == null) {
                 userStatisticRepository.deleteById(statistic.getId());
                 return statisticDto;
             }
@@ -130,7 +126,7 @@ public class UserStatisticServiceImpl implements UserStatisticService {
 //                .orElseThrow(() -> new EntityNotFoundException("Statistic not found"));
 //    }
 
-//    @Override
+    //    @Override
 //    public List<StatisticDto> getAllStatistic() {
 //        List<Statistic> statisticList = userStatisticRepository.findAll();
 //        return getDtoList(statisticList);
@@ -156,18 +152,18 @@ public class UserStatisticServiceImpl implements UserStatisticService {
 //                .orElseThrow(() -> new EntityNotFoundException("Statistic not found"));
 //    }
 //
-    private Statistic updateStatistic(Statistic statistic, StatisticDto statisticDto) {
-        if (statisticDto.liked() != statistic.getLiked()) {
-            statistic.setLiked(statisticDto.liked());
-        }
-        if (statisticDto.saved() != statistic.getSaved()) {
-            statistic.setSaved(statisticDto.saved());
-        }
-        if (!Objects.equals(statisticDto.rate(), statistic.getRate())) {
-            statistic.setRate(statisticDto.rate());
-        }
-        return statistic;
-    }
+//    private Statistic updateStatistic(Statistic statistic, StatisticDto statisticDto) {
+//        if (statisticDto.liked() != statistic.getLiked()) {
+//            statistic.setLiked(statisticDto.liked());
+//        }
+//        if (statisticDto.saved() != statistic.getSaved()) {
+//            statistic.setSaved(statisticDto.saved());
+//        }
+//        if (!Objects.equals(statisticDto.rate(), statistic.getRate())) {
+//            statistic.setRate(statisticDto.rate());
+//        }
+//        return statistic;
+//    }
 //
 //    private Statistic updatePartially(Statistic statistic, Boolean liked) {
 //        if (statistic.getLiked() != liked)
