@@ -17,8 +17,8 @@ const UserPage = () => {
     const [showUpdateUser, setShowUpdateUser] = useState(false);
 
     useEffect(() => {
-        const getAllPost = async () => {
-            const res = await fetch("https://localhost:8080/api/posts", {
+        const getUserPost = async () => {
+            const res = await fetch(`https://localhost:8080/api/posts/user/${userId}`, {
                 mode: "cors",
             });
             const data = await res.json();
@@ -36,7 +36,7 @@ const UserPage = () => {
         };
 
         getUserById();
-        getAllPost();
+        getUserPost();
     }, [userId]);
 
     const handleShow = () => {
@@ -96,7 +96,7 @@ const UserPage = () => {
                         <p className="text-white text-[26px] font-semibold leading-[26px] m-0">Стежень</p>
                     </div>
                     <div className="flex flex-col items-center">
-                        <p className="text-white text-[26px] font-semibold leading-[26px] m-0">10</p>
+                        <p className="text-white text-[26px] font-semibold leading-[26px] m-0">{userState?.createdPosts}</p>
                         <p className="text-white text-[26px] font-semibold leading-[26px] m-0">Дописів</p>
                     </div>
                 </div>

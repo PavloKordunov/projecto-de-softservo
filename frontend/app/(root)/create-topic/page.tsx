@@ -1,5 +1,6 @@
 "use client"
 
+import AutoFillPost from "@/components/AutoFillPost";
 import { useUser } from "@/hooks/useUser";
 import { Dirent } from "fs";
 import Image from "next/image";
@@ -8,11 +9,16 @@ import { useEffect, useState } from "react";
 
 interface FilmData {
     Title: string;
-    ImdbRating: string;
+    imdbRating: string;
     Country: string;
     Genre: string;
     Author: any;
     Runtime: string;
+    Plot: string;
+    Poster: string;
+    Released: string;
+    Director: string;
+    Actors: string;
   }
   
 
@@ -20,7 +26,7 @@ const AdminPostMenu = () => {
     const router = useRouter();
     const {user} = useUser()
     const [postMode, setPostMode] = useState("film");
-    const [showModal, setShowModal] = useState(false); 
+    const [showModal, setShowModal] = useState(true); 
     const [filmData, setFilmData] = useState<FilmData | null>(null);
     const [base64, setBase64] = useState<string | null>(null);
     const [limitAge, setLimitAge] = useState<number | null>(null);
@@ -40,6 +46,10 @@ const AdminPostMenu = () => {
         seasoneAmount: "",
         runtime: ""
     });
+
+    const getFilmApiData = (data: FilmData) => {
+        setFilmData(data);
+    };
 
     const handleCreateTopic = async () => {
         try {
@@ -67,11 +77,17 @@ const AdminPostMenu = () => {
             setFormData((prev) => ({
                 ...prev,
                 title: filmData?.Title || '',
-                IMDB: filmData?.ImdbRating || '',
+                IMDB: filmData?.imdbRating || '',
                 country: filmData?.Country || '',
                 genre: filmData?.Genre || '',
                 duration: filmData?.Runtime || '',
+                description: filmData?.Plot || '',
+                image: filmData?.Poster,
+                releaseDate: filmData?.Released || '',
+                director: filmData?.Director || '',
+                actor: filmData?.Actors || '',
             }));
+            setBase64(filmData?.Poster);
         }
     }, [filmData]);
 
@@ -111,12 +127,12 @@ const AdminPostMenu = () => {
     return (
         <div className="mt-4 w-[1030px] bg-[#1E1F20] rounded-[31px] px-6 py-10 relative">
             <div>
-                {/* {showModal && (
+                {showModal && (
                     <AutoFillPost
                         onClose={() => setShowModal(false)}
                         getFilmApiData={getFilmApiData}
                     />
-                )} */}
+                )}
             </div>
             <div className="flex justify-center mb-10">
                 <h1 className="text-4xl font-bold text-[#F4F6F8]">Добавити фільм, серіал або книгу</h1>
@@ -415,41 +431,27 @@ const AdminPostMenu = () => {
                     <div className="mb-6">
                         <h2 className="text-2xl font-semibold text-[#F4F6F8] mb-4">Режисери:</h2>
                         <div className="flex items-center gap-6">
-                            <div className="w-[240px] h-[43px] bg-[#2C353D] rounded-lg flex justify-center items-center text-[#b0b0b0]">
-                                <p>Перетягніть сюди фото</p>
-                            </div>
                             <input
-                                className="w-[218px] h-[43px] bg-[#2c353d] rounded-md px-3 text-[#C5D0E6] text-sm"
+                                className="w-[478px] h-[43px] bg-[#2c353d] rounded-md px-3 text-[#C5D0E6] text-sm"
                                 type='text'
                                 name='director'
                                 value={formData.director}
-                                placeholder='Введіть прізвище та ім’я...'
+                                placeholder='Введіть прізвище та ім’я режисера...'
                                 onChange={handleInputChange}
                             />
-                            <button className="px-6 py-2 bg-[#FF4155] rounded-[26px] text-[#C5D0E6] text-sm font-semibold h-[43px]">Добавити ще</button>
                         </div>
                     </div>
                     <div className="mb-6">
                         <h2 className="text-2xl font-semibold text-[#F4F6F8] mb-4">Актори:</h2>
                         <div className="flex items-center gap-6">
-                            <div className="w-[240px] h-[43px] bg-[#2C353D] rounded-lg flex justify-center items-center text-[#b0b0b0]">
-                                <p>Перетягніть сюди фото</p>
-                            </div>
                             <input
-                                className="w-[218px] h-[43px] bg-[#2c353d] rounded-md px-3 text-[#C5D0E6] text-sm"
+                                className="w-[478px] h-[43px] bg-[#2c353d] rounded-md px-3 text-[#C5D0E6] text-sm"
                                 type='text'
                                 value={formData.actor}
                                 name='actor'
-                                placeholder='Введіть прізвище та ім’я (у фільмі)...'
+                                placeholder='Введіть прізвище та ім’я актора...'
                                 onChange={handleInputChange}
                             />
-                            <input
-                                className="w-[218px] h-[43px] bg-[#2c353d] rounded-md px-3 text-[#C5D0E6] text-sm"
-                                type='text'
-                                placeholder='Введіть прізвище та ім’я (в житті)...'
-                                onChange={handleInputChange}
-                            />
-                            <button className="px-6 py-2 bg-[#FF4155] rounded-[26px] text-[#C5D0E6] text-sm font-semibold h-[43px]">Добавити ще</button>
                         </div>
                     </div>
                 </>
