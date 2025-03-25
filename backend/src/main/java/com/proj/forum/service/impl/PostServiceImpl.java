@@ -7,7 +7,6 @@ import com.proj.forum.entity.Group;
 import com.proj.forum.entity.Post;
 import com.proj.forum.entity.Statistic;
 import com.proj.forum.entity.User;
-import com.proj.forum.exception.TokenTypeException;
 import com.proj.forum.repository.GroupRepository;
 import com.proj.forum.repository.PostRepository;
 import com.proj.forum.repository.UserRepository;
@@ -28,7 +27,6 @@ import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -69,13 +67,15 @@ public class PostServiceImpl implements PostService {
                 () -> new EntityNotFoundException("Post not found"));
 
         String email = getEmail();
-        if(email == null)
-            return stickPostDtoAndStatistic(post, null);
-
+        Integer countLikes = getCountLikes(post);
+        Integer countSaved = getCountSaved(post);
+        if(email == null) {
+            return stickPostDtoAndStatistic(post, null, countLikes, countSaved);
+        }
         User user = userRepository.findByEmail(email)
                 .orElseThrow(()-> new EntityNotFoundException("User not found"));
         Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(id, user.getId()).orElse(null);
-        return stickPostDtoAndStatistic(post, statistic);
+        return stickPostDtoAndStatistic(post, statistic, countLikes, countSaved);
     }
 
     @Override
@@ -149,18 +149,41 @@ private List<PostResponseDto> getPostResponseDtos(List<Post> postList) {
     String email = getEmail();
 
     if (email == null) {
-        for (Post post : postList)
-            postDtoList.add(stickPostDtoAndStatistic(post, null));
+        for (Post post : postList){
+            Integer countLikes = getCountLikes(post);
+            Integer countSaved = getCountSaved(post);
+            postDtoList.add(stickPostDtoAndStatistic(post, null, countLikes, countSaved));
+        }
         return postDtoList;
     }
     User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new EntityNotFoundException("User not found"));
     for (Post post : postList) {
         Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(post.getId(), user.getId()).orElse(null);
-        postDtoList.add(stickPostDtoAndStatistic(post, statistic));
+
+        Integer countLikes = getCountLikes(post);
+        Integer countSaved = getCountSaved(post);
+        postDtoList.add(stickPostDtoAndStatistic(post, statistic, countLikes, countSaved));
     }
     return postDtoList;
 }
+
+    private Integer getCountLikes(Post post) {
+        int countLike = 0;
+        List<Statistic> statistics = userStatisticRepository.findStatisticsByObjectIdAndLikedIsTrue(post.getId());
+        if(!statistics.isEmpty())
+            countLike = statistics.size();
+        return countLike;
+    }
+
+    private Integer getCountSaved(Post post) {
+        int countSaved = 0;
+        List<Statistic> statistics = userStatisticRepository.findStatisticsByObjectIdAndSavedIsTrue(post.getId());
+        if(!statistics.isEmpty())
+            countSaved = statistics.size();
+        return countSaved;
+    }
+
     private Post getUpdatePost(Post post, PostRequestDto postDto) {
         if (postDto.title() != null)
             post.setTitle(postDto.title());
@@ -184,6 +207,49 @@ private List<PostResponseDto> getPostResponseDtos(List<Post> postList) {
                 .build();
     }
 
+    private PostResponseDto stickPostDtoAndStatistic(Post post, Statistic statistic,
+                                                     Integer countLikes, Integer countSaved) {
+
+        List<CommentDto> comments = commentService.mapToListOfCommentsDto(post.getComments());
+        return PostResponseDto.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .description(post.getDescription() == null ? StringUtils.EMPTY : post.getDescription())
+                .image(post.getImage() == null ? StringUtils.EMPTY : post.getImage())
+                .userImage(post.getAuthor().getProfileImage())
+                .nickname(post.getAuthor().getUsername())
+                .name(post.getAuthor().getName())
+                .isPinned(post.isPinned())
+                .groupTitle(post.getGroup().getTitle())
+                .createdAt(post.getCreatedAt())
+                .viewCount(post.getViewCount())
+                .comments(comments)
+                .userId(post.getAuthor().getId())
+                .groupId(post.getGroup().getId())
+                .isLiked(statistic == null ? null: statistic.getLiked())
+                .isSaved(statistic == null ? false: statistic.getSaved())
+                .countLikes(countLikes)
+                .countSaved(countSaved)
+                .build();
+    }
+
+    @Override
+    public List<PostResponseDto> mapToPostDtoList(List<Post> posts) {
+        return posts.stream()
+                .map(this::getUpdatePost)
+                .toList();
+
+    }
+
+    private String getEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof JwtAuthenticationToken token)) {
+            return null;
+        }
+        var jwt = (Jwt) token.getPrincipal();
+        return jwt.getClaims().get("sub").toString();
+    }
+
     private PostResponseDto getUpdatePost(Post post) {
         List<CommentDto> comments = commentService.mapToListOfCommentsDto(post.getComments());
 
@@ -205,45 +271,6 @@ private List<PostResponseDto> getPostResponseDtos(List<Post> postList) {
                 .isSaved(false)
                 .isLiked(null)
                 .build();
-    }
-    private PostResponseDto stickPostDtoAndStatistic(Post post, Statistic statistic) {
-        List<CommentDto> comments = commentService.mapToListOfCommentsDto(post.getComments());
-
-        return PostResponseDto.builder()
-                .id(post.getId())
-                .title(post.getTitle())
-                .description(post.getDescription() == null ? StringUtils.EMPTY : post.getDescription())
-                .image(post.getImage() == null ? StringUtils.EMPTY : post.getImage())
-                .userImage(post.getAuthor().getProfileImage())
-                .nickname(post.getAuthor().getUsername())
-                .name(post.getAuthor().getName())
-                .isPinned(post.isPinned())
-                .groupTitle(post.getGroup().getTitle())
-                .createdAt(post.getCreatedAt())
-                .viewCount(post.getViewCount())
-                .comments(comments)
-                .userId(post.getAuthor().getId())
-                .groupId(post.getGroup().getId())
-                .isLiked(statistic == null ? null: statistic.getLiked())
-                .isSaved(statistic == null ? false: statistic.getSaved())
-                .build();
-    }
-
-    @Override
-    public List<PostResponseDto> mapToPostDtoList(List<Post> posts) {
-        return posts.stream()
-                .map(this::getUpdatePost)
-                .toList();
-
-    }
-
-    private String getEmail() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof JwtAuthenticationToken token)) {
-            return null;
-        }
-        var jwt = (Jwt) token.getPrincipal();
-        return jwt.getClaims().get("sub").toString();
     }
 }
 

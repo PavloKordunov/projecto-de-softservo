@@ -1,6 +1,5 @@
 package com.proj.forum.helper;
 
-import java.util.Random;
 import java.util.UUID;
 
 public class UserHelper {

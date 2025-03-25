@@ -14,6 +14,7 @@ public interface UserStatisticRepository extends JpaRepository<Statistic, UUID> 
     //List<Statistic> findByUserId(@NotNull UUID userId);
 
     boolean existsByObjectIdAndUserId(@NotNull UUID objectId, @NotNull UUID userId);
-
     Optional<Statistic> getStatisticByObjectIdAndUserId(@NotNull UUID objectId, @NotNull UUID userId);
+    List<Statistic> findStatisticsByObjectIdAndLikedIsTrue(UUID objectId);
+    List<Statistic> findStatisticsByObjectIdAndSavedIsTrue(UUID objectId);
 }

@@ -24,7 +24,9 @@ public record PostResponseDto(
         int viewCount,
         List<CommentDto> comments,
         Boolean isLiked,
-        boolean isSaved
+        boolean isSaved,
+        Integer countLikes,
+        Integer countSaved
         ) {
 
 }
