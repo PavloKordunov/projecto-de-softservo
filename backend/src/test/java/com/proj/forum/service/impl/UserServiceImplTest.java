@@ -5,7 +5,7 @@ import com.proj.forum.dto.UserUpdateDto;
 import com.proj.forum.entity.User;
 import com.proj.forum.exception.TokenTypeException;
 import com.proj.forum.repository.UserRepository;
-import com.proj.forum.strategy.UserMapper;
+import com.proj.forum.strategy.UserCustomMapper;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.junit.jupiter.api.AfterEach;
@@ -66,7 +66,7 @@ public class UserServiceImplTest {
     private Jwt jwt;
 
     @Mock
-    private UserMapper userMapper;
+    private UserCustomMapper userMapper;
 
     @InjectMocks
     private UserServiceImpl userService;

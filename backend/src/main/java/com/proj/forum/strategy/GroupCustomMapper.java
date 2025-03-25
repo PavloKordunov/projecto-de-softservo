@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 
 @Component
-public class GroupMapper implements Mapper<Group, GroupDto> {
+public class GroupCustomMapper implements CustomMapper<Group, GroupDto> {
 
     @Override
     public GroupDto mapToDto(Group group) {

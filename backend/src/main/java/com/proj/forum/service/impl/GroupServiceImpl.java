@@ -6,16 +6,14 @@ import com.proj.forum.entity.User;
 import com.proj.forum.repository.GroupRepository;
 import com.proj.forum.repository.UserRepository;
 import com.proj.forum.service.GroupService;
-import com.proj.forum.strategy.GroupMapper;
+import com.proj.forum.strategy.GroupCustomMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.AccessDeniedException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,7 +26,7 @@ public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
-    private final GroupMapper groupMapper;
+    private final GroupCustomMapper groupMapper;
 
     @Override
     public UUID createGroup(GroupDto groupDto) {

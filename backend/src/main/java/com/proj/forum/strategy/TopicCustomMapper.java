@@ -11,7 +11,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class TopicMapper implements Mapper<Topic, TopicDto> {
+public class TopicCustomMapper implements CustomMapper<Topic, TopicDto> {
 
     private final CommentService commentService;
 

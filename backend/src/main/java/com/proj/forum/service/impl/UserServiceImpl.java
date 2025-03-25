@@ -5,7 +5,7 @@ import com.proj.forum.dto.UserUpdateDto;
 import com.proj.forum.entity.User;
 import com.proj.forum.exception.TokenTypeException;
 import com.proj.forum.helper.UserHelper;
-import com.proj.forum.strategy.UserMapper;
+import com.proj.forum.strategy.UserCustomMapper;
 import com.proj.forum.repository.UserRepository;
 import com.proj.forum.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -28,7 +28,7 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
+    private final UserCustomMapper userMapper;
 
     //private final UserStatisticRepository userStatisticRepository;
 

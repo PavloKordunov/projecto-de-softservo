@@ -86,6 +86,7 @@ public class PostController {
         return ApiResponse.apiResponse(true, 200, "Post deleted", postId);
     }
 
+
     @PatchMapping("/view/{id}")
     public void addView(@PathVariable UUID id){
         postService.addView(id);

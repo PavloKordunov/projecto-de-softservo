@@ -56,9 +56,6 @@ public class User {
 
     @ManyToMany(mappedBy = "members")
     private List<Group> groups;
-
-    @OneToMany(mappedBy = "user", cascade = ALL, orphanRemoval = true)
-    private List<Comment> createdComments;
 }
 
 

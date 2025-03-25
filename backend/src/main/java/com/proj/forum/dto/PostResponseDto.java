@@ -22,7 +22,9 @@ public record PostResponseDto(
         @NotBlank String groupTitle,
         LocalDateTime createdAt,
         int viewCount,
-        List<CommentDto> comments
+        List<CommentDto> comments,
+        Boolean isLiked,
+        boolean isSaved
         ) {
 
 }

@@ -1,12 +1,10 @@
 package com.proj.forum.service.impl;
 
-import com.proj.forum.dto.CommentDto;
 import com.proj.forum.dto.TopicDto;
 import com.proj.forum.entity.Topic;
 import com.proj.forum.repository.TopicRepository;
-import com.proj.forum.service.CommentService;
 import com.proj.forum.service.TopicService;
-import com.proj.forum.strategy.TopicMapper;
+import com.proj.forum.strategy.TopicCustomMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +20,7 @@ import java.util.UUID;
 public class TopicServiceImpl implements TopicService {
 
     private final TopicRepository topicRepository;
-    private final TopicMapper topicMapper;
+    private final TopicCustomMapper topicMapper;
 
     @Override
     public UUID createTopic(TopicDto topicDto) {

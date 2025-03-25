@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserMapper implements Mapper<User, UserDto> {
+public class UserCustomMapper implements CustomMapper<User, UserDto> {
     @Override
     public User mapToEntity(UserDto userDto) {
         return User.builder()
