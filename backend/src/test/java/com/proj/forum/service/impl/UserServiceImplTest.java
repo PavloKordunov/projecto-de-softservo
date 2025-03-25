@@ -28,10 +28,10 @@ import java.util.Optional;
 import java.util.ArrayList;
 import java.util.Map;
 
-import static com.proj.forum.testdata.TestDto.getUserDto;
-import static com.proj.forum.testdata.TestDto.getUserUpdateDto;
-import static com.proj.forum.testdata.TestDto.getUser;
-import static com.proj.forum.testdata.TestDto.getFollowedUser;
+import static com.proj.forum.testdata.TestEntity.getUser;
+import static com.proj.forum.testdata.TestEntity.getUserDto;
+import static com.proj.forum.testdata.TestEntity.getUserUpdateDto;
+import static com.proj.forum.testdata.TestEntity.getFollowedUser;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
