@@ -5,21 +5,30 @@ import com.proj.forum.dto.PostRequestDto;
 import com.proj.forum.dto.PostResponseDto;
 import com.proj.forum.entity.Group;
 import com.proj.forum.entity.Post;
+import com.proj.forum.entity.Statistic;
 import com.proj.forum.entity.User;
+import com.proj.forum.exception.TokenTypeException;
 import com.proj.forum.repository.GroupRepository;
 import com.proj.forum.repository.PostRepository;
 import com.proj.forum.repository.UserRepository;
+import com.proj.forum.repository.UserStatisticRepository;
 import com.proj.forum.service.CommentService;
 import com.proj.forum.service.PostService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -30,6 +39,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final UserStatisticRepository userStatisticRepository;
     private final CommentService commentService;
 
     @Override
@@ -61,7 +71,15 @@ public class PostServiceImpl implements PostService {
     public PostResponseDto getPostById(UUID id) {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Post not found"));
-        return getUpdatePost(post);
+
+        String email = getEmail();
+        if(email == null)
+            return stickPostDtoAndStatistic(post, null);
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new EntityNotFoundException("User not found"));
+        Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(id, user.getId()).orElse(null);
+        return stickPostDtoAndStatistic(post, statistic);
     }
 
     @Override
@@ -81,7 +99,21 @@ public class PostServiceImpl implements PostService {
             throw new EntityNotFoundException("Posts not found");
         }
 
-        return mapToPostDtoList(postList);
+        List<PostResponseDto> postDtoList = new ArrayList<>();
+        String email = getEmail();
+
+        if(email == null) {
+            for (Post post: postList)
+                postDtoList.add(stickPostDtoAndStatistic(post, null));
+            return postDtoList;
+        }
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new EntityNotFoundException("User not found"));
+        for(Post post: postList){
+            Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(post.getId(), user.getId()).orElse(null);
+            postDtoList.add(stickPostDtoAndStatistic(post, statistic));
+        }
+        return postDtoList;
     }
 
     @Override
@@ -171,6 +203,30 @@ public class PostServiceImpl implements PostService {
                 .comments(comments)
                 .userId(post.getAuthor().getId())
                 .groupId(post.getGroup().getId())
+                .isSaved(false)
+                .isLiked(null)
+                .build();
+    }
+    private PostResponseDto stickPostDtoAndStatistic(Post post, Statistic statistic) {
+        List<CommentDto> comments = commentService.mapToListOfCommentsDto(post.getComments());
+
+        return PostResponseDto.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .description(post.getDescription() == null ? StringUtils.EMPTY : post.getDescription())
+                .image(post.getImage() == null ? StringUtils.EMPTY : post.getImage())
+                .userImage(post.getAuthor().getProfileImage())
+                .nickname(post.getAuthor().getUsername())
+                .name(post.getAuthor().getName())
+                .isPinned(post.isPinned())
+                .groupTitle(post.getGroup().getTitle())
+                .createdAt(post.getCreatedAt())
+                .viewCount(post.getViewCount())
+                .comments(comments)
+                .userId(post.getAuthor().getId())
+                .groupId(post.getGroup().getId())
+                .isLiked(statistic == null ? null: statistic.getLiked())
+                .isSaved(statistic == null ? false: statistic.getSaved())
                 .build();
     }
 
@@ -180,6 +236,15 @@ public class PostServiceImpl implements PostService {
                 .map(this::getUpdatePost)
                 .toList();
 
+    }
+
+    private String getEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof JwtAuthenticationToken token)) {
+            return null;
+        }
+        var jwt = (Jwt) token.getPrincipal();
+        return jwt.getClaims().get("sub").toString();
     }
 }
 
