@@ -43,6 +43,32 @@ const UserPage = () => {
         setShowUpdateUser(!showUpdateUser);
     };
 
+    const subscribeUser = async () => {
+        try {
+            const res = await fetch(`https://localhost:8080/api/users/follow-user/${userId}`, {
+                mode: "cors",
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${user?.accessToken}`
+                },
+            });
+
+            if (!res.ok) {
+                throw new Error(`Failed to update post: ${res.status}`);
+            }
+
+            const data = await res.json();
+            console.log("Follow user:", data);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+       console.log(user) 
+    }, [])
+
     return (
         <div className="px-3 py-12 mt-4 bg-MainColor rounded-[21px] mb-6 w-[1050px]">
             <div className="flex items-center ml-9 mb-8">
@@ -76,6 +102,11 @@ const UserPage = () => {
                 </div>
             </div>
 
+            {user?.id !== userId && <div className="flex items-center ml-9 gap-6 mb-5">
+                <button onClick={subscribeUser} className="px-4 py-1 bg-[#434C55] rounded-[31px] text-white text-[16px] font-bold">підписатись</button>
+                <button className="px-4 py-1 bg-[#434C55] rounded-[31px] text-white text-[16px] font-bold">Написати</button>
+            </div>}
+
             <div className="flex items-center ml-9 gap-6 mb-10">
                 <button className="px-5 py-3 bg-[#434C55] rounded-[31px] text-white text-[16px] font-bold">Дописи</button>
                 <button className="px-5 py-3 bg-[#434C55] rounded-[31px] text-white text-[16px] font-bold">Вподобання</button>
@@ -93,10 +124,10 @@ const UserPage = () => {
                     </svg>
                 </button>
                 <button className="px-3 py-2 bg-[#434C55] rounded-[8px] text-white text-[16px] font-bold gap-1 flex items-center">
-                    <p>За вподобаннями</p>
+                    <p>За перглядами</p>
                 </button>
                 <button className="px-3 py-2 bg-[#434C55] rounded-[8px] text-white text-[16px] font-bold gap-1 flex items-center">
-                    <p>За вподобаннями</p>
+                    <p>За датою</p>
                 </button>
             </div>
 

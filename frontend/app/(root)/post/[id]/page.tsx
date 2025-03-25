@@ -18,7 +18,8 @@ interface Post {
     isPinned: boolean;
     groupTitle: string;
     viewCount: string;
-    userId: string
+    userId: string;
+    groupId: string
 }
 
 const PostPage = () => {
@@ -119,7 +120,7 @@ const PostPage = () => {
         <div>
             <div className="p-7 mt-4 bg-MainColor rounded-[21px] mb-6 w-[1030px]">
                 <div className="flex items-center justify-between mb-4">
-                    <Link href='/group/:id' className="flex item-center gap-2">                   
+                    <Link href={`/group/${post.groupId}`} className="flex item-center gap-2">                   
                         <Image src='/groupImage.png' alt="" width={38} height={38} />
                         <p className="text-[18px] text-white font-semibold">/{post?.groupTitle}</p>
                     </Link>
@@ -149,9 +150,9 @@ const PostPage = () => {
                 <Image src={post?.image} alt="" width={980} height={760} className="mb-3" />
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">
-                        <Image src="/person.png" alt="" width={54} height={54}/>
+                        <Link href={`/user/${post.userId}`}><Image src="/person.png" alt="" width={54} height={54}/></Link>
                         <div>
-                            <p className="text-[18px] text-white font-semibold">{post.nickname}</p>
+                            <Link href={`/user/${post.userId}`}><p className="text-[18px] text-white font-semibold">{post.nickname}</p></Link>
                             <span className="text-[13px] text-[#C5D0E6] font-regular">2 години тому</span>
                         </div>
                         <div className="flex gap-3 ml-5">

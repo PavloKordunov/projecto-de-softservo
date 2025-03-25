@@ -18,15 +18,15 @@ const Chat = ({handleShowChat, handleShow}: {handleShowChat: ()=> void, handleSh
                     <use href={`/sprite.svg#closeBtnIcon`}/>
                 </svg>
             </div>
-            <div className="bg-SecondaryColor p-2 rounded-[14px] flex h-[375px] w-[310px] items-center mb-4" onClick={handleShowChat}>
+            <div className="bg-SecondaryColor p-2 rounded-[14px] flex h-[375px] w-[310px] items-center mb-4">
 
             </div>
-            <div className="bg-SecondaryColor p-2 rounded-[14px] flex h-fit w-[310px] items-center" onClick={handleShowChat}>
+            <div className="bg-SecondaryColor p-2 rounded-[14px] flex h-fit w-[310px] items-center">
                 <svg onClick={handleShow} className="w-5 h-6 mr-3" fill="#fff">
                     <use href={`/sprite.svg#paperClipIcon`}/>
                 </svg>
                 <input name="title" type="text" className="w-[220px] h-9 px-4 py-2 text-white bg-MainColor border-none rounded-[16px] focus:outline-none mr-[6px]" placeholder="Повідомлення.."/>
-                <div className="bg-[#FF4155] p-2 rounded-[16px] flex h-9 w-9 items-center" onClick={handleShowChat}>
+                <div className="bg-[#FF4155] p-2 rounded-[16px] flex h-9 w-9 items-center">
                     <svg onClick={handleShow} className="w-5 h-5" fill="#fff">
                         <use href={`/sprite.svg#sendIcon`}/>
                     </svg>

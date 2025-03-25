@@ -108,13 +108,25 @@ const CreatePostModal = ({handleShow, group} : {handleShow : () => void, group?:
                     <textarea name="description" value={post.description} onChange={handleInputChange} className="w-full h-64 px-4 py-2 resize-none text-white bg-SecondaryColor border-none rounded-[10px] mb-3 focus:outline-none" placeholder="Введіть опис..."></textarea>
                 ): (
                     <div className="w-full h-64 px-4 py-2 flex items-center justify-center bg-SecondaryColor rounded-[10px] mb-5">
-                        <label
-                            className="text-xs text-gray-500 flex items-center gap-2 cursor-pointer"
-                            htmlFor="img"
-                        >
-                            <span>Завантажте світлину</span>
-                        </label>
-                        <input type="file" id="img" onChange={encodeImageFileAsURL} className="hidden"/>
+                        
+                        {base64 ? (
+                                <div className="relative w-fit">
+                                    <Image src={base64} alt="" width={2} height={2} className="w-fit max-h-64" />
+                                    <svg onClick={() => setBase64('')} className="absolute top-[10px] right-[10px] w-7 h-8" fill="#FF4155">
+                                        <use href={`/sprite.svg?v=1#bucket-icon`}></use>
+                                    </svg>
+                                </div>
+                            ) : (
+                                <>
+                                    <label
+                                        className="text-xs text-gray-500 flex items-center gap-2 cursor-pointer"
+                                        htmlFor="img"
+                                    >
+                                        <span>Завантажте світлину</span>
+                                    </label>
+                        <           input type="file" id="img" onChange={encodeImageFileAsURL} className="hidden"/>
+                                </>
+                            )}
                     </div>
                 )}
                 <div className="w-full flex justify-end">
