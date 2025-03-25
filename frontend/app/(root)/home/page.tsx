@@ -9,7 +9,9 @@ const HomePage = () => {
 
   useEffect(() => {
     const getAllPost = async () => {
-      const res = await fetch("http://localhost:8080/api/posts");
+      const res = await fetch("https://localhost:8080/api/posts", {
+        mode: "cors",
+      });
       const data = await res.json();
       setPosts(data.body);
       console.log(data);
@@ -21,7 +23,7 @@ const HomePage = () => {
   return (
     <div >
       <CreatePostNav />
-      {posts.length > 0 ? (
+      {posts ? (
         posts.map((post) => <Post key={post.id} post={post} />)
       ) : (
         <p>Поки що немає постів...</p>

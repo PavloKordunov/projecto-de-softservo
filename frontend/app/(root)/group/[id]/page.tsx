@@ -26,14 +26,18 @@ const Group = () => {
 
     useEffect(() => {
         const getAllPost = async () => {
-          const res = await fetch(`http://localhost:8080/api/posts/group/${groupId}`);
+          const res = await fetch(`https://localhost:8080/api/posts/group/${groupId}`, {
+            mode: "cors",
+          });
           const data = await res.json();
           setPosts(data.body);
           console.log(data);
         };
         const getPostById = async() =>{
             try {
-                const res = await fetch(`http://localhost:8080/api/groups/${groupId}`)
+                const res = await fetch(`https://localhost:8080/api/groups/${groupId}`, {
+                    mode: "cors",
+                })
                 const data = await res.json()
                 setGroup(data.body)
                 console.log(data)
@@ -43,7 +47,9 @@ const Group = () => {
         }
         const getFollowedGroups = async () => {
             try {
-                const res = await fetch(`http://localhost:8080/api/groups/followed/${user?.id}`)
+                const res = await fetch(`https://localhost:8080/api/groups/followed/${user?.id}`, {
+                    mode: "cors",
+                })
                 const data = await res.json()
                 setUserSubscribed(data.body.some((group: any) => group.id === groupId))
             } catch (error) {
@@ -61,7 +67,7 @@ const Group = () => {
       }, [userSubscribed])
 
       const getSubscribeUser = async () => {
-        const res = await fetch(`http://localhost:8080/api/groups/${group?.title}/follow/${user?.id}`, {
+        const res = await fetch(`https://localhost:8080/api/groups/${group?.title}/follow/${user?.id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -137,7 +143,7 @@ const Group = () => {
                     <p className="text-white text-[28px] font-bold">Закріплені пости</p>
                 </div>
                 <div className="flex gap-6">
-                {posts.length > 0 && posts.map(post => ( post.isPinned == true && (
+                {posts && posts.map(post => ( post.isPinned == true && (
                     <Link href={`/post/${post?.id}`} key={post.id} className="bg-SecondaryColor w-[311px] pb-2 h-fit rounded-br-[14px] rounded-bl-[14px]">
                         <Image src={post?.image} alt="" width={311} height={204} className="mb-2" />
                         <p className=" ml-3 text-white text-[16px] font-bold">{post.title}</p>
@@ -145,7 +151,7 @@ const Group = () => {
                     )))}
                 </div>
             </div>
-            {posts.length > 0 ? (
+            {posts ? (
                 posts.map((post) => <Post key={post.id} post={post} />)
             ) : (
                 <p>Поки що немає постів...</p>

@@ -55,4 +55,7 @@ public class TestConstants {
     //Tag
     public static final UUID tagId = UUID.randomUUID();
 
+    //Search
+    public static final String subtitlePost = "Test";
+
 }

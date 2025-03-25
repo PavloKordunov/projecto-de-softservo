@@ -1,67 +1,40 @@
 spring:
   application:
     name: backend
+
   datasource:
-    postgres:
-      url: jdbc:postgresql://localhost:5432/postgres
-      driver-class-name: org.postgresql.Driver
-      username: postgres
-      password: password
     h2:
-      url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      jdbc-url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
       driver-class-name: org.h2.Driver
       username: sa
       password:
+    postgres:
+      jdbc-url: jdbc:postgresql://localhost:5432/postgres
+      driver-class-name: org.postgresql.Driver
+      username: postgres
+      password: password
 
   jpa:
-    show-sql: true
+    properties:
+      hibernate:
+        default_schema: public
+    hibernate:
+        ddl-auto: none
 
   h2:
     console:
       enabled: true
       path: /api/h2-console
 
-
-  #spring:
-  #  application:
-  #    name: backend
-  #
-  #  datasource:
-  #    url: jdbc:postgresql://localhost:5432/postgres
-  #    driver-class-name: org.postgresql.Driver
-  #    username: postgres
-  #    password: password
-  #
-  #  jpa:
-  #    database: postgresql
-  #    database-platform: org.hibernate.dialect.PostgreSQLDialect
-  #    generate-ddl: true
-  #    hibernate:
-  #      ddl-auto: update
-  #  h2:
-  #    console:
-  #      enabled: true
-  #      path: /h2-console
-  #      settings:
-  #        trace: false
-  #        web-allow-others: false
-#  profiles:
-#    active: dev
-
 ---
-#spring:
-#  datasource:
-#    url: jdbc:h2:mem:testdb
-#    driver-class-name: org.h2.Driver
-#    username: sa
-#    password: password
-#  jpa:
-#    database-platform: org.hibernate.dialect.H2Dialect
-#    hibernate:
-#      ddl-auto: update
-#  h2:
-#    console:
-#      enabled: true
+server:
+  port: 8080
+  ssl:
+    enabled: true
+    key-alias: softservo
+    key-store: classpath:softservo-keystore.p12
+    key-store-password: secret
+    key-store-type: PKCS12
 
 okta:
   domain: dev-97946146.okta.com
@@ -69,7 +42,14 @@ okta:
     client-id: 0oalmv1c9zXfKRxLb5d7
     issuer: https://${okta.domain}/oauth2/default
 
-omdb:
+tmdb:
   api:
-    key: ce9b484a
-    url: http://www.omdbapi.com/
+#    key-omdb: ce9b484a
+    key: ${api-key}
+#    url-omdb: http://www.omdbapi.com
+    url: https://api.themoviedb.org/3/discover/movie
+
+#access token to read
+#eyJhbGciOiJIUzI1NiJ9:
+#  eyJhdWQiOiI0MWU3Y2Y4YWMzMjE0NzA5Nzg1ZTk4NmVjY2I3NjVkNCIsIm5iZiI6MTc0MjQxMjM2Ny4zMjksInN1YiI6IjY3ZGIxYTRmOWYzNThmNGExMzdmN2FiNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ:
+#    6N6dD_uS27KkehCkIYuHgBEIv_s8e470WLQGFeMyWkM:

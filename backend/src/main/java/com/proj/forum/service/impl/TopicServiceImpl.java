@@ -6,6 +6,7 @@ import com.proj.forum.entity.Topic;
 import com.proj.forum.repository.TopicRepository;
 import com.proj.forum.service.CommentService;
 import com.proj.forum.service.TopicService;
+import com.proj.forum.strategy.TopicMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,11 +22,11 @@ import java.util.UUID;
 public class TopicServiceImpl implements TopicService {
 
     private final TopicRepository topicRepository;
-    private final CommentService commentService;
+    private final TopicMapper topicMapper;
 
     @Override
     public UUID createTopic(TopicDto topicDto) {
-        Topic topic = mapToTopic(topicDto);
+        Topic topic = topicMapper.mapToEntity(topicDto);
         Topic topicFromDB = topicRepository.save(topic);
         return topicFromDB.getId();
     }
@@ -33,7 +34,7 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public TopicDto getTopic(UUID id) {
         Topic topic = topicRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Topic not found"));
-        return getUpdateTopic(topic);
+        return topicMapper.mapToDto(topic);
     }
 
     @Override
@@ -44,21 +45,17 @@ public class TopicServiceImpl implements TopicService {
         }
 
         return topicList.stream()
-                .map(this::getUpdateTopic)
+                .map(topicMapper::mapToDto)
                 .toList();
     }
 
     @Override
     public void updateTopic(UUID id, TopicDto topicDto) {
         Topic updatedTopic = topicRepository.findById(id)
-                .map(topic -> getUpdateTopic(topicDto))
+                .map(topic -> topicMapper.mapToEntity(topicDto))
                 .orElseThrow(() -> new EntityNotFoundException("Topic not found"));
 
         topicRepository.save(updatedTopic);
-    }
-
-    private Topic getUpdateTopic(TopicDto topicDto) {
-        return mapToTopic(topicDto);
     }
 
     @Override
@@ -82,53 +79,10 @@ public class TopicServiceImpl implements TopicService {
         return mapToTopicDtoList(topicRepository.findByTitleContainingIgnoreCase(name));
     }
 
-    private static Topic mapToTopic(TopicDto topicDto) {
-        return Topic.builder()
-                .title(topicDto.title())
-                .description(topicDto.description())
-                .country(topicDto.country())
-                .limitAge(topicDto.limitAge())
-                .actor(topicDto.actor())
-                .director(topicDto.director())
-                .image(topicDto.image())
-                .IMDB(topicDto.IMDB())
-                .genre(topicDto.genre())
-                .duration(topicDto.duration())
-                .viewCount(0)
-                .author_id(topicDto.author())
-                .type(topicDto.topicType())
-                .tag_id(topicDto.tagId())
-                .releaseDate(topicDto.releaseDate())
-                .build();
-    }
-
-    private TopicDto getUpdateTopic(Topic topic) {
-        List<CommentDto> comments = commentService.mapToListOfCommentsDto(topic.getComments());
-        return TopicDto.builder()
-                .id(topic.getId())
-                .title(topic.getTitle())
-                .description(topic.getDescription())
-                .country(topic.getCountry())
-                .limitAge(topic.getLimitAge())
-                .actor(topic.getActor())
-                .director(topic.getDirector())
-                .image(topic.getImage())
-                .IMDB(topic.getIMDB())
-                .genre(topic.getGenre())
-                .duration(topic.getDuration())
-                .viewCount(topic.getViewCount())
-                .author(topic.getAuthor_id())
-                .topicType(topic.getType())
-                .tagId(topic.getTag_id())
-                .comments(comments)
-                .releaseDate(topic.getReleaseDate())
-                .build();
-    }
-
     @Override
     public List<TopicDto> mapToTopicDtoList(List<Topic> topics) {
         return topics.stream()
-                .map(this::getUpdateTopic)
+                .map(topicMapper::mapToDto)
                 .toList();
     }
 }

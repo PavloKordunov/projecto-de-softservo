@@ -6,6 +6,7 @@ import com.proj.forum.entity.User;
 import com.proj.forum.repository.GroupRepository;
 import com.proj.forum.repository.UserRepository;
 import com.proj.forum.service.GroupService;
+import com.proj.forum.strategy.GroupMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,10 +28,11 @@ public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final GroupMapper groupMapper;
 
     @Override
     public UUID createGroup(GroupDto groupDto) {
-        Group group = mapToGroup(groupDto);
+        Group group = groupMapper.mapToEntity(groupDto);
         group.getMembers().add(userRepository.findById(groupDto.userId()).orElseThrow(
                 () -> new EntityNotFoundException("Member not found")));
         Group groupFromDB = groupRepository.save(group);
@@ -41,7 +43,7 @@ public class GroupServiceImpl implements GroupService {
     public GroupDto getGroup(UUID id) {
         Group group = groupRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Group not found"));
-        return getUpdateGroup(group);
+        return groupMapper.mapToDto(group);
     }
 
     @Override
@@ -51,9 +53,7 @@ public class GroupServiceImpl implements GroupService {
             throw new EntityNotFoundException("Group not found");
         }
 
-        return groupList.stream()
-                .map(GroupServiceImpl::getUpdateGroup)
-                .toList();
+        return mapToGroupDtoList(groupList);
     }
 
     @Override
@@ -112,33 +112,8 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public List<GroupDto> mapToGroupDtoList(List<Group> groups) {
         return groups.stream()
-                .map(GroupServiceImpl::getUpdateGroup)
+                .map(groupMapper::mapToDto)
                 .toList();
-    }
-
-    private static Group mapToGroup(GroupDto groupDto) {
-        return Group.builder()
-                .author(groupDto.userId())
-                .title(groupDto.title())
-                .image(groupDto.image() == null ? StringUtils.EMPTY : groupDto.image())
-                .description(groupDto.description())
-                .members(new ArrayList<>())
-                .isPublic(groupDto.isPublic())
-                .build();
-    }
-
-    private static GroupDto getUpdateGroup(Group group) {
-        return GroupDto.builder()
-                .id(group.getId())
-                .title(group.getTitle())
-                .description(group.getDescription() == null ? StringUtils.EMPTY : group.getDescription())
-                .image(group.getImage() == null ? StringUtils.EMPTY : group.getImage())
-                .userId(group.getAuthor())
-                .createdAt(group.getCreatedAt())
-                .isPublic(group.isPublic())
-                .memberCount(group.getMembers().size())
-                .postCount(group.getPosts().size())
-                .build();
     }
 
     private Group getUpdateGroup(Group group, GroupDto groupDto) {
@@ -150,18 +125,4 @@ public class GroupServiceImpl implements GroupService {
             group.setImage(groupDto.image());
         return group;
     }
-//    @Override
-//    @Transactional
-//    public UUID removeMember(UUID userId, String groupName) {
-//        Group group = groupRepository.findByTitle(groupName).orElseThrow(() -> new EntityNotFoundException("Group is not found"));
-//        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User is not found"));
-//
-//        if (!group.getMembers().contains(user)) {
-//            throw new UserAlreadySubscribeException("User is not subscribed to group");
-//        }
-//        group.getMembers().remove(user);
-//        groupRepository.save(group);
-//        return group.getId();
-//    }
-
 }

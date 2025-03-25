@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/home")
 @Logging
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("https://localhost:3000")
 public class HomeController {
 
     private final TagService tagService;

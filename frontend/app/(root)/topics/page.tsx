@@ -11,7 +11,9 @@ const TopicPage = () => {
 
     useEffect(() => {
         const getAllTopics = async () => {
-          const res = await fetch("http://localhost:8080/api/topics");
+          const res = await fetch("https://localhost:8080/api/topics", {
+            mode: "cors",
+          });
           const data = await res.json();
           setTopic(data.body);
           console.log(data);
@@ -22,7 +24,7 @@ const TopicPage = () => {
 
     return ( 
         <div className="px-5 py-4 flex-wrap flex items-center gap-5 h-fit w-[1030px]">
-            {topic.length > 0 ? (
+            {topic ? (
                 topic.map((topic) => (
                 <Link href={`/topics/${topic.id}`} key={topic.id} className="bg-MainColor w-[265px] h-fit rounded-br-[14px] rounded-bl-[14px]">
                     <Image 

@@ -14,14 +14,18 @@ const GroupPage = () => {
 
     useEffect(() => {
         const getAllGroups = async () => {
-          const res = await fetch("http://localhost:8080/api/groups");
+          const res = await fetch("https://localhost:8080/api/groups", {
+            mode: "cors",
+          });
           const data = await res.json();
           setGroups(data.body);
           console.log(data);
         };
         const getFollowedGroups = async () => {
             try {
-                const res = await fetch(`http://localhost:8080/api/groups/followed/${user?.id}`)
+                const res = await fetch(`https://localhost:8080/api/groups/followed/${user?.id}`, {
+                    mode: "cors",
+                })
                 const data = await res.json()
                 setUserSubscribed(data.body)
             } catch (error) {
@@ -34,7 +38,8 @@ const GroupPage = () => {
       }, []);  
       
       const subscribeUser = async (title: string) => {
-        const res = await fetch(`http://localhost:8080/api/groups/${title}/follow/${user?.id}`, {
+        const res = await fetch(`https://localhost:8080/api/groups/${title}/follow/${user?.id}`, {
+            mode: "cors",
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -49,7 +54,7 @@ const GroupPage = () => {
 
     return (
         <div>
-        {groups.map((group) => (
+        {groups && groups.map((group) => (
             <Link key={group.id} href={`/group/${group.id}`} className="mt-4 p-4 bg-MainColor rounded-[21px] flex items-center h-fit w-[1030px] gap-4">
             <Image src="/postImage.png" alt="" width="208" height="237"/>
             <div className="w-full">
@@ -65,7 +70,7 @@ const GroupPage = () => {
                             }}
 
                         >
-                            {userSubscribed.some((subscribeGroup) => subscribeGroup.id === group.id) ? "Відписатись" : "Підписатись"}
+                            {userSubscribed?.some((subscribeGroup) => subscribeGroup.id === group.id) ? "Відписатись" : "Підписатись"}
                         </button>
                     </div>
                </div>

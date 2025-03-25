@@ -28,7 +28,8 @@ const EditProfile = ({ handleShow }: { handleShow: () => void }) => {
 
     const handleUpdateUser = async () => {
         try {
-            const res = await fetch(`http://localhost:8080/api/users/update/${user?.id}`, {
+            const res = await fetch(`https://localhost:8080/api/users/update/${user?.id}`, {
+                mode: "cors",
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",

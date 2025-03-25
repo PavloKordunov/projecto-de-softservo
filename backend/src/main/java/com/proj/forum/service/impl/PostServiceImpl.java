@@ -60,7 +60,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostResponseDto getPostById(UUID id) {
         Post post = postRepository.findById(id).orElseThrow(
-                ()->new EntityNotFoundException("Post not found"));
+                () -> new EntityNotFoundException("Post not found"));
         return getUpdatePost(post);
     }
 
@@ -71,9 +71,7 @@ public class PostServiceImpl implements PostService {
             throw new EntityNotFoundException("Posts not found");
         }
 
-        return postList.stream()
-                .map(this::getUpdatePost)
-                .toList();
+        return mapToPostDtoList(postList);
     }
 
     @Override
@@ -83,9 +81,7 @@ public class PostServiceImpl implements PostService {
             throw new EntityNotFoundException("Posts not found");
         }
 
-        return postList.stream()
-                .map(this::getUpdatePost)
-                .toList();
+        return mapToPostDtoList(postList);
     }
 
     @Override
@@ -99,13 +95,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public boolean pinPost(UUID postId) {
-            Post post = postRepository.findById(postId)
-                    .orElseThrow(() -> new EntityNotFoundException("Post not found"));
-            post.setPinned(!post.isPinned());
-            postRepository.save(post);
-            return post.isPinned();
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("Post not found"));
+        post.setPinned(!post.isPinned());
+        postRepository.save(post);
+        return post.isPinned();
     }
-
 
     @Override
     public void deletePost(UUID id) {
@@ -117,12 +112,11 @@ public class PostServiceImpl implements PostService {
         return mapToPostDtoList(postRepository.findByTitleContainingIgnoreCase(name));
     }
 
-
     @Override
     public void addView(UUID id) {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Post not found"));
-        post.setViewCount((post.getViewCount()) + 1);
+        post.setViewCount((post.getViewCount()) + 1);   //maybe should save explicit
     }
 
     @Override
@@ -175,6 +169,8 @@ public class PostServiceImpl implements PostService {
                 .createdAt(post.getCreatedAt())
                 .viewCount(post.getViewCount())
                 .comments(comments)
+                .userId(post.getAuthor().getId())
+                .groupId(post.getGroup().getId())
                 .build();
     }
 

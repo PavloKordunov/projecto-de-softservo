@@ -33,7 +33,8 @@ const OktaSignInWidget: React.FC<OktaSignInWidgetProps> = ({ config, onSuccess, 
         preSubmit: async (postData, onSuccess, onFailure) => {
           console.log(postData);
           try {
-            const response = await fetch('http://localhost:8080/api/users/create', {
+            const response = await fetch('https://localhost:8080/api/users/create', {
+              mode: "cors",
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

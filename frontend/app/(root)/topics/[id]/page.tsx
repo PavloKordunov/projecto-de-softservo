@@ -32,14 +32,18 @@ const AdminPost = () => {
 
   useEffect(() => {
       const getAllTopics = async () => {
-        const res = await fetch(`http://localhost:8080/api/topics/${topicId}`);
+        const res = await fetch(`https://localhost:8080/api/topics/${topicId}`, {
+          mode: "cors",
+        });
         const data = await res.json();
         setTopics(data.body);
         console.log(data);
       };
       const getComments = async() =>{
         try {
-            const res = await fetch(`http://localhost:8080/api/comments/id/${topicId}`)
+            const res = await fetch(`https://localhost:8080/api/comments/id/${topicId}`, {
+              mode: "cors",
+            })
             const data = await res.json()
             console.log(data)
             setComments(data.body)
@@ -54,7 +58,8 @@ const AdminPost = () => {
 
   const createComment = async() =>{
     try {
-        const res = await fetch(`http://localhost:8080/api/comments/create`, {
+        const res = await fetch(`https://localhost:8080/api/comments/create`, {
+          mode: "cors",
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

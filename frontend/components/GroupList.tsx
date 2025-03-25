@@ -11,7 +11,9 @@ const GroupList = ({ setShowGroupList, selectGroup }: { setShowGroupList: React.
 
     useEffect(() => {
         const getAllGroups = async () => {
-            const res = await fetch(`http://localhost:8080/api/groups/followed/${user?.id}`);
+            const res = await fetch(`https://localhost:8080/api/groups/followed/${user?.id}`,{
+                mode: "cors",
+            });
             const data = await res.json();
             setGroups(data.body);
             setFilteredGroups(data.body);

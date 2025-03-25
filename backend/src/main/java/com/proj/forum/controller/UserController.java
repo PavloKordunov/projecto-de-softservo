@@ -4,6 +4,7 @@ import com.proj.forum.annotation.Logging;
 import com.proj.forum.annotation.RequireRoles;
 import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.GenericResponse;
+import com.proj.forum.dto.StatisticDto;
 import com.proj.forum.dto.UserDto;
 import com.proj.forum.dto.UserUpdateDto;
 import com.proj.forum.enums.RoleType;
@@ -21,11 +22,10 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("https://localhost:3000")
 public class UserController {
 
     private final UserService userService;
-
 
     @PostMapping("/create")
     public ApiResponse<GenericResponse> createUser(@RequestBody @Valid UserDto user) {

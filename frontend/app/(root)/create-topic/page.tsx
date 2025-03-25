@@ -2,6 +2,7 @@
 
 import { useUser } from "@/hooks/useUser";
 import { Dirent } from "fs";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -42,7 +43,8 @@ const AdminPostMenu = () => {
 
     const handleCreateTopic = async () => {
         try {
-            const res = await fetch("http://localhost:8080/api/topics/create", {
+            const res = await fetch("https://localhost:8080/api/topics/create", {
+                mode: "cors",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -166,11 +168,11 @@ const AdminPostMenu = () => {
                     <div className="mb-6">
                         <h2 className="text-2xl font-semibold text-[#F4F6F8] mb-4">Вікові обмеження:</h2>
                         <div className="flex items-center gap-4">
-                            <button className="px-6 py-2 bg-[#2c353d] rounded-[26px] text-[#C5D0E6] text-sm" onClick={() => setLimitAge(0)}>0+</button>
-                            <button className="px-6 py-2 bg-[#2c353d] rounded-[26px] text-[#C5D0E6] text-sm" onClick={() => setLimitAge(6)}>6+</button>
-                            <button className="px-6 py-2 bg-[#2c353d] rounded-[26px] text-[#C5D0E6] text-sm" onClick={() => setLimitAge(12)}>12+</button>
-                            <button className="px-6 py-2 bg-[#2c353d] rounded-[26px] text-[#C5D0E6] text-sm" onClick={() => setLimitAge(16)}>16+</button>
-                            <button className="px-6 py-2 bg-[#2c353d] rounded-[26px] text-[#C5D0E6] text-sm" onClick={() => setLimitAge(18)}>18+</button>
+                            <button className={`px-6 py-2 bg-[#2c353d] ${limitAge === 0 ? "bg-[#FF4155]" : ""} rounded-[26px] text-[#C5D0E6] text-sm`} onClick={() => setLimitAge(0)}>0+</button>
+                            <button className={`px-6 py-2 bg-[#2c353d] ${limitAge === 6 ? "bg-[#FF4155]" : ""} rounded-[26px] text-[#C5D0E6] text-sm`} onClick={() => setLimitAge(6)}>6+</button>
+                            <button className={`px-6 py-2 bg-[#2c353d] ${limitAge === 12 ? "bg-[#FF4155]" : ""} rounded-[26px] text-[#C5D0E6] text-sm`} onClick={() => setLimitAge(12)}>12+</button>
+                            <button className={`px-6 py-2 bg-[#2c353d] ${limitAge === 16 ? "bg-[#FF4155]" : ""} rounded-[26px] text-[#C5D0E6] text-sm`} onClick={() => setLimitAge(16)}>16+</button>
+                            <button className={`px-6 py-2 bg-[#2c353d] ${limitAge === 18 ? "bg-[#FF4155]" : ""} rounded-[26px] text-[#C5D0E6] text-sm`} onClick={() => setLimitAge(18)}>18+</button>
                         </div>
                     </div>
                     {(postMode === 'film' || postMode === 'serial') && (
@@ -337,18 +339,27 @@ const AdminPostMenu = () => {
                     <div className="mb-6">
                         <h2 className="text-2xl font-semibold text-[#F4F6F8] mb-4">Фото:</h2>
                         <form>
-                            <div id="drop-area" className="w-full h-[214px] bg-[#2C353D] rounded-lg flex flex-col justify-center items-center text-[#b0b0b0]">
-                                <p>Перетягніть сюди фото</p>
-                                <label htmlFor="fileInput" className="mt-4 px-6 py-2 bg-[#2c353d] text-white rounded-md cursor-pointer">Оберіть файл</label>
-                                <input
-                                    className="hidden"
-                                    type="file"
-                                    id="fileInput"
-                                    accept=".jpg, .jpeg, .png"
-                                    onChange={encodeImageFileAsURL}
-                                    multiple
-                                />
+                            {base64 ? (
+                                <div className="relative w-fit">
+                                    <Image src={base64} alt="" width={2} height={2} className="w-fit h-[256]" />
+                                    <svg onClick={() => setBase64('')} className="absolute top-[10px] right-[10px] w-7 h-8" fill="#FF4155">
+                                        <use href={`/sprite.svg?v=1#bucket-icon`}></use>
+                                    </svg>
+                                </div>
+                            ): (
+                                <div id="drop-area" className="w-full h-[214px] bg-[#2C353D] rounded-lg flex flex-col justify-center items-center text-[#b0b0b0]">
+                            <p>Перетягніть сюди фото</p>
+                            <label htmlFor="fileInput" className="mt-4 px-6 py-2 bg-[#2c353d] text-white rounded-md cursor-pointer">Оберіть файл</label>
+                            <input
+                                className="hidden"
+                                type="file"
+                                id="fileInput"
+                                accept=".jpg, .jpeg, .png"
+                                onChange={encodeImageFileAsURL}
+                                multiple
+                            />
                             </div>
+                        )}
                         </form>
                     </div>
                     <div className="mb-6">

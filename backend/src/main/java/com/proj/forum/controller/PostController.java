@@ -21,7 +21,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/posts")
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("https://localhost:3000")
 public class PostController {
 
     private final PostService postService;
@@ -57,13 +57,12 @@ public class PostController {
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Post found", post);
     }
 
-    @RequireRoles({RoleType.USER})
-    @PatchMapping("/update/{postId}/{userId}")
+//    @RequireRoles({RoleType.USER})
+    @PatchMapping("/update/{postId}")
     public ApiResponse<GenericResponse> updatePost(
             @PathVariable UUID postId,
-            @PathVariable UUID userId,
             @RequestBody @Valid PostRequestDto postDto) throws AccessDeniedException {
-        postService.isAuthor(postId, userId);
+        postService.isAuthor(postId, postDto.userId()); //TODO fix?
         postService.updatePost(postId, postDto);
         return ApiResponse.apiResponse(true, 200, "Post updated", postId);
     }

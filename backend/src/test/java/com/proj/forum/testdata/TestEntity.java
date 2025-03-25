@@ -13,7 +13,7 @@ import static com.proj.forum.testdata.TestConstants.*;
 import java.util.ArrayList;
 
 @UtilityClass
-public class TestDto {
+public class TestEntity {
     public static PostRequestDto getPostRequestDto() {
         return PostRequestDto.builder()
                 .tagId(tagId)
@@ -50,6 +50,7 @@ public class TestDto {
                 .name(nameOfUser)
                 .profileImage(profileImage)
                 .groups(new ArrayList<>())
+                .createdPosts(new ArrayList<>())
                 .build();
     }
 
@@ -71,6 +72,7 @@ public class TestDto {
                 .isPublic(isPublic)
                 .author(authorId)
                 .members(new ArrayList<>())
+                .posts(new ArrayList<>())
                 .build();
     }
 
@@ -80,8 +82,6 @@ public class TestDto {
                 .title(titlePost)
                 .description(descriptionPost)
                 .image(imagePost)
-                .group(getGroup())
-                .author(getUser())
                 .createdAt(createdAt)
                 .viewCount(counterPost)
                 .build();
