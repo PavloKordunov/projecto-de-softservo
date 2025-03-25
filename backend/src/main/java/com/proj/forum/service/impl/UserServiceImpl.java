@@ -1,13 +1,10 @@
 package com.proj.forum.service.impl;
 
-import com.proj.forum.dto.StatisticDto;
 import com.proj.forum.dto.UserDto;
 import com.proj.forum.dto.UserUpdateDto;
-import com.proj.forum.entity.Statistic;
 import com.proj.forum.entity.User;
 import com.proj.forum.exception.TokenTypeException;
 import com.proj.forum.helper.UserHelper;
-import com.proj.forum.repository.UserStatisticRepository;
 import com.proj.forum.strategy.UserMapper;
 import com.proj.forum.repository.UserRepository;
 import com.proj.forum.service.UserService;
@@ -117,17 +114,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean followUser(UUID userId) {
-        User followedUser = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        User followedUser = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Followed user not found"));
 
         String email = getEmail();
         User currentUser = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("Current user not found"));
         if (currentUser.getFollowing().contains(followedUser)) {
             currentUser.getFollowing().remove(followedUser);
+            followedUser.getSubscribers().remove(currentUser);
             userRepository.save(currentUser);
-            return false;
+            userRepository.save(followedUser);
+            return false;   
         } else {
             currentUser.getFollowing().add(followedUser);
+            followedUser.getSubscribers().add(currentUser);
             userRepository.save(currentUser);
+            userRepository.save(followedUser);
             return true;
         }
     }
@@ -149,7 +150,7 @@ public class UserServiceImpl implements UserService {
 
     private String getEmail() {  //fix it later
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !(authentication instanceof JwtAuthenticationToken token)) {
+        if (!(authentication instanceof JwtAuthenticationToken token)) {
             throw new EntityNotFoundException("User not found");
         }
         var jwt = (Jwt) token.getPrincipal();
