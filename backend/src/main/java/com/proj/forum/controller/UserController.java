@@ -73,7 +73,7 @@ public class UserController {
     }
 
     @RequireRoles({RoleType.USER})
-    @PatchMapping("follow-user/{userId}")
+    @PatchMapping("/follow-user/{userId}")
     public ApiResponse<Boolean> followUser(@PathVariable UUID userId) {
         Boolean isFollowing = userService.followUser(userId);
         return new ApiResponse<>(true, HttpStatus.OK, "Successful follow user", isFollowing);

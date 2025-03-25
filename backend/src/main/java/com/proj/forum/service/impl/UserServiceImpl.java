@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
         User followedUser = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         String email = getEmail();
-        User currentUser = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        User currentUser = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("Current user not found"));
         if (currentUser.getFollowing().contains(followedUser)) {
             currentUser.getFollowing().remove(followedUser);
             userRepository.save(currentUser);
@@ -149,12 +149,11 @@ public class UserServiceImpl implements UserService {
 
     private String getEmail() {  //fix it later
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication != null && authentication.getPrincipal() instanceof JwtAuthenticationToken token) {
-            var jwt = (Jwt) token.getPrincipal();
-            return jwt.getClaims().get("sub").toString();
+        if (authentication == null || !(authentication instanceof JwtAuthenticationToken token)) {
+            throw new EntityNotFoundException("User not found");
         }
-        throw new EntityNotFoundException("User not found");
+        var jwt = (Jwt) token.getPrincipal();
+        return jwt.getClaims().get("sub").toString();
     }
 
     private UUID getUserNickOrGenerateNew(Optional<User> user, String email) {
