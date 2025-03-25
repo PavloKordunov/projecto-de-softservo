@@ -35,8 +35,23 @@ public class TestConstants {
     public static final LocalDateTime createdAt = LocalDateTime.now();
     public static final int counterPost = 0;
 
+    //UserDto
+    public static final String nicknameUserDto = "Test Nickname";
+    public static final String nameUserDto = "Test name";
+    public static final String emailUserDto = "Test email";
+    public static final String profileImageUserDto = "Test profile image";
 
+    //UserUpdateDto
+    public static final String nicknameUserUpdate = "New nickname";
+    public static final String nameUserUpdate = "New name";
+    public static final String profileImageUserUpdate = "New profile image";
 
+    //followedUser
+    public static final UUID followedId = UUID.randomUUID();
+    public static final String nicknameFollowed = "Followed nickname";
+    public static final String nameFollowed = "Followed name";
+    public static final String emailFollowed = "Followed email";
+    public static final String profileImageFollowed = "Followed profile image";
     //Tag
     public static final UUID tagId = UUID.randomUUID();
 

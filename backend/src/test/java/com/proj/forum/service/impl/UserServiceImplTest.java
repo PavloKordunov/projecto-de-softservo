@@ -3,32 +3,50 @@ package com.proj.forum.service.impl;
 import com.proj.forum.dto.UserDto;
 import com.proj.forum.dto.UserUpdateDto;
 import com.proj.forum.entity.User;
+import com.proj.forum.exception.TokenTypeException;
 import com.proj.forum.repository.UserRepository;
-import com.proj.forum.service.UserService;
+import com.proj.forum.strategy.UserMapper;
 import jakarta.persistence.EntityNotFoundException;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.ArrayList;
+import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static com.proj.forum.testdata.TestDto.getUserDto;
+import static com.proj.forum.testdata.TestDto.getUserUpdateDto;
+import static com.proj.forum.testdata.TestDto.getUser;
+import static com.proj.forum.testdata.TestDto.getFollowedUser;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.never;
+import static org.mockito.MockitoAnnotations.openMocks;
 
-@ExtendWith(MockitoExtension.class)
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserServiceImplTest {
 
@@ -38,171 +56,340 @@ public class UserServiceImplTest {
     @Mock
     private SecurityContext securityContext;
 
+    @Mock
+    private Authentication authentication;
+
+    @Mock
+    private JwtAuthenticationToken token;
+
+    @Mock
+    private Jwt jwt;
+
+    @Mock
+    private UserMapper userMapper;
+
     @InjectMocks
     private UserServiceImpl userService;
-    private UserDto dto;
-    private UserUpdateDto UpdateDto;
-    private User user;
 
+    private UserDto dto;
+    private List<UserDto> dtoList;
+    private UserUpdateDto updateDto;
+    private User expectedUser;
+    private User followedUser;
+
+    private AutoCloseable autoCloseable;
 
     @BeforeAll
-    public void setUp() {
-        
-        dto = UserDto.builder()
-                .nickName("Test Nickname")
-                .firstName("Test Name")
-                .email("test@gmail.com")
-                .profileImage("test-image-url")
-                .build();
+    void setUp() {
 
-        user = User.builder()
-                .id(UUID.randomUUID())
-                .username(dto.nickName())
-                .name(dto.firstName())
-                .email(dto.email())
-                .profileImage(dto.profileImage())
-                .build();
+        autoCloseable = openMocks(this);
+
+        dto = getUserDto();
+        expectedUser = getUser();
+        updateDto = getUserUpdateDto();
+        followedUser = getFollowedUser();
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() throws Exception {
+        autoCloseable.close();
     }
 
     @Test
-    void testCreateUser_Success() {
-        when(userRepository.save(any(User.class))).thenReturn(user);
+    void createUser_SuccessTest() {
+        when(userRepository.save(any(User.class))).thenReturn(expectedUser);
+        when(userMapper.mapToEntity(dto)).thenReturn(expectedUser);
 
-        UUID userId = userService.createUser(dto);
+        UUID actualResult = userService.createUser(dto);
 
-        assertNotNull(userId);
-        assertEquals(user.getId(),userId);
+        assertThat(actualResult)
+                .isNotNull()
+                .isEqualTo(expectedUser.getId());
 
-        verify(userRepository).save(any(User.class));
+        verify(userRepository,atLeastOnce()).save(any(User.class));
+        verify(userMapper,atLeastOnce()).mapToEntity(dto);
     }
 
-//    @Test
-//    void testCheckOrCreateUserByGoogle_UserExists() {
-//        SecurityContextHolder.setContext(securityContext);
-//
-//        Jwt jwt = mock(Jwt.class);
-//        when(jwt.getClaims()).thenReturn(Map.of("sub", user.getEmail()));
-//
-//        JwtAuthenticationToken token = mock(JwtAuthenticationToken.class);
-//        when(token.getPrincipal()).thenReturn(jwt);
-//
-//        when(securityContext.getAuthentication()).thenReturn(token);
-//        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-//
-//
-//        UUID result = userService.checkOrCreateUserByGoogle();
-//        assertEquals(result,user.getId());
-//    }
-
     @Test
-    void testCheckOrCreateUserByGoogle_UserExists() {
-        // Мок безпечного контексту
-        SecurityContext securityContext = mock(SecurityContext.class);
-        SecurityContextHolder.setContext(securityContext);
+    void checkOrCreateUserByGoogle_UserExistsTest() {
+        mockJwtToken();
+        when(userRepository.findByEmail(expectedUser.getEmail())).thenReturn(Optional.of(expectedUser));
 
-        // Мок JWT з коректними claims
-        Jwt jwt = mock(Jwt.class);
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("sub", "test@example.com");
-        when(jwt.getClaims()).thenReturn(claims); // <-- ВАЖЛИВО, ТУТ НЕ NULL!
-
-        // Мок токена, який повертає jwt
-        JwtAuthenticationToken token = mock(JwtAuthenticationToken.class);
-        when(token.getPrincipal()).thenReturn(jwt);
-
-        // Встановлення токена в SecurityContext
-        when(securityContext.getAuthentication()).thenReturn(token);
-
-        // Мок юзера
-        User user = new User();
-        user.setId(UUID.randomUUID());
-        user.setEmail("test@example.com");
-
-        // Мок репозиторію користувачів
-        UserRepository userRepository = mock(UserRepository.class);
-        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
-        System.out.println("SecurityContext: " + SecurityContextHolder.getContext().getAuthentication());
-        System.out.println("Principal: " + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        Jwt jwtFromContext = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println("Claims: " + jwtFromContext.getClaims());
-
-        // Створення сервісу та виклик методу
         UUID result = userService.checkOrCreateUserByGoogle();
 
-        // Перевірка результату
-        assertEquals(user.getId(), result);
-    }
-
-
-    @Test
-    public void testGetUser_Success() {
-            when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
-
-            UserDto result = userService.getUser(user.getId());
-
-            assertNotNull(result);
-            assertEquals(user.getId(),result.id());
-            assertEquals(user.getUsername(),result.nickName());
-            assertEquals(user.getName(),result.firstName());
-            verify(userRepository).findById(user.getId());
+        assertEquals(result,expectedUser.getId());
+        verify(userRepository, atLeastOnce()).findByEmail(expectedUser.getEmail());
+        verifyServicesJwtWereExecuted();
     }
 
     @Test
-    void testGetUser_UserNotFound() {
-        when(userRepository.findById(user.getId())).thenReturn(Optional.empty());
+    void checkOrCreateUserByGoogle_UserNotExistsTest() {
+        mockJwtToken();
+        when(userRepository.findByEmail(expectedUser.getEmail())).thenReturn(Optional.empty());
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
+            User savedUser = invocation.getArgument(0);
+            savedUser.setId(UUID.randomUUID());
+            return savedUser;
+        });
 
-        Exception exception = assertThrows(EntityNotFoundException.class, () -> userService.getUser(user.getId()));
-
-        assertEquals("No user found", exception.getMessage());
-        verify(userRepository).findById(user.getId());
-
-    }
-
-    @Test
-    void testGetUserByUsername_Success() {
-        when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
-
-        UserDto result = userService.getUserByUsername(user.getUsername());
+        UUID result = userService.checkOrCreateUserByGoogle();
 
         assertNotNull(result);
-        assertEquals(user.getId(),result.id());
-        verify(userRepository).findByUsername(user.getUsername());
+        verify(userRepository, atLeastOnce()).findByEmail(expectedUser.getEmail());
+        verifyServicesJwtWereExecuted();
     }
 
     @Test
-    void testGetUserByUsername_UserNotFound() {
-        when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.empty());
+    void checkOrCreateUserByGoogle_NoValidJwtTest() {
+        SecurityContextHolder.clearContext();
 
-        Exception exception = assertThrows(EntityNotFoundException.class, () -> userService.getUserByUsername(user.getUsername()));
+        assertThrowsExactly(TokenTypeException.class, () -> userService.checkOrCreateUserByGoogle());
 
-        assertEquals("No user found", exception.getMessage());
-        verify(userRepository).findByUsername(user.getUsername());
+        verifyNoMoreInteractions(userRepository);
     }
 
     @Test
-    void testGetUserByEmail_Success() {
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+    public void getUser_SuccessTest() {
+        when(userRepository.findById(expectedUser.getId())).thenReturn(Optional.of(expectedUser));
+        when(userMapper.mapToDto(expectedUser)).thenReturn(dto);
 
-        UserDto result = userService.getUserByEmail(user.getEmail());
+        UserDto actualResult = userService.getUser(expectedUser.getId());
 
-        assertNotNull(result);
-        assertEquals(user.getId(),result.id());
-        verify(userRepository).findByEmail(user.getEmail());
+        assertNotNull(actualResult);
+        assertEqualsToDto(actualResult);
+        verify(userRepository, atLeastOnce()).findById(expectedUser.getId());
+        verify(userMapper, atLeastOnce()).mapToDto(expectedUser);
     }
 
     @Test
-    void testGetUserByEmail_UserNotFound() {
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
+    void getUser_UserNotFoundTest() {
+        when(userRepository.findById(expectedUser.getId())).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(EntityNotFoundException.class, () -> userService.getUserByEmail(user.getEmail()));
+        assertThrowsExactly(EntityNotFoundException.class, () -> userService.getUser(expectedUser.getId()));
 
-        assertEquals("User don't find", exception.getMessage());
-        verify(userRepository).findByEmail(user.getEmail());
+        verify(userRepository, atLeastOnce()).findById(expectedUser.getId());
+
     }
 
+    @Test
+    void getUserByUsername_SuccessTest() {
+        when(userRepository.findByUsername(expectedUser.getUsername())).thenReturn(Optional.of(expectedUser));
+        when(userMapper.mapToDto(expectedUser)).thenReturn(dto);
 
+        UserDto actualResult = userService.getUserByUsername(expectedUser.getUsername());
+
+        assertNotNull(actualResult);
+        assertEqualsToDto(actualResult);
+        verify(userRepository, atLeastOnce()).findByUsername(expectedUser.getUsername());
+        verify(userMapper, atLeastOnce()).mapToDto(expectedUser);
+    }
+
+    @Test
+    void getUserByUsername_UserNotFoundTest() {
+        when(userRepository.findByUsername(expectedUser.getUsername())).thenReturn(Optional.empty());
+
+        assertThrowsExactly(EntityNotFoundException.class, () -> userService.getUserByUsername(expectedUser.getUsername()));
+
+        verify(userRepository, atLeastOnce()).findByUsername(expectedUser.getUsername());
+    }
+
+    @Test
+    void getUserByEmail_SuccessTest() {
+        when(userRepository.findByEmail(expectedUser.getEmail())).thenReturn(Optional.of(expectedUser));
+        when(userMapper.mapToDto(expectedUser)).thenReturn(dto);
+
+        UserDto actualResult = userService.getUserByEmail(expectedUser.getEmail());
+
+        assertNotNull(actualResult);
+        assertEqualsToDto(actualResult);
+        verify(userRepository, atLeastOnce()).findByEmail(expectedUser.getEmail());
+        verify(userMapper, atLeastOnce()).mapToDto(expectedUser);
+    }
+
+    @Test
+    void getUserByEmail_UserNotFoundTest() {
+        when(userRepository.findByEmail(expectedUser.getEmail())).thenReturn(Optional.empty());
+
+        assertThrowsExactly(EntityNotFoundException.class, () -> userService.getUserByEmail(expectedUser.getEmail()));
+
+        verify(userRepository, atLeastOnce()).findByEmail(expectedUser.getEmail());
+    }
+
+    @Test
+    void getAllUsers_SuccessTest() {
+        List<User> listUser = List.of(expectedUser);
+        when(userRepository.findAll()).thenReturn(listUser);
+        when(userMapper.mapToDto(expectedUser)).thenReturn(dto);
+
+        List<UserDto> actualResult = userService.getAllUsers();
+
+        assertThat(actualResult).isNotEmpty();
+        assertThat(actualResult).hasSize(1);
+        assertEqualsToListDto(actualResult);
+        verify(userRepository, atLeastOnce()).findAll();
+        verify(userMapper, atLeastOnce()).mapToDto(expectedUser);
+    }
+
+    @Test
+    void getAllUsers_UserNotFoundTest() {
+        when(userRepository.findAll()).thenReturn(Collections.emptyList());
+
+        assertThrowsExactly(EntityNotFoundException.class, () -> userService.getAllUsers());
+
+        verify(userRepository, atLeastOnce()).findAll();
+    }
+
+    @Test
+    void updateUser_SuccessTest() {
+        when(userRepository.findById(expectedUser.getId())).thenReturn(Optional.of(expectedUser));
+        when(userRepository.save(any(User.class))).thenReturn(expectedUser);
+
+        userService.updateUser(expectedUser.getId(), updateDto);
+
+        assertEquals(expectedUser.getUsername(),updateDto.nickName());
+        assertEquals(expectedUser.getName(),updateDto.firstName());
+        assertEquals(expectedUser.getProfileImage(),updateDto.profileImage());
+
+        verify(userRepository, atLeastOnce()).findById(expectedUser.getId());
+        verify(userRepository, atLeastOnce()).save(any(User.class));
+    }
+
+    @Test
+    void updateUser_UserNotFoundTest() {
+        when(userRepository.findById(expectedUser.getId())).thenReturn(Optional.empty());
+
+        UserUpdateDto updateDto = getUserUpdateDto();
+
+        assertThrowsExactly(EntityNotFoundException.class, () -> userService.updateUser(expectedUser.getId(),updateDto));
+        verify(userRepository, atLeastOnce()).findById(expectedUser.getId());
+    }
+
+    @Test
+    void deleteUser_SuccessTest() {
+        when(userRepository.existsById(expectedUser.getId())).thenReturn(true);
+
+        userService.deleteUser(expectedUser.getId());
+
+        verify(userRepository, atLeastOnce()).existsById(expectedUser.getId());
+        verify(userRepository, atLeastOnce()).deleteById(expectedUser.getId());
+    }
+
+    @Test
+    void deleteUser_UserNotFoundTest() {
+        when(userRepository.existsById(expectedUser.getId())).thenReturn(false);
+
+        assertThrowsExactly(EntityNotFoundException.class, () -> userService.deleteUser(expectedUser.getId()));
+
+        verify(userRepository, atLeastOnce()).existsById(expectedUser.getId());
+        verify(userRepository, never()).deleteById(expectedUser.getId());
+    }
+
+    @Test
+    void followUser_UserAlreadyFollowedTest() {
+        expectedUser.setFollowing(new ArrayList<>(List.of(followedUser)));
+
+        when(userRepository.findById(followedUser.getId())).thenReturn(Optional.of(followedUser));
+        when(userRepository.findByEmail(expectedUser.getEmail())).thenReturn(Optional.of(expectedUser));
+        when(userRepository.save(any(User.class))).thenReturn(expectedUser);
+
+        mockJwtToken();
+
+        Boolean result = userService.followUser(followedUser.getId());
+
+        assertFalse(result);
+        assertFalse(expectedUser.getFollowing().contains(followedUser));
+
+        verify(userRepository, atLeastOnce()).findById(followedUser.getId());
+        verify(userRepository, atLeastOnce()).findByEmail(expectedUser.getEmail());
+        verify(userRepository, atLeastOnce()).save(any(User.class));
+        verifyServicesJwtWereExecuted();
+    }
+
+    @Test
+    void followUser_UserNotFollowedTest() {
+        expectedUser.setFollowing(new ArrayList<>());
+
+        when(userRepository.findById(followedUser.getId())).thenReturn(Optional.of(followedUser));
+        when(userRepository.findByEmail(expectedUser.getEmail())).thenReturn(Optional.of(expectedUser));
+        when(userRepository.save(any(User.class))).thenReturn(expectedUser);
+        mockJwtToken();
+        Boolean result = userService.followUser(followedUser.getId());
+
+        assertTrue(result);
+        assertTrue(expectedUser.getFollowing().contains(followedUser));
+
+        verify(userRepository, atLeastOnce()).findById(followedUser.getId());
+        verify(userRepository, atLeastOnce()).findByEmail(expectedUser.getEmail());
+        verify(userRepository, atLeastOnce()).save(any(User.class));
+        verifyServicesJwtWereExecuted();
+    }
+
+    @Test
+    void followUser_FollowedUserNotFoundTest() {
+        when(userRepository.findById(followedUser.getId())).thenReturn(Optional.empty());
+
+        assertThrowsExactly(EntityNotFoundException.class, () -> userService.followUser(followedUser.getId()));
+
+        verify(userRepository, atLeastOnce()).findById(followedUser.getId());
+    }
+
+    @Test
+    void followUser_ExpectedUserNotFoundTest() {
+        when(userRepository.findById(followedUser.getId())).thenReturn(Optional.of(followedUser));
+        when(userRepository.findByEmail(expectedUser.getEmail())).thenReturn(Optional.empty());
+        mockJwtToken();
+
+        assertThrowsExactly(EntityNotFoundException.class, () -> userService.followUser(followedUser.getId()));
+
+        verify(userRepository, atLeastOnce()).findById(followedUser.getId());
+        verify(userRepository, atLeastOnce()).findByEmail(expectedUser.getEmail());
+        verifyServicesJwtWereExecuted();
+    }
+
+    @Test
+    void getByUsernameContain_SuccessTest(){
+        List<User> listUser = List.of(expectedUser);
+        when(userRepository.findByUsernameContainingIgnoreCase(expectedUser.getUsername())).thenReturn(listUser);
+        when(userMapper.mapToDto(expectedUser)).thenReturn(dto);
+
+        List<UserDto> actualResult = userService.getByUsernameContain(expectedUser.getUsername());
+
+        assertThat(actualResult).isNotEmpty();
+        assertThat(actualResult).hasSize(1);
+        assertEqualsToListDto(actualResult);
+        verify(userRepository, atLeastOnce()).findByUsernameContainingIgnoreCase(expectedUser.getUsername());
+        verify(userMapper, atLeastOnce()).mapToDto(expectedUser);
+    }
+
+    private void verifyServicesJwtWereExecuted() {
+        verify(authentication, atLeastOnce()).getPrincipal();
+        verify(token, atLeastOnce()).getPrincipal();
+        verify(jwt, atLeastOnce()).getClaims();
+        verify(securityContext, atLeastOnce()).getAuthentication();
+    }
+
+    private void mockJwtToken() {
+        when(jwt.getClaims()).thenReturn(Map.of("sub", "test@example.com"));
+        when(token.getPrincipal()).thenReturn(jwt);
+        when(authentication.getPrincipal()).thenReturn(token);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        SecurityContextHolder.setContext(securityContext);
+    }
+
+    private void assertEqualsToDto(UserDto actualResult) {
+        assertEquals(dto.nickName(), actualResult.nickName());
+        assertEquals(dto.firstName(), actualResult.firstName());
+        assertEquals(dto.email(), actualResult.email());
+        assertEquals(dto.profileImage(), actualResult.profileImage());
+    }
+
+    private void assertEqualsToListDto(List<UserDto> actualResult) {
+        assertThat(actualResult.getFirst().id()).isEqualTo(dto.id());
+        assertThat(actualResult.getFirst().nickName()).isEqualTo(dto.nickName());
+        assertThat(actualResult.getFirst().firstName()).isEqualTo(dto.firstName());
+        assertThat(actualResult.getFirst().email()).isEqualTo(dto.email());
+        assertThat(actualResult.getFirst().profileImage()).isEqualTo(dto.profileImage());
+
+    }
 }

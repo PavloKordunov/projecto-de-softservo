@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
 
         String email = getEmail();
         User currentUser = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found"));
-        if (currentUser.getFollowing().contains(currentUser)) {
+        if (currentUser.getFollowing().contains(followedUser)) {
             currentUser.getFollowing().remove(followedUser);
             userRepository.save(currentUser);
             return false;

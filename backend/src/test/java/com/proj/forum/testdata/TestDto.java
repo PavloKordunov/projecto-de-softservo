@@ -1,6 +1,8 @@
 package com.proj.forum.testdata;
 
 import com.proj.forum.dto.PostRequestDto;
+import com.proj.forum.dto.UserDto;
+import com.proj.forum.dto.UserUpdateDto;
 import com.proj.forum.entity.Group;
 import com.proj.forum.entity.Post;
 import com.proj.forum.entity.User;
@@ -23,6 +25,23 @@ public class TestDto {
                 .build();
     }
 
+    public static UserDto getUserDto() {
+        return UserDto.builder()
+                .nickName(nicknameUserDto)
+                .firstName(nameUserDto)
+                .email(emailUserDto)
+                .profileImage(profileImageUserDto)
+                .build();
+    }
+
+    public static UserUpdateDto getUserUpdateDto() {
+        return UserUpdateDto.builder()
+                .nickName(nicknameUserUpdate)
+                .firstName(nameUserUpdate)
+                .profileImage(profileImageUserUpdate)
+                .build();
+    }
+
     public static User getUser() {
         return User.builder()
                 .id(userId)
@@ -31,6 +50,16 @@ public class TestDto {
                 .name(nameOfUser)
                 .profileImage(profileImage)
                 .groups(new ArrayList<>())
+                .build();
+    }
+
+    public static User getFollowedUser(){
+        return User.builder()
+                .id(followedId)
+                .username(nicknameFollowed)
+                .name(nameFollowed)
+                .email(emailFollowed)
+                .profileImage(profileImageFollowed)
                 .build();
     }
 
