@@ -11,4 +11,8 @@ import java.util.UUID;
 @Repository
 public interface UserStatisticRepository extends JpaRepository<Statistic, UUID> {
     List<Statistic> findByUserId(@NotNull UUID userId);
+
+    boolean existsByObjectIdAndUserId(@NotNull UUID objectId, @NotNull UUID userId);
+
+    Statistic getStatisticByUserIdAndObjectId(@NotNull UUID userId, @NotNull UUID objectId);
 }
