@@ -3,6 +3,7 @@ package com.proj.forum.strategy;
 import com.proj.forum.dto.CommentDto;
 import com.proj.forum.dto.TopicDto;
 import com.proj.forum.entity.Topic;
+import com.proj.forum.repository.UserStatisticRepository;
 import com.proj.forum.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,7 @@ import java.util.List;
 public class TopicCustomMapper implements CustomMapper<Topic, TopicDto> {
 
     private final CommentService commentService;
+    private final UserStatisticRepository userStatisticRepository;
 
     @Override
     public Topic mapToEntity(TopicDto topicDto) {
@@ -57,6 +59,8 @@ public class TopicCustomMapper implements CustomMapper<Topic, TopicDto> {
                 .tagId(topic.getTag_id())
                 .comments(comments)
                 .releaseDate(topic.getReleaseDate())
+                .userRate(userStatisticRepository.findAverageRateByObjectId(topic.getId()).get())
+                .userRateCount(userStatisticRepository.countStatisticsByObjectIdAndRateIsNotNull(topic.getId()))
                 .build();
     }
 }

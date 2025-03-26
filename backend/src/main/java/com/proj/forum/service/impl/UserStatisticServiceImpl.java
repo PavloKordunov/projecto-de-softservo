@@ -26,7 +26,7 @@ public class UserStatisticServiceImpl implements UserStatisticService {
             if (statisticDto.liked() != statistic.getLiked())
                 statistic.setLiked((statisticDto.liked()));
 
-            if (statistic.getLiked() == null && !statistic.getSaved() && statistic.getRate() == null) {
+            if (statistic.getLiked() == null && Boolean.FALSE.equals(statistic.getSaved()) && statistic.getRate() == null) {
                 userStatisticRepository.deleteById(statistic.getId());
                 return statisticDto;
             }
@@ -101,7 +101,7 @@ public class UserStatisticServiceImpl implements UserStatisticService {
             if (!Objects.equals(statisticDto.rate(), statistic.getRate()))
                 statistic.setRate(statisticDto.rate());
 
-            if (statistic.getLiked() == null && !statistic.getSaved() && statistic.getRate() == null) {
+            if (statistic.getLiked() == null && Boolean.FALSE.equals(statistic.getSaved()) && statistic.getRate() == null) {
                 userStatisticRepository.deleteById(statistic.getId());
                 return statisticDto;
             }
