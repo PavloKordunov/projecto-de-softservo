@@ -26,6 +26,9 @@ public record TopicDto(
         @NotNull TopicType topicType,
         @NotNull String releaseDate,
         int viewCount,
-        List<CommentDto> comments
+        Double userRate,
+        int userRateCount,
+        List<CommentDto> comments,
+        int myRate
 ) {
 }

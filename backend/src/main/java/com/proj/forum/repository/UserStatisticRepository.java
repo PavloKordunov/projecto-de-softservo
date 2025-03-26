@@ -13,13 +13,12 @@ import java.util.UUID;
 
 @Repository
 public interface UserStatisticRepository extends JpaRepository<Statistic, UUID> {
-    List<Statistic> findByUserId(@NotNull UUID userId);
+    //List<Statistic> findByUserId(@NotNull UUID userId);
 
     boolean existsByObjectIdAndUserId(@NotNull UUID objectId, @NotNull UUID userId);
     Optional<Statistic> getStatisticByObjectIdAndUserId(@NotNull UUID objectId, @NotNull UUID userId);
-
-    List<Statistic> findStatisticsByObjectIdAndLikedIsTrue(UUID objectId);
     List<Statistic> findStatisticsByObjectIdAndSavedIsTrue(UUID objectId);
+    List<Statistic> findStatisticsByObjectIdAndRateIsNotNull(UUID id);
 
     Statistic getStatisticByUserIdAndObjectId(@NotNull UUID userId, @NotNull UUID objectId);
 
@@ -29,5 +28,10 @@ public interface UserStatisticRepository extends JpaRepository<Statistic, UUID> 
             "FROM Statistic s WHERE s.objectId = :objectId")
     Integer getTotalLikes(@Param("objectId") UUID objectId);
 
+    @Query("SELECT ROUND(AVG(s.rate), 1) FROM Statistic s WHERE s.objectId = :objectId AND s.rate IS NOT NULL")
+    Optional<Double> findAverageRateByObjectId(UUID objectId);
 
+    int countStatisticsByObjectIdAndRateIsNotNull(UUID objectId);
+
+    List<Statistic> findStatisticsByObjectIdAndLikedIsTrue(UUID id);
 }

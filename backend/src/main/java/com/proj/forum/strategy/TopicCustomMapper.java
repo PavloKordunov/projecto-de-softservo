@@ -2,9 +2,15 @@ package com.proj.forum.strategy;
 
 import com.proj.forum.dto.CommentDto;
 import com.proj.forum.dto.TopicDto;
+import com.proj.forum.entity.Statistic;
 import com.proj.forum.entity.Topic;
+import com.proj.forum.entity.User;
+import com.proj.forum.helper.UserHelper;
+import com.proj.forum.repository.UserRepository;
+import com.proj.forum.repository.UserStatisticRepository;
 import com.proj.forum.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -14,6 +20,8 @@ import java.util.List;
 public class TopicCustomMapper implements CustomMapper<Topic, TopicDto> {
 
     private final CommentService commentService;
+    private final UserStatisticRepository userStatisticRepository;
+    private final UserRepository userRepository;
 
     @Override
     public Topic mapToEntity(TopicDto topicDto) {
@@ -39,6 +47,11 @@ public class TopicCustomMapper implements CustomMapper<Topic, TopicDto> {
     @Override
     public TopicDto mapToDto(Topic topic){
         List<CommentDto> comments = commentService.mapToListOfCommentsDto(topic.getComments());
+        Double userRate = userStatisticRepository.findAverageRateByObjectId(topic.getId()).orElse(null);
+        int userRateCount = userStatisticRepository.countStatisticsByObjectIdAndRateIsNotNull(topic.getId());
+        //String email = UserHelper.getEmail();
+        User user = userRepository.findByEmail(UserHelper.getEmail()).get();
+        Statistic myStat = userStatisticRepository.getStatisticByObjectIdAndUserId(topic.getId(), user.getId()).get();
         return TopicDto.builder()
                 .id(topic.getId())
                 .title(topic.getTitle())
@@ -57,6 +70,9 @@ public class TopicCustomMapper implements CustomMapper<Topic, TopicDto> {
                 .tagId(topic.getTag_id())
                 .comments(comments)
                 .releaseDate(topic.getReleaseDate())
+                .userRate(userRate)
+                .userRateCount(userRateCount)
+                .myRate(myStat.getRate())
                 .build();
     }
 }

@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UUID checkOrCreateUserByGoogle() {
-        String email = getEmail();
+        String email = UserHelper.getEmail();
         Optional<User> user = userRepository.findByEmail(email);
         return getUserOrGenerateNew(user, email);
     }
@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserService {
     public Boolean followUser(UUID userId) {
         User followedUser = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Followed user not found"));
 
-        String email = getEmail();
+        String email = UserHelper.getEmail();
         User currentUser = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("Current user not found"));
         if (currentUser.getFollowing().contains(followedUser)) {
             currentUser.getFollowing().remove(followedUser);
@@ -141,14 +141,14 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    private String getEmail() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof JwtAuthenticationToken token)) {
-            throw new TokenTypeException("User not found");
-        }
-        var jwt = (Jwt) token.getPrincipal();
-        return jwt.getClaims().get("sub").toString();
-    }
+//    private String getEmail() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (!(authentication instanceof JwtAuthenticationToken token)) {
+//            throw new TokenTypeException("User not found");
+//        }
+//        var jwt = (Jwt) token.getPrincipal();
+//        return jwt.getClaims().get("sub").toString();
+//    }
 
     private UUID getUserOrGenerateNew(Optional<User> user, String email) {
         if (user.isPresent()) {
