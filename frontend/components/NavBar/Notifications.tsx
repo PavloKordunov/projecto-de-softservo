@@ -1,8 +1,10 @@
 import Image from "next/image";
 import { useState } from "react";
+import { useTheme } from "next-themes";
 
 const Notifications = () => {
     const [showNotifications, setShowNotifications] = useState(false);
+    const { theme, setTheme } = useTheme();
 
     const notifications = [
         { id: 1, text: "Користувач Арнольд Шварценегер підписався на вас", time: "5 хв тому" },
@@ -13,10 +15,10 @@ const Notifications = () => {
     return (
         <>
             <div
-                className="bg-SecondaryColor hover:bg-AccnetColor w-14 h-14 rounded-[9px] flex items-center justify-center cursor-pointer"
+                className={`${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} hover:bg-AccnetColor w-14 h-14 rounded-[9px] flex items-center justify-center cursor-pointer`}
                 onClick={() => setShowNotifications(!showNotifications)}
             >
-                <svg className="w-6 h-6">
+                <svg className={`w-6 h-6 `}>
                     <use href={`/sprite.svg#iconNotification`} />
                 </svg>
             </div>

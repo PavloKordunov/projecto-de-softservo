@@ -9,6 +9,7 @@ import UserMenu from "./UserMenu";
 import { MovieDetails } from "@/api/omdbApi/omdbApi";
 import { FiMenu, FiX } from "react-icons/fi";
 import Messanger from "./Messanger";
+import { useTheme } from "next-themes";
 
 interface NavBarProps {
     movies: MovieDetails[];
@@ -18,6 +19,7 @@ const NavBar = ({ movies }: NavBarProps) => {
     const [isCalendarVisible, setIsCalendarVisible] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false); 
     const [isOpenMessanger, setIsOpenMessanger] = useState(false);
+    const { theme } = useTheme();
 
     const toggleCalendar = () => {
         setIsCalendarVisible((prev) => !prev);
@@ -32,7 +34,7 @@ const NavBar = ({ movies }: NavBarProps) => {
     };
 
     return (
-        <nav className="w-full py-4 px-6 bg-MainColor rounded-[10px] flex items-center justify-between relative">
+        <nav className={`w-full py-4 px-6 ${theme === 'dark' ? 'bg-MainColor' : 'bg-[#EAEAEA]'} rounded-[10px] flex items-center justify-between relative`}>
 
             <p className="text-AccnetColor font-bold text-[30px]">Logo</p>
 

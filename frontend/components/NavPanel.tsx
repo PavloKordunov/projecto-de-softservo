@@ -5,10 +5,10 @@ import Link from "next/link";
 import CreateGroup from "./CreateGroup";
 import { useState } from "react";
 import { motion } from 'framer-motion';
-import { useTheme } from "next-themes"; // Підключаємо бібліотеку для роботи з темами
+import { useTheme } from "next-themes";
 
 const NavPanel = () => {
-    const { theme, setTheme } = useTheme(); // Використовуємо useTheme для доступу до поточної теми
+    const { theme, setTheme } = useTheme();
     const [showGroup, setShowGroup] = useState(false)
 
     const handleShowCreateGroup = () => {
