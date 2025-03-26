@@ -20,6 +20,8 @@ public interface PostService {
     boolean pinPost(UUID postId);
     void deletePost(UUID postId);
 
+    List<PostResponseDto> getUserPosts(UUID userId, String sort, String order);
+
     List<PostResponseDto> mapToPostDtoList(List<Post> posts);
     void isAuthor(UUID postId, UUID userId) throws AccessDeniedException;
     void addView(UUID id);

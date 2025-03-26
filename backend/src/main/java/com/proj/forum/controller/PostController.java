@@ -45,12 +45,6 @@ public class PostController {
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Posts found", posts);
     }
 
-    @GetMapping("/user/{userId}")
-    public ApiResponse<List<PostResponseDto>> getPostsByUser(@PathVariable UUID userId) {
-        List<PostResponseDto> posts = postService.getPostsByUser(userId);
-        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Posts found", posts);
-    }
-
     @GetMapping("/{postId}")
     public ApiResponse<PostResponseDto> getPostById(@PathVariable UUID postId) {
         PostResponseDto post = postService.getPostById(postId);
@@ -90,6 +84,16 @@ public class PostController {
     @PatchMapping("/view/{id}")
     public void addView(@PathVariable UUID id){
         postService.addView(id);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ApiResponse<List<PostResponseDto>> getUserPosts(
+            @PathVariable UUID userId,
+            @RequestParam(defaultValue = "createdAt") String sort,
+            @RequestParam(defaultValue = "desc") String order) {
+
+        List<PostResponseDto> posts = postService.getUserPosts(userId, sort, order);
+        return new ApiResponse<>(true, HttpStatusCode.valueOf(200),"Post sorted", posts);
     }
 }
 

@@ -16,6 +16,7 @@ import com.proj.forum.service.PostService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -139,6 +141,38 @@ public class PostServiceImpl implements PostService {
         }
     }
 
+    @Override
+    public List<PostResponseDto> getUserPosts(UUID userId, String sort, String order) {
+        Sort.Direction direction = order.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        Sort sortBy;
+        if ("views".equals(sort)) {
+            sortBy = Sort.by(direction, "views");
+            List<Post> result = postRepository.findAllByAuthor_Id(userId, sortBy);
+            return mapToPostDtoList(result);
+        } else if ("createdAt".equals(sort)){
+            sortBy = Sort.by(direction, "createdAt");
+            List<Post> result = postRepository.findAllByAuthor_Id(userId, sortBy);
+            return mapToPostDtoList(result);
+        }
+
+        List<Post> posts = postRepository.findAllByAuthor_Id(userId);
+
+        if ("likes".equals(sort)) {
+
+            for (Post post : posts) {
+                Integer totalLikes = userStatisticRepository.getTotalLikes(post.getId());
+
+                post.setLikesCount(totalLikes);
+                postRepository.save(posts.getFirst());
+            }
+            posts.sort(order.equalsIgnoreCase("asc") ?
+                    Comparator.comparing(Post::getLikesCount) :
+                    Comparator.comparing(Post::getLikesCount).reversed());
+        }
+
+        return mapToPostDtoList(posts);
+    }
 
 private List<PostResponseDto> getPostResponseDtos(List<Post> postList) {
     if (postList.isEmpty()) {
@@ -265,6 +299,7 @@ private List<PostResponseDto> getPostResponseDtos(List<Post> postList) {
                 .groupTitle(post.getGroup().getTitle())
                 .createdAt(post.getCreatedAt())
                 .viewCount(post.getViewCount())
+                .countLikes(post.getLikesCount())
                 .comments(comments)
                 .userId(post.getAuthor().getId())
                 .groupId(post.getGroup().getId())

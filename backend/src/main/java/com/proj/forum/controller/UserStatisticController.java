@@ -3,7 +3,6 @@ package com.proj.forum.controller;
 import com.proj.forum.annotation.Logging;
 import com.proj.forum.annotation.RequireRoles;
 import com.proj.forum.dto.ApiResponse;
-import com.proj.forum.dto.GenericResponse;
 import com.proj.forum.dto.StatisticDto;
 import com.proj.forum.enums.RoleType;
 import com.proj.forum.service.UserStatisticService;
@@ -12,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @Logging
