@@ -73,7 +73,9 @@ const UserPage = () => {
         <div className="px-3 py-12 mt-4 bg-MainColor rounded-[21px] mb-6 w-[1050px]">
             <div className="flex items-center ml-9 mb-8">
                 <div className="flex gap-3 items-center mr-28">
-                    <Image src="/person.png" alt="" width={110} height={110} />
+                    <div className="h-[110px] w-[110px] rounded-[50%] overflow-hidden">
+                        {userState?.profileImage ? <Image src={userState?.profileImage} alt="" width={110} height={110} /> : <Image src="/person.png" alt="" width={110} height={110} />}
+                    </div>
                     <div className="flex flex-col gap-1">
                         <div className="flex gap-6 items-center">
                             <p className="text-white text-[48px] font-semibold leading-[48px] m-0">{userState?.firstName}</p>

@@ -104,10 +104,6 @@ const PostPage = () => {
         }
     }
 
-    useEffect(() => {
-        console.log(post?.userId)
-    }, [post])
-
     const handleShow = () => {
         setShowUpdatePost(!showUpdatePost)
     }

@@ -12,6 +12,7 @@ interface Group {
     id: string;
     title: string;
     description: string;
+    isPublic: boolean;
 }
 
 const Group = () => {
@@ -94,7 +95,12 @@ const Group = () => {
                 <div className="flex items-center gap-3">
                     <Image src="/groupImage.png" alt="" width={60} height={60} />
                     <div>
-                        <p className="text-white text-[28px] font-semibold">{group?.title}</p>
+                        <div className="flex items-center gap-2">
+                            <svg  className="w-6 h-7" fill="#fff">
+                                <use href={`/sprite.svg?v=1#icon-lock`}></use>
+                            </svg>
+                            <p className="text-white text-[28px] font-semibold">{group?.title}</p>
+                        </div>
                         <p className="text-[#97989D] text-[20px]">82,645 Постів у цій групі</p>
                     </div>
                 </div>
@@ -103,8 +109,8 @@ const Group = () => {
                     <button className="px-4 py-2 bg-[#3A7F4F] rounded-[10px] text-white text-[16px] h-[50px] font-medium" onClick={getSubscribeUser}>{userSubscribed ? "Відписатися" :"Приєднатися" }</button>
                 </div>
             </div>
-            <div className="flex gap-4">
-                <div className="mt-4 px-5 py-4 bg-MainColor rounded-[21px] h-fit w-[690px]">
+            <div className="flex gap-4 mb-4">
+                <div className="mt-4 h-[135px] px-5 py-4 bg-MainColor flex flex-col justify-between rounded-[21px] h-fit w-[690px]">
                     <p className="text-white text-[15px] font-semibold mb-3 line-clamp-2"><strong>Опис:</strong> {group?.description} </p>
                     <div className="flex gap-3 items-center mb-3">
                         <div className="py-2 w-fit px-3 bg-SecondaryColor rounded-[24px]">
@@ -129,13 +135,15 @@ const Group = () => {
                     </div>
                     <div className="flex items-center">
                         <div className="py-2 w-fit px-3 bg-SecondaryColor rounded-[24px] mr-2">
-                            <p className="text-[13px] text-[#C5D0E6] font-semibold ">Публічна група</p>
+                            <p className="text-[13px] text-[#C5D0E6] font-semibold ">{group.isPublic ? 'Публічна' : 'Приватна'} група</p>
                         </div>
                         <p className="text-white text-[15px] font-semibold">Створена: 31.12.2024</p>
                     </div>
                 </div>
             </div>
-             <div className="mt-4 p-5 bg-MainColor rounded-[21px] h-fit w-[1030px] mb-8">
+            {group.isPublic || userSubscribed && <div>
+            {posts && posts.map(post => ( post.isPinned == true && (
+                <div className=" p-5 bg-MainColor rounded-[21px] h-fit w-[1030px] mb-8">
                 <div className="flex items-center gap-1 mb-6">
                     <svg width={30} height={32}>
                         <use href={`/sprite.svg#pinIcon`} />
@@ -143,20 +151,22 @@ const Group = () => {
                     <p className="text-white text-[28px] font-bold">Закріплені пости</p>
                 </div>
                 <div className="flex gap-6">
-                {posts && posts.map(post => ( post.isPinned == true && (
+                
                     <Link href={`/post/${post?.id}`} key={post.id} className="bg-SecondaryColor w-[311px] pb-2 h-fit rounded-br-[14px] rounded-bl-[14px]">
                         <Image src={post?.image} alt="" width={311} height={204} className="mb-2" />
                         <p className=" ml-3 text-white text-[16px] font-bold">{post.title}</p>
                     </Link>
-                    )))}
+                    
                 </div>
             </div>
+            )))}
             {posts ? (
                 posts.map((post) => <Post key={post.id} post={post} />)
             ) : (
                 <p>Поки що немає постів...</p>
             )}
             {show && <CreatePostModal handleShow={handleShow} group={group} />}
+            </div>}
         </div>
      );
 }
