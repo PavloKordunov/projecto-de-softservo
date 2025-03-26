@@ -28,6 +28,7 @@ public record TopicDto(
         int viewCount,
         Double userRate,
         int userRateCount,
-        List<CommentDto> comments
+        List<CommentDto> comments,
+        int myRate
 ) {
 }

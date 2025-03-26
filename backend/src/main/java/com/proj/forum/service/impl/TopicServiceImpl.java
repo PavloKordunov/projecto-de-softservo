@@ -79,6 +79,7 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public List<TopicDto> mapToTopicDtoList(List<Topic> topics) {
+
         return topics.stream()
                 .map(topicMapper::mapToDto)
                 .toList();
