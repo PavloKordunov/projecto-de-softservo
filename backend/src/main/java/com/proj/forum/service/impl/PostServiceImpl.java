@@ -146,8 +146,8 @@ public class PostServiceImpl implements PostService {
         Sort.Direction direction = order.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
 
         Sort sortBy;
-        if ("views".equals(sort)) {
-            sortBy = Sort.by(direction, "views");
+        if ("viewCount".equals(sort)) {
+            sortBy = Sort.by(direction, "viewCount");
             List<Post> result = postRepository.findAllByAuthor_Id(userId, sortBy);
             return mapToPostDtoList(result);
         } else if ("createdAt".equals(sort)){
