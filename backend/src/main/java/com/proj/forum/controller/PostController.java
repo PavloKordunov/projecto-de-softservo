@@ -100,7 +100,7 @@ public class PostController {
 //            @RequestParam(defaultValue = "desc") String order) {
 //
 //        List<PostResponseDto> posts = postService.getUserPosts(userId, sort, order);
-//        return new ApiResponse<>(true, HttpStatusCode.valueOf(200),"Post sorted", posts);
+//        return new ApiResponse<>(true, HttpStatus.OK,"Post sorted", posts);
 //    }
 }
 
