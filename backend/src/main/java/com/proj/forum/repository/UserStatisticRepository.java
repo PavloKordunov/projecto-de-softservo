@@ -33,6 +33,4 @@ public interface UserStatisticRepository extends JpaRepository<Statistic, UUID> 
 
     List<Statistic> findStatisticsByObjectIdAndLikedIsTrue(UUID id);
 
-    @Query("SELECT s.objectId FROM Statistic s WHERE s.userId = :id AND s.liked IS NOT NULL")
-    List<UUID> findObjectIdsByUserIdAndLikedIsNotNull(@Param("id") UUID id);
 }

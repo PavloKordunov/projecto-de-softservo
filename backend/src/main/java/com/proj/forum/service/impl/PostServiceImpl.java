@@ -131,6 +131,14 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public PostResponseDto getRandomPost() {
+        Post post = postRepository.findPostByRandom()
+                .orElseThrow(() -> new EntityNotFoundException("Post not found"));
+
+        return getPostResponseDto(post);
+    }
+
+    @Override
     public void isAuthor(UUID postId, UUID userId) throws AccessDeniedException {
         if (!postRepository.findById(postId)
                 .map(Post::getAuthor)
@@ -191,46 +199,33 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostResponseDto> getUserLikedPosts(UUID userId, String sort, String order) {
-
-        List<UUID> obj = userStatisticRepository.findObjectIdsByUserIdAndLikedIsNotNull(userId);
-        if (!obj.isEmpty()) {
-
-            List<Post> posts = postRepository.findAllById(obj);
-            switch (sort) {
-                case "likes" -> {
-                    sortByLikes(sort, order, posts);
-
+        List<Post> posts;
+        switch (sort) {
+            case "viewCount" -> {
+                if (order.equalsIgnoreCase("asc")) {
+                    posts = postRepository.findLikedPostsByUserIdOrderByViewCountAsc(userId);
+                } else {
+                    posts = postRepository.findLikedPostsByUserIdOrderByViewCountDesc(userId);
                 }
-                case "viewCount" -> {
-                    posts.sort(order.equalsIgnoreCase("asc") ?
-                            Comparator.comparing(Post::getViewCount) :
-                            Comparator.comparing(Post::getViewCount).reversed());
-                }
-                case "createdAt" -> {
-                    posts.sort(order.equalsIgnoreCase("asc") ?
-                            Comparator.comparing(Post::getCreatedAt) :
-                            Comparator.comparing(Post::getCreatedAt).reversed());
-                }
-                case null, default -> throw new IllegalArgumentException("Incorrect sort type: " + sort);
             }
-            return mapToPostDtoList(posts);
+            case "createdAt" -> {
+                if (order.equalsIgnoreCase("asc")) {
+                    posts = postRepository.findLikedPostsByUserIdOrderByCreatedAtAsc(userId);
+                }else {
+                    posts = postRepository.findLikedPostsByUserIdOrderByCreatedAtDesc(userId);
+                }
+            }
+            case "likes" -> {
+                if (order.equalsIgnoreCase("asc")) {
+                    posts = postRepository.findLikedPostsByUserIdOrderByLikesAsc(userId);
+                } else {
+                    posts = postRepository.findLikedPostsByUserIdOrderByLikesDesc(userId);
+                }
+            }
+            case null, default -> posts = postRepository.findAllLikedPostsByUserId(userId);
         }
-        throw new EntityNotFoundException("Liked posts not found.");
-    }
 
-    private void sortByLikes(String sort, String order, List<Post> posts) {
-
-
-        for (Post post : posts) {
-            Integer totalLikes = userStatisticRepository.getTotalLikes(post.getId());
-
-            post.setLikesCount(totalLikes);
-            postRepository.save(posts.getFirst());
-        }
-        posts.sort(order.equalsIgnoreCase("asc") ?
-                Comparator.comparing(Post::getLikesCount) :
-                Comparator.comparing(Post::getLikesCount).reversed());
-
+        return getPostResponseDtos(posts);
     }
 
 private List<PostResponseDto> getPostResponseDtos(List<Post> postList) {
@@ -363,7 +358,7 @@ private List<PostResponseDto> getPostResponseDtos(List<Post> postList) {
                 .groupTitle(post.getGroup().getTitle())
                 .createdAt(post.getCreatedAt())
                 .viewCount(post.getViewCount())
-                .countLikes(post.getLikesCount())
+                //.countLikes(post.getLikesCount())
                 .comments(comments)
                 .userId(post.getAuthor().getId())
                 .groupId(post.getGroup().getId())
