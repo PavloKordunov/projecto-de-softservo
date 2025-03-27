@@ -93,14 +93,14 @@ public class PostController {
         postService.addView(id);
     }
 
-//    @GetMapping("/user/{userId}")
-//    public ApiResponse<List<PostResponseDto>> getUserPosts(
-//            @PathVariable UUID userId,
-//            @RequestParam(defaultValue = "createdAt") String sort,
-//            @RequestParam(defaultValue = "desc") String order) {
-//
-//        List<PostResponseDto> posts = postService.getUserPosts(userId, sort, order);
-//        return new ApiResponse<>(true, HttpStatus.OK,"Post sorted", posts);
-//    }
+    @GetMapping("/user/{userId}")
+    public ApiResponse<List<PostResponseDto>> getUserPosts(
+            @PathVariable UUID userId,
+            @RequestParam(defaultValue = "createdAt") String sort,
+            @RequestParam(defaultValue = "desc") String order) {
+
+        List<PostResponseDto> posts = postService.getUserPosts(userId, sort, order);
+        return new ApiResponse<>(true, HttpStatus.OK,"Post sorted", posts);
+    }
 }
 

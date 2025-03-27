@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -140,10 +139,25 @@ public class PostServiceImpl implements PostService {
         }
     }
 
-//    @Override
-//    public List<PostResponseDto> getUserPosts(UUID userId, String sort, String order) {
-//        Sort.Direction direction = order.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
-//
+    @Override
+    public List<PostResponseDto> getUserPosts(UUID userId, String sort, String order) {
+        Sort.Direction direction = order.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        List<Post> posts;
+        switch (sort) {
+            case "viewCount" -> posts = postRepository.findAllByAuthor_Id(userId, Sort.by(direction, "viewCount"));
+            case "createdAt" -> posts = postRepository.findAllByAuthor_Id(userId, Sort.by(direction, "createdAt"));
+            case "likes" -> {
+                if (order.equalsIgnoreCase("asc")) {
+                    posts = postRepository.findAllByAuthor_IdOrderByLikesAsc(userId);
+                } else {
+                    posts = postRepository.findAllByAuthor_IdOrderByLikesDesc(userId);
+                }
+            }
+            case null, default -> posts = postRepository.findAllByAuthor_Id(userId);
+        }
+
+        return getPostResponseDtos(posts);
 //        Sort sortBy;
 //        if ("viewCount".equals(sort)) {
 //            sortBy = Sort.by(direction, "viewCount");
@@ -161,9 +175,9 @@ public class PostServiceImpl implements PostService {
 //
 //            for (Post post : posts) {
 //                Integer totalLikes = userStatisticRepository.getTotalLikes(post.getId());
-//
-//                post.setLikesCount(totalLikes);
-//                postRepository.save(posts.getFirst());
+////
+////                post.setLikesCount(totalLikes);
+////                postRepository.save(posts.getFirst());
 //            }
 //            posts.sort(order.equalsIgnoreCase("asc") ?
 //                    Comparator.comparing(Post::getLikesCount) :
@@ -171,7 +185,7 @@ public class PostServiceImpl implements PostService {
 //        }
 //
 //        return mapToPostDtoList(posts);
-//    }
+    }
 
     private List<PostResponseDto> getPostResponseDtos(List<Post> postList) {
         if (postList.isEmpty()) {
