@@ -68,15 +68,19 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Post not found"));
 
+        return getPostResponseDto(post);
+    }
+
+    private PostResponseDto getPostResponseDto(Post post) {
         String email = getEmail();
         Integer countLikes = getCountLikes(post);
         Integer countSaved = getCountSaved(post);
-        if(email == null) {
+        if (email == null) {
             return stickPostDtoAndStatistic(post, null, countLikes, countSaved);
         }
         User user = userRepository.findByEmail(email)
-                .orElseThrow(()-> new EntityNotFoundException("User not found"));
-        Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(id, user.getId()).orElse(null);
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(post.getId(), user.getId()).orElse(null);
         return stickPostDtoAndStatistic(post, statistic, countLikes, countSaved);
     }
 
@@ -131,6 +135,14 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public PostResponseDto getRandomPost() {
+        Post post = postRepository.findPostByRandom()
+                .orElseThrow(() -> new EntityNotFoundException("Post not found"));
+
+        return getPostResponseDto(post);
+    }
+
+    @Override
     public void isAuthor(UUID postId, UUID userId) throws AccessDeniedException {
         if (!postRepository.findById(postId)
                 .map(Post::getAuthor)
@@ -141,46 +153,46 @@ public class PostServiceImpl implements PostService {
         }
     }
 
-    @Override
-    public List<PostResponseDto> getUserPosts(UUID userId, String sort, String order) {
-        Sort.Direction direction = order.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
-
-        Sort sortBy;
-        if ("viewCount".equals(sort)) {
-            sortBy = Sort.by(direction, "viewCount");
-            List<Post> result = postRepository.findAllByAuthor_Id(userId, sortBy);
-            return mapToPostDtoList(result);
-        } else if ("createdAt".equals(sort)){
-            sortBy = Sort.by(direction, "createdAt");
-            List<Post> result = postRepository.findAllByAuthor_Id(userId, sortBy);
-            return mapToPostDtoList(result);
-        }
-
-        List<Post> posts = postRepository.findAllByAuthor_Id(userId);
-
-        if ("likes".equals(sort)) {
-
-            for (Post post : posts) {
-                Integer totalLikes = userStatisticRepository.getTotalLikes(post.getId());
-
-                post.setLikesCount(totalLikes);
-                postRepository.save(posts.getFirst());
-            }
-            posts.sort(order.equalsIgnoreCase("asc") ?
-                    Comparator.comparing(Post::getLikesCount) :
-                    Comparator.comparing(Post::getLikesCount).reversed());
-        }
-
-        return mapToPostDtoList(posts);
-    }
+//    @Override
+//    public List<PostResponseDto> getUserPosts(UUID userId, String sort, String order) {
+//        Sort.Direction direction = order.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+//
+//        Sort sortBy;
+//        if ("viewCount".equals(sort)) {
+//            sortBy = Sort.by(direction, "viewCount");
+//            List<Post> result = postRepository.findAllByAuthor_Id(userId, sortBy);
+//            return mapToPostDtoList(result);
+//        } else if ("createdAt".equals(sort)){
+//            sortBy = Sort.by(direction, "createdAt");
+//            List<Post> result = postRepository.findAllByAuthor_Id(userId, sortBy);
+//            return mapToPostDtoList(result);
+//        }
+//
+//        List<Post> posts = postRepository.findAllByAuthor_Id(userId);
+//
+//        if ("likes".equals(sort)) {
+//
+//            for (Post post : posts) {
+//                Integer totalLikes = userStatisticRepository.getTotalLikes(post.getId());
+//
+//                post.setLikesCount(totalLikes);
+//                postRepository.save(posts.getFirst());
+//            }
+//            posts.sort(order.equalsIgnoreCase("asc") ?
+//                    Comparator.comparing(Post::getLikesCount) :
+//                    Comparator.comparing(Post::getLikesCount).reversed());
+//        }
+//
+//        return mapToPostDtoList(posts);
+//    }
 
 private List<PostResponseDto> getPostResponseDtos(List<Post> postList) {
     if (postList.isEmpty()) {
         throw new EntityNotFoundException("Posts not found");
     }
 
-    List<PostResponseDto> postDtoList = new ArrayList<>();
-    String email = getEmail();
+        List<PostResponseDto> postDtoList = new ArrayList<>();
+        String email = getEmail();
 
     if (email == null) {
         for (Post post : postList){
@@ -203,19 +215,11 @@ private List<PostResponseDto> getPostResponseDtos(List<Post> postList) {
 }
 
     private Integer getCountLikes(Post post) {
-        int countLike = 0;
-        List<Statistic> statistics = userStatisticRepository.findStatisticsByObjectIdAndLikedIsTrue(post.getId());
-        if(!statistics.isEmpty())
-            countLike = statistics.size();
-        return countLike;
+        return userStatisticRepository.getTotalLikes(post.getId());
     }
 
     private Integer getCountSaved(Post post) {
-        int countSaved = 0;
-        List<Statistic> statistics = userStatisticRepository.findStatisticsByObjectIdAndSavedIsTrue(post.getId());
-        if(!statistics.isEmpty())
-            countSaved = statistics.size();
-        return countSaved;
+        return userStatisticRepository.countStatisticByObjectIdAndSavedIsTrue(post.getId());
     }
 
     private Post getUpdatePost(Post post, PostRequestDto postDto) {
@@ -260,7 +264,7 @@ private List<PostResponseDto> getPostResponseDtos(List<Post> postList) {
                 .comments(comments)
                 .userId(post.getAuthor().getId())
                 .groupId(post.getGroup().getId())
-                .isLiked(statistic == null ? null: statistic.getLiked())
+                .isLiked(statistic == null ? null : statistic.getLiked())
                 .isSaved(statistic != null && statistic.getSaved())
                 .countLikes(post.getLikesCount() != null ? post.getLikesCount() : 0)
                 .countSaved(countSaved)
@@ -299,7 +303,7 @@ private List<PostResponseDto> getPostResponseDtos(List<Post> postList) {
                 .groupTitle(post.getGroup().getTitle())
                 .createdAt(post.getCreatedAt())
                 .viewCount(post.getViewCount())
-                .countLikes(post.getLikesCount())
+              //  .countLikes(post.getLikesCount())
                 .comments(comments)
                 .userId(post.getAuthor().getId())
                 .groupId(post.getGroup().getId())

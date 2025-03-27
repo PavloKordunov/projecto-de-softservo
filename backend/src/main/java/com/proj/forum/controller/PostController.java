@@ -10,6 +10,7 @@ import com.proj.forum.enums.RoleType;
 import com.proj.forum.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,6 +52,12 @@ public class PostController {
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Post found", post);
     }
 
+    @GetMapping("/random")
+    public ApiResponse<PostResponseDto> getRandomPost() {
+        PostResponseDto post = postService.getRandomPost();
+        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Success get random post", post);
+    }
+
     @RequireRoles({RoleType.USER})
     @PatchMapping("/update/{postId}")
     public ApiResponse<GenericResponse> updatePost(
@@ -82,18 +89,18 @@ public class PostController {
 
 
     @PatchMapping("/view/{id}")
-    public void addView(@PathVariable UUID id){
+    public void addView(@PathVariable UUID id) {
         postService.addView(id);
     }
 
-    @GetMapping("/user/{userId}")
-    public ApiResponse<List<PostResponseDto>> getUserPosts(
-            @PathVariable UUID userId,
-            @RequestParam(defaultValue = "createdAt") String sort,
-            @RequestParam(defaultValue = "desc") String order) {
-
-        List<PostResponseDto> posts = postService.getUserPosts(userId, sort, order);
-        return new ApiResponse<>(true, HttpStatusCode.valueOf(200),"Post sorted", posts);
-    }
+//    @GetMapping("/user/{userId}")
+//    public ApiResponse<List<PostResponseDto>> getUserPosts(
+//            @PathVariable UUID userId,
+//            @RequestParam(defaultValue = "createdAt") String sort,
+//            @RequestParam(defaultValue = "desc") String order) {
+//
+//        List<PostResponseDto> posts = postService.getUserPosts(userId, sort, order);
+//        return new ApiResponse<>(true, HttpStatusCode.valueOf(200),"Post sorted", posts);
+//    }
 }
 
