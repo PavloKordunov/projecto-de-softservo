@@ -16,20 +16,20 @@ import com.proj.forum.service.PostService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Transactional("postgreTransactionManager")
@@ -157,8 +157,43 @@ public class PostServiceImpl implements PostService {
         }
 
         List<Post> posts = postRepository.findAllByAuthor_Id(userId);
-
         if ("likes".equals(sort)) {
+            sortByLikes(sort, order, posts);
+        }
+        return mapToPostDtoList(posts);
+    }
+
+    @Override
+    public List<PostResponseDto> getUserLikedPosts(UUID userId, String sort, String order) {
+
+        List<UUID> obj = userStatisticRepository.findObjectIdsByUserIdAndLikedIsNotNull(userId);
+        if (!obj.isEmpty()) {
+
+            List<Post> posts = postRepository.findAllById(obj);
+            switch (sort) {
+                case "likes" -> {
+                    sortByLikes(sort, order, posts);
+
+                }
+                case "viewCount" -> {
+                    posts.sort(order.equalsIgnoreCase("asc") ?
+                            Comparator.comparing(Post::getViewCount) :
+                            Comparator.comparing(Post::getViewCount).reversed());
+                }
+                case "createdAt" -> {
+                    posts.sort(order.equalsIgnoreCase("asc") ?
+                            Comparator.comparing(Post::getCreatedAt) :
+                            Comparator.comparing(Post::getCreatedAt).reversed());
+                }
+                case null, default -> throw new IllegalArgumentException("Incorrect sort type: " + sort);
+            }
+            return mapToPostDtoList(posts);
+        }
+        throw new EntityNotFoundException("Liked posts not found.");
+    }
+
+    private void sortByLikes(String sort, String order, List<Post> posts) {
+
 
             for (Post post : posts) {
                 Integer totalLikes = userStatisticRepository.getTotalLikes(post.getId());
@@ -169,12 +204,10 @@ public class PostServiceImpl implements PostService {
             posts.sort(order.equalsIgnoreCase("asc") ?
                     Comparator.comparing(Post::getLikesCount) :
                     Comparator.comparing(Post::getLikesCount).reversed());
-        }
 
-        return mapToPostDtoList(posts);
     }
 
-private List<PostResponseDto> getPostResponseDtos(List<Post> postList) {
+    private List<PostResponseDto> getPostResponseDtos(List<Post> postList) {
     if (postList.isEmpty()) {
         throw new EntityNotFoundException("Posts not found");
     }
