@@ -27,8 +27,6 @@ public class Post {
 
     private Integer viewCount;
 
-    private Integer likesCount;
-
     @ManyToOne
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;

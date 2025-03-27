@@ -1,6 +1,5 @@
 package com.proj.forum.service;
 
-import com.proj.forum.dto.CommentDto;
 import com.proj.forum.dto.PostRequestDto;
 import com.proj.forum.dto.PostResponseDto;
 import com.proj.forum.entity.Post;
@@ -27,4 +26,6 @@ public interface PostService {
     List<PostResponseDto> mapToPostDtoList(List<Post> posts);
     void isAuthor(UUID postId, UUID userId) throws AccessDeniedException;
     void addView(UUID id);
+
+    PostResponseDto getRandomPost();
 }

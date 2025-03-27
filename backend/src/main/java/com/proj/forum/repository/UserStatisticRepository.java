@@ -18,9 +18,6 @@ public interface UserStatisticRepository extends JpaRepository<Statistic, UUID> 
     boolean existsByObjectIdAndUserId(@NotNull UUID objectId, @NotNull UUID userId);
     Optional<Statistic> getStatisticByObjectIdAndUserId(@NotNull UUID objectId, @NotNull UUID userId);
     List<Statistic> findStatisticsByObjectIdAndSavedIsTrue(UUID objectId);
-    List<Statistic> findStatisticsByObjectIdAndRateIsNotNull(UUID id);
-
-    Statistic getStatisticByUserIdAndObjectId(@NotNull UUID userId, @NotNull UUID objectId);
 
     @Query("SELECT " +
             "COALESCE(SUM(CASE WHEN s.liked = true THEN 1 ELSE 0 END), 0) - " +
@@ -31,6 +28,7 @@ public interface UserStatisticRepository extends JpaRepository<Statistic, UUID> 
     @Query("SELECT ROUND(AVG(s.rate), 1) FROM Statistic s WHERE s.objectId = :objectId AND s.rate IS NOT NULL")
     Optional<Double> findAverageRateByObjectId(UUID objectId);
 
+    Integer countStatisticByObjectIdAndSavedIsTrue(UUID objectId);
     int countStatisticsByObjectIdAndRateIsNotNull(UUID objectId);
 
     List<Statistic> findStatisticsByObjectIdAndLikedIsTrue(UUID id);
