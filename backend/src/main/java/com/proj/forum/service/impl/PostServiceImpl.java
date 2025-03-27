@@ -262,7 +262,7 @@ private List<PostResponseDto> getPostResponseDtos(List<Post> postList) {
                 .groupId(post.getGroup().getId())
                 .isLiked(statistic == null ? null: statistic.getLiked())
                 .isSaved(statistic != null && statistic.getSaved())
-                .countLikes(countLikes)
+                .countLikes(post.getLikesCount() != null ? post.getLikesCount() : 0)
                 .countSaved(countSaved)
                 .build();
     }
