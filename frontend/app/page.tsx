@@ -12,7 +12,7 @@ const Page = () => {
         <div >
             {/* rootPage */}
             <HomeLayout>
-                <div className="p-6  rounded-lg shadow-lg w-full max-w-4xl">
+                <div className="p-6 rounded-lg  w-full max-w-4xl">
                     <h1 className="text-3xl font-bold text-center text-AccnetColor mb-6">Welcome to the Home Page</h1>
                     {authState?.isAuthenticated ? (
                         <CreatePostNav />
