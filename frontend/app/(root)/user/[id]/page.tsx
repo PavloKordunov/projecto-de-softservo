@@ -3,9 +3,12 @@
 import EditProfile from "@/components/EditProfile";
 import Post from "@/components/Post";
 import { useUser } from "@/hooks/useUser";
+import { set } from "date-fns";
+import { get } from "http";
 import { Edit } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
+import { it } from "node:test";
 import { useEffect, useState } from "react";
 
 const UserPage = () => {
@@ -15,17 +18,10 @@ const UserPage = () => {
     const userId = params.id;
     const { user } = useUser(); 
     const [showUpdateUser, setShowUpdateUser] = useState(false);
+    const [filterType, setFilterType] = useState<string | null>('createdAt');
+    const [sortType, setSortType] = useState<string | null>('desc');
 
     useEffect(() => {
-        const getUserPost = async () => {
-            const res = await fetch(`https://localhost:8080/api/posts/user/${userId}`, {
-                mode: "cors",
-            });
-            const data = await res.json();
-            setPosts(data.body);
-            console.log(data);
-        };
-
         const getUserById = async () => {
             const res = await fetch(`https://localhost:8080/api/users/id/${userId}`, {
                 mode: "cors",
@@ -36,8 +32,20 @@ const UserPage = () => {
         };
 
         getUserById();
-        getUserPost();
     }, [userId]);
+
+    useEffect(() => {
+        const getUserPost = async () => {
+            const res = await fetch(`https://localhost:8080/api/posts/user/${userId}?sort=${filterType}&order=${sortType}`, {
+                mode: "cors",
+            });
+            const data = await res.json();
+            setPosts(data.body);
+            console.log(data);
+        };
+
+        getUserPost();
+    }, [filterType, sortType]);
 
     const handleShow = () => {
         setShowUpdateUser(!showUpdateUser);
@@ -66,9 +74,32 @@ const UserPage = () => {
     }
 
     useEffect(() => {
-       console.log(user) 
-    }, [])
+       console.log(user)
+       console.log("Filter type", filterType)
+       console.log("Sort type", sortType) 
+    }, [filterType, sortType])
 
+    const filterPost = (filterType: string) => {
+        if (filterType === "likes") {
+            setSortType((prevSortType) => {
+                if (prevSortType === null) return "asc";
+                if (prevSortType === "asc") return "desc";
+                return null;
+            });
+        } else if (filterType === "viewCount") {
+            setSortType((prevSortType) => {
+                if (prevSortType === null) return "asc";
+                if (prevSortType === "asc") return "desc";
+                return null;
+            });
+        } else if (filterType === "createdAt") {
+            setSortType((prevSortType) => {
+                if (prevSortType === null) return "asc";
+                if (prevSortType === "asc") return "desc";
+                return null;
+            });
+        }
+    };
     return (
         <div className="px-3 py-12 mt-4 bg-MainColor rounded-[21px] mb-6 w-[1050px]">
             <div className="flex items-center ml-9 mb-8">
@@ -119,17 +150,45 @@ const UserPage = () => {
             <div className="border-t border-[#434C55] mb-6"></div>
 
             <div className="flex items-center ml-9 gap-6 mb-6">
-                <button className="px-3 py-2 bg-AccnetColor rounded-[8px] text-white text-[16px] font-bold gap-1 flex items-center">
+                <button className={`px-3 py-2 ${filterType === 'likes' && (sortType === 'asc' || sortType=== "desc") ? 'bg-AccnetColor' : 'bg-[#434C55]'} rounded-[8px] text-white text-[16px] font-bold gap-1 flex items-center`}
+                    onClick={() => {
+                        filterPost('likes')
+                        setFilterType('likes')
+                    }
+                    }>
                     <p>За вподобаннями</p>
-                    <svg className="w-4 h-3 rotate-180" fill="#fff">
+                    { (filterType === 'likes' && (sortType === 'asc' || sortType=== "desc")) && 
+                    <svg className={`w-4 h-3 ${sortType === 'asc' ? 'rotate-180' : ""}`} fill="#fff">
                         <use href={`/sprite.svg#iconArrowDown`} />
                     </svg>
+                    }
+
                 </button>
-                <button className="px-3 py-2 bg-[#434C55] rounded-[8px] text-white text-[16px] font-bold gap-1 flex items-center">
+                <button className={`px-3 py-2 ${filterType === 'viewCount' && (sortType === 'asc' || sortType=== "desc") ? 'bg-AccnetColor' : 'bg-[#434C55]'} rounded-[8px] text-white text-[16px] font-bold gap-1 flex items-center`}
+                    onClick={() => {
+                        filterPost('viewCount')
+                        setFilterType('viewCount')
+                    }
+                    }>
                     <p>За перглядами</p>
+                    { (filterType === 'viewCount' && (sortType === 'asc' || sortType=== "desc")) && 
+                    <svg className={`w-4 h-3 ${sortType === 'asc' ? 'rotate-180' : ""}`} fill="#fff">
+                        <use href={`/sprite.svg#iconArrowDown`} />
+                    </svg>
+                    }
                 </button>
-                <button className="px-3 py-2 bg-[#434C55] rounded-[8px] text-white text-[16px] font-bold gap-1 flex items-center">
+                <button className={`px-3 py-2 ${filterType === 'createdAt' && (sortType === 'asc' || sortType=== "desc") ? 'bg-AccnetColor' : 'bg-[#434C55]'} rounded-[8px] text-white text-[16px] font-bold gap-1 flex items-center`}
+                    onClick={() => {    
+                        filterPost('createdAt')
+                        setFilterType('createdAt')
+                    }
+                    }>
                     <p>За датою</p>
+                    {  (filterType === 'createdAt' && (sortType === 'asc' || sortType=== "desc")) && 
+                    <svg className={`w-4 h-3 ${sortType === 'asc' ? 'rotate-180' : ""}`} fill="#fff">
+                        <use href={`/sprite.svg#iconArrowDown`} />
+                    </svg>
+                    }
                 </button>
             </div>
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@/hooks/useUser";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -8,11 +9,16 @@ import { useEffect, useState } from "react";
 const TopicPage = () => {
 
     const [topic, setTopic] = useState<any[]>([]);
+    const { user} = useUser()
 
     useEffect(() => {
         const getAllTopics = async () => {
           const res = await fetch("https://localhost:8080/api/topics", {
             mode: "cors",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${user?.accessToken}`,
+            }
           });
           const data = await res.json();
           setTopic(data.body);

@@ -1,7 +1,6 @@
 "use client"
 
 import { useUser } from "@/hooks/useUser";
-import { set } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -20,18 +19,20 @@ interface PostProps {
     userId: string;
     groupId: string;
     isLiked: boolean | null;
+    countLikes: number;
   };
   className?: string;
 }
 
-
 const Post: React.FC<PostProps> = ({ className, post }) => {
     const { user } = useUser();
+    
     const [likeStatus, setLikeStatus] = useState<boolean | null>(post.isLiked);
-  
+    const [countLikes, setCountLikes] = useState<number>(post.countLikes);
+
     const likeDislike = async (liked: boolean | null) => {
       if (!user) return;
-  
+
       try {
         const res = await fetch(`https://localhost:8080/api/user-statistic/like`, {
           mode: "cors",
@@ -46,29 +47,33 @@ const Post: React.FC<PostProps> = ({ className, post }) => {
             liked,
           }),
         });
-  
+
         if (!res.ok) {
           throw new Error(`HTTP error! Status: ${res.status}`);
         }
-  
+
         const data = await res.json();
         console.log(data);
-  
+
         setLikeStatus(liked);
+        setCountLikes((prev) => {
+          if (likeStatus === true && liked === null) return prev - 1;
+          if (likeStatus === false && liked === null) return prev + 1;
+          if (liked === true) return prev + (likeStatus === false ? 2 : 1);
+          if (liked === false) return prev - (likeStatus === true ? 2 : 1);
+          return prev;
+        });
+
       } catch (error) {
         console.error("Failed to update like status:", error);
       }
     };
 
-    useEffect(() => {
-      post.isLiked === likeStatus
-    }, [likeStatus, post.isLiked]);
-  
     const toggleLike = () => {
       const newStatus = likeStatus === true ? null : true;
       likeDislike(newStatus);
     };
-  
+
     const toggleDislike = () => {
       const newStatus = likeStatus === false ? null : false;
       likeDislike(newStatus);
@@ -76,7 +81,7 @@ const Post: React.FC<PostProps> = ({ className, post }) => {
 
     return ( 
         <Link href={`/post/${post.id}`} className={`p-6 bg-MainColor rounded-[21px] flex gap-3 mb-6 items-center w-[1030px] ${className}`}>
-            <Image src={post?.image} alt="" width="208" height="237" />
+            {post.image && <Image src={post?.image} alt="" width="208" height="237" />}
             <div className="ml-2 w-full">
                 <div className="flex items-center w-full justify-between">
                     <div className="flex gap-2 mb-4">
@@ -84,21 +89,14 @@ const Post: React.FC<PostProps> = ({ className, post }) => {
                         <p className="text-[16px] text-white font-semibold">/{post.groupTitle}</p>
                     </div>
                     <div className="flex items-center p-2 gap-3 bg-[#2C353D] rounded-[20px]">
-                        <button onClick={ (e) => {
-                          e.preventDefault();
-                          toggleLike();
-                        }}>
-                          <svg className="w-6 h-6" fill={likeStatus === true ? "#FF0000" : likeStatus === null ? "#C5D0E6" : "#C5D0E6"}>
+                        <button onClick={(e) => { e.preventDefault(); toggleLike(); }}>
+                          <svg className="w-6 h-6" fill={likeStatus === true ? "#FF0000" : "#C5D0E6"}>
                             <use href={`/sprite.svg#iconLike`} />
                           </svg>
                         </button>
-                        <p className="text-[18px] text-[#C5D0E6]">120</p>
-                        <button onClick={ (e) => {
-                          e.preventDefault();
-                          toggleDislike();
-                        }}>
-                          <svg className="w-6 h-6" fill={likeStatus === false ? "#FF0000" : likeStatus === null ? "#C5D0E6" : "#C5D0E6"}>
-                              <use href={`/sprite.svg?v=1#icon-heartbreak`}/>
+                        <button onClick={(e) => { e.preventDefault(); toggleDislike(); }}>
+                          <svg className="w-6 h-6" fill={likeStatus === false ? "#FF0000" : "#C5D0E6"}>
+                            <use href={`/sprite.svg?v=1#icon-heartbreak`}/>
                           </svg>
                         </button>
                     </div>                                                
@@ -124,12 +122,12 @@ const Post: React.FC<PostProps> = ({ className, post }) => {
                         </div>
                     </div>
                     <p className="text-[18px] text-[#C5D0E6] font-regular">{post.viewCount} Переглядів</p>
-                    <p className="text-[18px] text-[#C5D0E6] font-regular">36,6545 Уподобань</p>
+                    <p className="text-[18px] text-[#C5D0E6] font-regular">{countLikes} Уподобань</p>
                     <p className="text-[18px] text-[#C5D0E6] font-regular">56 Коментарів</p>
                 </div>
             </div>
         </Link>
-     );
+    );
 }
- 
+
 export default Post;

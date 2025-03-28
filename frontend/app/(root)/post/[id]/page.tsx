@@ -3,7 +3,7 @@
 import {useParams} from 'next/navigation';
 import Image from "next/image";
 import Link from "next/link";
-import {useEffect, useState} from 'react';
+import {use, useEffect, useState} from 'react';
 import {useUser} from '@/hooks/useUser';
 import {set} from 'date-fns';
 import EditPost from '@/components/EditPost';
@@ -19,7 +19,11 @@ interface Post {
     groupTitle: string;
     viewCount: string;
     userId: string;
-    groupId: string
+    groupId: string;
+    isLiked: boolean | null;
+    isSaved: boolean | null;
+    countLikes: number;
+    countSaved: number;
 }
 
 const PostPage = () => {
@@ -36,6 +40,110 @@ const PostPage = () => {
     const [comments, setComments] = useState<any[]>([])
     const [showUpdatePost, setShowUpdatePost] = useState(false)
     const [post, setPost] = useState<Post | null>(null)
+    const [likeStatus, setLikeStatus] = useState<boolean | null>(null);
+    const [saved, setSaved] = useState<boolean | null>(null);
+    const [countLikes, setCountLikes] = useState<number>(0);
+    const [countSaved, setCountSaved] = useState<number>(0);
+  
+    const likeDislike = async (liked: boolean | null) => {
+        if (!user) return;
+  
+        try {
+          const res = await fetch(`https://localhost:8080/api/user-statistic/like`, {
+            mode: "cors",
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${user?.accessToken}`,
+            },
+            body: JSON.stringify({
+              objectId: post?.id,
+              userId: user.id,
+              liked,
+            }),
+          });
+  
+          if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+          }
+  
+          const data = await res.json();
+          console.log(data);
+  
+          setLikeStatus(liked);
+          setCountLikes((prev) => {
+            if (likeStatus === true && liked === null) return prev - 1;
+            if (likeStatus === false && liked === null) return prev + 1;
+            if (liked === true) return prev + (likeStatus === false ? 2 : 1);
+            if (liked === false) return prev - (likeStatus === true ? 2 : 1);
+            return prev;
+          });
+  
+        } catch (error) {
+          console.error("Failed to update like status:", error);
+        }
+    };
+
+    const savePost = async (saved: boolean | null) => {
+        if (!user) return;
+    
+        try {
+          const res = await fetch(`https://localhost:8080/api/user-statistic/save`, {
+            mode: "cors",
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${user?.accessToken}`,
+            },
+            body: JSON.stringify({
+              objectId: post?.id,
+              userId: user.id,
+              saved,
+            }),
+          });
+    
+          if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+          }
+    
+          const data = await res.json();
+          console.log(data);
+    
+          setSaved(saved);
+            setCountSaved((prev) => {
+                if (saved === true) return prev + 1
+                if (saved === false) return prev - 1
+                return prev;
+            });
+          
+        } catch (error) {
+          console.error("Failed to update like status:", error);
+        }
+    };
+  
+    const toggleLike = () => {
+      const newStatus = likeStatus === true ? null : true;
+      likeDislike(newStatus);
+    };
+  
+    const toggleDislike = () => {
+      const newStatus = likeStatus === false ? null : false;
+      likeDislike(newStatus);
+    };
+
+    useEffect(() => {
+        if (post) {
+            setLikeStatus(post.isLiked);
+            setSaved(post.isSaved);
+            setCountLikes(post.countLikes);
+            setCountSaved(post.countSaved);
+        }
+    }, [post]);
+
+    useEffect(() => {
+        console.log('likeStatus:', likeStatus);
+        console.log('saved:', saved);
+    }, [likeStatus, saved]);
 
     function encodeImageFileAsURL(event: React.ChangeEvent<HTMLInputElement>) {
         const file = event.target.files?.[0];
@@ -59,6 +167,9 @@ const PostPage = () => {
             try {
                 const res = await fetch(`https://localhost:8080/api/posts/${postId}`, {
                     mode: "cors",
+                    headers: {
+                        'Authorization': `Bearer ${user?.accessToken}`
+                    }
                 })
                 const data = await res.json()
                 setPost(data.body)
@@ -143,7 +254,7 @@ const PostPage = () => {
                         <p className="text-[13px] text-[#C5D0E6] font-semibold">страшний</p>
                     </div>
                 </div>
-                <Image src={post?.image} alt="" width={980} height={760} className="mb-3" />
+                {post?.image && <Image src={post?.image} alt="" width={980} height={760} className="mb-3" />}
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">
                         <Link href={`/user/${post.userId}`}><Image src="/person.png" alt="" width={54} height={54}/></Link>
@@ -152,24 +263,43 @@ const PostPage = () => {
                             <span className="text-[13px] text-[#C5D0E6] font-regular">2 години тому</span>
                         </div>
                         <div className="flex gap-3 ml-5">
-                            <div className="flex items-center p-2 gap-3 bg-[#2C353D] rounded-[20px]">
-                                <svg className="w-6 h-6" fill="#C5D0E6" >
-                                    <use href={`/sprite.svg#iconLike`} />
-                                </svg>
-                                <p className="text-[18px] text-[#C5D0E6]">120</p>
-                                <Image src='/brokeHeart.png' alt="" width={29} height={29} />
+                            <div className="flex items-center px-3 py-2 gap-3 bg-[#2C353D] rounded-[20px]">
+                                <button onClick={ (e) => {
+                                    e.preventDefault();
+                                    toggleLike();
+                                    }}>
+                                    <svg className="w-6 h-6" fill={likeStatus === true ? "#FF0000" : likeStatus === null ? "#C5D0E6" : "#C5D0E6"}>
+                                        <use href={`/sprite.svg#iconLike`} />
+                                    </svg>
+                                </button>
+                                    <p className="text-[18px] text-[#C5D0E6]">{countLikes}</p>
+                                <button onClick={ (e) => {
+                                    e.preventDefault();
+                                    toggleDislike();
+                                    }}>
+                                    <svg className="w-6 h-6" fill={likeStatus === false ? "#FF0000" : likeStatus === null ? "#C5D0E6" : "#C5D0E6"}>
+                                        <use href={`/sprite.svg?v=1#icon-heartbreak`}/>
+                                    </svg>
+                                </button>
                             </div>
-                            <div className="flex items-center p-2 gap-3 bg-[#2C353D] rounded-[20px]">
+                            <div className="flex items-center px-3 py-2 gap-3 bg-[#2C353D] rounded-[20px]">
                                 <svg className="w-6 h-6" fill="#C5D0E6" >
                                     <use href={`/sprite.svg#icon-comment`} />
                                 </svg>
                                 <p className="text-[18px] text-[#C5D0E6]">56</p>
                             </div>
-                            <div className="flex items-center p-2 gap-3 bg-[#2C353D] rounded-[20px]">
-                                <svg className="w-5 h-6" fill="#C5D0E6" >
-                                    <use href={`/sprite.svg#icon-save`} />
-                                </svg>
-                                <p className="text-[18px] text-[#C5D0E6]">10</p>
+                            <div className="flex items-center px-3 py-2 gap-3 bg-[#2C353D] rounded-[20px]">
+                                <button onClick={ (e) => {
+                                    e.preventDefault();
+                                    setSaved(!saved);
+                                    savePost(!saved);
+                                    }
+                                }>
+                                    <svg className={`w-5 h-6 ${saved === true ? "fill-[#FFD700]" : "fill-white"}`}  >
+                                        <use href={`/sprite.svg#icon-save`} />
+                                    </svg>
+                                </button>
+                                <p className="text-[18px] text-[#C5D0E6]">{countSaved}</p>
                             </div>
                         </div>
                     </div>

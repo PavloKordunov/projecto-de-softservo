@@ -13,6 +13,9 @@ interface Post {
   duration: string;
   country: string;
   genre: string;
+  userRateCount: number;
+  userRate: number;
+  myRate: number;
 }
 
 const AdminPost = () => {
@@ -29,12 +32,18 @@ const AdminPost = () => {
   })
 
   const [topic, setTopics] = useState<Post | null>(null);
+  const [topicRate, setTopicRate] = useState<number | null>(null);
 
   useEffect(() => {
       const getAllTopics = async () => {
         const res = await fetch(`https://localhost:8080/api/topics/${topicId}`, {
           mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${user?.accessToken}`,
+          }
         });
+
         const data = await res.json();
         setTopics(data.body);
         console.log(data);
@@ -73,12 +82,59 @@ const AdminPost = () => {
     } catch (error) {
         console.log(error)
     }
-}
+  }
+
+ useEffect(() => {
+  if(topicRate !== 0 && topicRate !== null){
+    const rateTopic = async () => {
+        if (!user) return;
+    
+        try {
+          const res = await fetch(`https://localhost:8080/api/user-statistic/rate`, {
+            mode: "cors",
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${user?.accessToken}`,
+            },
+            body: JSON.stringify({
+              objectId: topicId,
+              userId: user.id,
+              rate: topicRate,
+            }),
+          });
+    
+          if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+          }
+    
+          const data = await res.json();
+          console.log(data);
+  
+        } catch (error) {
+          console.error("Failed to update like status:", error);
+        }
+      };
+    
+      rateTopic();
+    }
+  }, [topicRate]);
+
+
+  useEffect(() => {
+    if(topicRate !== null){
+      setTopics((prev) => {
+        if (prev) {
+          return { ...prev, userRate: topicRate };
+        }
+        return prev;
+      })
+    }
+  }, [topicRate])
 
   return (
     <div className="ml-6 mt-4 w-[1030px] bg-[#1E1F20] rounded-[31px] p-8">
       <div className="flex w-full gap-8 mb-32">
-        {/* Left Section */}
         <div>
           <img
             className="mb-6"
@@ -105,14 +161,14 @@ const AdminPost = () => {
               {[...Array(5)].map((_, index) => (
                 <svg
                   key={index}
-                  className={`w-6 h-6 ${index < 4 ? 'fill-[#FFD700]' : 'fill-white'}`}
+                  className={`w-6 h-6 ${index < (topic?.userRate ?? 0) ? 'fill-[#FFD700]' : 'fill-white'}`}
                 >
                   <use href={`/sprite.svg#starIcon`} />
                 </svg>
               ))}
             </li>
             <li>
-              <p className="text-[#C5D0E6] text-sm">100,145 Відгуки</p>
+              <p className="text-[#C5D0E6] text-sm">{topic?.userRateCount}</p>
             </li>
           </ul>
           <a className="flex justify-center items-center w-[237px] h-[39px] bg-[#2C353D] rounded-[31px]">
@@ -120,7 +176,6 @@ const AdminPost = () => {
           </a>
         </div>
 
-        {/* Right Section */}
         <div className='w-full'>
           <div className="flex w-full justify-between items-center mb-8">
             <div className='flex items-center '>
@@ -164,7 +219,7 @@ const AdminPost = () => {
       <div className="flex items-center mb-6">
         <p className="text-white text-3xl font-semibold mr-4">Залиш свої враження тут:</p>
         {[...Array(5)].map((_, index) => (
-          <svg key={index} className="w-10 h-10 fill-white">
+          <svg key={index} className={`w-10 h-10 ${(topicRate ?? topic?.myRate ?? 0) > index ? "fill-[#FFD700]" : 'fill-white'}`} onClick={() => setTopicRate(index+1)}>
             <use href={`/sprite.svg#starIcon`} />
           </svg>
         ))}

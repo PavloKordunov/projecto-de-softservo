@@ -6,6 +6,7 @@ import CreateGroup from "./CreateGroup";
 import { useState } from "react";
 import { motion } from 'framer-motion';
 import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
 
 const NavPanel = () => {
     const { theme, setTheme } = useTheme();
@@ -13,6 +14,19 @@ const NavPanel = () => {
 
     const handleShowCreateGroup = () => {
         setShowGroup(!showGroup)
+    }
+
+    const router = useRouter();
+
+    const getRandomPost = async () => {
+        try {
+            const res = await fetch('https://localhost:8080/api/posts/random')
+            const data = await res.json()
+
+            router.push(`/post/${data.body.id}`)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
@@ -29,7 +43,7 @@ const NavPanel = () => {
                         <p className="text-[#97989D] hover:text-black text-[8px] lg:text-[12px]">Обирай фільми, книги та серіали.</p>
                     </div>
                 </Link>
-                <div className={`p-2 ${theme === 'dark' ? 'bg-[#262D34]' : 'bg-[#FFFFFF]'} hover:bg-AccnetColor flex gap-2 items-center rounded-[10px] h-[60px] w-90 lg:w-90`}>
+                <div onClick={getRandomPost} className={`p-2 ${theme === 'dark' ? 'bg-[#262D34]' : 'bg-[#FFFFFF]'} hover:bg-AccnetColor flex gap-2 items-center rounded-[10px] h-[60px] w-90 lg:w-90`}>
                     <div className="w-9 h-9  rounded-[20px] flex items-center justify-center">
                         <svg className="w-6 h-6">
                             <use href={`/sprite.svg#diceIcon`} />
