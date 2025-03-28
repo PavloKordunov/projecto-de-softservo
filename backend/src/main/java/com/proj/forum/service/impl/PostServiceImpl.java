@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -67,7 +68,16 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Post not found"));
 
-        return getPostResponseDto(post);
+        String email = getEmail();
+        Integer countLikes = getCountLikes(post);
+        Integer countSaved = getCountSaved(post);
+        if(email == null) {
+            return stickPostDtoAndStatistic(post, null, countLikes, countSaved);
+        }
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new EntityNotFoundException("User not found"));
+        Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(id, user.getId()).orElse(null);
+        return stickPostDtoAndStatistic(post, statistic, countLikes, countSaved);
     }
 
     @Override
@@ -187,33 +197,64 @@ public class PostServiceImpl implements PostService {
 //        return mapToPostDtoList(posts);
     }
 
-    private List<PostResponseDto> getPostResponseDtos(List<Post> postList) {
-        if (postList.isEmpty()) {
-            throw new EntityNotFoundException("Posts not found");
-        }
-
-        List<PostResponseDto> postDtoList = new ArrayList<>();
-        String email = getEmail();
-
-        if (email == null) {
-            for (Post post : postList) {
-                Integer countLikes = getCountLikes(post);
-                Integer countSaved = getCountSaved(post);
-                postDtoList.add(stickPostDtoAndStatistic(post, null, countLikes, countSaved));
+    @Override
+    public List<PostResponseDto> getUserLikedPosts(UUID userId, String sort, String order) {
+        List<Post> posts;
+        switch (sort) {
+            case "viewCount" -> {
+                if (order.equalsIgnoreCase("asc")) {
+                    posts = postRepository.findLikedPostsByUserIdOrderByViewCountAsc(userId);
+                } else {
+                    posts = postRepository.findLikedPostsByUserIdOrderByViewCountDesc(userId);
+                }
             }
-            return postDtoList;
+            case "createdAt" -> {
+                if (order.equalsIgnoreCase("asc")) {
+                    posts = postRepository.findLikedPostsByUserIdOrderByCreatedAtAsc(userId);
+                }else {
+                    posts = postRepository.findLikedPostsByUserIdOrderByCreatedAtDesc(userId);
+                }
+            }
+            case "likes" -> {
+                if (order.equalsIgnoreCase("asc")) {
+                    posts = postRepository.findLikedPostsByUserIdOrderByLikesAsc(userId);
+                } else {
+                    posts = postRepository.findLikedPostsByUserIdOrderByLikesDesc(userId);
+                }
+            }
+            case null, default -> posts = postRepository.findAllLikedPostsByUserId(userId);
         }
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
-        for (Post post : postList) {
-            Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(post.getId(), user.getId()).orElse(null);
 
+        return getPostResponseDtos(posts);
+    }
+
+private List<PostResponseDto> getPostResponseDtos(List<Post> postList) {
+    if (postList.isEmpty()) {
+        throw new EntityNotFoundException("Posts not found");
+    }
+
+    List<PostResponseDto> postDtoList = new ArrayList<>();
+    String email = getEmail();
+
+    if (email == null) {
+        for (Post post : postList){
             Integer countLikes = getCountLikes(post);
             Integer countSaved = getCountSaved(post);
-            postDtoList.add(stickPostDtoAndStatistic(post, statistic, countLikes, countSaved));
+            postDtoList.add(stickPostDtoAndStatistic(post, null, countLikes, countSaved));
         }
         return postDtoList;
     }
+    User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new EntityNotFoundException("User not found"));
+    for (Post post : postList) {
+        Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(post.getId(), user.getId()).orElse(null);
+
+        Integer countLikes = getCountLikes(post);
+        Integer countSaved = getCountSaved(post);
+        postDtoList.add(stickPostDtoAndStatistic(post, statistic, countLikes, countSaved));
+    }
+    return postDtoList;
+}
 
     private PostResponseDto getPostResponseDto(Post post) {
         String email = getEmail();
@@ -317,7 +358,7 @@ public class PostServiceImpl implements PostService {
                 .groupTitle(post.getGroup().getTitle())
                 .createdAt(post.getCreatedAt())
                 .viewCount(post.getViewCount())
-                //  .countLikes(post.getLikesCount())
+                //.countLikes(post.getLikesCount())
                 .comments(comments)
                 .userId(post.getAuthor().getId())
                 .groupId(post.getGroup().getId())

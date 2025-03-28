@@ -32,4 +32,5 @@ public interface UserStatisticRepository extends JpaRepository<Statistic, UUID> 
     int countStatisticsByObjectIdAndRateIsNotNull(UUID objectId);
 
     List<Statistic> findStatisticsByObjectIdAndLikedIsTrue(UUID id);
+
 }

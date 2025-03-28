@@ -10,6 +10,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import { it } from "node:test";
 import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 
 const UserPage = () => {
     const [posts, setPosts] = useState<any[]>([]);
@@ -18,8 +19,12 @@ const UserPage = () => {
     const userId = params.id;
     const { user } = useUser(); 
     const [showUpdateUser, setShowUpdateUser] = useState(false);
+<<<<<<< HEAD
     const [filterType, setFilterType] = useState<string | null>('createdAt');
     const [sortType, setSortType] = useState<string | null>('desc');
+=======
+    const { theme } = useTheme();
+>>>>>>> origin/dev
 
     useEffect(() => {
         const getUserById = async () => {
@@ -76,7 +81,7 @@ const UserPage = () => {
     useEffect(() => {
        console.log(user)
        console.log("Filter type", filterType)
-       console.log("Sort type", sortType) 
+       console.log("Sort type", sortType)
     }, [filterType, sortType])
 
     const filterPost = (filterType: string) => {
@@ -101,7 +106,7 @@ const UserPage = () => {
         }
     };
     return (
-        <div className="px-3 py-12 mt-4 bg-MainColor rounded-[21px] mb-6 w-[1050px]">
+        <div className={`px-3 py-12 mt-4 ${theme === 'dark' ? 'bg-MainColor' : 'bg-[#EAEAEA]'} rounded-[21px] mb-6 w-[1050px]`}>
             <div className="flex items-center ml-9 mb-8">
                 <div className="flex gap-3 items-center mr-28">
                     <div className="h-[110px] w-[110px] rounded-[50%] overflow-hidden">
@@ -109,7 +114,7 @@ const UserPage = () => {
                     </div>
                     <div className="flex flex-col gap-1">
                         <div className="flex gap-6 items-center">
-                            <p className="text-white text-[48px] font-semibold leading-[48px] m-0">{userState?.firstName}</p>
+                            <p className={`${theme === 'dark' ? 'text-white' : 'text-black'} text-[48px] font-semibold leading-[48px] m-0`}>{userState?.firstName}</p>
                             {userId === user?.id && ( 
                                 <svg className="w-9 h-8" fill="#fff" onClick={handleShow}>
                                     <use href={`/sprite.svg#changeProfileIcon`} />
@@ -121,30 +126,30 @@ const UserPage = () => {
                 </div>
                 <div className="flex items-center gap-24">
                     <div className="flex flex-col items-center">
-                        <p className="text-white text-[26px] font-semibold leading-[26px] m-0">{userState?.following}</p> 
-                        <p className="text-white text-[26px] font-semibold leading-[26px] m-0">Читачі</p>
+                        <p className={`${theme === 'dark' ? ' text-white' : ' text-black'} text-[26px] font-semibold leading-[26px] m-0`}>{userState?.following}</p>
+                        <p className={`${theme === 'dark' ? ' text-white' : ' text-black'} text-[26px] font-semibold leading-[26px] m-0`}>Читачі</p>
                     </div>
                     <div className="flex flex-col items-center">
-                        <p className="text-white text-[26px] font-semibold leading-[26px] m-0">{userState?.subscribers}</p> 
-                        <p className="text-white text-[26px] font-semibold leading-[26px] m-0">Стежень</p>
+                        <p className={`${theme === 'dark' ? ' text-white' : ' text-black'} text-[26px] font-semibold leading-[26px] m-0`}>{userState?.subscribers}</p>
+                        <p className={`${theme === 'dark' ? ' text-white' : ' text-black'} text-[26px] font-semibold leading-[26px] m-0`}>Стежень</p>
                     </div>
                     <div className="flex flex-col items-center">
-                        <p className="text-white text-[26px] font-semibold leading-[26px] m-0">{userState?.createdPosts}</p>
-                        <p className="text-white text-[26px] font-semibold leading-[26px] m-0">Дописів</p>
+                        <p className={`${theme === 'dark' ? ' text-white' : ' text-black'} text-[26px] font-semibold leading-[26px] m-0`}>{userState?.createdPosts}</p>
+                        <p className={`${theme === 'dark' ? ' text-white' : ' text-black'} text-[26px] font-semibold leading-[26px] m-0`}>Дописів</p>
                     </div>
                 </div>
             </div>
 
             {user?.id !== userId && <div className="flex items-center ml-9 gap-6 mb-5">
-                <button onClick={subscribeUser} className="px-4 py-1 bg-[#434C55] rounded-[31px] text-white text-[16px] font-bold">підписатись</button>
-                <button className="px-4 py-1 bg-[#434C55] rounded-[31px] text-white text-[16px] font-bold">Написати</button>
+                <button onClick={subscribeUser} className={`px-4 py-1 ${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'} rounded-[31px]  text-[16px] font-bold`}>підписатись</button>
+                <button className={`px-4 py-1  rounded-[31px] ${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'} text-[16px] font-bold`}>Написати</button>
             </div>}
 
             <div className="flex items-center ml-9 gap-6 mb-10">
-                <button className="px-5 py-3 bg-[#434C55] rounded-[31px] text-white text-[16px] font-bold">Дописи</button>
-                <button className="px-5 py-3 bg-[#434C55] rounded-[31px] text-white text-[16px] font-bold">Вподобання</button>
-                <button className="px-5 py-3 bg-[#434C55] rounded-[31px] text-white text-[16px] font-bold">Збережені</button>
-                <button className="px-5 py-3 bg-[#434C55] rounded-[31px] text-white text-[16px] font-bold">Мої оцінки</button>
+                <button className={`px-5 py-3 ]  ${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'} rounded-[31px]  text-[16px] font-bold`}>Дописи</button>
+                <button className={`px-5 py-3 ]  ${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'} rounded-[31px]  text-[16px] font-bold`}>Вподобання</button>
+                <button className={`px-5 py-3 ]  ${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'} rounded-[31px]  text-[16px] font-bold`}>Збережені</button>
+                <button className={`px-5 py-3 ]  ${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'} rounded-[31px]  text-[16px] font-bold`}>Мої оцінки</button>
             </div>
 
             <div className="border-t border-[#434C55] mb-6"></div>
@@ -164,12 +169,16 @@ const UserPage = () => {
                     }
 
                 </button>
+<<<<<<< HEAD
                 <button className={`px-3 py-2 ${filterType === 'viewCount' && (sortType === 'asc' || sortType=== "desc") ? 'bg-AccnetColor' : 'bg-[#434C55]'} rounded-[8px] text-white text-[16px] font-bold gap-1 flex items-center`}
                     onClick={() => {
                         filterPost('viewCount')
                         setFilterType('viewCount')
                     }
                     }>
+=======
+                <button className={`px-3 py-2 ${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'} rounded-[8px]  text-[16px] font-bold gap-1 flex items-center`}>
+>>>>>>> origin/dev
                     <p>За перглядами</p>
                     { (filterType === 'viewCount' && (sortType === 'asc' || sortType=== "desc")) && 
                     <svg className={`w-4 h-3 ${sortType === 'asc' ? 'rotate-180' : ""}`} fill="#fff">
@@ -177,12 +186,16 @@ const UserPage = () => {
                     </svg>
                     }
                 </button>
+<<<<<<< HEAD
                 <button className={`px-3 py-2 ${filterType === 'createdAt' && (sortType === 'asc' || sortType=== "desc") ? 'bg-AccnetColor' : 'bg-[#434C55]'} rounded-[8px] text-white text-[16px] font-bold gap-1 flex items-center`}
                     onClick={() => {    
                         filterPost('createdAt')
                         setFilterType('createdAt')
                     }
                     }>
+=======
+                <button className={`px-3 py-2 ${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'} rounded-[8px]  text-[16px] font-bold gap-1 flex items-center`}>
+>>>>>>> origin/dev
                     <p>За датою</p>
                     {  (filterType === 'createdAt' && (sortType === 'asc' || sortType=== "desc")) && 
                     <svg className={`w-4 h-3 ${sortType === 'asc' ? 'rotate-180' : ""}`} fill="#fff">
