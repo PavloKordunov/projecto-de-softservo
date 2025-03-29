@@ -22,13 +22,15 @@ interface PostProps {
     countLikes: number;
   };
   className?: string;
+  isPinned?: any[];
 }
 
-const Post: React.FC<PostProps> = ({ className, post }) => {
+const Post: React.FC<PostProps> = ({ className, post, isPinned }) => {
     const { user } = useUser();
     
     const [likeStatus, setLikeStatus] = useState<boolean | null>(post.isLiked);
     const [countLikes, setCountLikes] = useState<number>(post.countLikes);
+    const [isPinnedPost, setIsPinnedPost] = useState(post.isPinned);
 
     const likeDislike = async (liked: boolean | null) => {
       if (!user) return;
@@ -69,6 +71,31 @@ const Post: React.FC<PostProps> = ({ className, post }) => {
       }
     };
 
+    const pinPost = async () => {
+      if (!user) return;
+
+      try {
+        const res = await fetch(`https://localhost:8080/api/posts/pin/${post.id}`, {
+          mode: "cors",
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user?.accessToken}`,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+
+        const data = await res.json();
+        console.log(data);
+
+      } catch (error) {
+        console.error("Failed to pin post:", error);
+      }
+    }
+
     const toggleLike = () => {
       const newStatus = likeStatus === true ? null : true;
       likeDislike(newStatus);
@@ -84,21 +111,34 @@ const Post: React.FC<PostProps> = ({ className, post }) => {
             {post.image && <Image src={post?.image} alt="" width="208" height="237" />}
             <div className="ml-2 w-full">
                 <div className="flex items-center w-full justify-between">
-                    <div className="flex gap-2 mb-4">
+                    <div className="flex gap-2">
                         <Image src='/groupImage.png' alt="" width={25} height={25} />
                         <p className="text-[16px] text-white font-semibold">/{post.groupTitle}</p>
                     </div>
-                    <div className="flex items-center p-2 gap-3 bg-[#2C353D] rounded-[20px]">
-                        <button onClick={(e) => { e.preventDefault(); toggleLike(); }}>
-                          <svg className="w-6 h-6" fill={likeStatus === true ? "#FF0000" : "#C5D0E6"}>
-                            <use href={`/sprite.svg#iconLike`} />
-                          </svg>
-                        </button>
-                        <button onClick={(e) => { e.preventDefault(); toggleDislike(); }}>
-                          <svg className="w-6 h-6" fill={likeStatus === false ? "#FF0000" : "#C5D0E6"}>
-                            <use href={`/sprite.svg?v=1#icon-heartbreak`}/>
-                          </svg>
-                        </button>
+                    <div className="flex items-center gap-3">
+                        {isPinned !== undefined && (
+                          <button className=" p-2 bg-[#2C353D] rounded-[20px]" onClick={(e) => {
+                             e.preventDefault();
+                             setIsPinnedPost(!isPinnedPost);
+                              pinPost();
+                          }}>
+                            <svg className="w-6 h-6" fill="#C5D0E6">
+                              <use href={`/sprite.svg?v=1#pinIcon`}/>
+                            </svg>
+                          </button>
+                        )}
+                      <div className="flex items-center p-2 gap-3 bg-[#2C353D] rounded-[20px]">
+                          <button onClick={(e) => { e.preventDefault(); toggleLike(); }}>
+                            <svg className="w-6 h-6" fill={likeStatus === true ? "#FF0000" : "#C5D0E6"}>
+                              <use href={`/sprite.svg#iconLike`} />
+                            </svg>
+                          </button>
+                          <button onClick={(e) => { e.preventDefault(); toggleDislike(); }}>
+                            <svg className="w-6 h-6" fill={likeStatus === false ? "#FF0000" : "#C5D0E6"}>
+                              <use href={`/sprite.svg?v=1#icon-heartbreak`}/>
+                            </svg>
+                          </button>
+                      </div>
                     </div>                                                
                 </div>
                 <p className="text-[24px] mb-3 text-white font-semibold w-[650px]">{post.title}</p>
