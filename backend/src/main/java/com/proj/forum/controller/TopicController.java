@@ -64,4 +64,11 @@ public class TopicController {
             topicService.deleteTopic(id);
             return ApiResponse.apiResponse(true, 200, "Topic successfully deleted", id);
     }
+
+    @GetMapping("/user/{userId}")
+    public ApiResponse<List<TopicDto>> getUserRatedTopics(@PathVariable UUID userId) {
+        List<TopicDto> topicsDto = topicService.getUserRatedTopics(userId);
+
+        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Topics found", topicsDto);
+    }
 }

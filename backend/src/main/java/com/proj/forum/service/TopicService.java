@@ -16,4 +16,6 @@ public interface TopicService {
     void updateTopic(UUID id, TopicDto topicDto);
     List<TopicDto> mapToTopicDtoList(List<Topic> topics);
     void addView(UUID id);
+
+    List<TopicDto> getUserRatedTopics(UUID userId);
 }
