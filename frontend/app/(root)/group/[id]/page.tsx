@@ -24,6 +24,7 @@ const Group = () => {
     const [userSubscribed, setUserSubscribed] = useState<boolean | null>(null);
     const [group, setGroup] = useState<Group | null>(null)
     const [show, setShow] = useState(false);
+    const [isPinned, setIsPinned] = useState<any[] >([]);
 
     useEffect(() => {
         const getAllPost = async () => {
@@ -141,33 +142,52 @@ const Group = () => {
                     </div>
                 </div>
             </div>
-            {group.isPublic || userSubscribed && <div>
-            {posts && posts.map(post => ( post.isPinned == true && (
-                <div className=" p-5 bg-MainColor rounded-[21px] h-fit w-[1030px] mb-8">
-                <div className="flex items-center gap-1 mb-6">
-                    <svg width={30} height={32}>
-                        <use href={`/sprite.svg#pinIcon`} />
-                    </svg>
-                    <p className="text-white text-[28px] font-bold">Закріплені пости</p>
+            {group.isPublic || userSubscribed ? (
+  <>
+    {posts && posts.some(post => post.isPinned) && (
+      <div className="p-5 bg-MainColor rounded-[21px] h-fit w-[1030px] mb-8">
+        <div className="flex items-center gap-1 mb-6">
+          <svg width={30} height={32}>
+            <use href={`/sprite.svg#pinIcon`} />
+          </svg>
+          <p className="text-white text-[28px] font-bold">Закріплені пости</p>
+        </div>
+        <div className="flex gap-6">
+          {posts
+            .filter(post => post.isPinned)
+            .map(post => (
+              <Link
+                href={`/post/${post.id}`}
+                key={post.id}
+                className="bg-SecondaryColor w-[311px] pb-2 h-fit rounded-br-[14px] rounded-bl-[14px]"
+              >
+                <div className="h-311 w-204 overflow-hidden">
+                {post.image && <Image
+                  src={post.image}
+                  alt=""
+                  width={311}
+                  height={204}
+                  className="mb-2 "
+                />} 
                 </div>
-                <div className="flex gap-6">
-                
-                    <Link href={`/post/${post?.id}`} key={post.id} className="bg-SecondaryColor w-[311px] pb-2 h-fit rounded-br-[14px] rounded-bl-[14px]">
-                        <Image src={post?.image} alt="" width={311} height={204} className="mb-2" />
-                        <p className=" ml-3 text-white text-[16px] font-bold">{post.title}</p>
-                    </Link>
-                    
-                </div>
-            </div>
-            )))}
+                <p className="ml-3 text-white text-[16px] font-bold">
+                  {post.title}
+                </p>
+              </Link>
+            ))}
+        </div>
+      </div>
+    )}
+  </>
+) : null}
+
             {posts ? (
-                posts.map((post) => <Post key={post.id} post={post} />)
+                posts.map((post) => <Post key={post.id} post={post} isPinned={isPinned} />)
             ) : (
                 <p>Поки що немає постів...</p>
             )}
             {show && <CreatePostModal handleShow={handleShow} group={group} />}
-            </div>}
-        </div>
+            </div>
      );
 }
  

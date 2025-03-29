@@ -19,12 +19,10 @@ const UserPage = () => {
     const userId = params.id;
     const { user } = useUser(); 
     const [showUpdateUser, setShowUpdateUser] = useState(false);
-<<<<<<< HEAD
     const [filterType, setFilterType] = useState<string | null>('createdAt');
     const [sortType, setSortType] = useState<string | null>('desc');
-=======
     const { theme } = useTheme();
->>>>>>> origin/dev
+    const [categorytype, setCategoryType] = useState<string>("posts");
 
     useEffect(() => {
         const getUserById = async () => {
@@ -43,14 +41,37 @@ const UserPage = () => {
         const getUserPost = async () => {
             const res = await fetch(`https://localhost:8080/api/posts/user/${userId}?sort=${filterType}&order=${sortType}`, {
                 mode: "cors",
+                headers : {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${user?.accessToken}`
+                },
             });
             const data = await res.json();
             setPosts(data.body);
             console.log(data);
         };
 
-        getUserPost();
-    }, [filterType, sortType]);
+        const getUserLikePost = async () => {
+            const res = await fetch(`https://localhost:8080/api/posts/user/liked/${userId}?sort=${filterType}&order=${sortType}`, {
+                mode: "cors",
+                headers : {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${user?.accessToken}`
+                }, 
+            });
+            const data = await res.json();
+            setPosts(data.body);
+            console.log(data);
+        };
+
+        if(categorytype === "posts") {
+            getUserPost();
+        }
+        if(categorytype === "likes") {
+            setPosts([]);
+            getUserLikePost();
+        }    
+    }, [filterType, sortType, categorytype]);
 
     const handleShow = () => {
         setShowUpdateUser(!showUpdateUser);
@@ -81,7 +102,7 @@ const UserPage = () => {
     useEffect(() => {
        console.log(user)
        console.log("Filter type", filterType)
-       console.log("Sort type", sortType)
+       console.log("Sort type", sortType) 
     }, [filterType, sortType])
 
     const filterPost = (filterType: string) => {
@@ -146,16 +167,16 @@ const UserPage = () => {
             </div>}
 
             <div className="flex items-center ml-9 gap-6 mb-10">
-                <button className={`px-5 py-3 ]  ${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'} rounded-[31px]  text-[16px] font-bold`}>Дописи</button>
-                <button className={`px-5 py-3 ]  ${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'} rounded-[31px]  text-[16px] font-bold`}>Вподобання</button>
-                <button className={`px-5 py-3 ]  ${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'} rounded-[31px]  text-[16px] font-bold`}>Збережені</button>
-                <button className={`px-5 py-3 ]  ${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'} rounded-[31px]  text-[16px] font-bold`}>Мої оцінки</button>
+                <button className={`px-5 py-3 ${categorytype === 'posts' ? 'bg-AccnetColor' : `${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'}` }  rounded-[31px]  text-[16px] font-bold`} onClick={() => setCategoryType('posts')} >Дописи</button>
+                <button className={`px-5 py-3 ${categorytype === 'likes' ? 'bg-AccnetColor' : `${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'}` }  rounded-[31px]  text-[16px] font-bold`} onClick={() => setCategoryType('likes')} >Вподобання</button>
+                <button className={`px-5 py-3  ${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'} rounded-[31px]  text-[16px] font-bold`}>Збережені</button>
+                <button className={`px-5 py-3  ${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'} rounded-[31px]  text-[16px] font-bold`}>Мої оцінки</button>
             </div>
 
             <div className="border-t border-[#434C55] mb-6"></div>
 
             <div className="flex items-center ml-9 gap-6 mb-6">
-                <button className={`px-3 py-2 ${filterType === 'likes' && (sortType === 'asc' || sortType=== "desc") ? 'bg-AccnetColor' : 'bg-[#434C55]'} rounded-[8px] text-white text-[16px] font-bold gap-1 flex items-center`}
+                <button className={`px-3 py-2 ${filterType === 'likes' && (sortType === 'asc' || sortType=== "desc") ? 'bg-AccnetColor' : `${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'}`} rounded-[8px] text-white text-[16px] font-bold gap-1 flex items-center`}
                     onClick={() => {
                         filterPost('likes')
                         setFilterType('likes')
@@ -169,16 +190,12 @@ const UserPage = () => {
                     }
 
                 </button>
-<<<<<<< HEAD
-                <button className={`px-3 py-2 ${filterType === 'viewCount' && (sortType === 'asc' || sortType=== "desc") ? 'bg-AccnetColor' : 'bg-[#434C55]'} rounded-[8px] text-white text-[16px] font-bold gap-1 flex items-center`}
+                <button className={`px-3 py-2 ${filterType === 'viewCount' && (sortType === 'asc' || sortType === "desc") ? 'bg-AccnetColor' : `${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'}` }   rounded-[8px] text-white text-[16px] font-bold gap-1 flex items-center`}
                     onClick={() => {
                         filterPost('viewCount')
                         setFilterType('viewCount')
                     }
                     }>
-=======
-                <button className={`px-3 py-2 ${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'} rounded-[8px]  text-[16px] font-bold gap-1 flex items-center`}>
->>>>>>> origin/dev
                     <p>За перглядами</p>
                     { (filterType === 'viewCount' && (sortType === 'asc' || sortType=== "desc")) && 
                     <svg className={`w-4 h-3 ${sortType === 'asc' ? 'rotate-180' : ""}`} fill="#fff">
@@ -186,16 +203,12 @@ const UserPage = () => {
                     </svg>
                     }
                 </button>
-<<<<<<< HEAD
-                <button className={`px-3 py-2 ${filterType === 'createdAt' && (sortType === 'asc' || sortType=== "desc") ? 'bg-AccnetColor' : 'bg-[#434C55]'} rounded-[8px] text-white text-[16px] font-bold gap-1 flex items-center`}
+                <button className={`px-3 py-2 ${filterType === 'createdAt' && (sortType === 'asc' || sortType=== "desc") ? 'bg-AccnetColor' : `${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'}`}  rounded-[8px] text-white text-[16px] font-bold gap-1 flex items-center`}
                     onClick={() => {    
                         filterPost('createdAt')
                         setFilterType('createdAt')
                     }
                     }>
-=======
-                <button className={`px-3 py-2 ${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'} rounded-[8px]  text-[16px] font-bold gap-1 flex items-center`}>
->>>>>>> origin/dev
                     <p>За датою</p>
                     {  (filterType === 'createdAt' && (sortType === 'asc' || sortType=== "desc")) && 
                     <svg className={`w-4 h-3 ${sortType === 'asc' ? 'rotate-180' : ""}`} fill="#fff">
