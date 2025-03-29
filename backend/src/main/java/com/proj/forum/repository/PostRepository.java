@@ -48,6 +48,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
 """)
     List<Post> findAllByAuthor_IdOrderByLikesAsc(@Param("authorId") UUID authorId);
 
+    //liked posts
     @Query("""
     SELECT p FROM Post p 
     LEFT JOIN Statistic s ON p.id = s.objectId
@@ -111,5 +112,70 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
     GROUP BY p.id
 """)
     List<Post> findAllLikedPostsByUserId(@Param("userId") UUID userId);
+
+    //saved posts
+    @Query("""
+    SELECT p FROM Post p 
+    LEFT JOIN Statistic s ON p.id = s.objectId
+    WHERE s.userId = :userId AND s.saved = true 
+    GROUP BY p.id
+    ORDER BY p.createdAt DESC
+""")
+    List<Post> findSavedPostsByUserIdOrderByCreatedAtDesc(@Param("userId") UUID userId);
+
+    @Query("""
+    SELECT p FROM Post p 
+    LEFT JOIN Statistic s ON p.id = s.objectId
+    WHERE s.userId = :userId AND s.saved = true 
+    GROUP BY p.id
+    ORDER BY p.createdAt ASC 
+""")
+    List<Post> findSavedPostsByUserIdOrderByCreatedAtAsc(@Param("userId") UUID userId);
+
+    @Query("""
+    SELECT p FROM Post p 
+    LEFT JOIN Statistic s ON p.id = s.objectId
+    WHERE s.userId = :userId AND s.saved = true 
+    GROUP BY p.id
+    ORDER BY p.viewCount DESC
+""")
+    List<Post> findSavedPostsByUserIdOrderByViewCountDesc(@Param("userId") UUID userId);
+
+    @Query("""
+    SELECT p FROM Post p 
+    LEFT JOIN Statistic s ON p.id = s.objectId
+    WHERE s.userId = :userId AND s.saved = true 
+    GROUP BY p.id
+    ORDER BY p.viewCount ASC 
+""")
+    List<Post> findSavedPostsByUserIdOrderByViewCountAsc(@Param("userId") UUID userId);
+
+    @Query("""
+    SELECT p FROM Post p 
+    LEFT JOIN Statistic s ON p.id = s.objectId
+    WHERE s.userId = :userId AND s.saved = true 
+    GROUP BY p.id
+    ORDER BY SUM(CASE WHEN s.liked = true THEN 1 ELSE 0 END) - 
+        SUM(CASE WHEN s.liked = false THEN 1 ELSE 0 END) DESC 
+""")
+    List<Post> findSavedPostsByUserIdOrderByLikesDesc(@Param("userId") UUID userId);
+
+    @Query("""
+    SELECT p FROM Post p 
+    LEFT JOIN Statistic s ON p.id = s.objectId
+    WHERE s.userId = :userId AND s.saved = true 
+    GROUP BY p.id
+    ORDER BY SUM(CASE WHEN s.liked = true THEN 1 ELSE 0 END) - 
+        SUM(CASE WHEN s.liked = false THEN 1 ELSE 0 END) ASC 
+""")
+    List<Post> findSavedPostsByUserIdOrderByLikesAsc(@Param("userId") UUID userId);
+
+    @Query("""
+    SELECT p FROM Post p 
+    LEFT JOIN Statistic s ON p.id = s.objectId
+    WHERE s.userId = :userId AND s.liked IS NOT NULL
+    GROUP BY p.id
+""")
+    List<Post> findAllSavedPostsByUserId(@Param("userId") UUID userId);
 
 }

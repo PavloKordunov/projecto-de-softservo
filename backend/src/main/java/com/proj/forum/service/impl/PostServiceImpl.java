@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -223,6 +222,37 @@ public class PostServiceImpl implements PostService {
                 }
             }
             case null, default -> posts = postRepository.findAllLikedPostsByUserId(userId);
+        }
+
+        return getPostResponseDtos(posts);
+    }
+
+    @Override
+    public List<PostResponseDto> getUserSavedPosts(UUID userId, String sort, String order) {
+        List<Post> posts;
+        switch (sort) {
+            case "viewCount" -> {
+                if (order.equalsIgnoreCase("asc")) {
+                    posts = postRepository.findSavedPostsByUserIdOrderByViewCountAsc(userId);
+                } else {
+                    posts = postRepository.findSavedPostsByUserIdOrderByViewCountDesc(userId);
+                }
+            }
+            case "createdAt" -> {
+                if (order.equalsIgnoreCase("asc")) {
+                    posts = postRepository.findSavedPostsByUserIdOrderByCreatedAtAsc(userId);
+                }else {
+                    posts = postRepository.findSavedPostsByUserIdOrderByCreatedAtDesc(userId);
+                }
+            }
+            case "likes" -> {
+                if (order.equalsIgnoreCase("asc")) {
+                    posts = postRepository.findSavedPostsByUserIdOrderByLikesAsc(userId);
+                } else {
+                    posts = postRepository.findSavedPostsByUserIdOrderByLikesDesc(userId);
+                }
+            }
+            case null, default -> posts = postRepository.findAllSavedPostsByUserId(userId);
         }
 
         return getPostResponseDtos(posts);
