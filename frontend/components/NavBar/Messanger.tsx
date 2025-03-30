@@ -3,6 +3,7 @@ import Image from "next/image";
 import Chat from "./Chat";
 import { WebSocketService } from "@/services/websocket";
 import { User, Message, ChatPreview } from "@/types/chatTypes";
+import { useTheme } from "next-themes";
 
 interface MessangerProps {
   handleShow: () => void;
@@ -15,6 +16,7 @@ const Messanger = ({ handleShow, currentUser }: MessangerProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [onlineUsers, setOnlineUsers] = useState<User[]>([]);
   const wsService = useRef<WebSocketService | null>(null);
+  const { theme } = useTheme();
 
   const chats: ChatPreview[] = [
     {
@@ -79,12 +81,12 @@ const Messanger = ({ handleShow, currentUser }: MessangerProps) => {
   };
 
   return (
-    <div className="fixed w-[370px] z-50 bg-gray-800 p-4 top-[100px] right-[30px] flex flex-col rounded-xl shadow-xl border border-gray-700">
+    <div className={`fixed w-[370px] z-50 ${theme === 'dark' ? 'bg-gray-800 border-gray-700'  : 'bg-[#EAEAEA] border-[#E4E3E3]'}  p-4 top-[100px] right-[30px] flex flex-col rounded-xl shadow-xl border `}>
       {!isOpenChat ? (
         <>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl text-white font-bold">Повідомлення</h2>
-            <button onClick={handleShow} className="text-gray-400 hover:text-white">
+            <h2 className={`text-2xl ${theme === 'dark' ? 'text-white' : 'text-black'} font-bold`}>Повідомлення</h2>
+            <button onClick={handleShow} className={`${theme === 'dark' ? 'text-gray-400 hover:text-white' : 'text-black hover:text-AccnetColor'} `}>
               <svg className="w-6 h-6" fill="currentColor">
                 <use href="/sprite.svg#closeBtnIcon" />
               </svg>
@@ -96,7 +98,7 @@ const Messanger = ({ handleShow, currentUser }: MessangerProps) => {
               <div 
                 key={chat.id}
                 onClick={() => handleShowChat(chat.id)}
-                className="bg-gray-700 p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:bg-gray-600 transition-colors"
+                className={`${theme === 'dark' ? 'bg-gray-700' : 'bg-[#B5B5B5]'} p-3 rounded-xl flex items-center gap-3 cursor-pointer hover:bg-gray-600 transition-colors`}
               >
                 <div className="relative">
                   <Image 

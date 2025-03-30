@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Message, User } from "@/types/chatTypes";
+import { useTheme } from "next-themes";
 
 interface ChatProps {
   handleBackToList: () => void;
@@ -27,6 +28,7 @@ const Chat = ({
 }: ChatProps) => {
   const [message, setMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { theme } = useTheme();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -65,7 +67,7 @@ const Chat = ({
               className="rounded-full mr-3"
             />
             <div>
-              <h3 className="text-lg font-semibold text-white">{chatInfo?.name}</h3>
+              <h3 className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-black'}`}>{chatInfo?.name}</h3>
               <p className="text-xs text-gray-400">
                 {onlineUsers.length > 1 ? "Online" : `Active ${chatInfo?.lastSeen || "recently"}`}
               </p>
@@ -79,7 +81,7 @@ const Chat = ({
         </button>
       </div>
 
-      <div className="flex-1 bg-gray-700 rounded-lg p-4 mb-4 overflow-y-auto max-h-[400px]">
+      <div className={`flex-1 ${theme === 'dark' ? 'bg-gray-700' : 'bg-[#B5B5B5]'} rounded-[10px] p-4 mb-4 overflow-y-auto max-h-[400px]`}>
         <div className="space-y-3">
           {messages.map((msg, index) => (
             <div 
@@ -91,8 +93,8 @@ const Chat = ({
                   ? "bg-blue-600 rounded-br-none" 
                   : "bg-gray-600 rounded-bl-none"}`}
               >
-                <p className="text-white">{msg.content}</p>
-                <p className="text-xs mt-1 text-gray-300 text-right">
+                <p className={`${theme === 'dark' ? 'text-white' : 'text-black'}`}>{msg.content}</p>
+                <p className={`text-xs mt-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-800'} text-right`}>
                   {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </p>
               </div>
@@ -103,7 +105,7 @@ const Chat = ({
       </div>
 
       <form onSubmit={handleSubmit} className="flex items-center gap-2">
-        <button type="button" className="text-gray-400 hover:text-white p-2">
+        <button type="button" className={`${theme === 'dark' ? 'text-gray-400' : 'text-black '} hover:text-white p-2`}>
           <svg className="w-5 h-5" fill="currentColor">
             <use href="/sprite.svg#paperClipIcon" />
           </svg>
@@ -112,7 +114,7 @@ const Chat = ({
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="flex-1 bg-gray-700 text-white rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={`flex-1 ${theme === 'dark' ? 'bg-gray-700 text-white placeholder-gray-400' : 'bg-[#B5B5B5] text-black placeholder-gray-800'}  rounded-[10px] px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
           placeholder="Повідомлення.."
         />
         <button 
