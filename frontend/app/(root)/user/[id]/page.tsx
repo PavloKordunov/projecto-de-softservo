@@ -11,6 +11,7 @@ import { useParams } from "next/navigation";
 import { it } from "node:test";
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
+import Link from "next/link";
 
 const UserPage = () => {
     const [posts, setPosts] = useState<any[]>([]);
@@ -23,6 +24,7 @@ const UserPage = () => {
     const [sortType, setSortType] = useState<string | null>('desc');
     const { theme } = useTheme();
     const [categorytype, setCategoryType] = useState<string>("posts");
+    const [rateTopic, setRateTopic] = useState<any[]>([])
 
     useEffect(() => {
         const getUserById = async () => {
@@ -64,12 +66,58 @@ const UserPage = () => {
             console.log(data);
         };
 
+        const getUserSavedPost = async () => {
+            try {
+                const res = await fetch(`https://localhost:8080/api/posts/user/saved/${userId}?sort=${filterType}&order=${sortType}`, {
+                    mode: "cors",
+                    headers : {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${user?.accessToken}`
+                    }, 
+                });
+                const data = await res.json();
+                setPosts(data.body);
+                console.log(data);
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        const getUserRateTopic = async () => {
+            try {
+                const res = await fetch(`https://localhost:8080/api/topics/user/${userId}`, {
+                    mode: "cors",
+                    headers : {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${user?.accessToken}`
+                    },
+                });
+                const data = await res.json();
+                setRateTopic(data.body);
+                console.log(data);  
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
         if(categorytype === "posts") {
+            setPosts([]);
+            setRateTopic([])
             getUserPost();
         }
         if(categorytype === "likes") {
             setPosts([]);
+            setRateTopic([])
             getUserLikePost();
+        }
+        if(categorytype === 'saved') {
+            setPosts([])
+            setRateTopic([])
+            getUserSavedPost()
+        } 
+        if(categorytype === 'rate') {
+            setPosts([])
+            getUserRateTopic()
         }    
     }, [filterType, sortType, categorytype]);
 
@@ -169,13 +217,13 @@ const UserPage = () => {
             <div className="flex items-center ml-9 gap-6 mb-10">
                 <button className={`px-5 py-3 ${categorytype === 'posts' ? 'bg-AccnetColor' : `${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'}` }  rounded-[31px]  text-[16px] font-bold`} onClick={() => setCategoryType('posts')} >Дописи</button>
                 <button className={`px-5 py-3 ${categorytype === 'likes' ? 'bg-AccnetColor' : `${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'}` }  rounded-[31px]  text-[16px] font-bold`} onClick={() => setCategoryType('likes')} >Вподобання</button>
-                <button className={`px-5 py-3  ${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'} rounded-[31px]  text-[16px] font-bold`}>Збережені</button>
-                <button className={`px-5 py-3  ${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'} rounded-[31px]  text-[16px] font-bold`}>Мої оцінки</button>
+                <button className={`px-5 py-3 ${categorytype === 'saved' ? 'bg-AccnetColor' : `${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'}` }  rounded-[31px]  text-[16px] font-bold`} onClick={() => setCategoryType('saved')} >Збережені</button>
+                <button className={`px-5 py-3 ${categorytype === 'rate' ? 'bg-AccnetColor' : `${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'}` }  rounded-[31px]  text-[16px] font-bold`} onClick={() => setCategoryType('rate')} >Мої оцінки</button>
             </div>
 
             <div className="border-t border-[#434C55] mb-6"></div>
 
-            <div className="flex items-center ml-9 gap-6 mb-6">
+            {categorytype !== "rate" && <div className="flex items-center ml-9 gap-6 mb-6">
                 <button className={`px-3 py-2 ${filterType === 'likes' && (sortType === 'asc' || sortType=== "desc") ? 'bg-AccnetColor' : `${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'}`} rounded-[8px] text-white text-[16px] font-bold gap-1 flex items-center`}
                     onClick={() => {
                         filterPost('likes')
@@ -216,12 +264,34 @@ const UserPage = () => {
                     </svg>
                     }
                 </button>
-            </div>
+            </div>}
 
             {posts ? (
                 posts.map((post) => <Post key={post.id} post={post} className="bg-[#262D34]" />)
             ) : (
                 <p>Поки що немає постів...</p>
+            )}
+
+            {rateTopic && (
+                rateTopic.map((topic) => 
+                    <Link href={`/topics/${topic.id}`} key={topic.id} className='p-6 bg-SecondaryColor rounded-[21px] flex gap-3 mb-6 w-[520px]'>
+                        <Image src={topic.image} alt="" width={100} height={150}  />
+                        <div>
+                            <p className="text-[20px] text-white font-semibold">{topic.title}</p>
+                            <p className="text-[16px] mb-3 text-white font-semibold line-clamp-3">{topic.description}</p>
+                            <div className="flex items-center gap-1">
+                            {[...Array(5)].map((_, index) => (
+                                <svg
+                                key={index}
+                                className={`w-6 h-6 ${index < (topic?.myRate ?? 0) ? 'fill-[#FFD700]' : 'fill-white'}`}
+                                >
+                                <use href={`/sprite.svg#starIcon`} />
+                                </svg>
+                            ))}
+                            </div>
+                        </div>
+                    </Link>
+                )
             )}
 
             {showUpdateUser && (
