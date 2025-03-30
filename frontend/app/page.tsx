@@ -5,9 +5,33 @@ import HomeLayout from "@/app/(root)/layout";
 import { useOktaAuth } from "@okta/okta-react";
 import Link from "next/link";
 import PostPage from "@/app/(root)/post/[id]/page";
+import HomePage from "./(root)/home/page";
+import { useEffect, useState } from "react";
+import { useUser } from "@/hooks/useUser";
+import Post from "@/components/Post";
 
 const Page = () => {
     const { authState } = useOktaAuth();
+      const [posts, setPosts] = useState<any[]>([]);
+      const { user } = useUser();
+    
+      useEffect(() => {
+        const getAllPost = async () => {
+          const res = await fetch("https://localhost:8080/api/posts", {
+            mode: "cors",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `${user?.accessToken ? `Bearer ${user?.accessToken}` : null}`,
+            },
+          });
+          const data = await res.json();
+          setPosts(data.body);
+          console.log(data);
+        };
+    
+        getAllPost();
+      }, []);
+
     return (
         <div >
             {/* rootPage */}
@@ -29,9 +53,14 @@ const Page = () => {
                             </h2>
                         </div>
                     )}
+                          {posts ? (
+        posts.map((post) => <Post key={post.id} post={post} />)
+      ) : (
+        <p>Поки що немає постів...</p>
+      )}
                 </div>
             </HomeLayout>
-            <PostPage />
+            
         </div>
     );
 }

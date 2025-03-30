@@ -89,7 +89,7 @@ const EditProfile = ({ handleShow }: { handleShow: () => void }) => {
                     </svg>
                 </div>
                 <div className="flex gap-16 justify-between items-center mb-6">
-                    <p className={`text-[18px]  ${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold`}>Ім`&apos;`я:</p>
+                    <p className={`text-[18px]  ${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold`}>Ім`я:</p>
                     <input
                         onChange={handleInputChange}
                         name="firstName"

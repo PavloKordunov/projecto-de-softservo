@@ -61,7 +61,7 @@ const UserMenu = () => {
                         </Link>
                     </div>
                     {isAuthenticated && (
-                        <div className={`p-2 ${theme === 'dark' ? 'bg-MainColor' : 'bg-[#B5B5B5]'} rounded-[10px] shadow flex items-center gap-4 cursor-pointer" onClick={handleLogout}`}>
+                        <div className={`p-2 ${theme === 'dark' ? 'bg-MainColor' : 'bg-[#B5B5B5]'} rounded-[10px] shadow flex items-center gap-4 cursor-pointer `} onClick={handleLogout}>
                             <Icon name="NavExitIcon" />
                             <p className="text-white text-[14px] font-semibold">Log out</p>
                         </div>
