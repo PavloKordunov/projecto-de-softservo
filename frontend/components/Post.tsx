@@ -4,6 +4,7 @@ import { useUser } from "@/hooks/useUser";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 
 interface PostProps {
   post: {
@@ -31,6 +32,8 @@ const Post: React.FC<PostProps> = ({ className, post, isPinned }) => {
     const [likeStatus, setLikeStatus] = useState<boolean | null>(post.isLiked);
     const [countLikes, setCountLikes] = useState<number>(post.countLikes);
     const [isPinnedPost, setIsPinnedPost] = useState(post.isPinned);
+
+    const { theme, setTheme } = useTheme();
 
     const likeDislike = async (liked: boolean | null) => {
       if (!user) return;
@@ -107,17 +110,17 @@ const Post: React.FC<PostProps> = ({ className, post, isPinned }) => {
     };
 
     return ( 
-        <Link href={`/post/${post.id}`} className={`p-6 bg-MainColor rounded-[21px] flex gap-3 mb-6 items-center w-[1030px] ${className}`}>
+        <Link href={`/post/${post.id}`} className={`p-6 ${theme === 'dark' ? 'bg-MainColor' : 'bg-[#EAEAEA]'} rounded-[21px] flex gap-3 mb-6 items-center w-[1030px] ${className}`}>
             {post.image && <Image src={post?.image} alt="" width="208" height="237" />}
             <div className="ml-2 w-full">
                 <div className="flex items-center w-full justify-between">
                     <div className="flex gap-2">
                         <Image src='/groupImage.png' alt="" width={25} height={25} />
-                        <p className="text-[16px] text-white font-semibold">/{post.groupTitle}</p>
+                        <p className={`text-[16px] ${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold`}>/{post.groupTitle}</p>
                     </div>
                     <div className="flex items-center gap-3">
                         {isPinned !== undefined && (
-                          <button className=" p-2 bg-[#2C353D] rounded-[20px]" onClick={(e) => {
+                          <button className={`p-2 ${theme === 'dark' ? 'bg-[#2C353D]' : 'bg-[#B5B5B5]'} rounded-[20px]`} onClick={(e) => {
                              e.preventDefault();
                              setIsPinnedPost(!isPinnedPost);
                               pinPost();
@@ -127,7 +130,7 @@ const Post: React.FC<PostProps> = ({ className, post, isPinned }) => {
                             </svg>
                           </button>
                         )}
-                      <div className="flex items-center p-2 gap-3 bg-[#2C353D] rounded-[20px]">
+                      <div className={`flex items-center p-2 gap-3 ] ${theme === 'dark' ? 'bg-[#2C353D]' : 'bg-[#B5B5B5]'} rounded-[20px]`}>
                           <button onClick={(e) => { e.preventDefault(); toggleLike(); }}>
                             <svg className="w-6 h-6" fill={likeStatus === true ? "#FF0000" : "#C5D0E6"}>
                               <use href={`/sprite.svg#iconLike`} />
@@ -141,29 +144,29 @@ const Post: React.FC<PostProps> = ({ className, post, isPinned }) => {
                       </div>
                     </div>                                                
                 </div>
-                <p className="text-[24px] mb-3 text-white font-semibold w-[650px]">{post.title}</p>
+                <p className={`text-[24px] mb-3 ${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold w-[650px]`}>{post.title}</p>
                 <div className="flex gap-3 items-center mb-5">
-                    <div className="py-2 w-fit px-3 bg-SecondaryColor rounded-[24px]">
-                        <p className="text-[13px] text-[#C5D0E6] font-semibold">фільм</p>
+                    <div className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#EAEAEA]'} rounded-[24px]`}>
+                        <p className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-semibold`}>фільм</p>
                     </div>
-                    <div className="py-2 w-fit px-3 bg-SecondaryColor rounded-[24px]">
-                        <p className="text-[13px] text-[#C5D0E6] font-semibold">хоррор</p>
+                    <div className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#EAEAEA]'} rounded-[24px]`}>
+                        <p className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-semibold`}>хоррор</p>
                     </div>
-                    <div className="py-2 w-fit px-3 bg-SecondaryColor rounded-[24px]">
-                        <p className="text-[13px] text-[#C5D0E6] font-semibold">страшний</p>
+                    <div className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#EAEAEA]'} rounded-[24px]`}>
+                        <p className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-semibold`}>страшний</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-9">
                     <div className="flex items-center gap-3">
                         <Image src="/person.png" alt="" width={54} height={54}/>
                         <div>
-                            <p className="text-[18px] text-white font-semibold">{post.nickname}</p>
-                            <span className="text-[13px] text-[#C5D0E6] font-regular">2 години тому</span>
+                            <p className={`text-[18px] ${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold`}>{post.nickname}</p>
+                            <span className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-regular`}>2 години тому</span>
                         </div>
                     </div>
-                    <p className="text-[18px] text-[#C5D0E6] font-regular">{post.viewCount} Переглядів</p>
-                    <p className="text-[18px] text-[#C5D0E6] font-regular">{countLikes} Уподобань</p>
-                    <p className="text-[18px] text-[#C5D0E6] font-regular">56 Коментарів</p>
+                    <p className={`text-[18px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-regular`}>{post.viewCount} Переглядів</p>
+                    <p className={`text-[18px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-regular`}>{countLikes} Уподобань</p>
+                    <p className={`text-[18px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-regular`}>56 Коментарів</p>
                 </div>
             </div>
         </Link>

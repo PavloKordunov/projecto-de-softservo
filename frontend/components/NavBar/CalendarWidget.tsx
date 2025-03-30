@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { MovieDetails } from "@/api/omdbApi/omdbApi";
+import { useTheme } from "next-themes";
 
 interface MovieCalendarProps {
     onClose: () => void;
@@ -13,7 +14,7 @@ interface MovieCalendarProps {
 const CalendarWidget = ({ onClose, movies }: MovieCalendarProps) => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const modalRef = useRef<HTMLDivElement>(null);
-
+    const { theme, setTheme } = useTheme();
     const handleDateChange = (value: Date | [Date, Date] | null, event?: React.MouseEvent<HTMLButtonElement>) => {
         setSelectedDate(value instanceof Date ? value : null);
     };
@@ -53,7 +54,7 @@ const CalendarWidget = ({ onClose, movies }: MovieCalendarProps) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-            <div ref={modalRef} className="bg-SecondaryColor w-[380px] h-fit p-[20px] rounded-[10px] relative  max-w-lg text-red">
+            <div ref={modalRef} className={`${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} w-[380px] h-fit p-[20px] rounded-[10px] relative  max-w-lg text-red`}>
                 <Calendar
                     className="react-calendar custom-calendar max-w-full aspect-[1.1]"
                     onChange={handleDateChange}
@@ -69,14 +70,14 @@ const CalendarWidget = ({ onClose, movies }: MovieCalendarProps) => {
 
                 {selectedDate && (
                     <div className="mt-6">
-                        <h3 className="text-xl font-semibold text-white">Фільми на {selectedDate.toDateString()}:</h3>
+                        <h3 className={`text-xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-black'}`}>Фільми на {selectedDate.toDateString()}:</h3>
                         <ul className="mt-4 space-y-2">
                             {movies
                                 .filter(
                                     (movie) => new Date(movie.Released).toDateString() === selectedDate.toDateString()
                                 )
                                 .map((movie) => (
-                                    <li key={movie.imdbID} className="text-sm text-AccnetColor">
+                                    <li key={movie.imdbID} className={`text-sm rounded-[10px] p-[10px] text-AccnetColor ${theme === 'dark' ? 'text-AccnetColor' : 'text-AccnetColor bg-[#EAEAEA]'}`}>
                                         {movie.Title}
                                     </li>
                                 ))}

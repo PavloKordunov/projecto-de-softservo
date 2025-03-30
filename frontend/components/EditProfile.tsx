@@ -1,9 +1,10 @@
 import { useUser } from "@/hooks/useUser";
 import { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
 
 const EditProfile = ({ handleShow }: { handleShow: () => void }) => {
     const { user, setUser } = useUser();
-
+    const { theme, setTheme } = useTheme();
     const [base64, setBase64] = useState<string | null>(null);
     const [updateUser, setUpdateUser] = useState({
         firstName: user?.firstName || "",
@@ -80,45 +81,45 @@ const EditProfile = ({ handleShow }: { handleShow: () => void }) => {
 
     return (
         <div className="w-full h-full absolute left-0 top-0 bg-black bg-opacity-60 z-50 flex items-center justify-center">
-            <div className="bg-MainColor px-10 py-6 rounded-[31px] w-fit">
+            <div className={`${theme === 'dark' ? 'bg-MainColor' : 'bg-[#EAEAEA]'} px-10 py-6 rounded-[31px] w-fit`}>
                 <div className="flex justify-between items-center mb-8">
-                    <p className="text-[36px] text-white font-semibold">Редагувати профіль</p>
+                    <p className={`text-[36px]  ${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold`}>Редагувати профіль</p>
                     <svg className="w-8 h-8" fill="#fff" onClick={handleShow}>
                         <use href={`/sprite.svg#closeBtnIcon`} />
                     </svg>
                 </div>
                 <div className="flex gap-16 justify-between items-center mb-6">
-                    <p className="text-[18px] text-white font-semibold">Ім'я:</p>
+                    <p className={`text-[18px]  ${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold`}>Ім`&apos;`я:</p>
                     <input
                         onChange={handleInputChange}
                         name="firstName"
                         value={updateUser.firstName}
                         type="text"
-                        className="w-[450px] h-12 px-4 py-2 text-white bg-SecondaryColor border-none rounded-[10px] focus:outline-none"
+                        className={`w-[450px] h-12 px-4 py-2  ${theme === 'dark' ? 'text-white bg-SecondaryColor' : 'text-black bg-[#B5B5B5] placeholder:text-gray-800'}  border-none rounded-[10px] focus:outline-none`}
                         placeholder="Введіть ім'я..."
                     />
                 </div>
                 <div className="flex justify-between items-center mb-6">
-                    <p className="text-[18px] text-white font-semibold">Нікнейм:</p>
+                    <p className={`text-[18px] ${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold`}>Нікнейм:</p>
                     <input
                         onChange={handleInputChange}
                         name="nickName"
                         value={updateUser.nickName}
                         type="text"
-                        className="w-[450px] h-12 px-4 py-2 text-white bg-SecondaryColor border-none rounded-[10px] focus:outline-none"
+                        className={`w-[450px] h-12 px-4 py-2 ${theme === 'dark' ? 'text-white bg-SecondaryColor' : 'text-black bg-[#B5B5B5] placeholder:text-gray-800'} border-none rounded-[10px] focus:outline-none`}
                         placeholder="Введіть опис..."
                     />
                 </div>
                 <div className="flex gap-7 items-center mb-6">
-                    <p className="text-[18px] text-white font-semibold">Тип користувача:</p>
+                    <p className={`text-[18px] ${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold`}>Тип користувача:</p>
                     <div> 
-                        <button className="px-4 py-2 bg-SecondaryColor rounded-[10px] text-white text-[14px] h-[38px] w-40 font-medium mr-6">Приватний</button>
-                        <button className="px-4 py-2 bg-AccnetColor rounded-[10px] text-white text-[14px] h-[38px] w-40 font-medium">Публічний</button>
+                        <button className={`px-4 py-2 ${theme === 'dark' ? 'text-white bg-SecondaryColor' : 'text-black bg-[#B5B5B5] '} rounded-[10px] text-[14px] h-[38px] w-40 font-medium mr-6`}>Приватний</button>
+                        <button className={`px-4 py-2 bg-AccnetColor rounded-[10px] ${theme === 'dark' ? 'text-white' : 'text-black'} text-[14px] h-[38px] w-40 font-medium`}>Публічний</button>
                     </div>
                 </div> 
                 <div className="flex gap-9 items-center mb-6">
-                    <p className="text-[18px] text-white font-semibold">Аватар:</p>
-                    <div className="w-[260px] h-12 px-4 py-2 text-white bg-SecondaryColor border-none rounded-[10px] focus:outline-none">
+                    <p className={`text-[18px] ${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold`}>Аватар:</p>
+                    <div className={`w-[260px] h-12 px-4 py-2 ${theme === 'dark' ? 'text-white bg-SecondaryColor' : 'text-black bg-[#B5B5B5] '} border-none rounded-[10px] focus:outline-none`}>
                         <label
                             className="text-xs text-gray-500 flex items-center gap-2 cursor-pointer"
                             htmlFor="img"
@@ -129,7 +130,7 @@ const EditProfile = ({ handleShow }: { handleShow: () => void }) => {
                     </div>
                 </div>   
                 <div className="w-full flex justify-end">
-                    <button onClick={handleUpdateUser} className="px-4 py-2 bg-AccnetColor rounded-[10px] items-center justify-center text-white text-[16px] h-[50px] font-medium">
+                    <button onClick={handleUpdateUser} className={`px-4 py-2 bg-AccnetColor rounded-[10px] items-center justify-center ${theme === 'dark' ? 'text-white' : 'text-black'} text-[16px] h-[50px] font-medium`}>
                         Оновити профіль
                     </button>
                 </div>
