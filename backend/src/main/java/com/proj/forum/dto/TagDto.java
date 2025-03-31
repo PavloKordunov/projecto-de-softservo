@@ -1,6 +1,5 @@
 package com.proj.forum.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
 import java.util.UUID;
