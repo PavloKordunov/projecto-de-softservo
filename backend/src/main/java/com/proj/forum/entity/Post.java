@@ -27,6 +27,9 @@ public class Post {
 
     private Integer viewCount;
 
+    @ManyToMany(mappedBy = "posts")
+    private List<Tag> tags;
+
     @ManyToOne
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;

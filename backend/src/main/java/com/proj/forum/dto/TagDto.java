@@ -8,6 +8,6 @@ import java.util.UUID;
 @Builder
 public record TagDto(
         UUID id,
-        @NotBlank(message = "Tag cannot be blank") String name
+        String name
 ) {
 }

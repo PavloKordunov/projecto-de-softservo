@@ -1,5 +1,6 @@
 package com.proj.forum.service.impl;
 
+import com.proj.forum.dto.TagDto;
 import com.proj.forum.dto.TopicDto;
 import com.proj.forum.entity.Statistic;
 import com.proj.forum.entity.Topic;
@@ -112,10 +113,16 @@ public class TopicServiceImpl implements TopicService {
         Optional<Double> usersRate = userStatisticRepository.findAverageRateByObjectId(topic.getId());
         int usersRateCount = userStatisticRepository.countStatisticsByObjectIdAndRateIsNotNull(topic.getId());
         Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(topic.getId(), userId).get();
-
+        List<TagDto> tags = topic.getTags().stream()
+                .map(tag -> TagDto.builder()
+                        .name(tag.getName())
+                        .id(tag.getId())
+                        .build())
+                .toList();
         return TopicDto.builder()
                 .id(topic.getId())
                 .title(topic.getTitle())
+                .tagDtos(tags)
                 .author(topic.getAuthor_id())
                 .limitAge(topic.getLimitAge())
                 .description(topic.getDescription())

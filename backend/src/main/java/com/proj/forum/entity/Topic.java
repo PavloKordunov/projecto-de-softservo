@@ -26,7 +26,8 @@ public class Topic {
     @GeneratedValue
     private UUID id;
 
-    private UUID tag_id;
+    @ManyToMany(mappedBy = "topics")
+    private List<Tag> tags;
 
     @Column(nullable = false)
     private UUID author_id;

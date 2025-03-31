@@ -3,12 +3,15 @@ package com.proj.forum.service.impl;
 import com.proj.forum.dto.CommentDto;
 import com.proj.forum.dto.PostRequestDto;
 import com.proj.forum.dto.PostResponseDto;
+import com.proj.forum.dto.TagDto;
 import com.proj.forum.entity.Group;
 import com.proj.forum.entity.Post;
 import com.proj.forum.entity.Statistic;
+import com.proj.forum.entity.Tag;
 import com.proj.forum.entity.User;
 import com.proj.forum.repository.GroupRepository;
 import com.proj.forum.repository.PostRepository;
+import com.proj.forum.repository.TagRepository;
 import com.proj.forum.repository.UserRepository;
 import com.proj.forum.repository.UserStatisticRepository;
 import com.proj.forum.service.CommentService;
@@ -16,6 +19,7 @@ import com.proj.forum.service.PostService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,6 +43,7 @@ public class PostServiceImpl implements PostService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private final UserStatisticRepository userStatisticRepository;
+    private final TagRepository tagRepository;
     private final CommentService commentService;
 
     @Override
@@ -50,7 +55,8 @@ public class PostServiceImpl implements PostService {
         if (!user.getGroups().contains(group)) {
             throw new EntityNotFoundException("User is not in the group");
         }
-        Post post = mapToPost(postDto, user, group);
+        List<Tag> tags = tagRepository.findAllById(postDto.tagsId());
+        Post post = mapToPost(postDto, user, group, tags);
         Post postFromDB = postRepository.save(post);
         return postFromDB.getId();
     }
@@ -299,7 +305,7 @@ public class PostServiceImpl implements PostService {
         return post;
     }
 
-    private static Post mapToPost(PostRequestDto postDto, User user, Group group) {
+    private static Post mapToPost(PostRequestDto postDto, User user, Group group, List<Tag> tags) {
         return Post.builder()
                 .title(postDto.title())
                 .description(postDto.description() == null ? StringUtils.EMPTY : postDto.description())
@@ -309,16 +315,19 @@ public class PostServiceImpl implements PostService {
                 .isPinned(false)
                 .createdAt(LocalDateTime.now())
                 .viewCount(0)
+                .tags(tags)
                 .build();
     }
 
     private PostResponseDto stickPostDtoAndStatistic(Post post, Statistic statistic,
                                                      Integer countLikes, Integer countSaved) {
 
+        List<TagDto> tags = getTagDtos(post);
         List<CommentDto> comments = commentService.mapToListOfCommentsDto(post.getComments());
         return PostResponseDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
+                .tagDtos(tags)
                 .description(post.getDescription() == null ? StringUtils.EMPTY : post.getDescription())
                 .image(post.getImage() == null ? StringUtils.EMPTY : post.getImage())
                 .userImage(post.getAuthor().getProfileImage())
@@ -336,6 +345,16 @@ public class PostServiceImpl implements PostService {
                 .countLikes(countLikes)
                 .countSaved(countSaved)
                 .build();
+    }
+
+    @NotNull
+    private static List<TagDto> getTagDtos(Post post) {
+        return post.getTags().stream()
+                .map(tag -> TagDto.builder()
+                        .name(tag.getName())
+                        .id(tag.getId())
+                        .build())
+                .toList();
     }
 
     @Override
@@ -370,7 +389,7 @@ public class PostServiceImpl implements PostService {
                 .groupTitle(post.getGroup().getTitle())
                 .createdAt(post.getCreatedAt())
                 .viewCount(post.getViewCount())
-                //.countLikes(post.getLikesCount())
+                .tagDtos(getTagDtos(post))
                 .comments(comments)
                 .userId(post.getAuthor().getId())
                 .groupId(post.getGroup().getId())

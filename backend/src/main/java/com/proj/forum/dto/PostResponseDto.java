@@ -10,6 +10,7 @@ import java.util.UUID;
 @Builder
 public record PostResponseDto(
         UUID id,
+        List<TagDto> tagDtos,
         @NotBlank String title,
         String description,
         String image,

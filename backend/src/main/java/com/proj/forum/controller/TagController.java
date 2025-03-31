@@ -45,6 +45,6 @@ public class TagController {
     @GetMapping("/search")
     public ApiResponse<List<TagDto>> searchTags(@RequestParam String query) {
         List<TagDto> tags = tagService.searchTags(query);
-        return new ApiResponse<>(true, HttpStatus.OK, "Success search tags", tags);
+        return new ApiResponse<>(true, HttpStatus.OK, "Success search tagDtos", tags);
     }
 }
