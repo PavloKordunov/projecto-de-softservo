@@ -6,6 +6,7 @@ const CreateGroup = ({ handleShow }: { handleShow: () => void }) => {
     const { user } = useUser();
     const [isPublic, setIsPublic] = useState<boolean | null>(null);
     const { theme } = useTheme();
+    const [base64, setBase64] = useState<string | null>(null);
 
     const [group, setGroup] = useState({
         title: "",
@@ -41,6 +42,24 @@ const CreateGroup = ({ handleShow }: { handleShow: () => void }) => {
         }
         handleShow();
     };
+
+    function encodeImageFileAsURL(event: React.ChangeEvent<HTMLInputElement>) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onloadend = function () {
+            const base64String = reader.result as string;
+            setBase64(base64String);
+            setGroup((prev) => ({
+            ...prev,
+            image: base64String,
+        }));
+            console.log('RESULT:', base64String);
+        };
+        reader.readAsDataURL(file);
+    }
+
 
     return (
         <div className="w-full h-full absolute left-0 top-0 bg-black bg-opacity-60 z-50 flex items-center justify-center">
@@ -100,6 +119,18 @@ const CreateGroup = ({ handleShow }: { handleShow: () => void }) => {
                         className={`w-[450px] h-28 px-4 py-2 resize-none ${theme === 'dark' ? 'bg-SecondaryColor text-white' : 'bg-[#EAEAEA] text-black'} border-none rounded-[10px] mb-3 focus:outline-none`}
                         placeholder="Введіть опис..."
                     ></textarea>
+                </div>
+                <div className="flex gap-9 items-center mb-6">
+                    <p className={`text-[18px] ${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold`}>Світлина:</p>
+                    <div className={`w-[260px] h-12 px-4 py-2 ${theme === 'dark' ? 'text-white bg-SecondaryColor' : 'text-black bg-[#B5B5B5] '} border-none rounded-[10px] focus:outline-none`}>
+                        <label
+                            className="text-xs text-gray-500 flex items-center gap-2 cursor-pointer"
+                            htmlFor="img"
+                        >
+                            <span>Завантажте світлину</span>
+                        </label>
+                        <input type="file" id="img" onChange={encodeImageFileAsURL} className="hidden"/>
+                    </div>
                 </div>
                 <div className="w-full flex justify-end">
                     <button

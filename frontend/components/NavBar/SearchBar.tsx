@@ -126,7 +126,7 @@ const SearchBar = () => {
                             {posts.map((post: any) => (
                                 <div key={post.id} className="flex items-center p-2 rounded-[10px] bg-SecondaryColor w-fit">
                                     <div className="flex items-center gap-2">
-                                        <Image src={post.image} alt="" width={100} height={120} />
+                                        {post.image && <Image src={post.image} alt="" width={100} height={120} />}
                                         <div>
                                             <p className="text-[12px] text-white font-semibold">/{post.groupTitle}</p>
                                             <p className="text-[14px] mb-2 text-white font-semibold">{post.title}</p>
@@ -166,7 +166,7 @@ const SearchBar = () => {
                             {topics.map((topic: any) => (
                                 <div key={topic.id} className="flex items-center p-2 rounded-[10px] bg-SecondaryColor w-fit">
                                     <div className="flex items-center gap-2">
-                                        <Image src={topic.image} alt="" width={100} height={120} />
+                                        {topic.image && <Image src={topic.image} alt="" width={100} height={120} />}
                                         <div>
                                             <p className="text-[14px] text-white font-semibold">/{topic.title}</p>
                                             <p className="text-[12px] mb-2 text-white font-semibold line-clamp-3">{topic.description}</p>

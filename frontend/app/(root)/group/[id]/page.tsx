@@ -162,13 +162,19 @@ const Group = () => {
                 className="bg-SecondaryColor w-[311px] pb-2 h-fit rounded-br-[14px] rounded-bl-[14px]"
               >
                 <div className="h-311 w-204 overflow-hidden">
-                {post.image && <Image
+                {post.image ? <Image
                   src={post.image}
                   alt=""
                   width={311}
                   height={204}
                   className="mb-2 "
-                />} 
+                />: <Image
+                src='/ImgPost1.png'
+                alt=""
+                width={311}
+                height={204}
+                className="mb-2 "
+              /> } 
                 </div>
                 <p className="ml-3 text-white text-[16px] font-bold">
                   {post.title}

@@ -34,14 +34,13 @@ const Page = () => {
 
     return (
         <div >
-            {/* rootPage */}
             <HomeLayout>
                 <div className="p-6 rounded-lg  w-full max-w-4xl">
                     <h1 className="text-3xl font-bold text-center text-AccnetColor mb-6">Welcome to the Home Page</h1>
                     {authState?.isAuthenticated ? (
                         <CreatePostNav />
                     ) : (
-                        <div className="text-center">
+                        <div className="text-center mb-8">
                             <p className="text-lg text-gray-600 mb-4">Please log in to access the features.</p>
                             <h2>
                                 <Link
@@ -53,11 +52,11 @@ const Page = () => {
                             </h2>
                         </div>
                     )}
-                          {posts ? (
-        posts.map((post) => <Post key={post.id} post={post} />)
-      ) : (
-        <p>Поки що немає постів...</p>
-      )}
+                    {posts ? (
+                      posts.map((post) => <Post key={post.id} post={post} />)
+                    ) : (
+                      <p>Поки що немає постів...</p>
+                    )}
                 </div>
             </HomeLayout>
             
