@@ -9,4 +9,6 @@ public interface TagService {
     List<TagDto> getAllTags();
     UUID createTag(TagDto tag);
     TagDto getTag(UUID id);
+
+    List<TagDto> searchTags(String query);
 }

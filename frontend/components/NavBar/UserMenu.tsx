@@ -33,7 +33,7 @@ const UserMenu = () => {
                 <div className={`${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} w-14 h-14 rounded-[9px] mr-2 flex items-center justify-center`}>
                     {user?.img ? renderImage(user.img, 45, 40, "person") : renderImage("/NavPerson.png", 45, 40, "default person")}
                 </div>
-                <p className="text-white text-[21px] font-bold">{user?.firstName}</p>
+                <p className={`${theme === 'dark' ? 'text-white' : 'text-black'} text-[21px] font-bold`}>{user?.firstName}</p>
                 <svg className="w-4 h-3">
                     <use href={`/sprite.svg#iconArrowDown`} />
                 </svg>
@@ -44,7 +44,7 @@ const UserMenu = () => {
                     <Link href={`/user/${user?.id}`} className="flex items-center gap-4">
                         {renderImage(user?.img || "/NavPerson.png", 53, 53, "person")}
                         <div>
-                            <p className="text-white text-[16px] font-semibold">{user?.firstName}</p>
+                            <p className={`${theme === 'dark' ? 'text-white' : 'text-black'} text-[16px] font-semibold`}>{user?.firstName}</p>
                             <p className="text-[#97989D] text-[12px]">@{user?.nickName}</p>
                         </div>
                     </Link>

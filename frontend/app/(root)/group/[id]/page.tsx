@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { use, useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 
 interface Group {
     id: string;
@@ -25,6 +26,7 @@ const Group = () => {
     const [group, setGroup] = useState<Group | null>(null)
     const [show, setShow] = useState(false);
     const [isPinned, setIsPinned] = useState<any[] >([]);
+    const { theme, setTheme } = useTheme();
 
     useEffect(() => {
         const getAllPost = async () => {
@@ -92,7 +94,7 @@ const Group = () => {
 
     return (
         <div> 
-            <div className="mt-4 px-5 py-4 bg-MainColor rounded-[21px] flex items-center justify-between h-fit w-[1030px]">
+            <div className={`mt-4 px-5 py-4 ${theme === 'dark' ? 'bg-MainColor ' : 'bg-[#EAEAEA] '} rounded-[21px] flex items-center justify-between h-fit w-[1030px]`}>
                 <div className="flex items-center gap-3">
                     <Image src="/groupImage.png" alt="" width={60} height={60} />
                     <div>
@@ -100,7 +102,7 @@ const Group = () => {
                             <svg  className="w-6 h-7" fill="#fff">
                                 <use href={`/sprite.svg?v=1#icon-lock`}></use>
                             </svg>
-                            <p className="text-white text-[28px] font-semibold">{group?.title}</p>
+                            <p className={`${theme === 'dark' ? 'text-white' : 'text-black'} text-[28px] font-semibold`}>{group?.title}</p>
                         </div>
                         <p className="text-[#97989D] text-[20px]">82,645 Постів у цій групі</p>
                     </div>
@@ -111,34 +113,34 @@ const Group = () => {
                 </div>
             </div>
             <div className="flex gap-4 mb-4">
-                <div className="mt-4 h-[135px] px-5 py-4 bg-MainColor flex flex-col justify-between rounded-[21px] h-fit w-[690px]">
-                    <p className="text-white text-[15px] font-semibold mb-3 line-clamp-2"><strong>Опис:</strong> {group?.description} </p>
+                <div className={`mt-4 h-[135px] px-5 py-4 ${theme === 'dark' ? 'bg-MainColor ' : 'bg-[#EAEAEA] '} flex flex-col justify-between rounded-[21px] h-fit w-[690px]`}>
+                    <p className={`${theme === 'dark' ? 'text-white' : 'text-black'} text-[15px] font-semibold mb-3 line-clamp-2`}><strong>Опис:</strong> {group?.description} </p>
                     <div className="flex gap-3 items-center mb-3">
-                        <div className="py-2 w-fit px-3 bg-SecondaryColor rounded-[24px]">
-                            <p className="text-[13px] text-[#C5D0E6] font-semibold">фільм</p>
+                        <div className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor ' : 'bg-[#B5B5B5]'} rounded-[24px]`}>
+                            <p className={`text-[13px]  ${theme === 'dark' ? 'text-text-[#C5D0E6]' : 'text-white'} font-semibold`}>фільм</p>
                         </div>
-                        <div className="py-2 w-fit px-3 bg-SecondaryColor rounded-[24px]">
-                            <p className="text-[13px] text-[#C5D0E6] font-semibold">хоррор</p>
+                        <div className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor ' : 'bg-[#B5B5B5]'} rounded-[24px]`}>
+                            <p className={`text-[13px] ${theme === 'dark' ? 'text-text-[#C5D0E6]' : 'text-white'} font-semibold`}>хоррор</p>
                         </div>
-                        <div className="py-2 w-fit px-3 bg-SecondaryColor rounded-[24px]">
-                            <p className="text-[13px] text-[#C5D0E6] font-semibold">страшний</p>
+                        <div className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor ' : 'bg-[#B5B5B5]'} rounded-[24px]`}>
+                            <p className={`text-[13px] ${theme === 'dark' ? 'text-text-[#C5D0E6]' : 'text-white'} font-semibold`}>страшний</p>
                         </div>
                     </div>
                 </div>
-                <div className="mt-4  px-4 py-4 bg-MainColor rounded-[21px] h-fit w-[320px]">
+                <div className={`mt-4  px-4 py-4 ${theme === 'dark' ? 'bg-MainColor ' : 'bg-[#EAEAEA] '} rounded-[21px] h-fit w-[320px]`}>
                     <div className="flex items-center gap-2 mb-2">
                         <Image src="/sabs.png" alt="" width={24} height={18} />
-                        <p className="text-white text-[15px] font-semibold">317,731  підписники</p>
+                        <p className={`${theme === 'dark' ? 'text-white' : 'text-black'} text-[15px] font-semibold`}>317,731  підписники</p>
                     </div>
                     <div className="flex items-center gap-2 mb-4">
                         <Image src="/subsActive.png" alt="" width={24} height={18} />
-                        <p className="text-white text-[15px] font-semibold">37,731  онлайн</p>
+                        <p className={`${theme === 'dark' ? 'text-white' : 'text-black'} text-[15px] font-semibold`}>37,731  онлайн</p>
                     </div>
                     <div className="flex items-center">
-                        <div className="py-2 w-fit px-3 bg-SecondaryColor rounded-[24px] mr-2">
-                            <p className="text-[13px] text-[#C5D0E6] font-semibold ">{group.isPublic ? 'Публічна' : 'Приватна'} група</p>
+                        <div className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor ' : 'bg-[#B5B5B5]'} rounded-[24px] mr-2`}>
+                            <p className={`text-[13px] ${theme === 'dark' ? 'text-text-[#C5D0E6]' : 'text-white'} font-semibold`}>{group.isPublic ? 'Публічна' : 'Приватна'} група</p>
                         </div>
-                        <p className="text-white text-[15px] font-semibold">Створена: 31.12.2024</p>
+                        <p className={`${theme === 'dark' ? 'text-white' : 'text-black'} text-[15px] font-semibold`}>Створена: 31.12.2024</p>
                     </div>
                 </div>
             </div>

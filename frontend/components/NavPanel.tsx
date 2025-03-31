@@ -112,7 +112,7 @@ const NavPanel = () => {
                             transition={{duration: 0.5, ease: 'easeOut'}}
                         >
                             <motion.p
-                                className={`text-[21px] text-${theme === 'dark' ? '#97989D' : 'black'} font-semibold`}
+                                className={`text-[21px] text-${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold`}
                                 initial={{x: -100, opacity: 0}}
                                 animate={{x: 0, opacity: 1}}
                                 transition={{duration: 0.5, ease: 'easeOut'}}
