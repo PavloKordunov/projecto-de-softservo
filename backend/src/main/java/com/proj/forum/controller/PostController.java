@@ -100,25 +100,25 @@ public class PostController {
             @RequestParam(defaultValue = "desc") String order) {
 
         List<PostResponseDto> posts = postService.getUserPosts(userId, sort, order);
-        return new ApiResponse<>(true, HttpStatus.OK,"Post sorted", posts);
+        return new ApiResponse<>(true, HttpStatus.OK, "Post sorted", posts);
     }
 
     @GetMapping("/user/liked/{userId}")
     public ApiResponse<List<PostResponseDto>> getUserLikedPosts(
             @PathVariable UUID userId,
             @RequestParam(defaultValue = "createdAt") String sort,
-            @RequestParam(defaultValue = "desc") String order){
+            @RequestParam(defaultValue = "desc") String order) {
         List<PostResponseDto> posts = postService.getUserLikedPosts(userId, sort, order);
-        return new ApiResponse<>(true, HttpStatusCode.valueOf(200),"Post sorted", posts);
+        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Post sorted", posts);
     }
 
     @GetMapping("/user/saved/{userId}")
     public ApiResponse<List<PostResponseDto>> getUserSavedPosts(
             @PathVariable UUID userId,
             @RequestParam(defaultValue = "createdAt") String sort,
-            @RequestParam(defaultValue = "desc") String order){
+            @RequestParam(defaultValue = "desc") String order) {
         List<PostResponseDto> posts = postService.getUserSavedPosts(userId, sort, order);
-        return new ApiResponse<>(true, HttpStatusCode.valueOf(200),"Post sorted", posts);
+        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Post sorted", posts);
     }
 }
 

@@ -58,7 +58,16 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostResponseDto> getAllPosts() {
         List<Post> postList = postRepository.findAll();
-        return getPostResponseDtos(postList);
+        List<Post> result = new ArrayList<>();
+        User user = userRepository.findByEmail(getEmail()).orElse(null);
+        for (Post post : postList) {
+            Group group = post.getGroup();
+
+            if (group.isPublic() || (user != null && group.getMembers().contains(user))) {
+                result.add(post);
+            }
+        }
+        return getPostResponseDtos(result);
     }
 
 
@@ -70,11 +79,11 @@ public class PostServiceImpl implements PostService {
         String email = getEmail();
         Integer countLikes = getCountLikes(post);
         Integer countSaved = getCountSaved(post);
-        if(email == null) {
+        if (email == null) {
             return stickPostDtoAndStatistic(post, null, countLikes, countSaved);
         }
         User user = userRepository.findByEmail(email)
-                .orElseThrow(()-> new EntityNotFoundException("User not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
         Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(id, user.getId()).orElse(null);
         return stickPostDtoAndStatistic(post, statistic, countLikes, countSaved);
     }
@@ -167,33 +176,6 @@ public class PostServiceImpl implements PostService {
         }
 
         return getPostResponseDtos(posts);
-//        Sort sortBy;
-//        if ("viewCount".equals(sort)) {
-//            sortBy = Sort.by(direction, "viewCount");
-//            List<Post> result = postRepository.findAllByAuthor_Id(userId, sortBy);
-//            return mapToPostDtoList(result);
-//        } else if ("createdAt".equals(sort)){
-//            sortBy = Sort.by(direction, "createdAt");
-//            List<Post> result = postRepository.findAllByAuthor_Id(userId, sortBy);
-//            return mapToPostDtoList(result);
-//        }
-//
-//        List<Post> posts = postRepository.findAllByAuthor_Id(userId);
-//
-//        if ("likes".equals(sort)) {
-//
-//            for (Post post : posts) {
-//                Integer totalLikes = userStatisticRepository.getTotalLikes(post.getId());
-////
-////                post.setLikesCount(totalLikes);
-////                postRepository.save(posts.getFirst());
-//            }
-//            posts.sort(order.equalsIgnoreCase("asc") ?
-//                    Comparator.comparing(Post::getLikesCount) :
-//                    Comparator.comparing(Post::getLikesCount).reversed());
-//        }
-//
-//        return mapToPostDtoList(posts);
     }
 
     @Override
@@ -210,7 +192,7 @@ public class PostServiceImpl implements PostService {
             case "createdAt" -> {
                 if (order.equalsIgnoreCase("asc")) {
                     posts = postRepository.findLikedPostsByUserIdOrderByCreatedAtAsc(userId);
-                }else {
+                } else {
                     posts = postRepository.findLikedPostsByUserIdOrderByCreatedAtDesc(userId);
                 }
             }
@@ -241,7 +223,7 @@ public class PostServiceImpl implements PostService {
             case "createdAt" -> {
                 if (order.equalsIgnoreCase("asc")) {
                     posts = postRepository.findSavedPostsByUserIdOrderByCreatedAtAsc(userId);
-                }else {
+                } else {
                     posts = postRepository.findSavedPostsByUserIdOrderByCreatedAtDesc(userId);
                 }
             }
@@ -258,33 +240,33 @@ public class PostServiceImpl implements PostService {
         return getPostResponseDtos(posts);
     }
 
-private List<PostResponseDto> getPostResponseDtos(List<Post> postList) {
-    if (postList.isEmpty()) {
-        throw new EntityNotFoundException("Posts not found");
-    }
+    private List<PostResponseDto> getPostResponseDtos(List<Post> postList) {
+        if (postList.isEmpty()) {
+            throw new EntityNotFoundException("Posts not found");
+        }
 
-    List<PostResponseDto> postDtoList = new ArrayList<>();
-    String email = getEmail();
+        List<PostResponseDto> postDtoList = new ArrayList<>();
+        String email = getEmail();
 
-    if (email == null) {
-        for (Post post : postList){
+        if (email == null) {
+            for (Post post : postList) {
+                Integer countLikes = getCountLikes(post);
+                Integer countSaved = getCountSaved(post);
+                postDtoList.add(stickPostDtoAndStatistic(post, null, countLikes, countSaved));
+            }
+            return postDtoList;
+        }
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        for (Post post : postList) {
+            Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(post.getId(), user.getId()).orElse(null);
+
             Integer countLikes = getCountLikes(post);
             Integer countSaved = getCountSaved(post);
-            postDtoList.add(stickPostDtoAndStatistic(post, null, countLikes, countSaved));
+            postDtoList.add(stickPostDtoAndStatistic(post, statistic, countLikes, countSaved));
         }
         return postDtoList;
     }
-    User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new EntityNotFoundException("User not found"));
-    for (Post post : postList) {
-        Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(post.getId(), user.getId()).orElse(null);
-
-        Integer countLikes = getCountLikes(post);
-        Integer countSaved = getCountSaved(post);
-        postDtoList.add(stickPostDtoAndStatistic(post, statistic, countLikes, countSaved));
-    }
-    return postDtoList;
-}
 
     private PostResponseDto getPostResponseDto(Post post) {
         String email = getEmail();
