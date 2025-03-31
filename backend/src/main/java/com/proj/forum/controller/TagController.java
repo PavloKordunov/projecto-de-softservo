@@ -8,6 +8,7 @@ import com.proj.forum.dto.TagDto;
 import com.proj.forum.service.TagService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,5 +40,11 @@ public class TagController {
     public ApiResponse<TagDto> getTagById(@PathVariable @Valid UUID id) {
         TagDto tagDto = tagService.getTag(id);
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Successful getById", tagDto);
+    }
+
+    @GetMapping("/search")
+    public ApiResponse<List<TagDto>> searchTags(@RequestParam String query) {
+        List<TagDto> tags = tagService.searchTags(query);
+        return new ApiResponse<>(true, HttpStatus.OK, "Success search tags", tags);
     }
 }

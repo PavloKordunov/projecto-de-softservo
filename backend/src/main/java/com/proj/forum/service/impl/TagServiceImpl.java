@@ -35,6 +35,15 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public List<TagDto> searchTags(String query) {
+        List<Tag> tags = tagRepository.findAll();
+        return tags.stream()
+                .filter(tag -> tag.getName().toLowerCase().startsWith(query.toLowerCase()))
+                .map(TagServiceImpl::getUpdateTag)
+                .toList();
+    }
+
+    @Override
     public List<TagDto> getAllTags() {
         List<Tag> tagList = tagRepository.findAll();
         if (tagList.isEmpty()) {
