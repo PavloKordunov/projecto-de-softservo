@@ -9,6 +9,7 @@ import HomePage from "./(root)/home/page";
 import { useEffect, useState } from "react";
 import { useUser } from "@/hooks/useUser";
 import Post from "@/components/Post";
+import { motion } from "framer-motion";
 
 const Page = () => {
     const { authState } = useOktaAuth();
@@ -35,22 +36,30 @@ const Page = () => {
     return (
         <div >
             <HomeLayout>
-                <div className="p-6 rounded-lg  w-full max-w-4xl">
-                    <h1 className="text-3xl font-bold text-center text-AccnetColor mb-6">Welcome to the Home Page</h1>
+                <div className="p-6 rounded-lg w-fit ">
                     {authState?.isAuthenticated ? (
                         <CreatePostNav />
                     ) : (
-                        <div className="text-center mb-8">
-                            <p className="text-lg text-gray-600 mb-4">Please log in to access the features.</p>
-                            <h2>
-                                <Link
-                                    href="/login"
-                                    className="text-white bg-AccnetColor hover:bg-gray-600 font-semibold py-2 px-4 rounded transition duration-300"
-                                >
-                                    Долучитись до спільноти
+                        <motion.div
+                            className="text-center flex border-SecondaryColor border-2 p-[30px] rounded-xl justify-center mb-8 shadow-lg"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, ease: "easeOut" }}
+                        >
+                            <motion.h2 whileHover={{ scale: 1.1 }}>
+                                <Link href="/login" className="font-semibold rounded-lg shadow-md overflow-hidden block">
+                                    <motion.span
+                                        initial={{ backgroundPosition: "0% 50%" }}
+                                        animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+                                        transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+                                        className="block py-2 px-6 border-white border-2 rounded-[10px] text-[20px] text-MainColor text-center"
+                                        style={{ background: "linear-gradient(90deg, #ffffff, #ff4155,  #2c353d)", backgroundSize: "200% 100%" }}
+                                    >
+                                        Долучитись до спільноти
+                                    </motion.span>
                                 </Link>
-                            </h2>
-                        </div>
+                            </motion.h2>
+                        </motion.div>
                     )}
                     {posts ? (
                       posts.map((post) => <Post key={post.id} post={post} />)
