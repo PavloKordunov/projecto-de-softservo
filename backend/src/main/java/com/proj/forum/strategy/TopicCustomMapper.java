@@ -31,10 +31,17 @@ public class TopicCustomMapper implements CustomMapper<Topic, TopicDto> {
     @Override
     public Topic mapToEntity(TopicDto topicDto) {
         List<UUID> tagsId = new ArrayList<>();
-        for(TagDto tagDto:topicDto.tagDtos()){
-            tagsId.add(tagDto.id());
+        List<Tag> tags;
+        if(topicDto.tagDtos() != null) {
+            for (TagDto tagDto : topicDto.tagDtos()) {
+                tagsId.add(tagDto.id());
+            }
+            tags = tagRepository.findAllById(tagsId);
         }
-        List<Tag> tags = tagRepository.findAllById(tagsId);
+        else {
+            tags = null;
+        }
+
         return Topic.builder()
                 .title(topicDto.title())
                 .description(topicDto.description())
@@ -65,8 +72,23 @@ public class TopicCustomMapper implements CustomMapper<Topic, TopicDto> {
                         .id(tag.getId())
                         .build())
                 .toList();
-        User user = userRepository.findByEmail(UserHelper.getEmail()).get();
-        Statistic myStat = userStatisticRepository.getStatisticByObjectIdAndUserId(topic.getId(), user.getId()).get();
+
+        String email = UserHelper.getEmail();
+        User user;
+        Statistic myStat;
+        if(email != null){
+            user = userRepository.findByEmail(email).get();
+            if(userStatisticRepository.existsByObjectIdAndUserId(topic.getId(), user.getId())){
+                myStat = userStatisticRepository.getStatisticByObjectIdAndUserId(topic.getId(), user.getId()).get();
+            }
+            else{
+                myStat = null;
+            }
+        }
+        else {
+            myStat = null;
+        }
+
         return TopicDto.builder()
                 .id(topic.getId())
                 .title(topic.getTitle())
@@ -87,7 +109,7 @@ public class TopicCustomMapper implements CustomMapper<Topic, TopicDto> {
                 .releaseDate(topic.getReleaseDate())
                 .userRate(userRate)
                 .userRateCount(userRateCount)
-                .myRate(myStat.getRate())
+                .myRate(myStat != null ? myStat.getRate() : null)
                 .build();
     }
 }

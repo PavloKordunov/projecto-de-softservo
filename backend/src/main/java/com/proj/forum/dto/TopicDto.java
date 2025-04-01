@@ -29,6 +29,6 @@ public record TopicDto(
         Double userRate,
         int userRateCount,
         List<CommentDto> comments,
-        int myRate
+        Short myRate
 ) {
 }
