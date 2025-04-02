@@ -27,7 +27,12 @@ public class Post {
 
     private Integer viewCount;
 
-    @ManyToMany(mappedBy = "posts")
+    @ManyToMany
+    @JoinTable(
+            name = "tag_post",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
     private List<Tag> tags;
 
     @ManyToOne

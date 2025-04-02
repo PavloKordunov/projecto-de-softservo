@@ -21,20 +21,10 @@ public class Tag {
     @GeneratedValue
     private UUID id;
 
-    @ManyToMany
-    @JoinTable(
-            name = "tag_post",
-            joinColumns = @JoinColumn(name = "tag_id"),
-            inverseJoinColumns = @JoinColumn(name = "post_id")
-    )
+    @ManyToMany(mappedBy = "tags")
     private List<Post> posts;
 
-    @ManyToMany
-    @JoinTable(
-            name = "tag_topic",
-            joinColumns = @JoinColumn(name = "tag_id"),
-            inverseJoinColumns = @JoinColumn(name = "topic_id")
-    )
+    @ManyToMany(mappedBy = "tags")
     private List<Topic> topics;
 
 
