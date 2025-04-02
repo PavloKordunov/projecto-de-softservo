@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -65,7 +66,7 @@ public class Topic {
     private String director;
 
     @Column(nullable = false)
-    private String releaseDate;
+    private LocalDate releaseDate;
 
     @Lob
     @Column(nullable = false)

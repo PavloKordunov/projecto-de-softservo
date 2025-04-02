@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface TopicService {
-    List<TopicDto> getAllTopics();
+    //List<TopicDto> getAllTopics();
     UUID createTopic(TopicDto topic);
     TopicDto getTopic(UUID id);
     List<TopicDto> getByTitleContain(String name);
@@ -18,4 +18,8 @@ public interface TopicService {
     void addView(UUID id);
 
     List<TopicDto> getUserRatedTopics(UUID userId);
+
+    List<TopicDto> getAllTopics(String sort, String order);
+
+    List<TopicDto> getAllTopicsByGenre(String genre, String sort, String order);
 }

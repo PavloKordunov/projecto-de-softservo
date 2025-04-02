@@ -10,6 +10,7 @@ import com.proj.forum.service.TopicService;
 import com.proj.forum.strategy.TopicCustomMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,17 +42,17 @@ public class TopicServiceImpl implements TopicService {
         return topicMapper.mapToDto(topic);
     }
 
-    @Override
-    public List<TopicDto> getAllTopics() {
-        List<Topic> topicList = topicRepository.findAll();
-        if (topicList.isEmpty()) {
-            throw new EntityNotFoundException("Topics not found");
-        }
-
-        return topicList.stream()
-                .map(topicMapper::mapToDto)
-                .toList();
-    }
+//    @Override
+//    public List<TopicDto> getAllTopics() {
+//        List<Topic> topicList = topicRepository.findAll();
+//        if (topicList.isEmpty()) {
+//            throw new EntityNotFoundException("Topics not found");
+//        }
+//
+//        return topicList.stream()
+//                .map(topicMapper::mapToDto)
+//                .toList();
+//    }
 
     @Override
     public void updateTopic(UUID id, TopicDto topicDto) {
@@ -108,6 +109,61 @@ public class TopicServiceImpl implements TopicService {
         return topicDtoList;
     }
 
+    @Override
+    public List<TopicDto> getAllTopics(String sort, String order) {
+        Sort.Direction direction = order.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        List<Topic> topics;
+        switch (sort) {
+            case "releaseDate" -> topics = topicRepository.findAll(Sort.by(direction, "releaseDate"));
+            case "IMDB" -> topics = topicRepository.findAll(Sort.by(direction, "IMDB"));
+            case "userRate" -> {
+                if (order.equalsIgnoreCase("asc")) {
+                    topics = topicRepository.getAllByRateAsc();
+                } else {
+                    topics = topicRepository.getAllByRateDesc();
+                }
+            }
+            case "userRateCount" -> {
+                if (order.equalsIgnoreCase("asc")) {
+                    topics = topicRepository.getTopicsByRateCountAsc();
+                } else {
+                    topics = topicRepository.getTopicsByRateCountDesc();
+                }
+            }
+            case null, default -> topics = topicRepository.findAll();
+        }
+
+        return mapToTopicDtoList(topics);
+    }
+
+    @Override
+    public List<TopicDto> getAllTopicsByGenre(String genre, String sort, String order) {
+        Sort.Direction direction = order.equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        List<Topic> topics;
+        switch (sort) {
+            case "releaseDate" -> topics = topicRepository.findByGenreContainingIgnoreCase(genre, Sort.by(direction, "releaseDate"));
+            case "IMDB" -> topics = topicRepository.findByGenreContainingIgnoreCase(genre, Sort.by(direction, "IMDB"));
+            case "userRate" -> {
+                if (order.equalsIgnoreCase("asc")) {
+                    topics = topicRepository.getTopicsByGenreAndRateAsc(genre);
+                } else {
+                    topics = topicRepository.getTopicsByGenreAndRateDesc(genre);
+                }
+            }
+            case "userRateCount" -> {
+                if (order.equalsIgnoreCase("asc")) {
+                    topics = topicRepository.getTopicsByGenreAndRateCountAsc(genre);
+                } else {
+                    topics = topicRepository.getTopicsByGenreAndRateCountDesc(genre);
+                }
+            }
+            case null, default -> topics = topicRepository.findByGenreContainingIgnoreCase(genre);
+        }
+        return mapToTopicDtoList(topics);
+    }
+
     private TopicDto stickTopicDtoAndStatistic(Topic topic, UUID userId) {
         //Optional<Integer> myRate = userStatisticRepository.findRateByObjectIdAndUserId(topic.getId(), userId);
         Optional<Double> usersRate = userStatisticRepository.findAverageRateByObjectId(topic.getId());
@@ -134,7 +190,7 @@ public class TopicServiceImpl implements TopicService {
                 .director(topic.getDirector())
                 .image(topic.getImage())
                 .topicType(topic.getType())
-                .releaseDate(topic.getReleaseDate())
+                .responseReleaseDate(topic.getReleaseDate())
                 .viewCount(topic.getViewCount())
                 .userRate(usersRate.orElse(0.0))
                 .userRateCount(usersRateCount)

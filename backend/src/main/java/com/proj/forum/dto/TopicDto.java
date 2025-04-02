@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,7 +25,8 @@ public record TopicDto(
         @NotBlank String director,
         @NotBlank String image,
         @NotNull TopicType topicType,
-        @NotNull String releaseDate,
+        String releaseDate,
+        LocalDate responseReleaseDate,
         int viewCount,
         Double userRate,
         int userRateCount,

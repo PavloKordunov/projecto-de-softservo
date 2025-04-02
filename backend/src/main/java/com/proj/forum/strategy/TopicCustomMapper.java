@@ -15,8 +15,11 @@ import com.proj.forum.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 @Component
@@ -42,6 +45,13 @@ public class TopicCustomMapper implements CustomMapper<Topic, TopicDto> {
             tags = null;
         }
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.ENGLISH);
+        LocalDate releaseDate = null;
+        if (topicDto.releaseDate() != null) {
+            releaseDate = LocalDate.parse(topicDto.releaseDate(), formatter);
+        }
+
+
         return Topic.builder()
                 .title(topicDto.title())
                 .description(topicDto.description())
@@ -57,7 +67,7 @@ public class TopicCustomMapper implements CustomMapper<Topic, TopicDto> {
                 .author_id(topicDto.author())
                 .type(topicDto.topicType())
                 .tags(tags)
-                .releaseDate(topicDto.releaseDate())
+                .releaseDate(releaseDate)
                 .build();
     }
 
@@ -106,7 +116,7 @@ public class TopicCustomMapper implements CustomMapper<Topic, TopicDto> {
                 .topicType(topic.getType())
                 .tagDtos(tags)
                 .comments(comments)
-                .releaseDate(topic.getReleaseDate())
+                .responseReleaseDate(topic.getReleaseDate())
                 .userRate(userRate)
                 .userRateCount(userRateCount)
                 .myRate(myStat != null ? myStat.getRate() : null)

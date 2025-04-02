@@ -31,11 +31,11 @@ public class TopicController {
             return ApiResponse.apiResponse(true, 201, "Create topic", id);
     }
 
-    @GetMapping
-    public ApiResponse<List<TopicDto>> getAllTopics() {
-        List<TopicDto> topicsDto = topicService.getAllTopics();
-        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Topics found", topicsDto);
-    }
+//    @GetMapping
+//    public ApiResponse<List<TopicDto>> getAllTopics() {
+//        List<TopicDto> topicsDto = topicService.getAllTopics();
+//        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Topics found", topicsDto);
+//    }
 
     @GetMapping("/{id}")
     public ApiResponse<TopicDto> getTopicById(@PathVariable UUID id) {
@@ -70,5 +70,22 @@ public class TopicController {
         List<TopicDto> topicsDto = topicService.getUserRatedTopics(userId);
 
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Topics found", topicsDto);
+    }
+
+    @GetMapping("/genre/{genre}")
+    public ApiResponse<List<TopicDto>> getAllTopicsByGenre(
+            @PathVariable String genre,
+            @RequestParam(defaultValue = "releaseDate") String sort,
+            @RequestParam(defaultValue = "desc") String order) {
+        List<TopicDto> topics = topicService.getAllTopicsByGenre(genre, sort, order);
+        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Topics found", topics);
+    }
+
+    @GetMapping
+    public ApiResponse<List<TopicDto>> getAllTopics(
+            @RequestParam(defaultValue = "releaseDate") String sort,
+            @RequestParam(defaultValue = "desc") String order) {
+        List<TopicDto> topics = topicService.getAllTopics(sort, order);
+        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Topics found", topics);
     }
 }
