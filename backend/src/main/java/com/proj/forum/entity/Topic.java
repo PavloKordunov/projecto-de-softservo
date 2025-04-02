@@ -26,7 +26,12 @@ public class Topic {
     @GeneratedValue
     private UUID id;
 
-    @ManyToMany(mappedBy = "topics")
+    @ManyToMany
+    @JoinTable(
+            name = "tag_topic",
+            joinColumns = @JoinColumn(name = "topic_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
     private List<Tag> tags;
 
     @Column(nullable = false)
