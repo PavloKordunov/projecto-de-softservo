@@ -21,6 +21,7 @@ interface PostProps {
     groupId: string;
     isLiked: boolean | null;
     countLikes: number;
+    userImage: string;
   };
   className?: string;
   isPinned?: any[];
@@ -44,7 +45,7 @@ const Post: React.FC<PostProps> = ({ className, post, isPinned }) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${user?.accessToken}`,
+            "Authorization": `Bearer ${user?.accessToken}`,
           },
           body: JSON.stringify({
             objectId: post.id,
@@ -83,7 +84,7 @@ const Post: React.FC<PostProps> = ({ className, post, isPinned }) => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${user?.accessToken}`,
+            "Authorization": `Bearer ${user?.accessToken}`,
           },
         });
 
@@ -158,7 +159,9 @@ const Post: React.FC<PostProps> = ({ className, post, isPinned }) => {
                 </div>
                 <div className="flex items-center gap-9">
                     <div className="flex items-center gap-3">
-                        <Image src="/person.png" alt="" width={54} height={54}/>
+                        <div className="h-[54px] w-[54px] rounded-[50%] overflow-hidden">
+                            {post?.userImage ? <Image src={post?.userImage} alt="" width={54} height={54} /> : <Image src="/person.png" alt="" width={54} height={54} />}
+                        </div>
                         <div>
                             <p className={`text-[18px] ${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold`}>{post.nickname}</p>
                             <span className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-regular`}>2 години тому</span>

@@ -12,6 +12,11 @@ interface Group {
     description: string;
 }
 
+interface Tag {
+    id: string;
+    name: string;
+}
+
 const CreatePostModal = ({handleShow, group} : {handleShow : () => void, group?: Group }) => {
 
     const [fieldMode, setFieldMode] = useState("text")
@@ -20,13 +25,32 @@ const CreatePostModal = ({handleShow, group} : {handleShow : () => void, group?:
     const [base64, setBase64] = useState<string | null>(null);
     const { theme, setTheme } = useTheme();
     const {user} = useUser()
+    const [tagQuery, setTagQuery] = useState("");
+    const [suggestedTags, setSuggestedTags] = useState<Tag[]>([]);
     const [post, setPost] = useState({
         title: "",
         userId: user?.id,
         groupId:selectedGroup ? selectedGroup?.id : group?.id,
         description: "",
         image: "",
+        tagsId: [] as string[],
     })
+    const [tags, setTags] = useState<Tag[]>([]);
+
+    useEffect(() => {
+        if (tagQuery.trim() !== "") {
+            fetch(`https://localhost:8080/api/tags/search?query=${tagQuery}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        setSuggestedTags(data.body);
+                    }
+                })
+                .catch(err => console.log(err));
+        } else {
+            setSuggestedTags([]);
+        }
+    }, [tagQuery]);
 
     const selectGroup = (selectGroup: any) => {
         setSelecterGroup(selectGroup);
@@ -77,6 +101,19 @@ const CreatePostModal = ({handleShow, group} : {handleShow : () => void, group?:
         reader.readAsDataURL(file);
     }
 
+    const addTag = (tag: Tag) => {
+        if (!post.tagsId.includes(tag.id)) {
+            setPost((prev) => ({
+                ...prev,
+                tagsId: [...prev.tagsId, tag.id]
+            }));
+            setTags((prev) => [...prev, tag]);
+        }
+        setTagQuery("");
+        setSuggestedTags([]);
+    };
+
+
     useEffect(() => {
         console.log(post)
     }, [post])
@@ -103,8 +140,26 @@ const CreatePostModal = ({handleShow, group} : {handleShow : () => void, group?:
                     </div>
                 </div>
                 <input type="text" name="title" value={post.title} onChange={handleInputChange} className={`w-full h-12 px-4 py-2  ${theme === 'dark' ? 'bg-SecondaryColor text-white' : 'bg-[#B5B5B5] text-black'} border-none rounded-[10px] mb-3 focus:outline-none`} placeholder="Введіть заглоловок..."/>
-                <div className={`${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} px-4 py-2 rounded-[31px] w-fit mb-3`}>
-                    <p className="text-[14px] text-[#858EAD] font-semibold">додати тег</p>
+                <div className="relative flex items-center gap-4">
+                    {tags.length > 0 &&<div className="flex flex-wrap gap-2 mb-3">
+                        {tags.map(tag => (
+                        <div key={tag.id} className={`${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} px-4 py-2 rounded-[31px] w-fit`}>
+                            <p className="text-[14px] text-[#858EAD] font-semibold">{tag.name}</p>
+                        </div>
+                        ))}
+                    </div>}
+                    <div className="relative">
+                        <div className={`${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} px-2 rounded-[31px] items-center justify-center w-fit mb-3`}>
+                            <input type="text" value={tagQuery} onChange={(e) => setTagQuery(e.target.value)} className={`px-1 mt-3 text-[14px] font-semibold w-[88px] h-4 ${theme === 'dark' ? 'bg-SecondaryColor text-white' : 'bg-[#B5B5B5] text-black'} border-none rounded-[10px] mb-3 focus:outline-none`} placeholder="додати тег" />
+                        </div>
+                        {suggestedTags.length > 0 && (
+                            <ul className="absolute w-[200px] p-4 bg-SecondaryColor rounded-[31px] shadow-md mt-1">
+                                {suggestedTags.map(tag => (
+                                    <li key={tag.id} className="px-2 py-1 cursor-pointer hover:bg-[#3A464F] transition-colors" onClick={() => addTag(tag)}>{tag.name}</li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
                 </div>
                 {fieldMode === "text" ? (
                     <textarea name="description" value={post.description} onChange={handleInputChange} className={`w-full h-64 px-4 py-2 resize-none ${theme === 'dark' ? 'bg-SecondaryColor text-white' : 'bg-[#B5B5B5] text-black'} border-none rounded-[10px] mb-3 focus:outline-none`} placeholder="Введіть опис..."></textarea>

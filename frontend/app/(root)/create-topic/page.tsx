@@ -44,7 +44,8 @@ const AdminPostMenu = () => {
         director: "",
         image: "",
         seasoneAmount: "",
-        runtime: ""
+        runtime: "",
+        tagDtos: null,
     });
 
     const getFilmApiData = (data: FilmData) => {
@@ -57,7 +58,8 @@ const AdminPostMenu = () => {
                 mode: "cors",
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${user?.accessToken}`
                 },
                 body: JSON.stringify(formData)
             });

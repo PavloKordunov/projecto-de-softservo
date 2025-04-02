@@ -31,7 +31,7 @@ const CreateGroup = ({ handleShow }: { handleShow: () => void }) => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${user?.accessToken}`,
+                    "Authorization": `Bearer ${user?.accessToken}`,
                 },
                 body: JSON.stringify(group),
             });

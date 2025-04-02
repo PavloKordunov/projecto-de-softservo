@@ -10,6 +10,7 @@ import { MovieDetails } from "@/api/omdbApi/omdbApi";
 import { FiMenu, FiX } from "react-icons/fi";
 import Messanger from "./Messanger";
 import { useTheme } from "next-themes";
+import Image from "next/image";
 
 interface NavBarProps {
     movies: MovieDetails[];
@@ -36,7 +37,7 @@ const NavBar = ({ movies }: NavBarProps) => {
     return (
         <nav className={`w-full py-4 px-6 ${theme === 'dark' ? 'bg-MainColor' : 'bg-[#EAEAEA]'} rounded-[10px] flex items-center justify-between relative`}>
 
-            <p className="text-AccnetColor font-bold text-[30px]">Logo</p>
+            <Image src='/logo.png' alt="" width={70} height={50} />
 
 
             <div className="hidden md:flex flex-row md:gap-[15px] xl:gap-[25px] items-center">

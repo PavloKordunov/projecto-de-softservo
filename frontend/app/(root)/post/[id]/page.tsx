@@ -25,6 +25,7 @@ interface Post {
     isSaved: boolean | null;
     countLikes: number;
     countSaved: number;
+    userImage: string;
 }
 
 const PostPage = () => {
@@ -170,7 +171,7 @@ const PostPage = () => {
                 const res = await fetch(`https://localhost:8080/api/posts/${postId}`, {
                     mode: "cors",
                     headers: {
-                        'Authorization': `Bearer ${user?.accessToken}`
+                        'Authorization': `${user?.accessToken ? `Bearer ${user?.accessToken}` : null}`
                     }
                 })
                 const data = await res.json()
@@ -205,7 +206,7 @@ const PostPage = () => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${user?.accessToken}`
+                    "Authorization": `${user?.accessToken ? `Bearer ${user?.accessToken}` : null}`
                 },
                 body: JSON.stringify(commentData)
             })
@@ -259,7 +260,11 @@ const PostPage = () => {
                 {post?.image && <Image src={post?.image} alt="" width={980} height={760} className="mb-3" />}
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">
-                        <Link href={`/user/${post.userId}`}><Image src="/person.png" alt="" width={54} height={54}/></Link>
+                        <Link href={`/user/${post.userId}`}>
+                            <div className="h-[54px] w-[54px] rounded-[50%] overflow-hidden">
+                                {post?.userImage ? <Image src={post?.userImage} alt="" width={54} height={54} /> : <Image src="/person.png" alt="" width={54} height={54} />}
+                            </div>
+                        </Link>
                         <div>
                             <Link href={`/user/${post.userId}`}><p className={`text-[18px] ${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold`}>{post.nickname}</p></Link>
                             <span className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-regular`}>2 години тому</span>

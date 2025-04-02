@@ -17,7 +17,7 @@ const TopicPage = () => {
             mode: "cors",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${user?.accessToken}`,
+              "Authorization": `${user?.accessToken ? `Bearer ${user?.accessToken}` : null}`,
             }
           });
           const data = await res.json();
