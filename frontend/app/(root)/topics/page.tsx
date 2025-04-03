@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 
 const TopicPage = () => {
 
@@ -125,7 +126,7 @@ const TopicPage = () => {
           </div>
             {topic ? (
                 topic.map((topic) => (
-                <Link href={`/topics/${topic.id}`} key={topic.id} className="bg-MainColor w-[295px] h-fit rounded-br-[14px] rounded-bl-[14px]">
+                <Link href={`/topics/${topic.id}`} key={topic.id} className={`${theme === 'dark' ? 'bg-MainColor' : 'bg-[#E4E3E3]'} w-[295px] h-fit rounded-br-[14px] rounded-bl-[14px]`}>
                     <Image 
                         src={topic.image} 
                         alt="Movie Poster" 
@@ -133,7 +134,7 @@ const TopicPage = () => {
                         height={460}
                         className="mb-2 w-full h-[425px] object-cover"
                     />
-                    <p className=" ml-3 text-white text-center mb-4 text-[16px] font-bold">{topic.title} </p>
+                    <p className={`ml-3 ${theme === 'dark' ? 'text-white' : 'text-black'} text-center mb-4 text-[16px] font-bold`}>{topic.title} </p>
                 </Link>
                  ))
                  

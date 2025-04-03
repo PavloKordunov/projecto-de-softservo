@@ -2,6 +2,7 @@
 import { useUser } from '@/hooks/useUser';
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { useTheme } from "next-themes";
 
 interface Post {
   id: string;
@@ -33,6 +34,8 @@ const AdminPost = () => {
 
   const [topic, setTopics] = useState<Post | null>(null);
   const [topicRate, setTopicRate] = useState<number | null>(null);
+
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
       const getAllTopics = async () => {
@@ -133,7 +136,7 @@ const AdminPost = () => {
   }, [topicRate])
 
   return (
-    <div className="ml-6 mt-4 w-[1030px] bg-[#1E1F20] rounded-[31px] p-8">
+    <div className={`ml-6 mt-4 w-[1030px]  ${theme === 'dark' ? 'bg-[#1E1F20]' : 'bg-[#E4E3E3]'} rounded-[31px] p-8`}>
       <div className="flex w-full gap-8 mb-32">
         <div>
           <img
@@ -144,15 +147,15 @@ const AdminPost = () => {
             width={237}
           />
           <a className="flex justify-center items-center w-[237px] h-[39px] bg-[#FF4155] rounded-[31px] mb-4">
-            <p className="text-white text-lg font-semibold">Переглянути трейлер</p>
+            <p className={`${theme === 'dark' ? 'text-white' : 'text-black'} text-lg font-semibold`}>Переглянути трейлер</p>
           </a>
           <ul className="flex gap-3 mb-4">
             {['живучі', 'хоррор', 'слешер'].map((tag, index) => (
               <li
                 key={index}
-                className="flex justify-center items-center w-[70px] h-[32px] bg-[#2C353D] rounded-[26px]"
+                className={`flex justify-center items-center w-[70px] h-[32px]  ${theme === 'dark' ? 'bg-[#2C353D]' : 'bg-[#B5B5B5]'} rounded-[26px]`}
               >
-                <p className="text-[#C5D0E6] text-sm font-semibold">{tag}</p>
+                <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-sm font-semibold`}>{tag}</p>
               </li>
             ))}
           </ul>
@@ -168,20 +171,20 @@ const AdminPost = () => {
               ))}
             </li>
             <li>
-              <p className="text-[#C5D0E6] text-sm">{topic?.userRateCount}</p>
+              <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-sm`}>{topic?.userRateCount}</p>
             </li>
           </ul>
-          <a className="flex justify-center items-center w-[237px] h-[39px] bg-[#2C353D] rounded-[31px]">
-            <p className="text-white text-[16px] font-semibold">Група по цьому фільму тут</p>
+          <a className={`flex justify-center items-center w-[237px] h-[39px] ${theme === 'dark' ? 'bg-[#2C353D]' : 'bg-[#B5B5B5]'} rounded-[31px]`}>
+            <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-[16px] font-semibold`}>Група по цьому фільму тут</p>
           </a>
         </div>
 
         <div className='w-full'>
           <div className="flex w-full justify-between items-center mb-8">
             <div className='flex items-center '>
-                <h1 className="text-white text-4xl font-extrabold mr-4">{topic?.title}</h1>
+                <h1 className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-4xl font-extrabold mr-4`}>{topic?.title}</h1>
                 {topic?.limitAge === '18' && <div className="flex justify-center items-center w-[42px] h-[42px] bg-[#FF4155] rounded-[9px]">
-                    <p className="text-white text-2xl font-semibold">18+</p>
+                    <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'}text-2xl font-semibold`}>18+</p>
                 </div>}
             </div>
             <a onClick={() => router.push('/home')} className="cursor-pointer">
@@ -192,24 +195,24 @@ const AdminPost = () => {
           </div>
           <ul className="flex gap-4 h-fit bg-[#2C353D] p-4 w-fit rounded-xl mb-6">
             <li>
-              <p className="text-white text-lg font-bold">Рейтинг:</p>
-              <p className="text-white text-lg font-bold">Рік:</p>
-              <p className="text-white text-lg font-bold">Країна:</p>
-              <p className="text-white text-lg font-bold">Тривалість:</p>
-              <p className="text-white text-lg font-bold">Жанр:</p>
-              <p className="text-white text-lg font-bold">Рекомендований вік:</p>
+              <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg font-bold`}>Рейтинг:</p>
+              <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg font-bold`}>Рік:</p>
+              <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg font-bold`}>Країна:</p>
+              <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg font-bold`}>Тривалість:</p>
+              <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg font-bold`}>Жанр:</p>
+              <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg font-bold`}>Рекомендований вік:</p>
             </li>
             <li>
-              <p className="text-white text-lg">IMBD: <strong>{topic?.IMDB}/10</strong> (29К)</p>
-              <p className="text-white text-lg">2024</p>
-              <p className="text-white text-lg">{topic?.country}</p>
-              <p className="text-white text-lg">{topic?.duration}</p>
-              <p className="text-white text-lg">{topic?.country}</p>
-              <p className="text-white text-lg">{topic?.limitAge}+ {topic?.limitAge === '18' && ("(тільки для дорослих)")}</p>
+              <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg`}>IMBD: <strong>{topic?.IMDB}/10</strong> (29К)</p>
+              <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg`}>2024</p>
+              <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg`}>{topic?.country}</p>
+              <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg`}>{topic?.duration}</p>
+              <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg`}>{topic?.country}</p>
+              <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg`}>{topic?.limitAge}+ {topic?.limitAge === '18' && ("тільки для дорослих")}</p>
             </li>
           </ul>
-          <div className="bg-[#2C353D] p-4 w-[660px] rounded-xl">
-            <p className="text-white text-lg font-medium">
+          <div className={`${theme === 'dark' ? 'bg-[#2C353D]' : 'bg-[#B5B5B5]'} p-4 w-[660px] rounded-xl`}>
+            <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg font-medium`}>
               {topic?.description}
             </p>
           </div>
@@ -217,7 +220,7 @@ const AdminPost = () => {
       </div>
     <div className="mb-12">
       <div className="flex items-center mb-6">
-        <p className="text-white text-3xl font-semibold mr-4">Залиш свої враження тут:</p>
+        <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-3xl font-semibold mr-4`}>Залиш свої враження тут:</p>
         {[...Array(5)].map((_, index) => (
           <svg key={index} className={`w-10 h-10 ${(topicRate ?? topic?.myRate ?? 0) > index ? "fill-[#FFD700]" : 'fill-white'}`} onClick={() => setTopicRate(index+1)}>
             <use href={`/sprite.svg#starIcon`} />
@@ -232,24 +235,24 @@ const AdminPost = () => {
           value={commentData.content}
           onChange={(e) => setCommentData((prev) => {return{...prev, content: e.target.value}})}
         />
-        <button className="w-[193px] h-[58px] bg-[#FF4155] rounded-[13px] text-white text-lg font-semibold" onClick={createComment}>
+        <button className={`w-[193px] h-[58px] bg-[#FF4155] rounded-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg font-semibold`} onClick={createComment}>
           Створити коментар
         </button>
       </div>
     </div>
-    {comments.length > 0 ? (<div className="bg-[#2C353D] p-5 w-[930px] rounded-xl">
+    {comments.length > 0 ? (<div className={`${theme === 'dark' ? 'bg-[#2C353D]' : 'bg-[#B5B5B5]'} p-5 w-[930px] rounded-xl`}>
       <ul>
         { comments.map(comment => (
-          <li key={comment.id} className="bg-[#1E1F20] p-5 w-[900px] rounded-xl mb-5">
+          <li key={comment.id} className={`${theme === 'dark' ? 'bg-[#1E1F20]' : 'bg-[#E4E3E3]'}p-5 w-[900px] rounded-xl mb-5`}>
             <div className="flex items-center gap-2 mb-3">
               <img src="/person.png" alt="avatar" className="w-12 h-12" />
               <div>
-                <p className="text-white text-xl font-semibold">{comment.userName}</p>
+                <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-xl font-semibold`}>{comment.userName}</p>
                 <p className="text-[#B5A8A8] text-sm font-semibold">{comment.nickname}</p>
               </div>
             </div>
-            <div className="bg-[#2C353D] p-5 w-[870px] rounded-xl mb-3">
-              <p className="text-white text-lg font-semibold">{comment.content}</p>
+            <div className={`${theme === 'dark' ? 'bg-[#2C353D]' : 'bg-[#B5B5B5]'} p-5 w-[870px] rounded-xl mb-3`}>
+              <p className={`${theme === 'dark' ? 'text-white' : 'text-black'}text-lg font-semibold`}>{comment.content}</p>
             </div>
             <div className="flex justify-between">
               <p className="text-[#B5A8A8] text-sm font-semibold">
