@@ -8,7 +8,7 @@ interface Post {
   title: string;
   description: string;
   image: string;
-  limitAge: number;
+  limitAge: string;
   IMDB: number;
   duration: string;
   country: string;
@@ -180,7 +180,7 @@ const AdminPost = () => {
           <div className="flex w-full justify-between items-center mb-8">
             <div className='flex items-center '>
                 <h1 className="text-white text-4xl font-extrabold mr-4">{topic?.title}</h1>
-                {topic?.limitAge === 18 && <div className="flex justify-center items-center w-[42px] h-[42px] bg-[#FF4155] rounded-[9px]">
+                {topic?.limitAge === '18' && <div className="flex justify-center items-center w-[42px] h-[42px] bg-[#FF4155] rounded-[9px]">
                     <p className="text-white text-2xl font-semibold">18+</p>
                 </div>}
             </div>
@@ -205,7 +205,7 @@ const AdminPost = () => {
               <p className="text-white text-lg">{topic?.country}</p>
               <p className="text-white text-lg">{topic?.duration}</p>
               <p className="text-white text-lg">{topic?.country}</p>
-              <p className="text-white text-lg">{topic?.limitAge}+ {topic?.limitAge === 18 && ("тільки для дорослих")}</p>
+              <p className="text-white text-lg">{topic?.limitAge}+ {topic?.limitAge === '18' && ("(тільки для дорослих)")}</p>
             </li>
           </ul>
           <div className="bg-[#2C353D] p-4 w-[660px] rounded-xl">
