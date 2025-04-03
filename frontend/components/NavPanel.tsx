@@ -7,16 +7,22 @@ import { useState } from "react";
 import { motion } from 'framer-motion';
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
+import { useOktaAuth } from "@okta/okta-react";
 
 const NavPanel = () => {
     const { theme, setTheme } = useTheme();
-    const [showGroup, setShowGroup] = useState(false)
+    const [showGroup, setShowGroup] = useState(false);
+    const { authState } = useOktaAuth();
+    const router = useRouter();
 
     const handleShowCreateGroup = () => {
+        if (!authState?.isAuthenticated) {
+            router.push("/login");
+            return;
+        }
         setShowGroup(!showGroup)
     }
 
-    const router = useRouter();
 
     const getRandomPost = async () => {
         try {

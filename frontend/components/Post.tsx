@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
+import { useOktaAuth } from "@okta/okta-react";
 
 interface PostProps {
   post: {
@@ -35,6 +37,9 @@ const Post: React.FC<PostProps> = ({ className, post, isPinned }) => {
     const [isPinnedPost, setIsPinnedPost] = useState(post.isPinned);
 
     const { theme, setTheme } = useTheme();
+
+    const { authState } = useOktaAuth();
+    const router = useRouter();
 
     const likeDislike = async (liked: boolean | null) => {
       if (!user) return;
@@ -76,6 +81,10 @@ const Post: React.FC<PostProps> = ({ className, post, isPinned }) => {
     };
 
     const pinPost = async () => {
+      if (!authState?.isAuthenticated) {
+          router.push("/login");
+          return;
+      }
       if (!user) return;
 
       try {
@@ -101,11 +110,19 @@ const Post: React.FC<PostProps> = ({ className, post, isPinned }) => {
     }
 
     const toggleLike = () => {
+      if (!authState?.isAuthenticated) {
+          router.push("/login");
+          return;
+      }
       const newStatus = likeStatus === true ? null : true;
       likeDislike(newStatus);
     };
 
     const toggleDislike = () => {
+      if (!authState?.isAuthenticated) {
+          router.push("/login");
+          return;
+      }
       const newStatus = likeStatus === false ? null : false;
       likeDislike(newStatus);
     };

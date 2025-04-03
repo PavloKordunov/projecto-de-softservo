@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
+import { useOktaAuth } from "@okta/okta-react";
+import {useRouter} from "next/navigation";
 
 const GroupPage = () => {
     const [groups, setGroups] = useState<any[]>([]);
@@ -12,6 +14,8 @@ const GroupPage = () => {
     const [loading, setLoading] = useState<{ [key: string]: boolean }>({});
     const { user } = useUser();
     const { theme, setTheme } = useTheme();
+    const { authState } = useOktaAuth();
+    const router = useRouter();
 
     useEffect(() => {
         const getAllGroups = async () => {
@@ -79,6 +83,10 @@ const GroupPage = () => {
                                     onClick={e => {
                                         e.preventDefault();
                                         e.stopPropagation();
+                                        if (!authState?.isAuthenticated) {
+                                            router.push("/login");
+                                            return;
+                                        }
                                         subscribeUser(group?.title, group.id);
                                     }}
                                     disabled={loading[group.id]}
