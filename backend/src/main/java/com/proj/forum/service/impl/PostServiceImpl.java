@@ -112,6 +112,13 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<PostResponseDto> getPostsByTag(UUID tagId){
+        List<Post> postList = postRepository.findAllByTag_Id(tagId);
+        return getPostResponseDtos(postList);
+    }
+
+
+    @Override
     public void updatePost(UUID postId, PostRequestDto postDto) {
         Post updatedPost = postRepository.findById(postId)
                 .map(post -> getUpdatePost(post, postDto))

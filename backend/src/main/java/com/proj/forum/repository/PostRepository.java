@@ -17,6 +17,7 @@ import java.util.UUID;
 public interface PostRepository extends JpaRepository<Post, UUID> {
     List<Post> findAllByGroup_Id(UUID groupId);
     List<Post> findAllByAuthor_Id(UUID authorId);
+
     List<Post> findByTitleContainingIgnoreCase(String name);
 
     List<Post> findAllByAuthor_Id(UUID authorId, Sort sort);
@@ -178,4 +179,6 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
 """)
     List<Post> findAllSavedPostsByUserId(@Param("userId") UUID userId);
 
+    @Query("SELECT p FROM Post p JOIN p.tags t WHERE t.id = :tagId")
+    List<Post> findAllByTag_Id(@Param("tagId") UUID tagId);
 }
