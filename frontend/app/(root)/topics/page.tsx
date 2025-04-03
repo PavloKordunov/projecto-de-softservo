@@ -5,11 +5,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 
 const TopicPage = () => {
 
     const [topic, setTopic] = useState<any[]>([]);
     const { user} = useUser()
+    const { theme, setTheme } = useTheme();
 
     useEffect(() => {
         const getAllTopics = async () => {
@@ -32,7 +34,7 @@ const TopicPage = () => {
         <div className="px-5 py-4 flex-wrap flex items-center gap-5 h-fit w-[1030px]">
             {topic ? (
                 topic.map((topic) => (
-                <Link href={`/topics/${topic.id}`} key={topic.id} className="bg-MainColor w-[265px] h-fit rounded-br-[14px] rounded-bl-[14px]">
+                <Link href={`/topics/${topic.id}`} key={topic.id} className={`${theme === 'dark' ? 'bg-MainColor' : 'bg-[#E4E3E3]'} w-[265px] h-fit rounded-br-[14px] rounded-bl-[14px]`}>
                     <Image 
                         src={topic.image} 
                         alt="Movie Poster" 
@@ -40,7 +42,7 @@ const TopicPage = () => {
                         height={425}
                         className="mb-2 w-full h-[425px] object-cover"
                     />
-                    <p className=" ml-3 text-white text-center mb-4 text-[16px] font-bold">{topic.title} </p>
+                    <p className={`ml-3 ${theme === 'dark' ? 'text-white' : 'text-black'} text-center mb-4 text-[16px] font-bold`}>{topic.title} </p>
                 </Link>
                  ))
             ) : (

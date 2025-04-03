@@ -36,12 +36,12 @@ const Page = () => {
     return (
         <div >
             <HomeLayout>
-                <div className="p-6 rounded-lg w-fit ">
+                <div className="p-6 rounded-lg">
                     {authState?.isAuthenticated ? (
                         <CreatePostNav />
                     ) : (
                         <motion.div
-                            className="text-center flex border-SecondaryColor border-2 p-[30px] rounded-xl justify-center mb-8 shadow-lg"
+                            className="text-center w-full items-center flex border-SecondaryColor border-2 p-[30px] rounded-xl justify-center mb-8 shadow-lg"
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, ease: "easeOut" }}
