@@ -8,6 +8,9 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
+import { useOktaAuth } from "@okta/okta-react";
+import { useRouter } from "next/navigation";
+
 
 interface Group {
     id: string;
@@ -27,6 +30,9 @@ const Group = () => {
     const [show, setShow] = useState(false);
     const [isPinned, setIsPinned] = useState<any[] >([]);
     const { theme, setTheme } = useTheme();
+
+    const { authState } = useOktaAuth();
+    const router = useRouter();
 
     useEffect(() => {
         const getAllPost = async () => {
@@ -71,6 +77,10 @@ const Group = () => {
       }, [userSubscribed])
 
       const getSubscribeUser = async () => {
+        if (!authState?.isAuthenticated) {
+            router.push("/login");
+            return;
+        }
         const res = await fetch(`https://localhost:8080/api/groups/${group?.title}/follow/${user?.id}`, {
             method: "PATCH",
             headers: {
@@ -85,6 +95,10 @@ const Group = () => {
       };
 
     const handleShow = () => {
+        if (!authState?.isAuthenticated) {
+            router.push("/login");
+            return;
+        }
         setShow(!show);
     }
 

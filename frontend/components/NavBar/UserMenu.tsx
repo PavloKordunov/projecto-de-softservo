@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { useState} from "react";
 import Image from "next/image";
@@ -7,19 +7,36 @@ import { useUser } from "@/hooks/useUser";
 import { useOktaAuth } from "@okta/okta-react";
 import ThemeSwitch from "@/components/ThemeSwitch";
 import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
 
 const UserMenu = () => {
     const [show, setShow] = useState(false);
     const { user, setUser } = useUser();
     const { oktaAuth, authState } = useOktaAuth();
     const { theme } = useTheme();
-
+    const router = useRouter();
     const isAuthenticated = authState?.isAuthenticated || false;
+
 
     const handleLogout = async () => {
         await oktaAuth.signOut();
         setUser(null);
     };
+
+    const handleLoginRedirect = () => {
+        router.push('/login');
+    };
+
+    const handleProfileClick = () => {
+        if (!isAuthenticated) {
+            setTimeout(() => {
+                router.push("/login");
+            }, 0);
+        } else {
+            router.push(`/user/${user?.id}`);
+        }
+    };
+
 
     const handleShow = () => setShow(prev => !prev);
 
@@ -41,13 +58,13 @@ const UserMenu = () => {
 
             {show && (
                 <div className={`absolute w-[248px] z-10 ${theme === 'dark' ? 'bg-MainColor' : 'bg-[#EAEAEA]'} p-3 top-[100px] right-[37px] flex flex-col gap-4 rounded-[11px]`}>
-                    <Link href={`/user/${user?.id}`} className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 cursor-pointer" onClick={handleProfileClick}>
                         {renderImage(user?.img || "/NavPerson.png", 53, 53, "person")}
                         <div>
                             <p className={`${theme === 'dark' ? 'text-white' : 'text-black'} text-[16px] font-semibold`}>{user?.firstName}</p>
                             <p className="text-[#97989D] text-[12px]">@{user?.nickName}</p>
                         </div>
-                    </Link>
+                    </div>
                     <div className={`${theme === 'dark' ? 'bg-MainColor' : 'bg-[#B5B5B5]'} p-2 rounded-[10px] shadow`}>
                         <ThemeSwitch />
                     </div>
@@ -60,8 +77,13 @@ const UserMenu = () => {
                             <p className="text-white text-[14px] font-semibold">Admin Page</p>
                         </Link>
                     </div>
-                    {isAuthenticated && (
-                        <div className={`p-2 ${theme === 'dark' ? 'bg-MainColor' : 'bg-[#B5B5B5]'} rounded-[10px] shadow flex items-center gap-4 cursor-pointer `} onClick={handleLogout}>
+                    {!isAuthenticated ? (
+                        <div className={`p-2 ${theme === 'dark' ? 'bg-MainColor' : 'bg-[#B5B5B5]'} rounded-[10px] shadow flex items-center gap-4 cursor-pointer`} onClick={handleLoginRedirect}>
+                            <Icon name="NavExitIcon" />
+                            <p className="text-white text-[14px] font-semibold">Log in</p>
+                        </div>
+                    ) : (
+                        <div className={`p-2 ${theme === 'dark' ? 'bg-MainColor' : 'bg-[#B5B5B5]'} rounded-[10px] shadow flex items-center gap-4 cursor-pointer`} onClick={handleLogout}>
                             <Icon name="NavExitIcon" />
                             <p className="text-white text-[14px] font-semibold">Log out</p>
                         </div>

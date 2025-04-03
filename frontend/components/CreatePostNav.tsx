@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import CreatePostModal from "./CreatePostModal";
 import { useUser } from "@/hooks/useUser";
 import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
+import { useOktaAuth } from "@okta/okta-react";
 
 const CreatePostNav = () => {
 
@@ -12,8 +14,15 @@ const CreatePostNav = () => {
     const { theme, setTheme } = useTheme();
     const { user } = useUser();
 
+    const { authState } = useOktaAuth();
+    const router = useRouter();
+
 
     const handleShow = () => {
+        if (!authState?.isAuthenticated) {
+            router.push("/login");
+            return;
+        }
         setIsShow(!isShow)
     }
 
