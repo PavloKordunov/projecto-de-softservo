@@ -80,4 +80,6 @@ public class Topic {
     @OneToMany(mappedBy = "topic")
     @OrderBy("createdAt DESC")
     private List<Comment> comments;
+
+    private String trailerURL;
 }

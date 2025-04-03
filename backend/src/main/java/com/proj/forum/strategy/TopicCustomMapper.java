@@ -13,6 +13,7 @@ import com.proj.forum.repository.UserRepository;
 import com.proj.forum.repository.UserStatisticRepository;
 import com.proj.forum.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -68,6 +69,7 @@ public class TopicCustomMapper implements CustomMapper<Topic, TopicDto> {
                 .type(topicDto.topicType())
                 .tags(tags)
                 .releaseDate(releaseDate)
+                .trailerURL(topicDto.trailerURL() == null ? StringUtils.EMPTY : topicDto.trailerURL())
                 .build();
     }
 
@@ -120,6 +122,7 @@ public class TopicCustomMapper implements CustomMapper<Topic, TopicDto> {
                 .userRate(userRate)
                 .userRateCount(userRateCount)
                 .myRate(myStat != null ? myStat.getRate() : null)
+                .trailerURL(topic.getTrailerURL() == null ? StringUtils.EMPTY : topic.getTrailerURL())
                 .build();
     }
 }

@@ -25,6 +25,7 @@ public record TopicDto(
         @NotBlank String director,
         @NotBlank String image,
         @NotNull TopicType topicType,
+        String trailerURL,
         String releaseDate,
         LocalDate responseReleaseDate,
         int viewCount,
