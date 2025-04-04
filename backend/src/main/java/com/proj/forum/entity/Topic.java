@@ -37,6 +37,8 @@ public class Topic {
     @Column(nullable = false)
     private UUID author_id;
 
+    private UUID group_id;
+
     @Column(nullable = false)
     private String title;
 

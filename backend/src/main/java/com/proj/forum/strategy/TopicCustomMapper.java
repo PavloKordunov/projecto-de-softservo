@@ -66,6 +66,7 @@ public class TopicCustomMapper implements CustomMapper<Topic, TopicDto> {
                 .viewCount(0)
                 .author_id(topicDto.author())
                 .type(topicDto.topicType())
+                .group_id(topicDto.groupId())
                 .tags(tags)
                 .releaseDate(releaseDate)
                 .build();
@@ -118,6 +119,7 @@ public class TopicCustomMapper implements CustomMapper<Topic, TopicDto> {
                 .comments(comments)
                 .responseReleaseDate(topic.getReleaseDate())
                 .userRate(userRate)
+                .groupId(topic.getGroup_id())
                 .userRateCount(userRateCount)
                 .myRate(myStat != null ? myStat.getRate() : null)
                 .build();

@@ -25,6 +25,7 @@ public record TopicDto(
         @NotBlank String director,
         @NotBlank String image,
         @NotNull TopicType topicType,
+        UUID groupId,
         String releaseDate,
         LocalDate responseReleaseDate,
         int viewCount,
