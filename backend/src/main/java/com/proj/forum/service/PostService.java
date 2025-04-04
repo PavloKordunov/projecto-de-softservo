@@ -15,6 +15,9 @@ public interface PostService {
     List<PostResponseDto> getPostsByUser(UUID id);
     PostResponseDto getPostById(UUID id);
     List<PostResponseDto> getByTitleContain(String name);
+
+    List<PostResponseDto> getPostsByTag(UUID tagId);
+
     void updatePost(UUID id, PostRequestDto postDto);
     boolean pinPost(UUID postId);
     void deletePost(UUID postId);

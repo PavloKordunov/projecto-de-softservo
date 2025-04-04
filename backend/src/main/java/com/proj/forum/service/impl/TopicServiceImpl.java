@@ -10,6 +10,7 @@ import com.proj.forum.service.TopicService;
 import com.proj.forum.strategy.TopicCustomMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +42,8 @@ public class TopicServiceImpl implements TopicService {
         Topic topic = topicRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Topic not found"));
         return topicMapper.mapToDto(topic);
     }
+
+
 
 //    @Override
 //    public List<TopicDto> getAllTopics() {
@@ -195,6 +198,7 @@ public class TopicServiceImpl implements TopicService {
                 .userRate(usersRate.orElse(0.0))
                 .userRateCount(usersRateCount)
                 .myRate(statistic.getRate())
+                .trailerURL(topic.getTrailerURL() == null ? StringUtils.EMPTY : topic.getTrailerURL())
                 .build();
     }
 

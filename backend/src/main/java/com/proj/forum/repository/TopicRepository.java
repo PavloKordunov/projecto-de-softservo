@@ -45,38 +45,38 @@ public interface TopicRepository extends JpaRepository<Topic, UUID> {
     @Query("""
     SELECT t FROM Topic t\s
     JOIN Statistic s ON t.id = s.objectId
-    WHERE t.genre = :genre AND s.rate IS NOT NULL
+    WHERE LOWER(t.genre) LIKE LOWER(CONCAT('%', :genre, '%')) AND s.rate IS NOT NULL
     GROUP BY t.id
     ORDER BY ROUND(AVG(s.rate),1) ASC
 """)
-    List<Topic> getTopicsByGenreAndRateAsc(String genre);
+    List<Topic> getTopicsByGenreAndRateAsc(@Param("genre") String genre);
 
     @Query("""
     SELECT t FROM Topic t\s
     JOIN Statistic s ON t.id = s.objectId
-    WHERE t.genre = :genre AND s.rate IS NOT NULL
+    WHERE LOWER(t.genre) LIKE LOWER(CONCAT('%', :genre, '%')) AND s.rate IS NOT NULL
     GROUP BY t.id
     ORDER BY ROUND(AVG(s.rate),1) DESC
 """)
-    List<Topic> getTopicsByGenreAndRateDesc(String genre);
+    List<Topic> getTopicsByGenreAndRateDesc(@Param("genre") String genre);
 
     @Query("""
     SELECT t FROM Topic t\s
     JOIN Statistic s ON t.id = s.objectId
-    WHERE t.genre = :genre AND s.rate IS NOT NULL
+    WHERE LOWER(t.genre) LIKE LOWER(CONCAT('%', :genre, '%')) AND s.rate IS NOT NULL
     GROUP BY t.id
     ORDER BY COUNT (s.rate) DESC\s
 """)
-    List<Topic> getTopicsByGenreAndRateCountDesc(String genre);
+    List<Topic> getTopicsByGenreAndRateCountDesc(@Param("genre") String genre);
 
     @Query("""
     SELECT t FROM Topic t\s
     JOIN Statistic s ON t.id = s.objectId
-    WHERE t.genre = :genre AND s.rate IS NOT NULL
+    WHERE LOWER(t.genre) LIKE LOWER(CONCAT('%', :genre, '%')) AND s.rate IS NOT NULL
     GROUP BY t.id
     ORDER BY COUNT (s.rate) ASC\s
 """)
-    List<Topic> getTopicsByGenreAndRateCountAsc(String genre);
+    List<Topic> getTopicsByGenreAndRateCountAsc(@Param("genre") String genre);
 
     @Query("""
     SELECT t FROM Topic t\s

@@ -52,6 +52,12 @@ public class PostController {
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Post found", post);
     }
 
+    @GetMapping("/tag/{tagId}")
+    public ApiResponse<List<PostResponseDto>> getPostsByTag(@PathVariable UUID tagId) {
+        List<PostResponseDto> posts = postService.getPostsByTag(tagId);
+        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Posts found", posts);
+    }
+
     @GetMapping("/random")
     public ApiResponse<PostResponseDto> getRandomPost() {
         PostResponseDto post = postService.getRandomPost();
