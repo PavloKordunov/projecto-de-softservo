@@ -45,7 +45,7 @@ public interface TopicRepository extends JpaRepository<Topic, UUID> {
     @Query("""
     SELECT t FROM Topic t\s
     JOIN Statistic s ON t.id = s.objectId
-    WHERE t.genre LIKE %:genre% AND s.rate IS NOT NULL
+    WHERE LOWER(t.genre) LIKE LOWER(CONCAT('%', :genre, '%')) AND s.rate IS NOT NULL
     GROUP BY t.id
     ORDER BY ROUND(AVG(s.rate),1) ASC
 """)
@@ -54,7 +54,7 @@ public interface TopicRepository extends JpaRepository<Topic, UUID> {
     @Query("""
     SELECT t FROM Topic t\s
     JOIN Statistic s ON t.id = s.objectId
-    WHERE t.genre LIKE %:genre% AND s.rate IS NOT NULL
+    WHERE LOWER(t.genre) LIKE LOWER(CONCAT('%', :genre, '%')) AND s.rate IS NOT NULL
     GROUP BY t.id
     ORDER BY ROUND(AVG(s.rate),1) DESC
 """)
@@ -63,7 +63,7 @@ public interface TopicRepository extends JpaRepository<Topic, UUID> {
     @Query("""
     SELECT t FROM Topic t\s
     JOIN Statistic s ON t.id = s.objectId
-    WHERE t.genre LIKE %:genre% AND s.rate IS NOT NULL
+    WHERE LOWER(t.genre) LIKE LOWER(CONCAT('%', :genre, '%')) AND s.rate IS NOT NULL
     GROUP BY t.id
     ORDER BY COUNT (s.rate) DESC\s
 """)
@@ -72,7 +72,7 @@ public interface TopicRepository extends JpaRepository<Topic, UUID> {
     @Query("""
     SELECT t FROM Topic t\s
     JOIN Statistic s ON t.id = s.objectId
-    WHERE t.genre LIKE %:genre% AND s.rate IS NOT NULL
+    WHERE LOWER(t.genre) LIKE LOWER(CONCAT('%', :genre, '%')) AND s.rate IS NOT NULL
     GROUP BY t.id
     ORDER BY COUNT (s.rate) ASC\s
 """)
