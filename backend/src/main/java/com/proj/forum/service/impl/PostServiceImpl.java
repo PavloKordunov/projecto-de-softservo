@@ -15,12 +15,14 @@ import com.proj.forum.repository.TagRepository;
 import com.proj.forum.repository.UserRepository;
 import com.proj.forum.repository.UserStatisticRepository;
 import com.proj.forum.service.CommentService;
+import com.proj.forum.service.NotificationService;
 import com.proj.forum.service.PostService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Sort;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -33,10 +35,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
 @Transactional("postgreTransactionManager")
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
@@ -45,8 +45,12 @@ public class PostServiceImpl implements PostService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private final UserStatisticRepository userStatisticRepository;
+
+    private final NotificationService notificationService;
     private final TagRepository tagRepository;
     private final CommentService commentService;
+
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Override
     public UUID createPost(PostRequestDto postDto) {
@@ -60,6 +64,10 @@ public class PostServiceImpl implements PostService {
         List<Tag> tags = tagRepository.findAllById(postDto.tagsId());
         Post post = mapToPost(postDto, user, group, tags);
         Post postFromDB = postRepository.save(post);
+
+        //notify
+        sendNotifications(postFromDB);
+
         return postFromDB.getId();
     }
 
@@ -112,7 +120,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostResponseDto> getPostsByTag(UUID tagId){
+    public List<PostResponseDto> getPostsByTag(UUID tagId) {
         List<Post> postList = postRepository.findAllByTag_Id(tagId);
         return getPostResponseDtos(postList);
     }
@@ -405,6 +413,23 @@ public class PostServiceImpl implements PostService {
                 .isSaved(false)
                 .isLiked(null)
                 .build();
+    }
+
+
+    private void sendNotifications(Post post) {
+        List<User> followers = userRepository.findUsersFollowingGroup(post.getGroup().getId());
+
+        for (User follower : followers) {
+            String message = "New post '" + post.getTitle() + "' in '" + post.getGroup().getTitle() + "'";
+
+            notificationService.createNotification(follower.getId(), post.getGroup(), message);
+
+            messagingTemplate.convertAndSendToUser(
+                    follower.getId().toString(),
+                    "/queue/notifications",
+                    message
+            );
+        }
     }
 }
 
