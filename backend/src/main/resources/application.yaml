@@ -49,6 +49,15 @@ tmdb:
 #    url-omdb: http://www.omdbapi.com
     url: https://api.themoviedb.org/3/discover/movie
 
+logging:
+  level:
+    org:
+      springframework:
+        messaging: DEBUG
+        web:
+          socket: DEBUG
+
+
 #access token to read
 #eyJhbGciOiJIUzI1NiJ9:
 #  eyJhdWQiOiI0MWU3Y2Y4YWMzMjE0NzA5Nzg1ZTk4NmVjY2I3NjVkNCIsIm5iZiI6MTc0MjQxMjM2Ny4zMjksInN1YiI6IjY3ZGIxYTRmOWYzNThmNGExMzdmN2FiNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ:

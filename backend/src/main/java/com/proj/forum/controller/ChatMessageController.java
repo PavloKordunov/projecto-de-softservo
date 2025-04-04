@@ -19,26 +19,26 @@ import java.util.UUID;
 @Logging
 public class ChatMessageController {
 
-    private final SimpMessageSendingOperations messagingTemplate;
+    //private final SimpMessageSendingOperations messagingTemplate;
     private final ChatRoomService chatRoomService;
     private final ChatMessageService messageService;
 
-    @MessageMapping("/chat.sendMessage")
-    public void sendMessage(@Payload MessageRequestDto messageRequest,
-                            Principal principal) {
-        MessageDto message = messageService.saveMessage(messageRequest, principal.getName());
-        messagingTemplate.convertAndSend(
-                "/topic/chatroom/" + message.getChatRoomId(),
-                message
-        );
-    }
-
-    @MessageMapping("/chat.joinRoom")
-    public void joinRoom(@Payload UUID chatRoomId, Principal principal) {
-        chatRoomService.addUserToChatRoom(chatRoomId, principal.getName());
-        messagingTemplate.convertAndSend(
-                "/topic/chatroom/" + chatRoomId + "/users",
-                chatRoomService.getChatRoomUsers(chatRoomId)
-        );
-    }
+//    @MessageMapping("/chat.sendMessage")
+//    public void sendMessage(@Payload MessageRequestDto messageRequest,
+//                            Principal principal) {
+//        MessageDto message = messageService.saveMessage(messageRequest, principal.getName());
+//        messagingTemplate.convertAndSend(
+//                "/topic/chatroom/" + message.getChatRoomId(),
+//                message
+//        );
+//    }
+//
+//    @MessageMapping("/chat.joinRoom")
+//    public void joinRoom(@Payload UUID chatRoomId, Principal principal) {
+//        chatRoomService.addUserToChatRoom(chatRoomId, principal.getName());
+//        messagingTemplate.convertAndSend(
+//                "/topic/chatroom/" + chatRoomId + "/users",
+//                chatRoomService.getChatRoomUsers(chatRoomId)
+//        );
+//    }
 }
