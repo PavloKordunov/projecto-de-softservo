@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -19,6 +20,13 @@ public class Tag {
     @Id
     @GeneratedValue
     private UUID id;
+
+    @ManyToMany(mappedBy = "tags")
+    private List<Post> posts;
+
+    @ManyToMany(mappedBy = "tags")
+    private List<Topic> topics;
+
 
     @Column(unique = true, nullable = false)
     private String name;

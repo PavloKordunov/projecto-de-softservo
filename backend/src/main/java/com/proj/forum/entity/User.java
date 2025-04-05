@@ -23,8 +23,8 @@ public class User {
     @GeneratedValue
     private UUID id;
 
-    //@Column(unique = true, nullable = false)
-    //@NotBlank(message = "Email is required")
+    @Column(unique = true, nullable = false)
+    @NotBlank(message = "Email is required")
     private String email;
 
     @Column(unique = true, nullable = false)
@@ -34,10 +34,14 @@ public class User {
     @NotBlank(message = "Name is required")
     private String name;
 
+    @Lob
     private String profileImage;
 
     @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
     private List<Group> createdGroups;
+
+    @OneToMany(mappedBy = "author", cascade = ALL, orphanRemoval = true)
+    private List<Post> createdPosts;
 
     @ManyToMany
     @JoinTable(

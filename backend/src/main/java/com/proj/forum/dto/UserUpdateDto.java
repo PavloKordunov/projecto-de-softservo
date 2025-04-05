@@ -1,11 +1,11 @@
 package com.proj.forum.dto;
 
-import java.util.UUID;
+import lombok.Builder;
 
+@Builder
 public record UserUpdateDto(
-        //UUID user_id,
-        String username,
-        String name,
-        String profileImg
+        String nickName,
+        String firstName,
+        String profileImage
 ) {
 }

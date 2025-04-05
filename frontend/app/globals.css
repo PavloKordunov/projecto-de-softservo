@@ -1,0 +1,54 @@
+@import "react-calendar/dist/Calendar.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*:root {*/
+/*  --background: #ffffff;*/
+/*  --foreground: #171717;*/
+/*}*/
+
+/*@media (prefers-color-scheme: dark) {*/
+/*  :root {*/
+/*    --background: #151719;*/
+/*  }*/
+/*}*/
+
+/*body {*/
+/*  color: var(--foreground);*/
+/*  background: var(--background);*/
+/*  font-family: Source Sans Pro, sans-serif;*/
+/*}*/
+
+@layer components {
+  .custom-calendar {
+    background-color: #2c353d;
+    color: white;
+    border: none;
+    border-radius: 10px;
+  }
+  .custom-calendar .react-calendar {
+    width: 1200px;
+    height: 1200px;
+  }
+
+  .custom-calendar .react-calendar__month-view__days__day {
+    background-color: #2c353d !important;
+  }
+
+
+  .custom-calendar .react-calendar__month-view__days__day--hasMovie {
+    background-color: #FFEB3B !important;
+    color: #000 !important;
+  }
+
+  .custom-calendar .react-calendar__tile--active {
+    background-color: #1e1f20 !important;
+    color: white !important;
+    border-radius: 10px;
+  }
+
+}
+
+

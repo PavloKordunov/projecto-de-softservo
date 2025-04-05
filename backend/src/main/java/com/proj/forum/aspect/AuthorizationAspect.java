@@ -1,6 +1,7 @@
 package com.proj.forum.aspect;
 
 import com.proj.forum.annotation.RequireRoles;
+import com.proj.forum.enums.RoleType;
 import com.proj.forum.exception.TokenTypeException;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -16,9 +17,7 @@ import org.springframework.stereotype.Component;
 import javax.security.sasl.AuthenticationException;
 import java.nio.file.AccessDeniedException;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Aspect
 @Component
@@ -33,10 +32,14 @@ public class AuthorizationAspect {
         if (roles == null)
             throw new AccessDeniedException("User doesn't have roles");
 
-        Set<String> requiredRoles = new HashSet<>(Arrays.asList(requireRole.value()));
+        List<String> roleValues = Arrays
+                .stream(requireRole.value())
+                .map(RoleType::getValue)
+                .toList();
 
-        if(roles.stream().noneMatch(requiredRoles::contains))
+        if (roles.stream().noneMatch(s -> roleValues.stream().anyMatch(s::contains))) {
             throw new AccessDeniedException("User doesn't have permission to use it");
+        }
 
         return joinPoint.proceed();
     }
@@ -45,7 +48,7 @@ public class AuthorizationAspect {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-            throw new AuthenticationException("User isn't authentication");
+            throw new AuthenticationException("User isn't authenticated");
         }
         if (!(authentication instanceof JwtAuthenticationToken jwtAuthToken)) {
             throw new TokenTypeException("Type of token isn't jwt");

@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: backend
+
+  datasource:
+    h2:
+      jdbc-url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      driver-class-name: org.h2.Driver
+      username: sa
+      password:
+    postgres:
+      jdbc-url: jdbc:postgresql://localhost:5432/postgres
+      driver-class-name: org.postgresql.Driver
+      username: postgres
+      password: password
+
+  jpa:
+    properties:
+      hibernate:
+        default_schema: public
+    hibernate:
+        ddl-auto: none
+
+  h2:
+    console:
+      enabled: true
+      path: /api/h2-console
+
+---
+server:
+  port: 8080
+  ssl:
+    enabled: true
+    key-alias: softservo
+    key-store: classpath:softservo-keystore.p12
+    key-store-password: secret
+    key-store-type: PKCS12
+
+okta:
+  domain: dev-97946146.okta.com
+  oauth2:
+    client-id: 0oalmv1c9zXfKRxLb5d7
+    issuer: https://${okta.domain}/oauth2/default
+
+tmdb:
+  api:
+#    key-omdb: ce9b484a
+    key: ${api-key}
+#    url-omdb: http://www.omdbapi.com
+    url: https://api.themoviedb.org/3/discover/movie
+
+#access token to read
+#eyJhbGciOiJIUzI1NiJ9:
+#  eyJhdWQiOiI0MWU3Y2Y4YWMzMjE0NzA5Nzg1ZTk4NmVjY2I3NjVkNCIsIm5iZiI6MTc0MjQxMjM2Ny4zMjksInN1YiI6IjY3ZGIxYTRmOWYzNThmNGExMzdmN2FiNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ:
+#    6N6dD_uS27KkehCkIYuHgBEIv_s8e470WLQGFeMyWkM:

@@ -1,20 +1,19 @@
 package com.proj.forum.service.impl;
 
-import com.proj.forum.dto.GroupDto;
-import com.proj.forum.dto.UserRequestDto;
-import com.proj.forum.dto.UserResponseDto;
+import com.proj.forum.dto.UserDto;
 import com.proj.forum.dto.UserUpdateDto;
-import com.proj.forum.entity.Group;
 import com.proj.forum.entity.User;
-import com.proj.forum.exception.UserAlreadySubscribeException;
-import com.proj.forum.repository.GroupRepository;
+import com.proj.forum.exception.TokenTypeException;
+import com.proj.forum.helper.UserHelper;
+import com.proj.forum.strategy.UserCustomMapper;
 import com.proj.forum.repository.UserRepository;
-import com.proj.forum.service.GroupService;
 import com.proj.forum.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,89 +23,67 @@ import java.util.UUID;
 
 
 @Service
-@Transactional
+@Transactional("postgreTransactionManager")
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final GroupRepository groupRepository;
-    private final GroupService groupService;
+    private final UserCustomMapper userMapper;
+
+    //private final UserStatisticRepository userStatisticRepository;
 
     @Override
-    public UUID createUser(UserRequestDto userDto) {
-        User user = mapToUser(userDto);
+    public UUID createUser(UserDto userDto) {
+        User user = userMapper.mapToEntity(userDto);
         User userFromDB = userRepository.save(user);
         return userFromDB.getId();
     }
 
     @Override
-    public UserResponseDto getUser(UUID id) {
-        Optional<User> user;
-
-        user = userRepository.findById(id);
-        if (user.isEmpty()) {
-            throw new EntityNotFoundException("No user found");
-        }
-
-        return getUserResponseDto(user);
-    }
-
-    private UserResponseDto getUserResponseDto(Optional<User> user) {
-        return UserResponseDto.builder()
-                .id(user.get().getId())
-                .name(user.get().getName())
-                .username(user.get().getUsername())
-                .following(user.get().getFollowing().size())
-                .subscribers(user.get().getSubscribers().size())
-                .followingGroups(user.get().getCreatedGroups().size())
-                .profileImage(user.get().getEmail() == null ? StringUtils.EMPTY : user.get().getEmail())
-                .build();
+    public UUID checkOrCreateUserByGoogle() {
+        String email = UserHelper.getEmail();
+        Optional<User> user = userRepository.findByEmail(email);
+        return getUserOrGenerateNew(user, email);
     }
 
     @Override
-    public UserResponseDto getUserByUsername(String username) {
-        Optional<User> user;
-
-        user = Optional.ofNullable(userRepository.findByUsername(username));
-        if (user.isEmpty()) {
-            throw new EntityNotFoundException("No user found");
-        }
-
-        return getUserResponseDto(user);
+    public UserDto getUser(UUID id) {
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("User not found"));
+        return userMapper.mapToDto(user);
     }
 
     @Override
-    public List<UserRequestDto> getAllUsers() {
-        List<User> userList;
+    public UserDto getUserByUsername(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new EntityNotFoundException("User not found"));
+        return userMapper.mapToDto(user);
+    }
 
-        userList = userRepository.findAll();
+    @Override
+    public UserDto getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("User not found"));
+        return userMapper.mapToDto(user);
+    }
+
+    @Override
+    public List<UserDto> getAllUsers() {
+        List<User> userList = userRepository.findAll();
         if (userList.isEmpty()) {
-            throw new EntityNotFoundException("No users");
+            throw new EntityNotFoundException("User not found");
         }
-
         return userList.stream()
-                .map(UserServiceImpl::getUpdateUser)
+                .map(userMapper::mapToDto)
                 .toList();
     }
 
-    @Transactional
     @Override
     public void updateUser(UUID id, UserUpdateDto userDto) {
-        User updatedUser;
-        updatedUser = userRepository.findById(id)
+        User updatedUser = userRepository.findById(id)
                 .map(user -> getUpdateUser(user, userDto))
-                .orElseThrow(() -> new EntityNotFoundException("User is not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
         userRepository.save(updatedUser);
-    }
-
-    private User getUpdateUser(User user, UserUpdateDto userDto) {
-        if (userDto.username() != null)
-            user.setUsername(userDto.username());
-        if (userDto.name() != null)
-            user.setName(userDto.name());
-        if (userDto.profileImg() != null)
-            user.setProfileImage(userDto.profileImg());
-        return user;
     }
 
     @Override
@@ -118,37 +95,82 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private static User mapToUser(UserRequestDto userDto) {
-        return User.builder()
-                .name(userDto.firstName())
-                .username(userDto.nickName() == null ? StringUtils.EMPTY : userDto.nickName())
-                .email(userDto.email() == null ? StringUtils.EMPTY : userDto.email())
-                .build();
-    }
+//    @Override
+//    public void changeStat(StatisticDto statisticDto) {
+//        if(userStatisticRepository.existsByObjectIdAndUserId(statisticDto.userId(), statisticDto.objectId())){
+//            Statistic statistic = userStatisticRepository.getStatisticByUserIdAndObjectId(statisticDto.userId(), statisticDto.objectId());
+//            User user = userRepository.findById(statisticDto.userId()).get();
+//
+//            user.getStatisticList()
+//        }
+//    }
 
-    private static UserRequestDto getUpdateUser(User user) {
-        return UserRequestDto.builder()
-                .id(user.getId())
-                .firstName(user.getName())
-                .nickName(user.getUsername() == null ? StringUtils.EMPTY : user.getUsername())
-                .email(user.getEmail() == null ? StringUtils.EMPTY : user.getEmail())
-                .build();
+    @Override
+    public Boolean followUser(UUID userId) {
+        User followedUser = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Followed user not found"));
+
+        String email = UserHelper.getEmail();
+        User currentUser = userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("Current user not found"));
+        if (currentUser.getFollowing().contains(followedUser)) {
+            currentUser.getFollowing().remove(followedUser);
+            followedUser.getSubscribers().remove(currentUser);
+            userRepository.save(currentUser);
+            userRepository.save(followedUser);
+            return false;
+        } else {
+            currentUser.getFollowing().add(followedUser);
+            followedUser.getSubscribers().add(currentUser);
+            userRepository.save(currentUser);
+            userRepository.save(followedUser);
+            return true;
+        }
     }
 
     @Override
-    public List<UserRequestDto> mapToUserDtoList(List<User> users) {
-        return users.stream()
-                .map(user -> UserRequestDto.builder()
-                        .id(user.getId())
-                        .firstName(user.getName())
-                        .nickName(user.getUsername() == null ? StringUtils.EMPTY : user.getUsername())
-                        .email(user.getEmail() == null ? StringUtils.EMPTY : user.getEmail())
-                        .build())
-                .toList();
-    }
-
-    public List<UserRequestDto> getByUsernameContain(String name) {
+    public List<UserDto> getByUsernameContain(String name) {
         return mapToUserDtoList(userRepository.findByUsernameContainingIgnoreCase(name));
     }
 
+    private User getUpdateUser(User user, UserUpdateDto userDto) {
+        if (userDto.firstName() != null)
+            user.setName(userDto.firstName());
+        if (userDto.nickName() != null)
+            user.setUsername(userDto.nickName());
+        if (userDto.profileImage() != null)
+            user.setProfileImage(userDto.profileImage());
+        return user;
+    }
+
+//    private String getEmail() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (!(authentication instanceof JwtAuthenticationToken token)) {
+//            throw new TokenTypeException("User not found");
+//        }
+//        var jwt = (Jwt) token.getPrincipal();
+//        return jwt.getClaims().get("sub").toString();
+//    }
+
+    private UUID getUserOrGenerateNew(Optional<User> user, String email) {
+        if (user.isPresent()) {
+            return user.get().getId();
+        } else {
+            String nickName = UserHelper.createNickname(email);
+            User newUser = User.builder()
+                    .name(nickName)
+//                    .profileImage(StringUtils.EMPTY)
+                    .email(email)
+                    .username(nickName)
+                    .build();
+
+            User savedUser = userRepository.save(newUser);
+            return savedUser.getId();
+        }
+    }
+
+    @Override
+    public List<UserDto> mapToUserDtoList(List<User> users) {
+        return users.stream()
+                .map(userMapper::mapToDto)
+                .toList();
+    }
 }

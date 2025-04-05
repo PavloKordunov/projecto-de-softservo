@@ -6,17 +6,15 @@ import com.proj.forum.repository.TagRepository;
 import com.proj.forum.service.TagService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 
 @Service
-@Transactional
+@Transactional("postgreTransactionManager")
 @RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
 
@@ -31,27 +29,26 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public TagDto getTag(UUID id) {
-        Optional<Tag> tag;
-        tag = tagRepository.findById(id);
-        if (tag.isEmpty()) {
-            throw new EntityNotFoundException("No tag");
-        }
+        Tag tag = tagRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Tag not found"));
+        return getUpdateTag(tag);
+    }
 
-
-        return TagDto.builder()
-                .id(id)
-                .name(tag.get().getName())
-                .build();
+    @Override
+    public List<TagDto> searchTags(String query) {
+        List<Tag> tags = tagRepository.findAll();
+        return tags.stream()
+                .filter(tag -> tag.getName().toLowerCase().startsWith(query.toLowerCase()))
+                .map(TagServiceImpl::getUpdateTag)
+                .toList();
     }
 
     @Override
     public List<TagDto> getAllTags() {
-        List<Tag> tagList;
-        tagList = tagRepository.findAll();
+        List<Tag> tagList = tagRepository.findAll();
         if (tagList.isEmpty()) {
-            throw new EntityNotFoundException("No tags");
+            throw new EntityNotFoundException("Tag not found");
         }
-
         return tagList.stream()
                 .map(TagServiceImpl::getUpdateTag)
                 .toList();

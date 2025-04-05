@@ -5,13 +5,11 @@ import com.proj.forum.annotation.RequireRoles;
 import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.GenericResponse;
 import com.proj.forum.dto.TopicDto;
+import com.proj.forum.enums.RoleType;
 import com.proj.forum.service.TopicService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,33 +19,31 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/topics")
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("https://localhost:3000")
 public class TopicController {
 
     private final TopicService topicService;
 
-    @RequireRoles({"Admin"})
+    @RequireRoles({RoleType.ADMIN})
     @PostMapping("/create")
     public ApiResponse<GenericResponse> createTopic(@RequestBody @Valid TopicDto topic) {
             UUID id = topicService.createTopic(topic);
             return ApiResponse.apiResponse(true, 201, "Create topic", id);
     }
 
+//    @GetMapping
+//    public ApiResponse<List<TopicDto>> getAllTopics() {
+//        List<TopicDto> topicsDto = topicService.getAllTopics();
+//        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Topics found", topicsDto);
+//    }
 
-    @GetMapping
-    public ApiResponse<List<TopicDto>> getAllTopics() {
-        List<TopicDto> topicsDto = topicService.getAllTopics();
-        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Topics found", topicsDto);
-    }
-
-    @RequireRoles({"Everyone"})
     @GetMapping("/{id}")
-    public ApiResponse<TopicDto> getTopicById(@PathVariable @Valid UUID id) {
+    public ApiResponse<TopicDto> getTopicById(@PathVariable UUID id) {
         TopicDto topicDto = topicService.getTopic(id);
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Successful getting", topicDto);
     }
 
-    @RequireRoles({"Admin"})
+    @RequireRoles({RoleType.ADMIN})
     @PatchMapping("/update/{id}")
     public ApiResponse<GenericResponse> updateTopic(
             @PathVariable @Valid UUID id,
@@ -57,10 +53,39 @@ public class TopicController {
             return ApiResponse.apiResponse(true, 200, "Topic successfully updated", id);
     }
 
-    @RequireRoles({"Admin"})
+    @PatchMapping("/view/{id}")
+    public void addView(@PathVariable @Valid UUID id){
+        topicService.addView(id);
+    }
+
+    @RequireRoles({RoleType.ADMIN})
     @DeleteMapping("/delete/{id}")
     public ApiResponse<GenericResponse> deleteTopic(@PathVariable @Valid UUID id) {
             topicService.deleteTopic(id);
             return ApiResponse.apiResponse(true, 200, "Topic successfully deleted", id);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ApiResponse<List<TopicDto>> getUserRatedTopics(@PathVariable UUID userId) {
+        List<TopicDto> topicsDto = topicService.getUserRatedTopics(userId);
+
+        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Topics found", topicsDto);
+    }
+
+    @GetMapping("/genre/{genre}")
+    public ApiResponse<List<TopicDto>> getAllTopicsByGenre(
+            @PathVariable String genre,
+            @RequestParam(defaultValue = "releaseDate") String sort,
+            @RequestParam(defaultValue = "desc") String order) {
+        List<TopicDto> topics = topicService.getAllTopicsByGenre(genre, sort, order);
+        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Topics found", topics);
+    }
+
+    @GetMapping
+    public ApiResponse<List<TopicDto>> getAllTopics(
+            @RequestParam(defaultValue = "releaseDate") String sort,
+            @RequestParam(defaultValue = "desc") String order) {
+        List<TopicDto> topics = topicService.getAllTopics(sort, order);
+        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Topics found", topics);
     }
 }

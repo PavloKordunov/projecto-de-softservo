@@ -1,14 +1,13 @@
 package com.proj.forum.entity;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -26,6 +25,16 @@ public class Post {
 
     private String description;
 
+    private Integer viewCount;
+
+    @ManyToMany
+    @JoinTable(
+            name = "tag_post",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private List<Tag> tags;
+
     @ManyToOne
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
@@ -34,11 +43,19 @@ public class Post {
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
+    @Lob
     private String image;
 
-    private LocalDateTime createdDate;
+    private LocalDateTime createdAt;
 
     private boolean isPinned;
 
-    private String group_title;
+    @OrderBy("createdAt DESC")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 }
