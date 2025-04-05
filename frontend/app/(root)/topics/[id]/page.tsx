@@ -3,6 +3,8 @@ import { useUser } from '@/hooks/useUser';
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useTheme } from "next-themes";
+import TrailerModal from '@/components/TraillerModal';
+import Link from 'next/link';
 
 interface Post {
   id: string;
@@ -17,6 +19,10 @@ interface Post {
   userRateCount: number;
   userRate: number;
   myRate: number;
+  director: string;
+  actor: string;
+  trailerURL: string;
+  groupId: string;
 }
 
 const AdminPost = () => {
@@ -34,6 +40,8 @@ const AdminPost = () => {
 
   const [topic, setTopics] = useState<Post | null>(null);
   const [topicRate, setTopicRate] = useState<number | null>(null);
+  const [showTrailerModal, setShowTrailerModal] = useState(false);
+  const [trailerUrl, setTrailerUrl] = useState("");
 
   const { theme, setTheme } = useTheme();
 
@@ -146,9 +154,20 @@ const AdminPost = () => {
             height={346}
             width={237}
           />
-          <a className="flex justify-center items-center w-[237px] h-[39px] bg-[#FF4155] rounded-[31px] mb-4">
-            <p className={`${theme === 'dark' ? 'text-white' : 'text-black'} text-lg font-semibold`}>Переглянути трейлер</p>
+          <a 
+            className="flex justify-center items-center w-[237px] h-[39px] bg-[#FF4155] rounded-[31px] mb-4 cursor-pointer"
+            onClick={() => {
+              if (topic?.trailerURL) { 
+                setTrailerUrl(topic.trailerURL);
+                setShowTrailerModal(true);
+              }
+            }}
+          >
+            <p className={`${theme === 'dark' ? 'text-white' : 'text-black'} text-lg font-semibold`}>
+              Переглянути трейлер
+            </p>
           </a>
+            {showTrailerModal && <TrailerModal setShowTrailerModal={setShowTrailerModal} trailerUrl={trailerUrl} />}
           <ul className="flex gap-3 mb-4">
             {['живучі', 'хоррор', 'слешер'].map((tag, index) => (
               <li
@@ -174,9 +193,9 @@ const AdminPost = () => {
               <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-sm`}>{topic?.userRateCount}</p>
             </li>
           </ul>
-          <a className={`flex justify-center items-center w-[237px] h-[39px] ${theme === 'dark' ? 'bg-[#2C353D]' : 'bg-[#B5B5B5]'} rounded-[31px]`}>
+          <Link href={`/group/${topic?.groupId}`} className={`flex justify-center items-center w-[237px] h-[39px] ${theme === 'dark' ? 'bg-[#2C353D]' : 'bg-[#B5B5B5]'} rounded-[31px]`}>
             <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-[16px] font-semibold`}>Група по цьому фільму тут</p>
-          </a>
+          </Link>
         </div>
 
         <div className='w-full'>
@@ -201,14 +220,18 @@ const AdminPost = () => {
               <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg font-bold`}>Тривалість:</p>
               <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg font-bold`}>Жанр:</p>
               <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg font-bold`}>Рекомендований вік:</p>
+              <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg font-bold`}>Режисер:</p>
+              <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg font-bold`}>Актори:</p>
             </li>
             <li>
               <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg`}>IMBD: <strong>{topic?.IMDB}/10</strong> (29К)</p>
               <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg`}>2024</p>
               <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg`}>{topic?.country}</p>
               <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg`}>{topic?.duration}</p>
-              <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg`}>{topic?.country}</p>
+              <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg`}>{topic?.genre}</p>
               <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg`}>{topic?.limitAge}+ {topic?.limitAge === '18' && ("тільки для дорослих")}</p>
+              <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg`}>{topic?.director}</p>
+              <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg`}>{topic?.actor}</p>
             </li>
           </ul>
           <div className={`${theme === 'dark' ? 'bg-[#2C353D]' : 'bg-[#B5B5B5]'} p-4 w-[660px] rounded-xl`}>

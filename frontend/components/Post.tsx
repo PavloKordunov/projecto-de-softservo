@@ -129,7 +129,16 @@ const Post: React.FC<PostProps> = ({ className, post, isPinned }) => {
 
     return ( 
         <Link href={`/post/${post.id}`} className={`p-6 ${theme === 'dark' ? 'bg-MainColor' : 'bg-[#E4E3E3]'} rounded-[21px] flex gap-3 mb-6 items-center w-[1030px] ${className}`}>
-            {post.image && <Image src={post?.image} alt="" width="208" height="237" />}
+            {post.image && <div className="w-[237px] h-[237px] overflow-hidden rounded-[21px]"> 
+                    <Image 
+                    src={post.image} 
+                    alt={post.title} 
+                    width={237} 
+                    height={237}
+                    className="w-full h-full object-cover" 
+                    />
+            </div>}
+            {/* {post.image && <Image src={post?.image} alt="" width="208" height="237" />} */}
             <div className="ml-2 w-full">
                 <div className="flex items-center w-full justify-between">
                     <div className="flex gap-2">

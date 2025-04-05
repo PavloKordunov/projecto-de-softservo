@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useOktaAuth } from "@okta/okta-react";
+import useLastGroups from "@/hooks/useLastGroups";
 
 const NavPanel = () => {
     const { theme, setTheme } = useTheme();
@@ -23,6 +24,7 @@ const NavPanel = () => {
         setShowGroup(!showGroup)
     }
 
+    const lastGroups = useLastGroups()
 
     const getRandomPost = async () => {
         try {
@@ -88,24 +90,49 @@ const NavPanel = () => {
                                 transition={{duration: 0.5, ease: 'easeOut'}}
                                 whileHover={{scale: 1.1, color: '#FF4155'}}
                             >
-                                Закріплені групи
+                                Останні групи
                             </motion.p>
                         </motion.div>
-                        <svg className="w-4 h-3">
-                            <use href={`/sprite.svg#exit-arrow`}/>
-                        </svg>
                     </div>
                     <button
                         className="border-none bg-AccnetColor w-full h-[40px] rounded-[8px] text-[18px] text-white font-semibold mb-3"
                         onClick={handleShowCreateGroup}>Створити групу
                     </button>
-                    <div className={`flex gap-2 ${theme === 'dark' ? 'bg-[#262D34]' : 'bg-[#FFFFFF]'} hover:bg-AccnetColor p-[10px] rounded-[10px] items-center`}>
-                        <Image src="/groupIcon.png" alt="" width={42} height={42}/>
-                        <div className="flex flex-col cursor-pointer">
-                            <p className="text-${theme === 'dark' ? '#97989D' : 'black'} text-[16px] font-semibold">ФільмиУкраїнською</p>
-                            <p className="text-[#97989D] hover:text-black text-[12px]">82,645 Posted by this tag</p>
+                    {lastGroups.map((group) => (
+                    <Link
+                        href={`/group/${group.id}`}
+                        key={group.id} 
+                        className={`flex gap-2 ${theme === 'dark' ? 'bg-[#262D34]' : 'bg-[#FFFFFF]'} hover:bg-AccnetColor p-[10px] rounded-[10px] items-center`}
+                    >
+                        <div className="w-[42px] h-[42px] overflow-hidden rounded-[8px]"> 
+                        {group.image ? (
+                            <Image 
+                            src={group.image} 
+                            alt={group.title} 
+                            width={42} 
+                            height={42}
+                            className="w-full h-full object-cover" 
+                            />
+                        ) : (
+                            <Image 
+                            src="/groupImage.png"
+                            alt="Default group image" 
+                            width={42} 
+                            height={42}
+                            className="w-full h-full object-cover"
+                            />
+                        )}
                         </div>
-                    </div>
+                        <div className="flex flex-col cursor-pointer">
+                        <p className={`${theme === 'dark' ? 'text-[#97989D]' : 'text-black'} text-[16px] font-semibold`}>
+                            {group.title}
+                        </p>
+                        <p className="text-[#97989D] hover:text-black text-[12px]">
+                            {group.postCount} постів у групі
+                        </p>
+                        </div>
+                    </Link>
+                    ))}
                 </div>
             </div>
             <div>

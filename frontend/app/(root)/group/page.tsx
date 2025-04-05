@@ -73,7 +73,26 @@ const GroupPage = () => {
         <div>
             {groups.map(group => (
                 <Link key={group.id} href={`/group/${group.id}`} className={`mt-4 p-4 ${theme === 'dark' ? 'bg-MainColor' : 'bg-[#EAEAEA]'} rounded-[21px] flex items-center h-fit w-[1030px] gap-4`}>
-                    {group.image ? <Image src={group.image} alt="" width="208" height="237" /> :<Image src="/postImage.png" alt="" width="208" height="237" />}
+                    <div className="w-[208px] h-[208px] overflow-hidden rounded-[21px]"> 
+                        {group.image ? (
+                            <Image 
+                            src={group.image} 
+                            alt={group.title} 
+                            width={208} 
+                            height={208}
+                            className="w-full h-full object-cover" 
+                            />
+                        ) : (
+                            <Image 
+                            src="/postImage.png"
+                            alt="Default group image" 
+                            width={208} 
+                            height={208}
+                            className="w-full h-full object-cover"
+                            />
+                        )}
+                    </div>
+
                     <div className="w-full">
                         <div className="flex items-center justify-between mb-4">
                             <p className={`text-[24px] ${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold`}>/{group?.title}</p>

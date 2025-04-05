@@ -54,6 +54,5 @@ public class Group {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
-        isPublic = false;
     }
 }

@@ -2,6 +2,8 @@
 
 import AutoFillPost from "@/components/AutoFillPost";
 import { useUser } from "@/hooks/useUser";
+import { searchTrailer } from "@/lib/youtubeService";
+import { set } from "date-fns";
 import { Dirent } from "fs";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -19,8 +21,10 @@ interface FilmData {
     Released: string;
     Director: string;
     Actors: string;
+    Trailer?: string;
+    TrailerEmbed?: string;
   }
-  
+
 
 const AdminPostMenu = () => {
     const router = useRouter();
@@ -46,7 +50,10 @@ const AdminPostMenu = () => {
         seasoneAmount: "",
         runtime: "",
         tagDtos: null,
+        trailerURL: '',
     });
+    const [createdGroup, setCreatedGroup] = useState<any>();
+
 
     const getFilmApiData = (data: FilmData) => {
         setFilmData(data);
@@ -54,6 +61,13 @@ const AdminPostMenu = () => {
 
     const handleCreateTopic = async () => {
         try {
+            const groupData = await handleCreateGroup();
+    
+            const updatedFormData = {
+                ...formData,
+                groupId: groupData.id,
+            };
+    
             const res = await fetch("https://localhost:8080/api/topics/create", {
                 mode: "cors",
                 method: "POST",
@@ -61,18 +75,18 @@ const AdminPostMenu = () => {
                     "Content-Type": "application/json",
                     'Authorization': `Bearer ${user?.accessToken}`
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(updatedFormData)
             });
-
+    
             const data = await res.json();
-            console.log(data);
+            console.log("Topic created:", data);
+            router.push("/home");
+    
         } catch (error) {
-            console.log(error);
+            console.log("Error:", error);
         }
-
-        console.log(formData)
-        router.push("/home");
     };
+    
 
     useEffect(() => {
         if (filmData) {
@@ -93,6 +107,51 @@ const AdminPostMenu = () => {
         }
     }, [filmData]);
 
+    const fetchTrailer = async (title: string) => {
+        if (!title) return;
+        
+        const trailerData = await searchTrailer(title);
+        if (trailerData) {
+            setFormData(prev => ({
+                ...prev,
+                trailerURL: trailerData.url
+            }));
+
+            if (filmData) {
+                setFilmData({
+                    ...filmData,
+                    Trailer: trailerData.url,
+                    TrailerEmbed: trailerData.embedUrl
+                });
+            }
+        }
+    };
+
+    const handleCreateGroup = async() => {
+        try {
+            const res = await fetch("https://localhost:8080/api/groups/create", {
+                mode: "cors",
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${user?.accessToken}`,
+                },
+                body: JSON.stringify({
+                    title: formData.title,
+                    description: formData.description,
+                    userId: user?.id,
+                    isPublic: true,
+                    image: formData.image
+                }),
+            });
+            const data = await res.json();
+
+            return data.body;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         if (user) {
             setFormData((prev) => ({ ...prev, author: user.id }));
@@ -103,6 +162,11 @@ const AdminPostMenu = () => {
         setFormData((prev) => ({ ...prev, limitAge }));
     }, [limitAge]);
     
+    useEffect(() => {
+        if (filmData?.Title) {
+            fetchTrailer(filmData.Title);
+        }
+    }, [filmData?.Title]);
 
     const handleInputChange = (e: any) => {
         const { name, value } = e.target;
@@ -212,6 +276,7 @@ const AdminPostMenu = () => {
                                     className="w-[478px] h-[43px] bg-[#2c353d] rounded-md px-3 text-[#C5D0E6] text-sm"
                                     type='text'
                                     name='trailerLink'
+                                    value={formData.trailerURL}
                                     placeholder='Введіть посилання на трейлер для даного поста...'
                                     onChange={handleInputChange}
                                 />

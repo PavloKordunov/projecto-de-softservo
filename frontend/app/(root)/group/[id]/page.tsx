@@ -10,6 +10,7 @@ import { use, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { useOktaAuth } from "@okta/okta-react";
 import { useRouter } from "next/navigation";
+import useLastGroups from "@/hooks/useLastGroups";
 
 
 interface Group {
@@ -17,6 +18,8 @@ interface Group {
     title: string;
     description: string;
     isPublic: boolean;
+    postCount: number;
+    image: string
 }
 
 const Group = () => {
@@ -33,6 +36,8 @@ const Group = () => {
 
     const { authState } = useOktaAuth();
     const router = useRouter();
+
+    const lastGroups = useLastGroups(group?.id ? group : undefined);
 
     useEffect(() => {
         const getAllPost = async () => {
@@ -110,12 +115,30 @@ const Group = () => {
         <div> 
             <div className={`mt-4 px-5 py-4 ${theme === 'dark' ? 'bg-MainColor ' : 'bg-[#EAEAEA] '} rounded-[21px] flex items-center justify-between h-fit w-[1030px]`}>
                 <div className="flex items-center gap-3">
-                    <Image src="/groupImage.png" alt="" width={60} height={60} />
+                    <div className="w-[60px] h-[60px] overflow-hidden rounded-full"> 
+                    {group.image ? (
+                        <Image 
+                        src={group.image} 
+                        alt={group.title} 
+                        width={42} 
+                        height={42}
+                        className="w-full h-full object-cover" 
+                        />
+                    ) : (
+                        <Image 
+                        src="/groupImage.png"
+                        alt="Default group image" 
+                        width={42} 
+                        height={42}
+                        className="w-full h-full object-cover"
+                        />
+                    )}
+                    </div>
                     <div>
                         <div className="flex items-center gap-2">
-                            <svg  className="w-6 h-7" fill="#fff">
+                            {!group.isPublic && <svg  className="w-6 h-7" fill="#fff">
                                 <use href={`/sprite.svg?v=1#icon-lock`}></use>
-                            </svg>
+                            </svg>}
                             <p className={`${theme === 'dark' ? 'text-white' : 'text-black'} text-[28px] font-semibold`}>{group?.title}</p>
                         </div>
                         <p className="text-[#97989D] text-[20px]">82,645 Постів у цій групі</p>
@@ -127,7 +150,7 @@ const Group = () => {
                 </div>
             </div>
             <div className="flex gap-4 mb-4">
-                <div className={`mt-4 h-[135px] px-5 py-4 ${theme === 'dark' ? 'bg-MainColor ' : 'bg-[#EAEAEA] '} flex flex-col justify-between rounded-[21px] h-fit w-[690px]`}>
+                <div className={`mt-4 h-[134px] px-5 py-4 ${theme === 'dark' ? 'bg-MainColor ' : 'bg-[#EAEAEA] '} flex flex-col justify-between rounded-[21px] h-fit w-[690px]`}>
                     <p className={`${theme === 'dark' ? 'text-white' : 'text-black'} text-[15px] font-semibold mb-3 line-clamp-2`}><strong>Опис:</strong> {group?.description} </p>
                     <div className="flex gap-3 items-center mb-3">
                         <div className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor ' : 'bg-[#B5B5B5]'} rounded-[24px]`}>

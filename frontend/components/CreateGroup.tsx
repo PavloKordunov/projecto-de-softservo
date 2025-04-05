@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 
 const CreateGroup = ({ handleShow }: { handleShow: () => void }) => {
     const { user } = useUser();
-    const [isPublic, setIsPublic] = useState<boolean | null>(null);
+    const [isPublic, setIsPublic] = useState<boolean | null>(false);
     const { theme } = useTheme();
     const [base64, setBase64] = useState<string | null>(null);
 
@@ -37,6 +37,7 @@ const CreateGroup = ({ handleShow }: { handleShow: () => void }) => {
             });
             const data = await res.json();
             console.log(data);
+            console.log(group)
         } catch (error) {
             console.log(error);
         }
