@@ -26,6 +26,7 @@ interface Post {
     countLikes: number;
     countSaved: number;
     userImage: string;
+    tagDtos: any[];
 }
 
 const PostPage = () => {
@@ -246,16 +247,12 @@ const PostPage = () => {
                 </div>
                 <p className={`text-[24px] ${theme === 'dark' ? 'text-white' : 'text-black'} font-bold mb-4`}>{post.title}</p>
                 <p className={`text-[18px] ${theme === 'dark' ? 'text-white' : 'text-black'} mb-3`}>{post.description}</p>
-                <div className="flex gap-3 items-center mb-3">
-                    <div className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} rounded-[24px]`}>
-                        <p className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-semibold`}>фільм</p>
+                <div className="flex gap-3 items-center mb-5">
+                {post.tagDtos && post.tagDtos.map((tag) => (
+                    <div key={tag.id} className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#EAEAEA]'} rounded-[24px]`}>
+                        <p className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-semibold`}>{tag.name}</p>
                     </div>
-                    <div className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} rounded-[24px]`}>
-                        <p className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-semibold`}>хоррор</p>
-                    </div>
-                    <div className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} rounded-[24px]`}>
-                        <p className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-semibold`}>страшний</p>
-                    </div>
+                ))}
                 </div>
                 {post?.image && <Image src={post?.image} alt="" width={980} height={760} className="mb-3" />}
                 <div className="flex justify-between items-center">
