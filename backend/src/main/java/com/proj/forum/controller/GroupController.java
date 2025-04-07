@@ -58,6 +58,12 @@ public class GroupController {
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Successful getting", groupDto);
     }
 
+    @GetMapping("/tag/{tagId}")
+    public ApiResponse<List<GroupDto>> getGroupsByTag(@PathVariable @Valid UUID tagId) {
+        List<GroupDto> groupsDto = groupService.getGroupsByTag(tagId);
+        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Successful getting", groupsDto);
+    }
+
     @RequireRoles(RoleType.USER)
     @PatchMapping("/update/{id}")
     public ApiResponse<GenericResponse> updateGroup(

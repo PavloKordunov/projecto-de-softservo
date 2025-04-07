@@ -1,6 +1,7 @@
 package com.proj.forum.service;
 
 import com.proj.forum.dto.GroupDto;
+import com.proj.forum.dto.PostResponseDto;
 import com.proj.forum.entity.Group;
 
 import java.nio.file.AccessDeniedException;
@@ -9,6 +10,7 @@ import java.util.UUID;
 
 public interface GroupService {
     List<GroupDto> getAllGroups();
+    List<GroupDto> getGroupsByTag(UUID tagId);
     UUID createGroup(GroupDto group);
     GroupDto getGroup(UUID id);
     void deleteGroup(UUID groupId, UUID userId) throws AccessDeniedException;
