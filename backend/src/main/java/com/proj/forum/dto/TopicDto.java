@@ -12,7 +12,7 @@ import java.util.UUID;
 @Builder
 public record TopicDto(
         UUID id,
-        List<TagDto> tagDtos,
+        List<UUID> tagsId,
         @NotBlank(message = "Title cannot be blank") String title,
         @NotNull UUID author,
         @NotNull String limitAge,

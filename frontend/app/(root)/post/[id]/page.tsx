@@ -249,9 +249,9 @@ const PostPage = () => {
                 <p className={`text-[18px] ${theme === 'dark' ? 'text-white' : 'text-black'} mb-3`}>{post.description}</p>
                 <div className="flex gap-3 items-center mb-5">
                 {post.tagDtos && post.tagDtos.map((tag) => (
-                    <div key={tag.id} className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#EAEAEA]'} rounded-[24px]`}>
+                    <Link href={`/tag/${tag.id}`} key={tag.id} className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#EAEAEA]'} rounded-[24px]`}>
                         <p className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-semibold`}>{tag.name}</p>
-                    </div>
+                    </Link>
                 ))}
                 </div>
                 {post?.image && <Image src={post?.image} alt="" width={980} height={760} className="mb-3" />}

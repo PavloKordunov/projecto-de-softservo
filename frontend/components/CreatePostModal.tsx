@@ -78,6 +78,7 @@ const CreatePostModal = ({handleShow, group} : {handleShow : () => void, group?:
             })
             const data = await res.json();
             console.log(data);
+            console.log("POST", post);
         } catch (error) {
             console.log(error)
         }

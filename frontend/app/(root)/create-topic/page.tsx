@@ -5,6 +5,7 @@ import { useUser } from "@/hooks/useUser";
 import { searchTrailer } from "@/lib/youtubeService";
 import { set } from "date-fns";
 import { Dirent } from "fs";
+import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -25,6 +26,10 @@ interface FilmData {
     TrailerEmbed?: string;
   }
 
+  interface Tag {
+    id: string;
+    name: string;
+  }
 
 const AdminPostMenu = () => {
     const router = useRouter();
@@ -51,9 +56,27 @@ const AdminPostMenu = () => {
         runtime: "",
         tagDtos: null,
         trailerURL: '',
+        tagsId: [] as string[],
     });
-    const [createdGroup, setCreatedGroup] = useState<any>();
+    const [tagQuery, setTagQuery] = useState("");
+    const [suggestedTags, setSuggestedTags] = useState<Tag[]>([]);
+    const [tags, setTags] = useState<Tag[]>([]);
+    const { theme } = useTheme();   
 
+    useEffect(() => {
+        if (tagQuery.trim() !== "") {
+            fetch(`https://localhost:8080/api/tags/search?query=${tagQuery}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        setSuggestedTags(data.body);
+                    }
+                })
+                .catch(err => console.log(err));
+        } else {
+            setSuggestedTags([]);
+        }
+    }, [tagQuery]);
 
     const getFilmApiData = (data: FilmData) => {
         setFilmData(data);
@@ -80,6 +103,7 @@ const AdminPostMenu = () => {
     
             const data = await res.json();
             console.log("Topic created:", data);
+            console.log("Form data:", updatedFormData);
             router.push("/home");
     
         } catch (error) {
@@ -189,6 +213,18 @@ const AdminPostMenu = () => {
         };
         reader.readAsDataURL(file);
     }
+
+    const addTag = (tag: Tag) => {
+        if (!formData.tagsId.includes(tag.id)) {
+            setFormData((prev) => ({
+                ...prev,
+                tagsId: [...prev.tagsId, tag.id]
+            }));
+            setTags((prev) => [...prev, tag]);
+        }
+        setTagQuery("");
+        setSuggestedTags([]);
+    };
 
     return (
         <div className="mt-4 w-[1030px] bg-[#1E1F20] rounded-[31px] px-6 py-10 relative">
@@ -330,15 +366,26 @@ const AdminPostMenu = () => {
                         </div>
                     )}
 
-                    <div className="mb-6">
-                        <h2 className="text-2xl font-semibold text-[#F4F6F8] mb-4">Хештеги:</h2>
-                        <input
-                            className="w-[478px] h-[43px] bg-[#2c353d] rounded-md px-3 text-[#C5D0E6] text-sm"
-                            type='text'
-                            name='hashtags'
-                            placeholder='Введіть до 9 хештегів для даного поста...'
-                            onChange={handleInputChange}
-                        />
+                    <div className="relative flex items-center gap-4">
+                        {tags.length > 0 && <div className="flex flex-wrap gap-2 mb-3">
+                            {tags.map(tag => (
+                            <div key={tag.id} className={`${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} px-4 py-2 rounded-[31px] w-fit`}>
+                                <p className="text-[14px] text-[#858EAD] font-semibold">{tag.name}</p>
+                            </div>
+                            ))}
+                        </div>}
+                        <div className="relative">
+                            <div className={`${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} px-2 rounded-[31px] items-center justify-center w-fit mb-3`}>
+                                <input type="text" value={tagQuery} onChange={(e) => setTagQuery(e.target.value)} className={`px-1 mt-3 text-[14px] font-semibold w-[88px] h-4 ${theme === 'dark' ? 'bg-SecondaryColor text-white' : 'bg-[#B5B5B5] text-black'} border-none rounded-[10px] mb-3 focus:outline-none`} placeholder="додати тег" />
+                            </div>
+                            {suggestedTags.length > 0 && (
+                                <ul className="absolute w-[200px] p-4 bg-SecondaryColor rounded-[31px] shadow-md mt-1">
+                                    {suggestedTags.map(tag => (
+                                        <li key={tag.id} className="px-2 py-1 cursor-pointer hover:bg-[#3A464F] transition-colors" onClick={() => addTag(tag)}>{tag.name}</li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
                     </div>
                     {postMode === 'serial' && (
                         <div className="mb-6">
