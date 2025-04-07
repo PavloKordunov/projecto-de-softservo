@@ -9,11 +9,7 @@ import com.proj.forum.entity.Post;
 import com.proj.forum.entity.Statistic;
 import com.proj.forum.entity.Tag;
 import com.proj.forum.entity.User;
-import com.proj.forum.repository.GroupRepository;
-import com.proj.forum.repository.PostRepository;
-import com.proj.forum.repository.TagRepository;
-import com.proj.forum.repository.UserRepository;
-import com.proj.forum.repository.UserStatisticRepository;
+import com.proj.forum.repository.*;
 import com.proj.forum.service.CommentService;
 import com.proj.forum.service.NotificationService;
 import com.proj.forum.service.PostService;
@@ -45,6 +41,7 @@ public class PostServiceImpl implements PostService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private final UserStatisticRepository userStatisticRepository;
+    private final CommentRepository commentRepository;
 
     private final NotificationService notificationService;
     private final TagRepository tagRepository;
@@ -95,13 +92,14 @@ public class PostServiceImpl implements PostService {
         String email = getEmail();
         Integer countLikes = getCountLikes(post);
         Integer countSaved = getCountSaved(post);
+        Integer countComments = getCountComments(post);
         if (email == null) {
-            return stickPostDtoAndStatistic(post, null, countLikes, countSaved);
+            return stickPostDtoAndStatistic(post, null, countLikes, countSaved, countComments);
         }
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(id, user.getId()).orElse(null);
-        return stickPostDtoAndStatistic(post, statistic, countLikes, countSaved);
+        return stickPostDtoAndStatistic(post, statistic, countLikes, countSaved, countComments);
     }
 
     @Override
@@ -275,7 +273,8 @@ public class PostServiceImpl implements PostService {
             for (Post post : postList) {
                 Integer countLikes = getCountLikes(post);
                 Integer countSaved = getCountSaved(post);
-                postDtoList.add(stickPostDtoAndStatistic(post, null, countLikes, countSaved));
+                Integer countComments = getCountComments(post);
+                postDtoList.add(stickPostDtoAndStatistic(post, null, countLikes, countSaved, countComments));
             }
             return postDtoList;
         }
@@ -286,7 +285,8 @@ public class PostServiceImpl implements PostService {
 
             Integer countLikes = getCountLikes(post);
             Integer countSaved = getCountSaved(post);
-            postDtoList.add(stickPostDtoAndStatistic(post, statistic, countLikes, countSaved));
+            Integer countComments = getCountComments(post);
+            postDtoList.add(stickPostDtoAndStatistic(post, statistic, countLikes, countSaved, countComments));
         }
         return postDtoList;
     }
@@ -295,13 +295,14 @@ public class PostServiceImpl implements PostService {
         String email = getEmail();
         Integer countLikes = getCountLikes(post);
         Integer countSaved = getCountSaved(post);
+        Integer countComments = getCountComments(post);
         if (email == null) {
-            return stickPostDtoAndStatistic(post, null, countLikes, countSaved);
+            return stickPostDtoAndStatistic(post, null, countLikes, countSaved, countComments);
         }
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(post.getId(), user.getId()).orElse(null);
-        return stickPostDtoAndStatistic(post, statistic, countLikes, countSaved);
+        return stickPostDtoAndStatistic(post, statistic, countLikes, countSaved, countComments);
     }
 
     private Integer getCountLikes(Post post) {
@@ -311,6 +312,8 @@ public class PostServiceImpl implements PostService {
     private Integer getCountSaved(Post post) {
         return userStatisticRepository.countStatisticByObjectIdAndSavedIsTrue(post.getId());
     }
+
+    private Integer getCountComments(Post post) {return commentRepository.countByPostId(post.getId());}
 
     private Post getUpdatePost(Post post, PostRequestDto postDto) {
         if (postDto.title() != null)
@@ -337,7 +340,7 @@ public class PostServiceImpl implements PostService {
     }
 
     private PostResponseDto stickPostDtoAndStatistic(Post post, Statistic statistic,
-                                                     Integer countLikes, Integer countSaved) {
+                                                     Integer countLikes, Integer countSaved, Integer countComments) {
 
         List<TagDto> tags = getTagDtos(post);
         List<CommentDto> comments = commentService.mapToListOfCommentsDto(post.getComments());
@@ -361,6 +364,7 @@ public class PostServiceImpl implements PostService {
                 .isSaved(statistic != null && statistic.getSaved())
                 .countLikes(countLikes)
                 .countSaved(countSaved)
+                .countComments(countComments)
                 .build();
     }
 

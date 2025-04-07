@@ -11,4 +11,6 @@ import java.util.UUID;
 public interface CommentRepository extends JpaRepository<Comment, UUID> {
     List<Comment> findAllByPostIdOrderByCreatedAtDesc(UUID postId);
     List<Comment> findAllByTopicIdOrderByCreatedAtDesc(UUID topicId);
+
+    Integer countByPostId(UUID postId);
 }
