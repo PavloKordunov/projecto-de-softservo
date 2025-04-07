@@ -34,13 +34,9 @@ public class TopicCustomMapper implements CustomMapper<Topic, TopicDto> {
 
     @Override
     public Topic mapToEntity(TopicDto topicDto) {
-        List<UUID> tagsId = new ArrayList<>();
         List<Tag> tags;
-        if(topicDto.tagDtos() != null) {
-            for (TagDto tagDto : topicDto.tagDtos()) {
-                tagsId.add(tagDto.id());
-            }
-            tags = tagRepository.findAllById(tagsId);
+        if(topicDto.tagsId() != null) {
+            tags = tagRepository.findAllById(topicDto.tagsId());
         }
         else {
             tags = null;
