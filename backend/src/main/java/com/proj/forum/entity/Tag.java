@@ -27,6 +27,8 @@ public class Tag {
     @ManyToMany(mappedBy = "tags")
     private List<Topic> topics;
 
+    @ManyToMany(mappedBy = "tags")
+    private List<Topic> groups;
 
     @Column(unique = true, nullable = false)
     private String name;

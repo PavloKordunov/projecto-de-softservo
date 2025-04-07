@@ -6,11 +6,14 @@ import lombok.Builder;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Builder
-public record   GroupDto(
+public record GroupDto(
         UUID id,
+        List<TagDto> tagDtos,
+        List<UUID> tagsId,
         @NotBlank(message = "Title cannot be blank")
         String title,
         @NotNull
