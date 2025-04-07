@@ -5,6 +5,7 @@ import com.proj.forum.annotation.RequireRoles;
 import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.GenericResponse;
 import com.proj.forum.dto.GroupDto;
+import com.proj.forum.dto.ListResponse;
 import com.proj.forum.enums.RoleType;
 import com.proj.forum.service.GroupService;
 import jakarta.validation.Valid;
@@ -59,9 +60,9 @@ public class GroupController {
     }
 
     @GetMapping("/tag/{tagId}")
-    public ApiResponse<List<GroupDto>> getGroupsByTag(@PathVariable @Valid UUID tagId) {
+    public ListResponse<List<GroupDto>> getGroupsByTag(@PathVariable @Valid UUID tagId) {
         List<GroupDto> groupsDto = groupService.getGroupsByTag(tagId);
-        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Successful getting", groupsDto);
+        return new ListResponse<>(true, HttpStatusCode.valueOf(200), "Successful getting", groupsDto.size(), groupsDto);
     }
 
     @RequireRoles(RoleType.USER)
