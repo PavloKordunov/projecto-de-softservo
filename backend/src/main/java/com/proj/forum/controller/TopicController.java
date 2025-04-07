@@ -88,4 +88,10 @@ public class TopicController {
         List<TopicDto> topics = topicService.getAllTopics(sort, order);
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Topics found", topics);
     }
+
+    @GetMapping("tag/{tagId}")
+    public ApiResponse<List<TopicDto>> getAllTopicsByTagId(@PathVariable UUID tagId) {
+        List<TopicDto> topics = topicService.getAllTopicsByTagId(tagId);
+        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Topics found", topics);
+    }
 }
