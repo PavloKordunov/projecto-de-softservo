@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useOktaAuth } from "@okta/okta-react";
+import { parseDate } from "@/lib/dataParser";
 
 interface PostProps {
   post: {
@@ -25,6 +26,8 @@ interface PostProps {
     countLikes: number;
     userImage: string;
     tagDtos: any[];
+    createdAt: string;
+    countComments: number;
   };
   className?: string;
   isPinned?: any[];
@@ -128,8 +131,32 @@ const Post: React.FC<PostProps> = ({ className, post, isPinned }) => {
       likeDislike(newStatus);
     };
 
+
+    const addView = async () => {
+      if (!user) return;
+      try {
+        const res = await fetch(`https://localhost:8080/api/posts/view/${post?.id}`, {
+          mode: "cors",
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${user?.accessToken}`,
+          }
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+
+        console.log("View added successfully");
+      }
+      catch (error) {
+        console.error("Failed to add view:", error);
+      }
+    }
+
     return ( 
-        <Link href={`/post/${post.id}`} className={`p-6 ${theme === 'dark' ? 'bg-MainColor' : 'bg-[#E4E3E3]'} rounded-[21px] flex gap-3 mb-6 items-center w-[1030px] ${className}`}>
+        <Link href={`/post/${post.id}`} onClick={addView} className={`p-6 ${theme === 'dark' ? 'bg-MainColor' : 'bg-[#E4E3E3]'} rounded-[21px] flex gap-3 mb-6 items-center w-[1030px] ${className}`}>
             {post.image && <div className="w-[237px] h-[237px] overflow-hidden rounded-[21px]"> 
                     <Image 
                     src={post.image} 
@@ -186,12 +213,12 @@ const Post: React.FC<PostProps> = ({ className, post, isPinned }) => {
                         </div>
                         <div>
                             <p className={`text-[18px] ${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold`}>{post.nickname}</p>
-                            <span className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-regular`}>2 години тому</span>
+                            <span className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-regular`}>{parseDate(post.createdAt)}</span>
                         </div>
                     </div>
                     <p className={`text-[18px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-regular`}>{post.viewCount} Переглядів</p>
                     <p className={`text-[18px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-regular`}>{countLikes} Уподобань</p>
-                    <p className={`text-[18px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-regular`}>56 Коментарів</p>
+                    <p className={`text-[18px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-regular`}>{post.countComments} Коментарів</p>
                 </div>
             </div>
         </Link>

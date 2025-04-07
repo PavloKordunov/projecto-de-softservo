@@ -19,7 +19,9 @@ interface Group {
     description: string;
     isPublic: boolean;
     postCount: number;
-    image: string
+    image: string;
+    memberCount: number;
+    tagDtos: any[];
 }
 
 const Group = () => {
@@ -141,7 +143,6 @@ const Group = () => {
                             </svg>}
                             <p className={`${theme === 'dark' ? 'text-white' : 'text-black'} text-[28px] font-semibold`}>{group?.title}</p>
                         </div>
-                        <p className="text-[#97989D] text-[20px]">82,645 Постів у цій групі</p>
                     </div>
                 </div>
                 <div className="flex gap-7">
@@ -150,28 +151,26 @@ const Group = () => {
                 </div>
             </div>
             <div className="flex gap-4 mb-4">
-                <div className={`mt-4 h-[134px] px-5 py-4 ${theme === 'dark' ? 'bg-MainColor ' : 'bg-[#EAEAEA] '} flex flex-col justify-between rounded-[21px] h-fit w-[690px]`}>
+                <div className={`mt-4 h-[135px] px-5 py-4 ${theme === 'dark' ? 'bg-MainColor ' : 'bg-[#EAEAEA] '} flex flex-col justify-between rounded-[21px] h-fit w-[690px]`}>
                     <p className={`${theme === 'dark' ? 'text-white' : 'text-black'} text-[15px] font-semibold mb-3 line-clamp-2`}><strong>Опис:</strong> {group?.description} </p>
-                    <div className="flex gap-3 items-center mb-3">
-                        <div className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor ' : 'bg-[#B5B5B5]'} rounded-[24px]`}>
-                            <p className={`text-[13px]  ${theme === 'dark' ? 'text-text-[#C5D0E6]' : 'text-white'} font-semibold`}>фільм</p>
-                        </div>
-                        <div className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor ' : 'bg-[#B5B5B5]'} rounded-[24px]`}>
-                            <p className={`text-[13px] ${theme === 'dark' ? 'text-text-[#C5D0E6]' : 'text-white'} font-semibold`}>хоррор</p>
-                        </div>
-                        <div className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor ' : 'bg-[#B5B5B5]'} rounded-[24px]`}>
-                            <p className={`text-[13px] ${theme === 'dark' ? 'text-text-[#C5D0E6]' : 'text-white'} font-semibold`}>страшний</p>
-                        </div>
+                    <div className="flex gap-3 items-center">
+                        {group.tagDtos && group.tagDtos.map((tag) => (
+                            <div key={tag.id} className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#EAEAEA]'} rounded-[24px]`}>
+                                <p className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-semibold`}>{tag.name}</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
                 <div className={`mt-4  px-4 py-4 ${theme === 'dark' ? 'bg-MainColor ' : 'bg-[#EAEAEA] '} rounded-[21px] h-fit w-[320px]`}>
                     <div className="flex items-center gap-2 mb-2">
                         <Image src="/sabs.png" alt="" width={24} height={18} />
-                        <p className={`${theme === 'dark' ? 'text-white' : 'text-black'} text-[15px] font-semibold`}>317,731  підписники</p>
+                        <p className={`${theme === 'dark' ? 'text-white' : 'text-black'} text-[15px] font-semibold`}>{group.memberCount} підписники</p>
                     </div>
                     <div className="flex items-center gap-2 mb-4">
-                        <Image src="/subsActive.png" alt="" width={24} height={18} />
-                        <p className={`${theme === 'dark' ? 'text-white' : 'text-black'} text-[15px] font-semibold`}>37,731  онлайн</p>
+                        <svg className="w-6 h-6" fill='#EAEAEA'>
+                          <use href={`/sprite.svg#icon-post`}/>
+                        </svg>
+                        <p className={`${theme === 'dark' ? 'text-white' : 'text-black'} text-[15px] font-semibold`}>{group.postCount} Постів у цій групі</p>
                     </div>
                     <div className="flex items-center">
                         <div className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor ' : 'bg-[#B5B5B5]'} rounded-[24px] mr-2`}>

@@ -8,6 +8,7 @@ import {useUser} from '@/hooks/useUser';
 import {set} from 'date-fns';
 import EditPost from '@/components/EditPost';
 import { useTheme } from "next-themes";
+import { parseDate } from '@/lib/dataParser';
 
 interface Post {
     id: string;
@@ -27,6 +28,8 @@ interface Post {
     countSaved: number;
     userImage: string;
     tagDtos: any[];
+    createdAt: string;
+    countComments: number;
 }
 
 const PostPage = () => {
@@ -237,10 +240,12 @@ const PostPage = () => {
                     </Link>
                     <div className='flex items-center gap-3'>
                         {post?.userId === user?.id && <svg onClick={handleShow} className="w-6 h-6" fill="#C5D0E6" >
-                            <use href={`/sprite.svg#changeProfileIcon`} />
+                            <use href={`/sprite.svg?v=1#icon-edit`} />
                         </svg>}
-                        <div className={`${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} p-[2px] rounded-[20px] flex gap-2 items-center`}>
-                            <Image src="/view.png" alt="" width={42} height={42}/>
+                        <div className={`${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} p-2 rounded-[20px] flex gap-2 items-center`}>
+                            <svg className="ml-1 w-6 h-6" fill="#C5D0E6" >
+                                <use href={`/sprite.svg?v=1#icon-eye`} />
+                            </svg>
                             <p className={`text-[18px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'}`}>{post.viewCount}</p>
                         </div>
                     </div>
@@ -264,7 +269,7 @@ const PostPage = () => {
                         </Link>
                         <div>
                             <Link href={`/user/${post.userId}`}><p className={`text-[18px] ${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold`}>{post.nickname}</p></Link>
-                            <span className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-regular`}>2 години тому</span>
+                            <span className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-regular`}>{parseDate(post.createdAt)}</span>
                         </div>
                         <div className="flex gap-3 ml-5">
                             <div className={`flex items-center px-3 py-2 gap-3 ${theme === 'dark' ? 'bg-[#2C353D]' : 'bg-[#B5B5B5]'} rounded-[20px]`}>
@@ -290,7 +295,7 @@ const PostPage = () => {
                                 <svg className="w-6 h-6" fill="#C5D0E6" >
                                     <use href={`/sprite.svg#icon-comment`} />
                                 </svg>
-                                <p className={`text-[18px] 'text-[#C5D0E6]' : 'text-black'}`}>56</p>
+                                <p className={`text-[18px] 'text-[#C5D0E6]' : 'text-black'}`}>{post.countComments}</p>
                             </div>
                             <div className={`flex items-center px-3 py-2 gap-3 ${theme === 'dark' ? 'bg-[#2C353D]' : 'bg-[#B5B5B5]'} rounded-[20px]`}>
                                 <button onClick={ (e) => {
