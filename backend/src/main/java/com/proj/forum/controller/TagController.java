@@ -47,4 +47,10 @@ public class TagController {
         List<TagDto> tags = tagService.searchTags(query);
         return new ApiResponse<>(true, HttpStatus.OK, "Success search tagDtos", tags);
     }
+
+    @GetMapping("/popular")
+    public ApiResponse<List<TagDto>> getSortedTagsByCountPosts(){
+        List<TagDto> tags = tagService.getSortedTagsByCountPosts();
+        return new ApiResponse<>(true, HttpStatus.OK, "Success getSortedTagsByCountPosts", tags);
+    }
 }
