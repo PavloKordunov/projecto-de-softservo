@@ -7,6 +7,7 @@ import java.util.UUID;
 @Builder
 public record TagDto(
         UUID id,
-        String name
+        String name,
+        int countPosts
 ) {
 }
