@@ -5,6 +5,9 @@ import com.proj.forum.entity.Notification;
 import com.proj.forum.repository.NotificationRepository;
 import com.proj.forum.service.NotificationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,8 +20,9 @@ public class NotificationServiceImpl implements NotificationService {
     private final NotificationRepository notificationRepository;
 
     @Override
-    public List<Notification> getUnreadNotifications(UUID userId) {
-        return notificationRepository.findAllByUserIdAndReadIsFalse(userId);
+    public List<Notification> getUnreadNotifications(UUID userId, Integer page, Integer amount) {
+        Pageable pageable = PageRequest.of(page, amount, Sort.by("createdAt").descending());
+        return notificationRepository.findAllByUserIdAndReadIsFalse(userId, pageable).getContent();
     }
 
     @Override

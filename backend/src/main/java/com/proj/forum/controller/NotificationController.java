@@ -5,12 +5,14 @@ import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.entity.Notification;
 import com.proj.forum.service.NotificationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -25,9 +27,11 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
-    @GetMapping("/unread/{userId}")
-    public List<Notification> getUnreadNotifications(@PathVariable UUID userId) {
-        return notificationService.getUnreadNotifications(userId);
+    @GetMapping("/unread/{userId}/")
+    public List<Notification> getUnreadNotifications(@PathVariable UUID userId,
+                                                     @RequestParam Integer page,
+                                                     @RequestParam Integer amount) {
+        return notificationService.getUnreadNotifications(userId, page, amount);
     }
 
     @PatchMapping("/read/{notificationId}")
