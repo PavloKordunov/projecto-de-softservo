@@ -63,6 +63,13 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public CommentDto getCommentById(UUID commentId){
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                ()-> new EntityNotFoundException("Comment not found"));
+        return mapToCommentDto(comment);
+    }
+
+    @Override
     public void deleteComment(UUID id) {
         if (commentRepository.existsById(id)) {
             commentRepository.deleteById(id);
