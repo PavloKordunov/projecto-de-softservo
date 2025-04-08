@@ -5,10 +5,7 @@ import com.proj.forum.entity.Comment;
 import com.proj.forum.entity.Post;
 import com.proj.forum.entity.Topic;
 import com.proj.forum.entity.User;
-import com.proj.forum.repository.CommentRepository;
-import com.proj.forum.repository.PostRepository;
-import com.proj.forum.repository.TopicRepository;
-import com.proj.forum.repository.UserRepository;
+import com.proj.forum.repository.*;
 import com.proj.forum.service.CommentService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -26,6 +23,7 @@ import java.util.UUID;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
+    private final UserStatisticRepository userStatisticRepository;
     private final UserRepository userRepository;
     private final TopicRepository topicRepository;
     private final PostRepository postRepository;
@@ -73,6 +71,12 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
+    @Override
+    public List<CommentDto> getAllRepliesById(UUID parentId){
+        List<Comment> comments = commentRepository.findAllByParentCommentId(parentId);
+        return mapToListOfCommentsDto(comments);
+    }
+
 
     private static Comment mapToComment(CommentDto commentDto, User user, Post post, Topic topic) {
         return Comment.builder()
@@ -87,11 +91,15 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDto mapToCommentDto(Comment comment) {
+        Integer countReplies = commentRepository.countByParentCommentId(comment.getId());
+        Integer countLikes = userStatisticRepository.getTotalLikes(comment.getId());
         return CommentDto.builder()
                 .id(comment.getId())
                 .content(comment.getContent())
                 .image(comment.getImage())
                 .parentComment(comment.getParentComment() == null ? null : comment.getParentComment().getId())
+                .countReplies(countReplies)
+                .countLikes(countLikes)
                 .userId(comment.getUser().getId())
                 .nickName(comment.getUser().getUsername())
                 .userName(comment.getUser().getName())

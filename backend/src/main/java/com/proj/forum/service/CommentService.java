@@ -10,6 +10,10 @@ public interface CommentService {
     CommentDto createComment(CommentDto commentDto);
     List<CommentDto> getCommentsByPostId(UUID objectId);
     void deleteComment(UUID id);
+
+
+    List<CommentDto> getAllRepliesById(UUID parentId);
+
     CommentDto mapToCommentDto(Comment comment);
     List<CommentDto> mapToListOfCommentsDto(List<Comment> comments);
 }

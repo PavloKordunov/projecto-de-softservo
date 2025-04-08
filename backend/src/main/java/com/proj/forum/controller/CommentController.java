@@ -42,4 +42,10 @@ public class CommentController {
         commentService.deleteComment(id);
         return ApiResponse.apiResponse(true, 200, "Delete comment", null);
     }
+
+    @GetMapping("/replies/{commentId}")
+    public ApiResponse<List<CommentDto>> getAllRepliesByCommentId(@PathVariable UUID commentId){
+        List<CommentDto> comments = commentService.getAllRepliesById(commentId);
+        return new ApiResponse<>(true, HttpStatus.OK, "Get all replies by comment id", comments);
+    }
 }

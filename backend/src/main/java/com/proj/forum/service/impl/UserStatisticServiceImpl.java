@@ -19,7 +19,7 @@ public class UserStatisticServiceImpl implements UserStatisticService {
     private final UserStatisticRepository userStatisticRepository;
 
     @Override
-    public StatisticDto likePost(StatisticDto statisticDto) {
+    public StatisticDto likeObject(StatisticDto statisticDto) {
         if (userStatisticRepository.existsByObjectIdAndUserId(statisticDto.objectId(), statisticDto.userId())) {
             Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(statisticDto.objectId(), statisticDto.userId()).get();
 

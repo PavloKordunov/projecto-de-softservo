@@ -16,6 +16,8 @@ public record CommentDto(
         String userImage,
         String nickName,
         String userName,
-        UUID parentComment
+        UUID parentComment,
+        Integer countReplies,
+        Integer countLikes
 ) {
 }

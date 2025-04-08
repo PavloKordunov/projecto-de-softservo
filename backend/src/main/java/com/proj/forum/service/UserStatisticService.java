@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.UUID;
 
 public interface UserStatisticService {
-    StatisticDto likePost(StatisticDto statisticDto);
+    StatisticDto likeObject(StatisticDto statisticDto);
+
     StatisticDto savePost(StatisticDto statisticDto);
     StatisticDto rateTopic(StatisticDto statisticDto);
 
