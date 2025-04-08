@@ -1,7 +1,6 @@
 package com.proj.forum.service.impl;
 
 import com.proj.forum.dto.CommentDto;
-import com.proj.forum.dto.PostResponseDto;
 import com.proj.forum.entity.Comment;
 import com.proj.forum.entity.Post;
 import com.proj.forum.entity.Statistic;
@@ -20,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,7 +106,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentDto> getAllRepliesById(UUID objectId) {
-        List<Comment> comments = commentRepository.findAllByParentCommentId(objectId);
+        Comment parent = commentRepository.findById(objectId).orElse(null);
+        if (parent == null) return Collections.emptyList();
+
+        List<Comment> comments = new ArrayList<>();
+        collectAllReplies(parent, comments);
 
         String email = getEmail();
         User user = userRepository.findByEmail(email).orElse(null);
@@ -114,16 +118,28 @@ public class CommentServiceImpl implements CommentService {
         if (user == null) {
             return mapToListOfCommentsDto(comments, null);
         }
+
         Map<Comment, Statistic> statisticMap = new HashMap<>();
         for (Comment comment : comments) {
-            Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(comment.getId(), user.getId()).orElse(null);
+            Statistic statistic = userStatisticRepository
+                    .getStatisticByObjectIdAndUserId(comment.getId(), user.getId())
+                    .orElse(null);
             statisticMap.put(comment, statistic);
         }
+
         List<CommentDto> commentDtos = new ArrayList<>();
         for (Comment comment : statisticMap.keySet()){
             commentDtos.add(mapToCommentDto(comment, statisticMap.get(comment)));
         }
         return commentDtos;
+    }
+
+    private void collectAllReplies(Comment parent, List<Comment> result) {
+        List<Comment> replies = commentRepository.findAllByParentCommentId(parent.getId());
+        for (Comment reply : replies) {
+            result.add(reply);
+            collectAllReplies(reply, result);
+        }
     }
 
     private static Comment mapToComment(CommentDto commentDto, User user, Post post, Topic topic) {
