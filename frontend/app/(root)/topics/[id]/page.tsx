@@ -23,6 +23,7 @@ interface Post {
   actor: string;
   trailerURL: string;
   groupId: string;
+  tagDtos: any[];
 }
 
 const AdminPost = () => {
@@ -168,16 +169,13 @@ const AdminPost = () => {
             </p>
           </a>
             {showTrailerModal && <TrailerModal setShowTrailerModal={setShowTrailerModal} trailerUrl={trailerUrl} />}
-          <ul className="flex gap-3 mb-4">
-            {['живучі', 'хоррор', 'слешер'].map((tag, index) => (
-              <li
-                key={index}
-                className={`flex justify-center items-center w-[70px] h-[32px]  ${theme === 'dark' ? 'bg-[#2C353D]' : 'bg-[#B5B5B5]'} rounded-[26px]`}
-              >
-                <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-sm font-semibold`}>{tag}</p>
-              </li>
-            ))}
-          </ul>
+            <div className="flex gap-3 items-center mb-5">
+              {topic?.tagDtos && topic.tagDtos.map((tag) => (
+                  <Link href={`/tag/${tag.id}`} key={tag.id} className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#EAEAEA]'} rounded-[24px]`}>
+                      <p className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-semibold`}>{tag.name}</p>
+                  </Link>
+              ))}
+            </div>
           <ul className="flex items-center gap-2 mb-4">
             <li className="flex">
               {[...Array(5)].map((_, index) => (
@@ -224,7 +222,7 @@ const AdminPost = () => {
               <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg font-bold`}>Актори:</p>
             </li>
             <li>
-              <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg`}>IMBD: <strong>{topic?.IMDB}/10</strong> (29К)</p>
+              <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg`}>IMBD: <strong>{topic?.IMDB}/10</strong></p>
               <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg`}>2024</p>
               <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg`}>{topic?.country}</p>
               <p className={`${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} text-lg`}>{topic?.duration}</p>

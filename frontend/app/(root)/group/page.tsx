@@ -131,7 +131,7 @@ const GroupPage = () => {
                                     <p className={`text-[13px]  ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-semibold`}>страшний</p>
                                 </div>
                             </div>
-                            <p className={`text-[14px] ${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold mr-4 mt-1`}>317,731 Підписників</p>
+                            <p className={`text-[14px] ${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold mr-4 mt-1`}>{group.memberCount} Підписників</p>
                         </div>
                     </div>
                 </Link>
