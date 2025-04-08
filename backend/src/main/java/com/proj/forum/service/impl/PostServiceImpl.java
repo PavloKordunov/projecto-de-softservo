@@ -343,7 +343,7 @@ public class PostServiceImpl implements PostService {
                                                      Integer countLikes, Integer countSaved, Integer countComments) {
 
         List<TagDto> tags = getTagDtos(post);
-        List<CommentDto> comments = commentService.mapToListOfCommentsDto(post.getComments());
+        List<CommentDto> comments = commentService.getCommentsByObjectId(post.getId());
         return PostResponseDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
@@ -396,7 +396,7 @@ public class PostServiceImpl implements PostService {
     }
 
     private PostResponseDto getUpdatePost(Post post) {
-        List<CommentDto> comments = commentService.mapToListOfCommentsDto(post.getComments());
+        List<CommentDto> comments = commentService.getCommentsByObjectId(post.getId());
 
         return PostResponseDto.builder()
                 .id(post.getId())

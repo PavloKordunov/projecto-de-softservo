@@ -32,7 +32,7 @@ public class CommentController {
 
     @GetMapping("/objectId/{id}")
     public ApiResponse<List<CommentDto>> getAllCommentsByObjectId(@PathVariable UUID id){
-        List<CommentDto> comments = commentService.getCommentsByPostId(id);
+        List<CommentDto> comments = commentService.getCommentsByObjectId(id);
         return new ApiResponse<>(true, HttpStatus.OK, "Get comments by object", comments);
     }
 
