@@ -165,7 +165,8 @@ const AdminPostMenu = () => {
                     description: formData.description,
                     userId: user?.id,
                     isPublic: true,
-                    image: formData.image
+                    image: formData.image,
+                    tagsId: formData.tagsId,
                 }),
             });
             const data = await res.json();

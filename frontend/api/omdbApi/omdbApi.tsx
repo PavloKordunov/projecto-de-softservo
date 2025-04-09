@@ -1,4 +1,4 @@
-const API_KEY: string = '1a243e1a';
+const API_KEY: string = 'd0281bd1';
 const BASE_URL: string = 'https://www.omdbapi.com';
 
 interface MovieSearchResult {

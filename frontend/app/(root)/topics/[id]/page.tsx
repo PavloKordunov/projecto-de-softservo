@@ -62,7 +62,7 @@ const AdminPost = () => {
       };
       const getComments = async() =>{
         try {
-            const res = await fetch(`https://localhost:8080/api/comments/id/${topicId}`, {
+            const res = await fetch(`https://localhost:8080/api/comments/objectId/${topicId}`, {
               mode: "cors",
             })
             const data = await res.json()

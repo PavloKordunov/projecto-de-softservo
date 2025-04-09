@@ -120,16 +120,12 @@ const GroupPage = () => {
                             <strong>Опис: </strong>{group?.description}
                         </p>
                         <div className="flex justify-between">
-                            <div className="flex gap-3 items-center mb-3">
-                                <div className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} rounded-[24px]`}>
-                                    <p className={`text-[13px]  ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-semibold`}>фільм</p>
+                            <  div className="flex gap-3 items-center">
+                            {group.tagDtos && group.tagDtos.map((tag: any) => (
+                                <div key={tag.id} className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#EAEAEA]'} rounded-[24px]`}>
+                                    <p className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-semibold`}>{tag.name}</p>
                                 </div>
-                                <div className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} rounded-[24px]`}>
-                                    <p className={`text-[13px]  ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-semibold`}>хоррор</p>
-                                </div>
-                                <div className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} rounded-[24px]`}>
-                                    <p className={`text-[13px]  ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-semibold`}>страшний</p>
-                                </div>
+                            ))}
                             </div>
                             <p className={`text-[14px] ${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold mr-4 mt-1`}>{group.memberCount} Підписників</p>
                         </div>

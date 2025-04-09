@@ -109,7 +109,7 @@ const TagPage = () => {
                 </div>
             </div>
             <div className={`flex gap-5 mb-4 ${theme === 'dark' ? 'bg-MainColor' : 'bg-[#E4E3E3]'} rounded-[21px] px-5 py-4 w-fit`}>
-                <button onClick={() => setCategory('post')} className={`px-5 py-3 ${category === "post" ? "bg-AccnetColor" : "bg-[#434C55]"} rounded-[8px] text-white text-[16px] font-bold gap-1 flex items-center`}>Пости</button>
+                <button onClick={() => setCategory('post')} className={`px-5 py-3 ${category === "post" ? "bg-AccnetColor" : "bg-[#434C55]"} rounded-[8px] text-white text-[16px] font-bold gap-1 flex items-center`}>Дописи</button>
                 <button onClick={() => setCategory('topic')} className={`px-5 py-3 ${category === "topic" ? "bg-AccnetColor" : "bg-[#434C55]"} rounded-[8px] text-white text-[16px] font-bold gap-1 flex items-center`}>Теми</button>
                 <button onClick={() => setCategory('group')} className={`px-5 py-3 ${category === "group" ? "bg-AccnetColor" : "bg-[#434C55]"} rounded-[8px] text-white text-[16px] font-bold gap-1 flex items-center`}>Групи</button>
             </div>

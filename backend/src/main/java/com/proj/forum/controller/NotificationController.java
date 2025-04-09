@@ -27,7 +27,7 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
-    @GetMapping("/unread/{userId}/")
+    @GetMapping("/unread/{userId}")
     public List<Notification> getUnreadNotifications(@PathVariable UUID userId,
                                                      @RequestParam Integer page,
                                                      @RequestParam Integer amount) {

@@ -5,6 +5,7 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { MovieDetails } from "@/api/omdbApi/omdbApi";
 import { useTheme } from "next-themes";
+import Image from "next/image";
 
 interface MovieCalendarProps {
     onClose: () => void;
@@ -23,6 +24,7 @@ const CalendarWidget = ({ onClose, movies }: MovieCalendarProps) => {
     const movieDates = movies.map((movie) => ({
         date: new Date(movie.Released),
         title: movie.Title,
+        poster: movie.Poster
     }));
 
     const isMovieDate = (date: Date) =>
@@ -78,6 +80,7 @@ const CalendarWidget = ({ onClose, movies }: MovieCalendarProps) => {
                                 )
                                 .map((movie) => (
                                     <li key={movie.imdbID} className={`text-sm rounded-[10px] p-[10px] text-AccnetColor ${theme === 'dark' ? 'text-AccnetColor' : 'text-AccnetColor bg-[#EAEAEA]'}`}>
+                                        {movie.Poster !== "N/A" && <Image src={movie.Poster} alt="" width={80} height={70} className="mb-3"/>}
                                         {movie.Title}
                                     </li>
                                 ))}
