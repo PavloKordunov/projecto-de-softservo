@@ -30,9 +30,9 @@ public class CommentController {
         return new ApiResponse<>(true, HttpStatus.CREATED, "Create comment", comment);
     }
 
-    @GetMapping("/id/{id}")
+    @GetMapping("/objectId/{id}")
     public ApiResponse<List<CommentDto>> getAllCommentsByObjectId(@PathVariable UUID id){
-        List<CommentDto> comments = commentService.getCommentsByPostId(id);
+        List<CommentDto> comments = commentService.getCommentsByObjectId(id);
         return new ApiResponse<>(true, HttpStatus.OK, "Get comments by object", comments);
     }
 
@@ -41,5 +41,17 @@ public class CommentController {
     public ApiResponse<?> deleteComment(@PathVariable @Valid UUID id){
         commentService.deleteComment(id);
         return ApiResponse.apiResponse(true, 200, "Delete comment", null);
+    }
+
+    @GetMapping("/replies/{commentId}")
+    public ApiResponse<List<CommentDto>> getAllRepliesByCommentId(@PathVariable UUID commentId){
+        List<CommentDto> comments = commentService.getAllRepliesById(commentId);
+        return new ApiResponse<>(true, HttpStatus.OK, "Get all replies by comment id", comments);
+    }
+
+    @GetMapping("/id/{id}")
+    public ApiResponse<CommentDto> getCommentById(@PathVariable UUID id){
+        CommentDto comment = commentService.getCommentById(id);
+        return new ApiResponse<>(true, HttpStatus.OK, "Comment is found", comment);
     }
 }

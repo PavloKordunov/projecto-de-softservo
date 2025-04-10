@@ -24,8 +24,8 @@ public class UserStatisticController {
 
     @RequireRoles(RoleType.USER)
     @PostMapping("/like")
-    public ApiResponse<StatisticDto> likePost(@RequestBody @Valid StatisticDto statisticDto) {
-        StatisticDto newStatisticDto = userStatisticService.likePost(statisticDto);
+    public ApiResponse<StatisticDto> likeObject(@RequestBody @Valid StatisticDto statisticDto) {
+        StatisticDto newStatisticDto = userStatisticService.likeObject(statisticDto);
         return new ApiResponse<>(true, HttpStatus.CREATED, "Statistic create successfully", newStatisticDto);
     }
 

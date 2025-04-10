@@ -4,6 +4,7 @@ import com.proj.forum.annotation.Logging;
 import com.proj.forum.annotation.RequireRoles;
 import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.GenericResponse;
+import com.proj.forum.dto.ListResponse;
 import com.proj.forum.dto.TopicDto;
 import com.proj.forum.enums.RoleType;
 import com.proj.forum.service.TopicService;
@@ -87,5 +88,11 @@ public class TopicController {
             @RequestParam(defaultValue = "desc") String order) {
         List<TopicDto> topics = topicService.getAllTopics(sort, order);
         return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Topics found", topics);
+    }
+
+    @GetMapping("tag/{tagId}")
+    public ListResponse<List<TopicDto>> getAllTopicsByTagId(@PathVariable UUID tagId) {
+        List<TopicDto> topics = topicService.getAllTopicsByTagId(tagId);
+        return new ListResponse<>(true, HttpStatusCode.valueOf(200), "Topics found",topics.size(), topics);
     }
 }

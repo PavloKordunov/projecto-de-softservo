@@ -2,6 +2,7 @@ package com.proj.forum.service.impl;
 
 import com.proj.forum.dto.GroupDto;
 import com.proj.forum.entity.Group;
+import com.proj.forum.entity.Post;
 import com.proj.forum.entity.User;
 import com.proj.forum.repository.GroupRepository;
 import com.proj.forum.repository.UserRepository;
@@ -51,6 +52,12 @@ public class GroupServiceImpl implements GroupService {
             throw new EntityNotFoundException("Group not found");
         }
 
+        return mapToGroupDtoList(groupList);
+    }
+
+    @Override
+    public List<GroupDto> getGroupsByTag(UUID tagId) {
+        List<Group> groupList = groupRepository.findAllByTag_Id(tagId);
         return mapToGroupDtoList(groupList);
     }
 

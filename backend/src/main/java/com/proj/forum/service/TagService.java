@@ -11,4 +11,6 @@ public interface TagService {
     TagDto getTag(UUID id);
 
     List<TagDto> searchTags(String query);
+
+    List<TagDto> getSortedTagsByCountPosts();
 }

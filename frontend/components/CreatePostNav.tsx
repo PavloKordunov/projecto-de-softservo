@@ -13,6 +13,7 @@ const CreatePostNav = () => {
     const [isShow, setIsShow] = useState(false)
     const { theme, setTheme } = useTheme();
     const { user } = useUser();
+    const [userState, setUserState] = useState<any>(null);
 
     const { authState } = useOktaAuth();
     const router = useRouter();
@@ -26,12 +27,25 @@ const CreatePostNav = () => {
         setIsShow(!isShow)
     }
 
+    useEffect(() => {
+        const getUserById = async () => {
+            const res = await fetch(`https://localhost:8080/api/users/id/${user?.id}`, {
+                mode: "cors",
+            });
+            const data = await res.json();
+            setUserState(data.body); 
+            console.log(data);
+        };
+
+        getUserById();
+    }, []);
+
     return (
         <div className={`flex w-fit ax-w-[800px] mx-auto mt-[5px] md:mt-4 justify-center ${theme === 'dark' ? 'bg-MainColor' : 'bg-[#EAEAEA]'} md:p-6 p-[10px] rounded-[21px] gap-[10px] md:gap-6 mb-[10px] md:mb-6`}>
             <div className="w-[60px] h-[60px] overflow-hidden rounded-full"> 
-                {user?.img ? (
+                {userState?.profileImage ? (
                     <Image 
-                    src={user.image} 
+                    src={userState.profileImage} 
                     alt=''
                     width={42} 
                     height={42}
