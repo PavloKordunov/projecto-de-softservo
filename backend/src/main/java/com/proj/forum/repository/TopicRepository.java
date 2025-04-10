@@ -16,6 +16,8 @@ public interface TopicRepository extends JpaRepository<Topic, UUID> {
     List<Topic> findByTitleContainingIgnoreCase(String name);
     List<Topic> findByGenreContainingIgnoreCase(String genre, Sort sort);
     List<Topic> findByGenreContainingIgnoreCase(String genre);
+    List<Topic> findAllByTagsId(UUID tagId);
+
     @Query("""
     SELECT t FROM Topic t
     LEFT JOIN Statistic s ON t.id = s.objectId

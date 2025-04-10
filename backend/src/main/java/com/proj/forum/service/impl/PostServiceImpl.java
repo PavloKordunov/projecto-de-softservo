@@ -9,18 +9,16 @@ import com.proj.forum.entity.Post;
 import com.proj.forum.entity.Statistic;
 import com.proj.forum.entity.Tag;
 import com.proj.forum.entity.User;
-import com.proj.forum.repository.GroupRepository;
-import com.proj.forum.repository.PostRepository;
-import com.proj.forum.repository.TagRepository;
-import com.proj.forum.repository.UserRepository;
-import com.proj.forum.repository.UserStatisticRepository;
+import com.proj.forum.repository.*;
 import com.proj.forum.service.CommentService;
+import com.proj.forum.service.NotificationService;
 import com.proj.forum.service.PostService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Sort;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -33,10 +31,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
 @Transactional("postgreTransactionManager")
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
@@ -45,8 +41,13 @@ public class PostServiceImpl implements PostService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private final UserStatisticRepository userStatisticRepository;
+    private final CommentRepository commentRepository;
+
+    private final NotificationService notificationService;
     private final TagRepository tagRepository;
     private final CommentService commentService;
+
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Override
     public UUID createPost(PostRequestDto postDto) {
@@ -60,6 +61,10 @@ public class PostServiceImpl implements PostService {
         List<Tag> tags = tagRepository.findAllById(postDto.tagsId());
         Post post = mapToPost(postDto, user, group, tags);
         Post postFromDB = postRepository.save(post);
+
+        //notify
+        sendNotifications(postFromDB);
+
         return postFromDB.getId();
     }
 
@@ -87,13 +92,14 @@ public class PostServiceImpl implements PostService {
         String email = getEmail();
         Integer countLikes = getCountLikes(post);
         Integer countSaved = getCountSaved(post);
+        Integer countComments = getCountComments(post);
         if (email == null) {
-            return stickPostDtoAndStatistic(post, null, countLikes, countSaved);
+            return stickPostDtoAndStatistic(post, null, countLikes, countSaved, countComments);
         }
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(id, user.getId()).orElse(null);
-        return stickPostDtoAndStatistic(post, statistic, countLikes, countSaved);
+        return stickPostDtoAndStatistic(post, statistic, countLikes, countSaved, countComments);
     }
 
     @Override
@@ -112,7 +118,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostResponseDto> getPostsByTag(UUID tagId){
+    public List<PostResponseDto> getPostsByTag(UUID tagId) {
         List<Post> postList = postRepository.findAllByTag_Id(tagId);
         return getPostResponseDtos(postList);
     }
@@ -267,7 +273,8 @@ public class PostServiceImpl implements PostService {
             for (Post post : postList) {
                 Integer countLikes = getCountLikes(post);
                 Integer countSaved = getCountSaved(post);
-                postDtoList.add(stickPostDtoAndStatistic(post, null, countLikes, countSaved));
+                Integer countComments = getCountComments(post);
+                postDtoList.add(stickPostDtoAndStatistic(post, null, countLikes, countSaved, countComments));
             }
             return postDtoList;
         }
@@ -278,7 +285,8 @@ public class PostServiceImpl implements PostService {
 
             Integer countLikes = getCountLikes(post);
             Integer countSaved = getCountSaved(post);
-            postDtoList.add(stickPostDtoAndStatistic(post, statistic, countLikes, countSaved));
+            Integer countComments = getCountComments(post);
+            postDtoList.add(stickPostDtoAndStatistic(post, statistic, countLikes, countSaved, countComments));
         }
         return postDtoList;
     }
@@ -287,13 +295,14 @@ public class PostServiceImpl implements PostService {
         String email = getEmail();
         Integer countLikes = getCountLikes(post);
         Integer countSaved = getCountSaved(post);
+        Integer countComments = getCountComments(post);
         if (email == null) {
-            return stickPostDtoAndStatistic(post, null, countLikes, countSaved);
+            return stickPostDtoAndStatistic(post, null, countLikes, countSaved, countComments);
         }
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         Statistic statistic = userStatisticRepository.getStatisticByObjectIdAndUserId(post.getId(), user.getId()).orElse(null);
-        return stickPostDtoAndStatistic(post, statistic, countLikes, countSaved);
+        return stickPostDtoAndStatistic(post, statistic, countLikes, countSaved, countComments);
     }
 
     private Integer getCountLikes(Post post) {
@@ -303,6 +312,8 @@ public class PostServiceImpl implements PostService {
     private Integer getCountSaved(Post post) {
         return userStatisticRepository.countStatisticByObjectIdAndSavedIsTrue(post.getId());
     }
+
+    private Integer getCountComments(Post post) {return commentRepository.countByPostId(post.getId());}
 
     private Post getUpdatePost(Post post, PostRequestDto postDto) {
         if (postDto.title() != null)
@@ -329,10 +340,10 @@ public class PostServiceImpl implements PostService {
     }
 
     private PostResponseDto stickPostDtoAndStatistic(Post post, Statistic statistic,
-                                                     Integer countLikes, Integer countSaved) {
+                                                     Integer countLikes, Integer countSaved, Integer countComments) {
 
         List<TagDto> tags = getTagDtos(post);
-        List<CommentDto> comments = commentService.mapToListOfCommentsDto(post.getComments());
+        List<CommentDto> comments = commentService.getCommentsByObjectId(post.getId());
         return PostResponseDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
@@ -353,6 +364,7 @@ public class PostServiceImpl implements PostService {
                 .isSaved(statistic != null && statistic.getSaved())
                 .countLikes(countLikes)
                 .countSaved(countSaved)
+                .countComments(countComments)
                 .build();
     }
 
@@ -384,7 +396,7 @@ public class PostServiceImpl implements PostService {
     }
 
     private PostResponseDto getUpdatePost(Post post) {
-        List<CommentDto> comments = commentService.mapToListOfCommentsDto(post.getComments());
+        List<CommentDto> comments = commentService.getCommentsByObjectId(post.getId());
 
         return PostResponseDto.builder()
                 .id(post.getId())
@@ -405,6 +417,23 @@ public class PostServiceImpl implements PostService {
                 .isSaved(false)
                 .isLiked(null)
                 .build();
+    }
+
+
+    private void sendNotifications(Post post) {
+        List<User> followers = userRepository.findUsersFollowingGroup(post.getGroup().getId());
+
+        for (User follower : followers) {
+            String message = "New post '" + post.getTitle() + "' in '" + post.getGroup().getTitle() + "'";
+
+            notificationService.createNotification(follower.getId(), post.getGroup(), message);
+
+            messagingTemplate.convertAndSendToUser(
+                    follower.getId().toString(),
+                    "/queue/notifications",
+                    message
+            );
+        }
     }
 }
 

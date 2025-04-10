@@ -23,10 +23,7 @@ public class SecurityConfig {
                 csrf(CsrfConfigurer::disable) //TODO need to investigate
                 //csrf(csrf -> csrf.ignoringRequestMatchers("/api/**")) <- this line is more up-to-date
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/**")
-                        .permitAll()
-                        //.hasRole()
-                        //TODO investigate role split
+                        .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/ws/**").permitAll())
                 .oauth2ResourceServer(oauth2 ->
                         oauth2.jwt(Customizer.withDefaults())

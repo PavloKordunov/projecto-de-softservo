@@ -27,7 +27,8 @@ public record PostResponseDto(
         Boolean isLiked,
         boolean isSaved,
         Integer countLikes,
-        Integer countSaved
+        Integer countSaved,
+        Integer countComments
         ) {
 
 }

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class TestEntity {
     public static PostRequestDto getPostRequestDto() {
         return PostRequestDto.builder()
-                .tagId(tagId)
+                //.tagId(tagId)
                 .title(titlePostDto)
                 .userId(userId)
                 .groupId(groupId)

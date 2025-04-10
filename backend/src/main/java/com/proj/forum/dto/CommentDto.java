@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
@@ -16,6 +17,10 @@ public record CommentDto(
         String userImage,
         String nickName,
         String userName,
-        UUID parentComment
+        UUID parentComment,
+        Integer countReplies,
+        Integer countLikes,
+        LocalDateTime createdAt,
+        Boolean isLiked
 ) {
 }

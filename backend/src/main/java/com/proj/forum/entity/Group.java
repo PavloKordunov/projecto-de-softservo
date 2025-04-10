@@ -27,7 +27,16 @@ public class Group {
     private String title;
 
     private String description;
-    
+
+    @ManyToMany
+    @JoinTable(
+            name = "tag_group",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private List<Tag> tags;
+
+
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true) //is there a need of args in ()?
     private List<Post> posts;
 

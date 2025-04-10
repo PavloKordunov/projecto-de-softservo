@@ -22,4 +22,6 @@ public interface TopicService {
     List<TopicDto> getAllTopics(String sort, String order);
 
     List<TopicDto> getAllTopicsByGenre(String genre, String sort, String order);
+
+    List<TopicDto> getAllTopicsByTagId(UUID tagId);
 }

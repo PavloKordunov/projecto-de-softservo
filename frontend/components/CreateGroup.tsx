@@ -2,17 +2,26 @@ import { useUser } from "@/hooks/useUser";
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 
+interface Tag {
+    id: string;
+    name: string;
+}
+
 const CreateGroup = ({ handleShow }: { handleShow: () => void }) => {
     const { user } = useUser();
     const [isPublic, setIsPublic] = useState<boolean | null>(false);
     const { theme } = useTheme();
     const [base64, setBase64] = useState<string | null>(null);
+    const [tags, setTags] = useState<Tag[]>([]);
+    const [tagQuery, setTagQuery] = useState("");
+    const [suggestedTags, setSuggestedTags] = useState<Tag[]>([]);
 
     const [group, setGroup] = useState({
         title: "",
         description: "",
         userId: user?.id,
         isPublic: isPublic,
+        tagsId: [] as string[],
     });
 
     useEffect(() => {
@@ -23,6 +32,21 @@ const CreateGroup = ({ handleShow }: { handleShow: () => void }) => {
         const { name, value } = e.target;
         setGroup((prev) => ({ ...prev, [name]: value }));
     };
+
+    useEffect(() => {
+            if (tagQuery.trim() !== "") {
+                fetch(`https://localhost:8080/api/tags/search?query=${tagQuery}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            setSuggestedTags(data.body);
+                        }
+                    })
+                    .catch(err => console.log(err));
+            } else {
+                setSuggestedTags([]);
+            }
+        }, [tagQuery]);
 
     const handleCreateGroup = async () => {
         try {
@@ -60,6 +84,19 @@ const CreateGroup = ({ handleShow }: { handleShow: () => void }) => {
         };
         reader.readAsDataURL(file);
     }
+
+
+    const addTag = (tag: Tag) => {
+        if (!group.tagsId.includes(tag.id)) {
+            setGroup((prev) => ({
+                ...prev,
+                tagsId: [...prev.tagsId, tag.id]
+            }));
+            setTags((prev) => [...prev, tag]);
+        }
+        setTagQuery("");
+        setSuggestedTags([]);
+    };
 
 
     return (
@@ -120,6 +157,30 @@ const CreateGroup = ({ handleShow }: { handleShow: () => void }) => {
                         className={`w-[450px] h-28 px-4 py-2 resize-none ${theme === 'dark' ? 'bg-SecondaryColor text-white' : 'bg-[#EAEAEA] text-black'} border-none rounded-[10px] mb-3 focus:outline-none`}
                         placeholder="Введіть опис..."
                     ></textarea>
+                </div>
+                <div className="flex gap-16 items-center mb-6">
+                    <p className={`text-[18px] ${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold`}>Назва: </p>
+                    <div className="relative flex items-center gap-4">
+                    {tags.length > 0 &&<div className="flex flex-wrap gap-2">
+                        {tags.map(tag => (
+                        <div key={tag.id} className={`${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} px-4 py-2 rounded-[31px] w-fit`}>
+                            <p className="text-[14px] text-[#858EAD] font-semibold">{tag.name}</p>
+                        </div>
+                        ))}
+                    </div>}
+                    <div className="relative">
+                        <div className={`${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} px-2 rounded-[31px] items-center justify-center w-fit`}>
+                            <input type="text" value={tagQuery} onChange={(e) => setTagQuery(e.target.value)} className={`px-1 mt-3 text-[14px] font-semibold w-[88px] h-4 ${theme === 'dark' ? 'bg-SecondaryColor text-white' : 'bg-[#B5B5B5] text-black'} border-none rounded-[10px] mb-3 focus:outline-none`} placeholder="додати тег" />
+                        </div>
+                        {suggestedTags.length > 0 && (
+                            <ul className="absolute w-[200px] p-4 bg-SecondaryColor rounded-[31px] shadow-md">
+                                {suggestedTags.map(tag => (
+                                    <li key={tag.id} className="px-2 py-1 cursor-pointer hover:bg-[#3A464F] transition-colors" onClick={() => addTag(tag)}>{tag.name}</li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+                </div>
                 </div>
                 <div className="flex gap-9 items-center mb-6">
                     <p className={`text-[18px] ${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold`}>Світлина:</p>

@@ -209,9 +209,9 @@ const UserPage = () => {
                 </div>
             </div>
 
-            {user?.id !== userId && <div className="flex items-center ml-9 gap-6 mb-5">
-                <button onClick={subscribeUser} className={`px-4 py-1 ${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'} rounded-[31px]  text-[16px] font-bold`}>підписатись</button>
-                <button className={`px-4 py-1  rounded-[31px] ${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'} text-[16px] font-bold`}>Написати</button>
+            {user?.id !== userId && <div className="flex justify-end items-center mr-12 gap-6 mb-5">
+                <button onClick={subscribeUser} className={`px-4 py-3 ${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'} rounded-[11px]  text-[16px] font-bold`}>підписатись</button>
+                <button className={`px-4 py-3 rounded-[11px] ${theme === 'dark' ? 'bg-[#434C55] text-white' : 'bg-[#B5B5B5] text-black'} text-[16px] font-bold`}>Написати</button>
             </div>}
 
             <div className="flex items-center ml-9 gap-6 mb-10">

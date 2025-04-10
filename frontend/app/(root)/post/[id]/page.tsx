@@ -8,6 +8,8 @@ import {useUser} from '@/hooks/useUser';
 import {set} from 'date-fns';
 import EditPost from '@/components/EditPost';
 import { useTheme } from "next-themes";
+import { parseDate } from '@/lib/dataParser';
+import CreateCommentModal from '@/components/createCommentModal';
 
 interface Post {
     id: string;
@@ -26,6 +28,9 @@ interface Post {
     countLikes: number;
     countSaved: number;
     userImage: string;
+    tagDtos: any[];
+    createdAt: string;
+    countComments: number;
 }
 
 const PostPage = () => {
@@ -47,6 +52,7 @@ const PostPage = () => {
     const [countLikes, setCountLikes] = useState<number>(0);
     const [countSaved, setCountSaved] = useState<number>(0);
     const { theme, setTheme } = useTheme();
+    const [createCommentModal , setCreateCommentModal] = useState(false);
   
     const likeDislike = async (liked: boolean | null) => {
         if (!user) return;
@@ -184,7 +190,7 @@ const PostPage = () => {
 
         const getComments = async () => {
             try {
-                const res = await fetch(`https://localhost:8080/api/comments/id/${postId}`, {
+                const res = await fetch(`https://localhost:8080/api/comments/objectId/${postId}`, {
                     mode: "cors",
                 })
                 const data = await res.json()
@@ -211,7 +217,10 @@ const PostPage = () => {
                 body: JSON.stringify(commentData)
             })
             const data = await res.json()
-            commentData.content = ""
+            setCommentData((prev: any) => ({
+                ...prev,
+                content: "",
+              }));
             console.log(data)
         } catch (error) {
             console.log(error)
@@ -220,6 +229,10 @@ const PostPage = () => {
 
     const handleShow = () => {
         setShowUpdatePost(!showUpdatePost)
+    }
+
+    const handleCloseModal = () => {
+        setCreateCommentModal(false);
     }
 
     if (!post) {
@@ -236,26 +249,24 @@ const PostPage = () => {
                     </Link>
                     <div className='flex items-center gap-3'>
                         {post?.userId === user?.id && <svg onClick={handleShow} className="w-6 h-6" fill="#C5D0E6" >
-                            <use href={`/sprite.svg#changeProfileIcon`} />
+                            <use href={`/sprite.svg?v=1#icon-edit`} />
                         </svg>}
-                        <div className={`${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} p-[2px] rounded-[20px] flex gap-2 items-center`}>
-                            <Image src="/view.png" alt="" width={42} height={42}/>
+                        <div className={`${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} p-2 rounded-[20px] flex gap-2 items-center`}>
+                            <svg className="ml-1 w-6 h-6" fill="#C5D0E6" >
+                                <use href={`/sprite.svg?v=1#icon-eye`} />
+                            </svg>
                             <p className={`text-[18px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'}`}>{post.viewCount}</p>
                         </div>
                     </div>
                 </div>
                 <p className={`text-[24px] ${theme === 'dark' ? 'text-white' : 'text-black'} font-bold mb-4`}>{post.title}</p>
                 <p className={`text-[18px] ${theme === 'dark' ? 'text-white' : 'text-black'} mb-3`}>{post.description}</p>
-                <div className="flex gap-3 items-center mb-3">
-                    <div className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} rounded-[24px]`}>
-                        <p className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-semibold`}>фільм</p>
-                    </div>
-                    <div className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} rounded-[24px]`}>
-                        <p className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-semibold`}>хоррор</p>
-                    </div>
-                    <div className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#B5B5B5]'} rounded-[24px]`}>
-                        <p className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-semibold`}>страшний</p>
-                    </div>
+                <div className="flex gap-3 items-center mb-5">
+                {post.tagDtos && post.tagDtos.map((tag) => (
+                    <Link href={`/tag/${tag.id}`} key={tag.id} className={`py-2 w-fit px-3 ${theme === 'dark' ? 'bg-SecondaryColor' : 'bg-[#EAEAEA]'} rounded-[24px]`}>
+                        <p className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-semibold`}>{tag.name}</p>
+                    </Link>
+                ))}
                 </div>
                 {post?.image && <Image src={post?.image} alt="" width={980} height={760} className="mb-3" />}
                 <div className="flex justify-between items-center">
@@ -267,7 +278,7 @@ const PostPage = () => {
                         </Link>
                         <div>
                             <Link href={`/user/${post.userId}`}><p className={`text-[18px] ${theme === 'dark' ? 'text-white' : 'text-black'} font-semibold`}>{post.nickname}</p></Link>
-                            <span className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-regular`}>2 години тому</span>
+                            <span className={`text-[13px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'} font-regular`}>{parseDate(post.createdAt)}</span>
                         </div>
                         <div className="flex gap-3 ml-5">
                             <div className={`flex items-center px-3 py-2 gap-3 ${theme === 'dark' ? 'bg-[#2C353D]' : 'bg-[#B5B5B5]'} rounded-[20px]`}>
@@ -293,7 +304,7 @@ const PostPage = () => {
                                 <svg className="w-6 h-6" fill="#C5D0E6" >
                                     <use href={`/sprite.svg#icon-comment`} />
                                 </svg>
-                                <p className={`text-[18px] 'text-[#C5D0E6]' : 'text-black'}`}>56</p>
+                                <p className={`text-[18px] 'text-[#C5D0E6]' : 'text-black'}`}>{post.countComments}</p>
                             </div>
                             <div className={`flex items-center px-3 py-2 gap-3 ${theme === 'dark' ? 'bg-[#2C353D]' : 'bg-[#B5B5B5]'} rounded-[20px]`}>
                                 <button onClick={ (e) => {
@@ -346,41 +357,46 @@ const PostPage = () => {
                     </div>
                 </div>
                 {comments.length > 0 ? (comments.map((comment) =>
-                    <div key={comment.id} className={`p-6 mt-7 ${theme === 'dark' ? 'bg-MainColor' : 'bg-[#EAEAEA]'} rounded-[21px] mb-6 w-[1030px]`}>
-                        <div className="flex items-center mb-6">
-                            <Image src="/person.png" alt="" width={40} height={40} className="mr-2"/>
-                            <p className={`text-[16px] ${theme === 'dark' ? 'text-white' : 'text-black'} mr-4`}>{comment.userName}</p>
-                            <p className={`text-[16px] ${theme === 'dark' ? 'text-white' : 'text-black'}`}>35хв. тому</p>
-                        </div>
-                        <p className={`text-[28px] ${theme === 'dark' ? 'text-white' : 'text-black'} font-bold mb-4`}>{comment.content}</p>
-                        {comment.image && <Image src="/images.jpeg" alt="" width={980} height={760} className="mb-3"/>}
-                        <div className="flex gap-3">
-                            <div className={`flex items-center p-2 gap-3 ${theme === 'dark' ? 'bg-[#2C353D]' : 'bg-[#E4E3E3]'} rounded-[20px]`}>
-                                <svg className="w-6 h-6" fill="#C5D0E6">
-                                    <use href={`/sprite.svg#iconLike`}/>
-                                </svg>
-                                <p className="text-[18px] text-[#C5D0E6]">120</p>
-                                <Image src='/brokeHeart.png' alt="" width={29} height={29}/>
+                <div key={comment.id}>
+                    <Link href={`/replies/${comment.id}`}>
+                        <div className={`p-6 mt-7 ${theme === 'dark' ? 'bg-MainColor' : 'bg-[#EAEAEA]'} rounded-[21px] mb-6 w-[1030px]`}>
+                            <div className="flex items-center mb-6">
+                                <Image src="/person.png" alt="" width={40} height={40} className="mr-2"/>
+                                <p className={`text-[20px] ${theme === 'dark' ? 'text-white' : 'text-black'} mr-4 font-bold`}>{comment.userName}</p>
+                                <p className={`text-[16px] ${theme === 'dark' ? 'text-white' : 'text-black'}`}>{parseDate(comment.createdAt)}</p>
                             </div>
-                            <div className={`flex items-center p-2 gap-3 ${theme === 'dark' ? 'bg-[#2C353D]' : 'bg-[#E4E3E3]'} rounded-[20px]`}>
-                                <svg className="w-6 h-6" fill="#C5D0E6">
-                                    <use href={`/sprite.svg#icon-comment`}/>
-                                </svg>
-                                <p className={`text-[18px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'}`}>56</p>
+                            <p className={`text-[28px] ${theme === 'dark' ? 'text-white' : 'text-black'} font-bold mb-4`}>{comment.content}</p>
+                            {comment.image && <Image src={comment.image} alt="" width={980} height={760} className="mb-3"/>}
+                            <div className="flex gap-3">
+                                <div className={`flex items-center p-2 gap-3 ${theme === 'dark' ? 'bg-[#2C353D]' : 'bg-[#E4E3E3]'} rounded-[20px]`}>
+                                    <svg className="w-6 h-6" fill="#C5D0E6">
+                                        <use href={`/sprite.svg#iconLike`}/>
+                                    </svg>
+                                    <p className="text-[18px] text-[#C5D0E6]">{comment.countLikes}</p>
+                                    <Image src='/brokeHeart.png' alt="" width={29} height={29}/>
+                                </div>
+                                <div onClick={(e) =>{ 
+                                    e.preventDefault()
+                                    setCreateCommentModal(true)
+                                    }} 
+                                    className={`flex items-center p-2 gap-3 ${theme === 'dark' ? 'bg-[#2C353D]' : 'bg-[#E4E3E3]'} rounded-[20px]`}>
+                                    <svg className="w-6 h-6" fill="#C5D0E6">
+                                        <use href={`/sprite.svg#icon-comment`}/>
+                                    </svg>
+                                    <p className={`text-[18px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'}`}>{comment.countReplies}</p>
+                                </div>
                             </div>
-                            <div className={`flex items-center p-2 gap-3 ${theme === 'dark' ? 'bg-[#2C353D]' : 'bg-[#E4E3E3]'} rounded-[20px]`}>
-                                <svg className="w-5 h-6" fill="#C5D0E6">
-                                    <use href={`/sprite.svg#icon-save`}/>
-                                </svg>
-                                <p className={`text-[18px] ${theme === 'dark' ? 'text-[#C5D0E6]' : 'text-black'}`}>10</p>
-                            </div>
-                        </div>
-                    </div>)) : (
+                        </div> 
+                    </Link>
+                    {createCommentModal && <CreateCommentModal comment={comment} handleCloseModal={handleCloseModal} postId={postId} />}
+                </div>
+                )) : (
                     <p>Поки що немає коментарів...</p>
                 )}
+                
             {showUpdatePost && <EditPost handleShow={handleShow} post={post}/>}
         </div>
-            );
-            }
+    );
+}
 
-            export default PostPage;
+export default PostPage;

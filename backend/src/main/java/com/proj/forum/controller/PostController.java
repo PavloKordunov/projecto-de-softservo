@@ -4,6 +4,7 @@ import com.proj.forum.annotation.Logging;
 import com.proj.forum.annotation.RequireRoles;
 import com.proj.forum.dto.ApiResponse;
 import com.proj.forum.dto.GenericResponse;
+import com.proj.forum.dto.ListResponse;
 import com.proj.forum.dto.PostRequestDto;
 import com.proj.forum.dto.PostResponseDto;
 import com.proj.forum.enums.RoleType;
@@ -53,9 +54,9 @@ public class PostController {
     }
 
     @GetMapping("/tag/{tagId}")
-    public ApiResponse<List<PostResponseDto>> getPostsByTag(@PathVariable UUID tagId) {
+    public ListResponse<List<PostResponseDto>> getPostsByTag(@PathVariable UUID tagId) {
         List<PostResponseDto> posts = postService.getPostsByTag(tagId);
-        return new ApiResponse<>(true, HttpStatusCode.valueOf(200), "Posts found", posts);
+        return new ListResponse<>(true, HttpStatusCode.valueOf(200), "Posts found", posts.size(), posts);
     }
 
     @GetMapping("/random")

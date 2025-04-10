@@ -18,10 +18,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -34,13 +32,9 @@ public class TopicCustomMapper implements CustomMapper<Topic, TopicDto> {
 
     @Override
     public Topic mapToEntity(TopicDto topicDto) {
-        List<UUID> tagsId = new ArrayList<>();
         List<Tag> tags;
-        if(topicDto.tagDtos() != null) {
-            for (TagDto tagDto : topicDto.tagDtos()) {
-                tagsId.add(tagDto.id());
-            }
-            tags = tagRepository.findAllById(tagsId);
+        if(topicDto.tagsId() != null) {
+            tags = tagRepository.findAllById(topicDto.tagsId());
         }
         else {
             tags = null;
@@ -76,7 +70,7 @@ public class TopicCustomMapper implements CustomMapper<Topic, TopicDto> {
 
     @Override
     public TopicDto mapToDto(Topic topic){
-        List<CommentDto> comments = commentService.mapToListOfCommentsDto(topic.getComments());
+        List<CommentDto> comments = commentService.getCommentsByObjectId(topic.getId());
         Double userRate = userStatisticRepository.findAverageRateByObjectId(topic.getId()).orElse(null);
         int userRateCount = userStatisticRepository.countStatisticsByObjectIdAndRateIsNotNull(topic.getId());
         List<TagDto> tags = topic.getTags().stream()

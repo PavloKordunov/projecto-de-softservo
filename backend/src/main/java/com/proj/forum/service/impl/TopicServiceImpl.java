@@ -167,6 +167,11 @@ public class TopicServiceImpl implements TopicService {
         return mapToTopicDtoList(topics);
     }
 
+    @Override
+    public List<TopicDto> getAllTopicsByTagId(UUID tagId){
+        return mapToTopicDtoList(topicRepository.findAllByTagsId(tagId));
+    }
+
     private TopicDto stickTopicDtoAndStatistic(Topic topic, UUID userId) {
         //Optional<Integer> myRate = userStatisticRepository.findRateByObjectIdAndUserId(topic.getId(), userId);
         Optional<Double> usersRate = userStatisticRepository.findAverageRateByObjectId(topic.getId());

@@ -3,18 +3,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import CreateGroup from "./CreateGroup";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from 'framer-motion';
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useOktaAuth } from "@okta/okta-react";
 import useLastGroups from "@/hooks/useLastGroups";
+import { set } from "date-fns";
 
 const NavPanel = () => {
     const { theme, setTheme } = useTheme();
     const [showGroup, setShowGroup] = useState(false);
     const { authState } = useOktaAuth();
     const router = useRouter();
+    const [popularTags, setPopularTags] = useState<any[]>([]);
 
     const handleShowCreateGroup = () => {
         if (!authState?.isAuthenticated) {
@@ -36,6 +38,23 @@ const NavPanel = () => {
             console.log(error)
         }
     }
+    
+    useEffect(() => {
+        const populatTags = async () => {
+            try {
+                const res = await fetch('https://localhost:8080/api/tags/popular',{
+                    mode: "cors"
+                })
+                const data = await res.json()
+                if (data.success) {
+                    setPopularTags(data.body)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        populatTags()
+    }, [])
 
     return (
         <div className="flex flex-col">
@@ -155,13 +174,15 @@ const NavPanel = () => {
                             </motion.p>
                         </motion.div>
                     </div>
-                    <div className={`flex gap-[15px] ${theme === 'dark' ? 'bg-[#262D34]' : 'bg-[#FFFFFF]'} cursor-pointer hover:bg-AccnetColor p-[10px] rounded-[10px] items-center`}>
+                    {popularTags.map((tag, i) => (
+                    (i < 3) && <Link href={`/tag/${tag.id}`} key={tag.id} className={`flex gap-[15px] ${theme === 'dark' ? 'bg-[#262D34]' : 'bg-[#FFFFFF]'} cursor-pointer hover:bg-AccnetColor p-[10px] rounded-[10px] items-center`}>
                         <Image src="/tagIcon.png" alt="" width={42} height={42}/>
                         <div className="flex flex-col">
-                            <p className="text-${theme === 'dark' ? '#97989D' : 'black'} text-[16px] font-semibold">#Жахи</p>
-                            <p className="text-[#97989D] hover:text-black text-[12px]">82,645 Posted by this tag</p>
+                            <p className="text-${theme === 'dark' ? '#97989D' : 'black'} text-[16px] font-semibold">#{tag.name}</p>
+                            <p className="text-[#97989D] hover:text-black text-[12px]">{tag.countPosts} Posted by this tag</p>
                         </div>
-                    </div>
+                    </Link>
+                    ))}
                 </div>
             </div>
             {showGroup && <CreateGroup handleShow={handleShowCreateGroup}/>}

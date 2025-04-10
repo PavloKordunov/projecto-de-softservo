@@ -2,8 +2,10 @@ package com.proj.forum.service.impl;
 
 import com.proj.forum.dto.TagDto;
 import com.proj.forum.entity.Tag;
+import com.proj.forum.repository.PostRepository;
 import com.proj.forum.repository.TagRepository;
 import com.proj.forum.service.TagService;
+import com.proj.forum.strategy.TagCustomMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,10 +21,11 @@ import java.util.UUID;
 public class TagServiceImpl implements TagService {
 
     private final TagRepository tagRepository;
+    private final TagCustomMapper tagCustomMapper;
 
     @Override
     public UUID createTag(TagDto tagDto) {
-        Tag tag = mapToTag(tagDto);
+        Tag tag = tagCustomMapper.mapToEntity(tagDto);
         Tag tagFromDB = tagRepository.save(tag);
         return tagFromDB.getId();
     }
@@ -31,7 +34,7 @@ public class TagServiceImpl implements TagService {
     public TagDto getTag(UUID id) {
         Tag tag = tagRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Tag not found"));
-        return getUpdateTag(tag);
+        return tagCustomMapper.mapToDto(tag);
     }
 
     @Override
@@ -39,7 +42,7 @@ public class TagServiceImpl implements TagService {
         List<Tag> tags = tagRepository.findAll();
         return tags.stream()
                 .filter(tag -> tag.getName().toLowerCase().startsWith(query.toLowerCase()))
-                .map(TagServiceImpl::getUpdateTag)
+                .map(tagCustomMapper::mapToDto)
                 .toList();
     }
 
@@ -50,21 +53,16 @@ public class TagServiceImpl implements TagService {
             throw new EntityNotFoundException("Tag not found");
         }
         return tagList.stream()
-                .map(TagServiceImpl::getUpdateTag)
+                .map(tagCustomMapper::mapToDto)
                 .toList();
     }
 
-    private static Tag mapToTag(TagDto tagDto) {
-        return Tag.builder()
-                .name(tagDto.name())
-                .build();
-    }
-
-    private static TagDto getUpdateTag(Tag tag) {
-        return TagDto.builder()
-                .id(tag.getId())
-                .name(tag.getName())
-                .build();
+    @Override
+    public List<TagDto> getSortedTagsByCountPosts(){
+        List<Tag> tagList = tagRepository.findAllOrderByPostCountDesc();
+        return tagList.stream()
+                .map(tagCustomMapper::mapToDto)
+                .toList();
     }
 
 }
